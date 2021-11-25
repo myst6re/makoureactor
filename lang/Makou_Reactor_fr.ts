@@ -6,12 +6,12 @@
     <message>
         <location filename="../src/widgets/AboutDialog.cpp" line="28"/>
         <source>By Jérôme &amp;lt;myst6re&amp;gt; Arzel &lt;br/&gt;&lt;a href=&quot;https://github.com/myst6re/makoureactor/&quot;&gt;github.com/myst6re/makoureactor&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Par Jérôme &amp;lt;myst6re&amp;gt; Arzel &lt;br/&gt;&lt;a href=&quot;https://github.com/myst6re/makoureactor/&quot;&gt;github.com/myst6re/makoureactor&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="../src/widgets/AboutDialog.cpp" line="34"/>
         <source>Thanks to:&lt;ul style=&quot;margin:0&quot;&gt;&lt;li&gt;Squall78&lt;/li&gt;&lt;li&gt;Synergy Blades&lt;/li&gt;&lt;li&gt;TrueOdin&lt;/li&gt;&lt;li&gt;Akari&lt;/li&gt;&lt;li&gt;Asa&lt;/li&gt;&lt;li&gt;Aali&lt;/li&gt;&lt;li&gt;DLPB&lt;/li&gt;&lt;/ul&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Merci à&amp;nbsp;:&lt;ul style=&quot;margin:0&quot;&gt;&lt;li&gt;Squall78&lt;/li&gt;&lt;li&gt;Synergy Blades&lt;/li&gt;&lt;li&gt;TrueOdin&lt;/li&gt;&lt;li&gt;Akari&lt;/li&gt;&lt;li&gt;Asa&lt;/li&gt;&lt;li&gt;Aali&lt;/li&gt;&lt;li&gt;DLPB&lt;/li&gt;&lt;/ul&gt;</translation>
     </message>
 </context>
 <context>
@@ -19,7 +19,8 @@
     <message>
         <location filename="../src/widgets/AnimEditorDialog.cpp" line="25"/>
         <source>Animation Selector</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Sélection d&apos;une animation</oldsource>
+        <translation>Sélection d&apos;une animation</translation>
     </message>
 </context>
 <context>
@@ -27,7 +28,20 @@
     <message>
         <location filename="../src/widgets/ApercuBG.cpp" line="82"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Erreur</oldsource>
+        <translation>Erreur</translation>
+    </message>
+</context>
+<context>
+    <name>ApercuBGLabel</name>
+    <message>
+        <source>Save Background</source>
+        <oldsource>Enregistrer le background</oldsource>
+        <translation type="vanished">Enregistrer le background</translation>
+    </message>
+    <message>
+        <source>PNG image (*.png);;JPG image (*.jpg);;BMP image (*.bmp);;Portable Pixmap (*.ppm)</source>
+        <translation type="vanished">Image PNG (*.png);;Image JPG (*.jpg);;Image BMP (*.bmp);;Portable Pixmap (*.ppm)</translation>
     </message>
 </context>
 <context>
@@ -35,22 +49,22 @@
     <message>
         <location filename="../src/widgets/ArchivePreview.cpp" line="103"/>
         <source>Image %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Image %1</translation>
     </message>
     <message>
         <location filename="../src/widgets/ArchivePreview.cpp" line="116"/>
         <source>Palette %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Palette %1</translation>
     </message>
     <message>
         <location filename="../src/widgets/ArchivePreview.cpp" line="131"/>
         <source>Save Background</source>
-        <translation type="unfinished"></translation>
+        <translation>Enregistrer le background</translation>
     </message>
     <message>
         <location filename="../src/widgets/ArchivePreview.cpp" line="133"/>
         <source>PNG image (*.png);;JPG image (*.jpg);;BMP image (*.bmp);;Portable Pixmap (*.ppm)</source>
-        <translation type="unfinished"></translation>
+        <translation>Image PNG (*.png);;Image JPG (*.jpg);;Image BMP (*.bmp);;Portable Pixmap (*.ppm)</translation>
     </message>
 </context>
 <context>
@@ -128,79 +142,84 @@ List of available commands:
 <context>
     <name>BGDialog</name>
     <message>
-        <location filename="../src/widgets/BGDialog.cpp" line="24"/>
-        <source>Background</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../src/widgets/BGDialog.cpp" line="53"/>
         <source>Z :</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/BGDialog.cpp" line="62"/>
-        <source>Layers</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/widgets/BGDialog.cpp" line="63"/>
         <source>Sections (layer 1)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Sections (Layer 1)</oldsource>
+        <translation>Sections (couche 1)</translation>
     </message>
     <message>
         <location filename="../src/widgets/BGDialog.cpp" line="65"/>
         <source>Repair</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Réparer</oldsource>
+        <translation>Réparer</translation>
     </message>
     <message>
         <location filename="../src/widgets/BGDialog.cpp" line="149"/>
         <source>Parameter %1</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Paramètre %1</oldsource>
+        <translation>Paramètre %1</translation>
     </message>
     <message>
         <location filename="../src/widgets/BGDialog.cpp" line="159"/>
         <source>Section %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/BGDialog.cpp" line="175"/>
-        <source>Layer %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/BGDialog.cpp" line="221"/>
-        <source>State %1</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/widgets/BGDialog.cpp" line="330"/>
         <source>Save Background</source>
-        <translation type="unfinished"></translation>
+        <translation>Enregistrer le background</translation>
     </message>
     <message>
         <location filename="../src/widgets/BGDialog.cpp" line="332"/>
         <source>PNG image (*.png);;JPG image (*.jpg);;BMP image (*.bmp);;Portable Pixmap (*.ppm)</source>
-        <translation type="unfinished"></translation>
+        <translation>Image PNG (*.png);;Image JPG (*.jpg);;Image BMP (*.bmp);;Portable Pixmap (*.ppm)</translation>
     </message>
     <message>
         <location filename="../src/widgets/BGDialog.cpp" line="344"/>
         <source>Background Repaired</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/BGDialog.cpp" line="344"/>
-        <source>Errors were found and repaired, save to apply the changes.</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Background Repair</oldsource>
+        <translation>Décor réparé</translation>
     </message>
     <message>
         <location filename="../src/widgets/BGDialog.cpp" line="348"/>
         <source>Repair Failed</source>
-        <translation type="unfinished"></translation>
+        <translation>Réparation impossible</translation>
     </message>
     <message>
         <location filename="../src/widgets/BGDialog.cpp" line="348"/>
         <source>The errors were not corrected.</source>
-        <translation type="unfinished"></translation>
+        <translation>Les erreurs n&apos;ont pas été corrigées.</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/BGDialog.cpp" line="62"/>
+        <source>Layers</source>
+        <translation>Couches</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/BGDialog.cpp" line="24"/>
+        <source>Background</source>
+        <translation>Décor</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/BGDialog.cpp" line="175"/>
+        <source>Layer %1</source>
+        <translation>Couche %1</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/BGDialog.cpp" line="221"/>
+        <source>State %1</source>
+        <oldsource>État %1</oldsource>
+        <translation>État %1</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/BGDialog.cpp" line="344"/>
+        <source>Errors were found and repaired, save to apply the changes.</source>
+        <translation>Des erreurs ont été trouvées et réparées, sauvegardez l&apos;écran pour appliquer les changements.</translation>
     </message>
 </context>
 <context>
@@ -218,57 +237,57 @@ List of available commands:
     <message>
         <location filename="../src/CLI.cpp" line="125"/>
         <source>An error occured when exporting</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Une erreur s&apos;est produite lors de l&apos;exportation</translation>
     </message>
     <message>
         <location filename="../src/CLI.cpp" line="290"/>
         <source>Nothing found!</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Rien trouvé !</translation>
     </message>
     <message>
         <location filename="../src/CLI.cpp" line="293"/>
         <source>The file already exists</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Le fichier existe déjà</translation>
     </message>
     <message>
         <location filename="../src/CLI.cpp" line="296"/>
         <source>The file is inaccessible</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Le fichier est inaccessible</translation>
     </message>
     <message>
         <location filename="../src/CLI.cpp" line="299"/>
         <source>Can not create temporary file</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Impossible de créer un fichier temporaire</translation>
     </message>
     <message>
         <location filename="../src/CLI.cpp" line="302"/>
         <source>Unable to remove the file, check write permissions.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Impossible de supprimer le fichier, vérifiez les droits d&apos;écriture.</translation>
     </message>
     <message>
         <location filename="../src/CLI.cpp" line="305"/>
         <source>Failed to rename the file, check write permissions.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Impossible de renommer le fichier, vérifiez les droits d&apos;écriture.</translation>
     </message>
     <message>
         <location filename="../src/CLI.cpp" line="308"/>
         <source>Failed to copy the file, check write permissions.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Impossible de copier le fichier, vérifiez les droits d&apos;écriture.</translation>
     </message>
     <message>
         <location filename="../src/CLI.cpp" line="311"/>
         <source>Invalid file</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Fichier invalide</translation>
     </message>
     <message>
         <location filename="../src/CLI.cpp" line="314"/>
         <source>This error should not appear, thank you for reporting it</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cette erreur ne devrais pas s&apos;afficher, merci de le signaler</translation>
     </message>
     <message>
         <location filename="../src/CLI.cpp" line="319"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Erreur</translation>
     </message>
 </context>
 <context>
@@ -276,7 +295,7 @@ List of available commands:
     <message>
         <location filename="../src/widgets/ColorDisplay.cpp" line="173"/>
         <source>Choose a new color</source>
-        <translation type="unfinished"></translation>
+        <translation>Choisir une nouvelle couleur</translation>
     </message>
 </context>
 <context>
@@ -284,104 +303,149 @@ List of available commands:
     <message>
         <location filename="../src/widgets/ConfigWindow.cpp" line="27"/>
         <source>Configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>Configuration</translation>
     </message>
     <message>
         <location filename="../src/widgets/ConfigWindow.cpp" line="29"/>
         <source>Dependencies</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Dépendances</oldsource>
+        <translation>Dépendances</translation>
     </message>
     <message>
         <location filename="../src/widgets/ConfigWindow.cpp" line="34"/>
         <source>Final Fantasy VII Installs</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Final Fantasy VII installés</oldsource>
+        <translation>Final Fantasy VII installés</translation>
     </message>
     <message>
         <location filename="../src/widgets/ConfigWindow.cpp" line="38"/>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Supprimer</translation>
     </message>
     <message>
         <location filename="../src/widgets/ConfigWindow.cpp" line="40"/>
         <source>kernel2.bin</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/widgets/ConfigWindow.cpp" line="42"/>
         <location filename="../src/widgets/ConfigWindow.cpp" line="45"/>
         <location filename="../src/widgets/ConfigWindow.cpp" line="48"/>
         <source>Change</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Changer</oldsource>
+        <translation>Changer</translation>
     </message>
     <message>
         <location filename="../src/widgets/ConfigWindow.cpp" line="43"/>
         <source>window.bin</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/widgets/ConfigWindow.cpp" line="46"/>
         <source>char.lgp</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ConfigWindow.cpp" line="70"/>
+        <source>Theme</source>
+        <translation>Thème</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ConfigWindow.cpp" line="72"/>
+        <source>Dark mode</source>
+        <translation>Mode sombre</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ConfigWindow.cpp" line="77"/>
+        <source>OpenGL</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ConfigWindow.cpp" line="79"/>
+        <source>Disable OpenGL</source>
+        <oldsource>Désactiver OpenGL</oldsource>
+        <translation>Désactiver OpenGL</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ConfigWindow.cpp" line="84"/>
+        <source>Text Editor</source>
+        <oldsource>Editeur de texte</oldsource>
+        <translation>Editeur de texte</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ConfigWindow.cpp" line="91"/>
+        <source>Defaults</source>
+        <translation>Valeurs par défaut</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ConfigWindow.cpp" line="97"/>
+        <source>Latin</source>
+        <translation>Latin</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ConfigWindow.cpp" line="98"/>
+        <source>Japanese</source>
+        <translation>Japonais</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ConfigWindow.cpp" line="519"/>
+        <source>You must restart %1 to apply all changes.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/widgets/ConfigWindow.cpp" line="50"/>
         <source>Edit...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ConfigWindow.cpp" line="70"/>
-        <source>Theme</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ConfigWindow.cpp" line="72"/>
-        <source>Dark mode</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ConfigWindow.cpp" line="77"/>
-        <source>OpenGL</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ConfigWindow.cpp" line="79"/>
-        <source>Disable OpenGL</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ConfigWindow.cpp" line="84"/>
-        <source>Text Editor</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ConfigWindow.cpp" line="91"/>
-        <source>Defaults</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ConfigWindow.cpp" line="97"/>
-        <source>Latin</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ConfigWindow.cpp" line="98"/>
-        <source>Japanese</source>
-        <translation type="unfinished"></translation>
+        <translation>Modifier...</translation>
     </message>
     <message>
         <location filename="../src/widgets/ConfigWindow.cpp" line="130"/>
         <source>Encoding</source>
-        <translation type="unfinished"></translation>
+        <translation>Encodage</translation>
     </message>
     <message>
         <location filename="../src/widgets/ConfigWindow.cpp" line="137"/>
         <source>Autosize: margin right</source>
-        <translation type="unfinished"></translation>
+        <translation>Taille auto. : marge à droite</translation>
+    </message>
+    <message>
+        <source>Miscellaneous</source>
+        <translation type="vanished">Divers</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ConfigWindow.cpp" line="287"/>
+        <source>Edit</source>
+        <translation>Modifier</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ConfigWindow.cpp" line="290"/>
+        <location filename="../src/widgets/ConfigWindow.cpp" line="294"/>
+        <source>Add</source>
+        <translation>Ajouter</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ConfigWindow.cpp" line="314"/>
+        <location filename="../src/widgets/ConfigWindow.cpp" line="324"/>
+        <source>EXE files (*.exe)</source>
+        <translation>Fichiers EXE (*.exe)</translation>
+    </message>
+    <message>
+        <source>Lgp Archives (*.lgp);;All Files(*)</source>
+        <translation type="vanished">Lgp Archives (*.lgp);;All Files(*)</translation>
+    </message>
+    <message>
+        <source>You must restart Makou Reactor to apply all changes.</source>
+        <translation type="vanished">Vous devez redémarrer Makou Reactor pour appliquer tous les changements.</translation>
+    </message>
+    <message>
+        <source>Japanese Characters</source>
+        <oldsource>Caractères japonais</oldsource>
+        <translation type="vanished">Caractères japonais</translation>
     </message>
     <message>
         <location filename="../src/widgets/ConfigWindow.cpp" line="139"/>
         <source>{SPACED CHARACTERS} width</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Largeur {SPACED CHARACTERS}</oldsource>
+        <translation>Largeur {SPACED CHARACTERS}</translation>
     </message>
     <message>
         <location filename="../src/widgets/ConfigWindow.cpp" line="141"/>
@@ -396,56 +460,50 @@ List of available commands:
     <message>
         <location filename="../src/widgets/ConfigWindow.cpp" line="147"/>
         <source>Script Editor</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Editeur de script</oldsource>
+        <translation>Editeur de script</translation>
     </message>
     <message>
         <location filename="../src/widgets/ConfigWindow.cpp" line="149"/>
         <source>Expand lines by default</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Lignes expansées par défaut</oldsource>
+        <translation>Lignes expansées par défaut</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ConfigWindow.cpp" line="287"/>
-        <source>Edit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ConfigWindow.cpp" line="290"/>
-        <location filename="../src/widgets/ConfigWindow.cpp" line="294"/>
-        <source>Add</source>
-        <translation type="unfinished"></translation>
+        <source>Don&apos;t strictly verify the file format</source>
+        <oldsource>Ne pas vérifier strictement le format des fichiers</oldsource>
+        <translation type="vanished">Ne pas vérifier strictement le format des fichiers</translation>
     </message>
     <message>
         <location filename="../src/widgets/ConfigWindow.cpp" line="314"/>
         <location filename="../src/widgets/ConfigWindow.cpp" line="324"/>
         <source>Find ff7.exe</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ConfigWindow.cpp" line="314"/>
-        <location filename="../src/widgets/ConfigWindow.cpp" line="324"/>
-        <source>EXE files (*.exe)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Chercher ff7.exe</oldsource>
+        <translation>Chercher ff7.exe</translation>
     </message>
     <message>
         <location filename="../src/widgets/ConfigWindow.cpp" line="369"/>
         <source>Find kernel2.bin</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Chercher kernel2.bin</oldsource>
+        <translation>Chercher kernel2.bin</translation>
     </message>
     <message>
         <location filename="../src/widgets/ConfigWindow.cpp" line="369"/>
         <location filename="../src/widgets/ConfigWindow.cpp" line="376"/>
         <source>Bin Files (*.bin);;All Files (*)</source>
-        <translation type="unfinished"></translation>
+        <translation>Bin Files (*.bin);;All Files (*)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ConfigWindow.cpp" line="376"/>
         <source>Find window.bin</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Chercher window.bin</oldsource>
+        <translation>Chercher window.bin</translation>
     </message>
     <message>
         <location filename="../src/widgets/ConfigWindow.cpp" line="385"/>
         <source>Find char.lgp</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Chercher char.lgp</oldsource>
+        <translation>Chercher char.lgp</translation>
     </message>
     <message>
         <location filename="../src/widgets/ConfigWindow.cpp" line="385"/>
@@ -455,12 +513,7 @@ List of available commands:
     <message>
         <location filename="../src/widgets/ConfigWindow.cpp" line="519"/>
         <source>Information</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ConfigWindow.cpp" line="519"/>
-        <source>You must restart %1 to apply all changes.</source>
-        <translation type="unfinished"></translation>
+        <translation>Information</translation>
     </message>
 </context>
 <context>
@@ -468,58 +521,63 @@ List of available commands:
     <message>
         <location filename="../src/widgets/EncounterTableWidget.cpp" line="35"/>
         <source>-</source>
-        <translation type="unfinished"></translation>
+        <translation>-</translation>
     </message>
     <message>
         <location filename="../src/widgets/EncounterTableWidget.cpp" line="37"/>
         <source>+</source>
-        <translation type="unfinished"></translation>
+        <translation>+</translation>
     </message>
     <message>
         <location filename="../src/widgets/EncounterTableWidget.cpp" line="42"/>
         <source>Battle ID</source>
-        <translation type="unfinished"></translation>
+        <oldsource>ID Combat</oldsource>
+        <translation>ID Combat</translation>
     </message>
     <message>
         <location filename="../src/widgets/EncounterTableWidget.cpp" line="43"/>
         <source>Probability</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Probabilité</oldsource>
+        <translation>Probabilité</translation>
     </message>
     <message>
         <location filename="../src/widgets/EncounterTableWidget.cpp" line="45"/>
         <source>Back Attack 1</source>
-        <translation type="unfinished"></translation>
+        <translation>Attaque par l&apos;arrière 1</translation>
     </message>
     <message>
         <location filename="../src/widgets/EncounterTableWidget.cpp" line="45"/>
         <source>Back Attack 2</source>
-        <translation type="unfinished"></translation>
+        <translation>Attaque par l&apos;arrière 2</translation>
     </message>
     <message>
         <location filename="../src/widgets/EncounterTableWidget.cpp" line="45"/>
         <source>Side Attack</source>
-        <translation type="unfinished"></translation>
+        <translation>Attaque de côté</translation>
     </message>
     <message>
         <location filename="../src/widgets/EncounterTableWidget.cpp" line="45"/>
         <source>Attack From Both Sides</source>
-        <translation type="unfinished"></translation>
+        <translation>Attaque des deux côtés</translation>
     </message>
     <message>
         <location filename="../src/widgets/EncounterTableWidget.cpp" line="49"/>
         <source>Battle %1</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Combat %1</oldsource>
+        <translation>Combat %1</translation>
     </message>
     <message>
         <location filename="../src/widgets/EncounterTableWidget.cpp" line="123"/>
         <source>Battle rate: %1/255</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Fréquence des combats : %1/255</oldsource>
+        <translation>Fréquence des combats : %1/255</translation>
     </message>
     <message>
         <location filename="../src/widgets/EncounterTableWidget.cpp" line="143"/>
         <location filename="../src/widgets/EncounterTableWidget.cpp" line="151"/>
         <source>Remaining probability points: %1</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Points de probabilité restants : %1</oldsource>
+        <translation>Points de probabilité restants : %1</translation>
     </message>
 </context>
 <context>
@@ -527,22 +585,25 @@ List of available commands:
     <message>
         <location filename="../src/widgets/EncounterWidget.cpp" line="23"/>
         <source>Encounters</source>
-        <translation type="unfinished"></translation>
+        <translation>Rencontres aléatoires</translation>
     </message>
     <message>
         <location filename="../src/widgets/EncounterWidget.cpp" line="25"/>
         <source>Encounters 1</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Rencontres 1</oldsource>
+        <translation>Rencontres 1</translation>
     </message>
     <message>
         <location filename="../src/widgets/EncounterWidget.cpp" line="26"/>
         <source>Encounters 2</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Rencontres 2</oldsource>
+        <translation>Rencontres 2</translation>
     </message>
     <message>
         <location filename="../src/widgets/EncounterWidget.cpp" line="30"/>
         <source>&lt;b&gt;Encounters:&lt;/b&gt; There are two groups of independent encounters, by default it is the group 1 that is active, but the opcode BTLTB (in scripts) can modify to the group 2.&lt;br/&gt;&lt;b&gt;Battle Rate:&lt;/b&gt; The lower the percentage, the higher the fighting will be frequent.</source>
-        <translation type="unfinished"></translation>
+        <oldsource>&lt;b&gt;Les rencontres :&lt;/b&gt; Il y a deux groupes de rencontres aléatoires indépendants, par défaut c&apos;est le groupe 1 qui est actif, mais la commande BTLTB (dans les scripts) permet de passer au groupe 2.&lt;br/&gt;&lt;b&gt;Fréquence des combats :&lt;/b&gt; Plus la valeur est basse, plus les combats seront fréquents.</oldsource>
+        <translation>&lt;b&gt;Les rencontres :&lt;/b&gt; Il y a deux groupes de rencontres aléatoires indépendants, par défaut c&apos;est le groupe 1 qui est actif, mais la commande BTLTB (dans les scripts) permet de passer au groupe 2.&lt;br/&gt;&lt;b&gt;Fréquence des combats :&lt;/b&gt; Plus la valeur est basse, plus les combats seront fréquents.</translation>
     </message>
 </context>
 <context>
@@ -550,119 +611,145 @@ List of available commands:
     <message>
         <location filename="../src/widgets/FieldList.cpp" line="29"/>
         <source>File</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Fichier</oldsource>
+        <translation>Fichier</translation>
     </message>
     <message>
         <location filename="../src/widgets/FieldList.cpp" line="29"/>
         <source>Id</source>
-        <translation type="unfinished"></translation>
+        <translation>Id</translation>
     </message>
     <message>
         <location filename="../src/widgets/FieldList.cpp" line="40"/>
         <source>Quick search</source>
-        <translation type="unfinished"></translation>
+        <translation>Recherche rapide</translation>
     </message>
     <message>
         <location filename="../src/widgets/FieldList.cpp" line="41"/>
         <source>Search...</source>
-        <translation type="unfinished"></translation>
+        <translation>Rechercher...</translation>
+    </message>
+    <message>
+        <source>PC Field File (*)</source>
+        <translation type="vanished">Fichier Field PC (*)</translation>
+    </message>
+    <message>
+        <source>DAT File (*.DAT)</source>
+        <translation type="vanished">Fichier DAT (*.DAT)</translation>
     </message>
     <message>
         <location filename="../src/widgets/FieldList.cpp" line="46"/>
         <source>Rename field</source>
-        <translation type="unfinished"></translation>
+        <translation>Renommer écran</translation>
     </message>
     <message>
         <location filename="../src/widgets/FieldList.cpp" line="49"/>
         <source>Add field</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajouter écran</translation>
     </message>
     <message>
         <location filename="../src/widgets/FieldList.cpp" line="52"/>
         <source>Delete field</source>
-        <translation type="unfinished"></translation>
+        <translation>Supprimer écran</translation>
     </message>
     <message>
         <location filename="../src/widgets/FieldList.cpp" line="73"/>
         <source>&amp;Field List Toolbar</source>
-        <translation type="unfinished"></translation>
+        <translation>Barre d&apos;o&amp;utils écrans</translation>
     </message>
     <message>
         <location filename="../src/widgets/FieldList.cpp" line="76"/>
         <source>Add a field</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajouter un écran</translation>
     </message>
     <message>
         <location filename="../src/widgets/FieldList.cpp" line="78"/>
         <source>Remove a field</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/FieldList.cpp" line="211"/>
-        <location filename="../src/widgets/FieldList.cpp" line="263"/>
-        <source>Name not filled</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/FieldList.cpp" line="212"/>
-        <location filename="../src/widgets/FieldList.cpp" line="264"/>
-        <source>Please set a new field name.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/FieldList.cpp" line="216"/>
-        <location filename="../src/widgets/FieldList.cpp" line="267"/>
-        <source>Name already present in archive</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/FieldList.cpp" line="217"/>
-        <location filename="../src/widgets/FieldList.cpp" line="268"/>
-        <source>Please choose another name.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/FieldList.cpp" line="246"/>
-        <location filename="../src/widgets/FieldList.cpp" line="289"/>
-        <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Supprimer un écran</translation>
     </message>
     <message>
         <location filename="../src/widgets/FieldList.cpp" line="246"/>
         <location filename="../src/widgets/FieldList.cpp" line="289"/>
         <source>Not implemented for PS.</source>
-        <translation type="unfinished"></translation>
+        <translation>Pas implémenté pour la PS.</translation>
     </message>
     <message>
         <location filename="../src/widgets/FieldList.cpp" line="255"/>
         <source>Choose a name</source>
-        <translation type="unfinished"></translation>
+        <translation>Choisissez un nom</translation>
     </message>
     <message>
         <location filename="../src/widgets/FieldList.cpp" line="256"/>
         <source>Field name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Nom écran :</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/FieldList.cpp" line="211"/>
+        <location filename="../src/widgets/FieldList.cpp" line="263"/>
+        <source>Name not filled</source>
+        <translation>Nom vide</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/FieldList.cpp" line="212"/>
+        <location filename="../src/widgets/FieldList.cpp" line="264"/>
+        <source>Please set a new field name.</source>
+        <translation>Veuillez écrire un nouveau nom d&apos;écran.</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/FieldList.cpp" line="216"/>
+        <location filename="../src/widgets/FieldList.cpp" line="267"/>
+        <source>Name already present in archive</source>
+        <translation>Nom déjà présent dans l&apos;archive</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/FieldList.cpp" line="217"/>
+        <location filename="../src/widgets/FieldList.cpp" line="268"/>
+        <source>Please choose another name.</source>
+        <translation>Veuillez choisir un autre nom.</translation>
     </message>
     <message>
         <location filename="../src/widgets/FieldList.cpp" line="303"/>
         <source>Are you sure you want to remove %1?
 Other maps can refer to it!</source>
-        <translation type="unfinished"></translation>
+        <translation>Êtes-vous sûr de vouloir supprimer %1 ?
+D&apos;autres écrans peuvent y référer !</translation>
     </message>
     <message>
         <location filename="../src/widgets/FieldList.cpp" line="306"/>
         <source>the selected field</source>
-        <translation type="unfinished"></translation>
+        <translation>l&apos;écran sélectionné</translation>
     </message>
     <message>
         <location filename="../src/widgets/FieldList.cpp" line="307"/>
         <source>the selected fields</source>
-        <translation type="unfinished"></translation>
+        <translation>les écrans sélectionnés</translation>
     </message>
     <message>
         <location filename="../src/widgets/FieldList.cpp" line="309"/>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Supprimer</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/FieldList.cpp" line="246"/>
+        <location filename="../src/widgets/FieldList.cpp" line="289"/>
+        <source>Error</source>
+        <translation>Erreur</translation>
+    </message>
+    <message>
+        <source>Not implemented.</source>
+        <translation type="vanished">Pas implémenté.</translation>
+    </message>
+    <message>
+        <source>Field with this name already exist.</source>
+        <translation type="vanished">Un écran existe déjà avec ce nom.</translation>
+    </message>
+    <message>
+        <source>Unknown error.</source>
+        <translation type="vanished">Erreur inconnue.</translation>
+    </message>
+    <message>
+        <source>Cannot open file.</source>
+        <translation type="vanished">Impossible d&apos;ouvrir le fichier.</translation>
     </message>
 </context>
 <context>
@@ -670,7 +757,8 @@ Other maps can refer to it!</source>
     <message>
         <location filename="../src/core/field/FieldIO.cpp" line="66"/>
         <source>Cannot save field map %1</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Cannot save field %1</oldsource>
+        <translation>Impossible de sauvegarder l&apos;écran %1</translation>
     </message>
 </context>
 <context>
@@ -678,52 +766,61 @@ Other maps can refer to it!</source>
     <message>
         <location filename="../src/widgets/FontManager.cpp" line="25"/>
         <source>Font Manager</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/FontManager.cpp" line="56"/>
-        <source>Latin</source>
-        <translation type="unfinished"></translation>
+        <translation>Gestionnaire de polices de caractères</translation>
     </message>
     <message>
         <location filename="../src/widgets/FontManager.cpp" line="56"/>
         <source>Japanese</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/FontManager.cpp" line="111"/>
-        <source>OK</source>
-        <translation type="unfinished"></translation>
+        <translation>Japonais</translation>
     </message>
     <message>
         <location filename="../src/widgets/FontManager.cpp" line="115"/>
         <source>&amp;Displayed name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Nom &amp;affiché :</translation>
     </message>
     <message>
         <location filename="../src/widgets/FontManager.cpp" line="116"/>
         <source>&amp;File name:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/FontManager.cpp" line="132"/>
-        <source>Choose another name</source>
-        <translation type="unfinished"></translation>
+        <translation>Nom du &amp;fichier :</translation>
     </message>
     <message>
         <location filename="../src/widgets/FontManager.cpp" line="132"/>
         <source>This name already exist or is invalid, please choose another.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ce nom existe déjà ou est invalide, merci d&apos;en choisir un autre.</translation>
     </message>
     <message>
         <location filename="../src/widgets/FontManager.cpp" line="149"/>
         <source>Remove font</source>
-        <translation type="unfinished"></translation>
+        <translation>Supprimer la police de caractères</translation>
     </message>
     <message>
         <location filename="../src/widgets/FontManager.cpp" line="150"/>
         <source>Do you want to remove the selected font?</source>
-        <translation type="unfinished"></translation>
+        <translation>Voulez-vous supprimer la police de caractères sélectionnée ?</translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation type="obsolete">Ajouter</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation type="obsolete">Supprimer</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/FontManager.cpp" line="56"/>
+        <source>Latin</source>
+        <translation>Latin</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/FontManager.cpp" line="111"/>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/FontManager.cpp" line="132"/>
+        <source>Choose another name</source>
+        <oldsource>Choisissez un autre nom</oldsource>
+        <translation>Sélectionnez un autre nom</translation>
     </message>
 </context>
 <context>
@@ -731,67 +828,74 @@ Other maps can refer to it!</source>
     <message>
         <location filename="../src/widgets/FontWidget.cpp" line="30"/>
         <source>Grey</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/FontWidget.cpp" line="30"/>
-        <source>Blue</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/FontWidget.cpp" line="30"/>
-        <source>Red</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Gris</oldsource>
+        <translation>Gris</translation>
     </message>
     <message>
         <location filename="../src/widgets/FontWidget.cpp" line="30"/>
         <source>Violet</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/FontWidget.cpp" line="30"/>
-        <source>Green</source>
-        <translation type="unfinished"></translation>
+        <translation>Violet</translation>
     </message>
     <message>
         <location filename="../src/widgets/FontWidget.cpp" line="30"/>
         <source>Cyan</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/FontWidget.cpp" line="30"/>
-        <source>Yellow</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/FontWidget.cpp" line="30"/>
-        <source>White</source>
-        <translation type="unfinished"></translation>
+        <translation>Cyan</translation>
     </message>
     <message>
         <location filename="../src/widgets/FontWidget.cpp" line="46"/>
         <source>Export...</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Exporter...</oldsource>
+        <translation>Exporter...</translation>
     </message>
     <message>
         <location filename="../src/widgets/FontWidget.cpp" line="47"/>
         <source>Import...</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Importer...</oldsource>
+        <translation>Importer...</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/FontWidget.cpp" line="30"/>
+        <source>Blue</source>
+        <translation>Bleu</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/FontWidget.cpp" line="30"/>
+        <source>Red</source>
+        <translation>Rouge</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/FontWidget.cpp" line="30"/>
+        <source>Green</source>
+        <translation>Vert</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/FontWidget.cpp" line="30"/>
+        <source>Yellow</source>
+        <translation>Jaune</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/FontWidget.cpp" line="30"/>
+        <source>White</source>
+        <translation>Blanc</translation>
+    </message>
+    <message>
+        <source>From Image...</source>
+        <translation type="vanished">À partir d&apos;une image...</translation>
     </message>
     <message>
         <location filename="../src/widgets/FontWidget.cpp" line="48"/>
         <source>Cancel Changes</source>
-        <translation type="unfinished"></translation>
+        <translation>Annuler les modifications</translation>
     </message>
     <message>
         <location filename="../src/widgets/FontWidget.cpp" line="64"/>
         <source>Text:</source>
-        <translation type="unfinished"></translation>
+        <translation>Texte :</translation>
     </message>
     <message>
         <location filename="../src/widgets/FontWidget.cpp" line="66"/>
         <source>Width:</source>
-        <translation type="unfinished"></translation>
+        <translation>Largeur :</translation>
     </message>
     <message>
         <location filename="../src/widgets/FontWidget.cpp" line="68"/>
@@ -801,38 +905,48 @@ Other maps can refer to it!</source>
     <message>
         <location filename="../src/widgets/FontWidget.cpp" line="117"/>
         <source>Table %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Table %1</translation>
     </message>
     <message>
         <location filename="../src/widgets/FontWidget.cpp" line="219"/>
         <location filename="../src/widgets/FontWidget.cpp" line="295"/>
         <source>FF7 font file (*.bin)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Fichier police FF7 (*.bin)</oldsource>
+        <translation>Fichier police FF7 (*.bin)</translation>
+    </message>
+    <message>
+        <source>FF8 font file (*.tdw)</source>
+        <oldsource>Fichier police FF8 (*.tdw)</oldsource>
+        <translation type="vanished">Fichier police FF8 (*.tdw)</translation>
     </message>
     <message>
         <location filename="../src/widgets/FontWidget.cpp" line="221"/>
         <source>Image File (*.png)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Fichier image PNG (*.png)</oldsource>
+        <translation>Fichier image PNG (*.png)</translation>
     </message>
     <message>
         <location filename="../src/widgets/FontWidget.cpp" line="222"/>
         <source>Image File (*.jpg)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Image File (*.jpg))</oldsource>
+        <translation>Fichier image JPG (*.jpg)</translation>
     </message>
     <message>
         <location filename="../src/widgets/FontWidget.cpp" line="223"/>
         <source>Image File (*.bmp)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Fichier image BMP (*.bmp)</oldsource>
+        <translation>Fichier image BMP (*.bmp)</translation>
     </message>
     <message>
         <location filename="../src/widgets/FontWidget.cpp" line="227"/>
         <source>Translation file %1 (*.txt)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Fichier traduction %1 (*.txt)</oldsource>
+        <translation>Fichier traduction %1 (*.txt)</translation>
     </message>
     <message>
         <location filename="../src/widgets/FontWidget.cpp" line="231"/>
         <source>Export font</source>
-        <translation type="unfinished"></translation>
+        <translation>Exporter police de caractère</translation>
     </message>
     <message>
         <location filename="../src/widgets/FontWidget.cpp" line="244"/>
@@ -841,29 +955,30 @@ Other maps can refer to it!</source>
         <location filename="../src/widgets/FontWidget.cpp" line="313"/>
         <location filename="../src/widgets/FontWidget.cpp" line="317"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Erreur</oldsource>
+        <translation>Erreur</translation>
     </message>
     <message>
         <location filename="../src/widgets/FontWidget.cpp" line="244"/>
         <location filename="../src/widgets/FontWidget.cpp" line="270"/>
         <location filename="../src/widgets/FontWidget.cpp" line="317"/>
         <source>Error opening file (%1)</source>
-        <translation type="unfinished"></translation>
+        <translation>Erreur d&apos;ouverture du fichier. (%1)</translation>
     </message>
     <message>
         <location filename="../src/widgets/FontWidget.cpp" line="247"/>
         <source>Error saving file</source>
-        <translation type="unfinished"></translation>
+        <translation>Erreur d&apos;enregistrement</translation>
     </message>
     <message>
         <location filename="../src/widgets/FontWidget.cpp" line="299"/>
         <source>Import font</source>
-        <translation type="unfinished"></translation>
+        <translation>Importer police de caractère</translation>
     </message>
     <message>
         <location filename="../src/widgets/FontWidget.cpp" line="313"/>
         <source>Invalid file</source>
-        <translation type="unfinished"></translation>
+        <translation>Fichier invalide</translation>
     </message>
 </context>
 <context>
@@ -871,117 +986,135 @@ Other maps can refer to it!</source>
     <message>
         <location filename="../src/widgets/GrpScriptList.cpp" line="26"/>
         <source>Id</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/GrpScriptList.cpp" line="26"/>
-        <source>Group</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/widgets/GrpScriptList.cpp" line="26"/>
         <source>Type</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/GrpScriptList.cpp" line="26"/>
+        <source>Group</source>
+        <translation>Groupe</translation>
     </message>
     <message>
         <location filename="../src/widgets/GrpScriptList.cpp" line="37"/>
         <source>Rename group</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Renommer groupe</oldsource>
+        <translation>Renommer groupe</translation>
     </message>
     <message>
         <location filename="../src/widgets/GrpScriptList.cpp" line="40"/>
         <source>Add group</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Ajouter groupe</oldsource>
+        <translation>Ajouter groupe</translation>
     </message>
     <message>
         <location filename="../src/widgets/GrpScriptList.cpp" line="43"/>
         <source>Delete group</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Supprimer groupe</oldsource>
+        <translation>Supprimer groupe</translation>
     </message>
     <message>
         <location filename="../src/widgets/GrpScriptList.cpp" line="47"/>
         <source>Cut group</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Couper groupe</oldsource>
+        <translation>Couper groupe</translation>
     </message>
     <message>
         <location filename="../src/widgets/GrpScriptList.cpp" line="51"/>
         <source>Copy group</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Copier groupe</oldsource>
+        <translation>Copier groupe</translation>
     </message>
     <message>
         <location filename="../src/widgets/GrpScriptList.cpp" line="55"/>
         <source>Paste group</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/GrpScriptList.cpp" line="59"/>
-        <source>Move up</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Coller groupe</oldsource>
+        <translation>Coller groupe</translation>
     </message>
     <message>
         <location filename="../src/widgets/GrpScriptList.cpp" line="63"/>
         <source>Move down</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/GrpScriptList.cpp" line="102"/>
-        <source>&amp;Group Editor</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/GrpScriptList.cpp" line="105"/>
-        <source>Add a group</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/GrpScriptList.cpp" line="107"/>
-        <source>Remove a group</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Down a group</oldsource>
+        <translation>Descendre un groupe</translation>
     </message>
     <message>
         <location filename="../src/widgets/GrpScriptList.cpp" line="110"/>
         <source>Up</source>
-        <translation type="unfinished"></translation>
+        <translation>Déplacer vers le haut</translation>
     </message>
     <message>
         <location filename="../src/widgets/GrpScriptList.cpp" line="112"/>
         <source>Down</source>
-        <translation type="unfinished"></translation>
+        <translation>Déplacer vers le bas</translation>
     </message>
     <message>
-        <location filename="../src/widgets/GrpScriptList.cpp" line="255"/>
-        <source>You have more than 16 models in this field, the game may crash.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/GrpScriptList.cpp" line="261"/>
-        <source>You have more than 48 groups in this field, the game may crash.</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/widgets/GrpScriptList.cpp" line="107"/>
+        <source>Remove a group</source>
+        <translation>Supprimer un groupe</translation>
     </message>
     <message>
         <location filename="../src/widgets/GrpScriptList.cpp" line="319"/>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Supprimer</translation>
     </message>
     <message>
         <location filename="../src/widgets/GrpScriptList.cpp" line="319"/>
         <source>Are you sure you want to remove %1?
 Some scripts can refer to it!</source>
-        <translation type="unfinished"></translation>
+        <translation>Voulez-vous vraiment supprimer %1 ?
+Certains scripts peuvent y faire référence !</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/GrpScriptList.cpp" line="102"/>
+        <source>&amp;Group Editor</source>
+        <oldsource>Édition des &amp;groupes</oldsource>
+        <translation>Édition des &amp;groupes</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/GrpScriptList.cpp" line="59"/>
+        <source>Move up</source>
+        <translation>Monter un groupe</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/GrpScriptList.cpp" line="105"/>
+        <source>Add a group</source>
+        <oldsource>Ajouter un groupe</oldsource>
+        <translation>Ajouter un groupe</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/GrpScriptList.cpp" line="255"/>
+        <source>You have more than 16 models in this field, the game may crash.</source>
+        <translation>Vous avez plus de 16 modèles dans cet écran, le jeu est susceptible de planter.</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/GrpScriptList.cpp" line="261"/>
+        <source>You have more than 48 groups in this field, the game may crash.</source>
+        <translation>Vous avez plus de 48 groupes dans cet écran, le jeu est susceptible de planter.</translation>
     </message>
     <message>
         <location filename="../src/widgets/GrpScriptList.cpp" line="322"/>
         <source>the group selected</source>
-        <translation type="unfinished"></translation>
+        <oldsource>le groupe sélectionné</oldsource>
+        <translation>le groupe sélectionné</translation>
     </message>
     <message>
         <location filename="../src/widgets/GrpScriptList.cpp" line="323"/>
         <source>the selected groups</source>
-        <translation type="unfinished"></translation>
+        <oldsource>les groupes sélectionnés</oldsource>
+        <translation>les groupes sélectionnés</translation>
     </message>
 </context>
 <context>
     <name>GrpScriptWizardPageType</name>
+    <message>
+        <location filename="../src/widgets/GrpScriptWizard.cpp" line="69"/>
+        <location filename="../src/widgets/GrpScriptWizard.cpp" line="102"/>
+        <source>Empty</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <location filename="../src/widgets/GrpScriptWizard.cpp" line="70"/>
         <source>3D Model</source>
@@ -990,7 +1123,7 @@ Some scripts can refer to it!</source>
     <message>
         <location filename="../src/widgets/GrpScriptWizard.cpp" line="71"/>
         <source>Line</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ligne</translation>
     </message>
     <message>
         <location filename="../src/widgets/GrpScriptWizard.cpp" line="72"/>
@@ -1015,17 +1148,11 @@ Some scripts can refer to it!</source>
     <message>
         <location filename="../src/widgets/GrpScriptWizard.cpp" line="98"/>
         <source>Item</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Objet</translation>
     </message>
     <message>
         <location filename="../src/widgets/GrpScriptWizard.cpp" line="99"/>
         <source>Save Point</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/GrpScriptWizard.cpp" line="69"/>
-        <location filename="../src/widgets/GrpScriptWizard.cpp" line="102"/>
-        <source>Empty</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1040,47 +1167,51 @@ Some scripts can refer to it!</source>
         <location filename="../src/widgets/ImportDialog.cpp" line="23"/>
         <location filename="../src/widgets/ImportDialog.cpp" line="25"/>
         <source>Import</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Importer</oldsource>
+        <translation>Importer</translation>
     </message>
     <message>
         <location filename="../src/widgets/ImportDialog.cpp" line="26"/>
         <source>Scripts/Texts</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Scripts/Textes</oldsource>
+        <translation>Scripts/Textes</translation>
     </message>
     <message>
         <location filename="../src/widgets/ImportDialog.cpp" line="27"/>
         <source>Sounds/Tutorials</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Musiques/Tutoriels</oldsource>
+        <translation>Musiques/Tutoriels</translation>
     </message>
     <message>
         <location filename="../src/widgets/ImportDialog.cpp" line="28"/>
         <source>Camera</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Caméra</oldsource>
+        <translation>Caméra</translation>
     </message>
     <message>
         <location filename="../src/widgets/ImportDialog.cpp" line="29"/>
         <source>Walkmesh</source>
-        <translation type="unfinished"></translation>
+        <translation>Walkmesh</translation>
     </message>
     <message>
         <location filename="../src/widgets/ImportDialog.cpp" line="30"/>
         <source>Encounters</source>
-        <translation type="unfinished"></translation>
+        <translation>Combats aléatoires</translation>
     </message>
     <message>
         <location filename="../src/widgets/ImportDialog.cpp" line="31"/>
         <source>Triggers/gateways</source>
-        <translation type="unfinished"></translation>
+        <translation>Déclencheurs/Liens entre les écrans</translation>
     </message>
     <message>
         <location filename="../src/widgets/ImportDialog.cpp" line="32"/>
         <source>Model loader</source>
-        <translation type="unfinished"></translation>
+        <translation>Liste des modèles 3D</translation>
     </message>
     <message>
         <location filename="../src/widgets/ImportDialog.cpp" line="33"/>
         <source>Background</source>
-        <translation type="unfinished"></translation>
+        <translation>Background</translation>
     </message>
     <message>
         <location filename="../src/widgets/ImportDialog.cpp" line="35"/>
@@ -1090,48 +1221,53 @@ Some scripts can refer to it!</source>
     <message>
         <location filename="../src/widgets/ImportDialog.cpp" line="55"/>
         <source> (partial: models and animations are not linked properly)</source>
-        <translation type="unfinished"></translation>
+        <translation> (partiel : les modèles et les animations ne sont pas reliés correctement)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ImportDialog.cpp" line="56"/>
         <source> (partial: Z-depth might be a little broken)</source>
-        <translation type="unfinished"></translation>
+        <translation> (partiel : la profondeur Z sera potentiellement incorrecte)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ImportDialog.cpp" line="61"/>
         <location filename="../src/widgets/ImportDialog.cpp" line="71"/>
         <source>Change</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Changer</oldsource>
+        <translation>Changer</translation>
     </message>
     <message>
         <location filename="../src/widgets/ImportDialog.cpp" line="65"/>
         <source>MIM file:</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Fichier MIM :</oldsource>
+        <translation>Fichier MIM :</translation>
     </message>
     <message>
         <location filename="../src/widgets/ImportDialog.cpp" line="75"/>
         <source>BSX file:</source>
-        <translation type="unfinished"></translation>
+        <translation>Fichier BSX :</translation>
     </message>
     <message>
         <location filename="../src/widgets/ImportDialog.cpp" line="155"/>
         <source>Select the associated BSX file</source>
-        <translation type="unfinished"></translation>
+        <translation>Sélectionnez le fichier BSX associé</translation>
     </message>
     <message>
         <location filename="../src/widgets/ImportDialog.cpp" line="156"/>
         <source>BSX File (*.BSX);;All Files (*)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>BSX File (*.BSX);;All Files(*)</oldsource>
+        <translation>Fichier BSX (*.BSX);;Tous les fichiers (*)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ImportDialog.cpp" line="166"/>
         <source>Select the associated MIM file</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Sélectionner le fichier MIM associé</oldsource>
+        <translation>Sélectionner le fichier MIM associé</translation>
     </message>
     <message>
         <location filename="../src/widgets/ImportDialog.cpp" line="167"/>
         <source>MIM File (*.MIM);;All Files (*)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>MIM File (*.MIM);;All Files(*)</oldsource>
+        <translation>Fichier MIM (*.MIM);;Tous les fichiers (*)</translation>
     </message>
 </context>
 <context>
@@ -1139,7 +1275,138 @@ Some scripts can refer to it!</source>
     <message>
         <location filename="../src/widgets/KeyEditorDialog.cpp" line="24"/>
         <source>Keys</source>
-        <translation type="unfinished"></translation>
+        <translation>Touches</translation>
+    </message>
+</context>
+<context>
+    <name>LgpDialog</name>
+    <message>
+        <source>LGP archive manager</source>
+        <oldsource>Gestionnaire d&apos;archive LGP</oldsource>
+        <translation type="vanished">Gestionnaire d&apos;archive LGP</translation>
+    </message>
+    <message>
+        <source>Rename</source>
+        <oldsource>Renommer</oldsource>
+        <translation type="vanished">Renommer</translation>
+    </message>
+    <message>
+        <source>Replace</source>
+        <oldsource>Remplacer</oldsource>
+        <translation type="vanished">Remplacer</translation>
+    </message>
+    <message>
+        <source>Extract</source>
+        <oldsource>Extraire</oldsource>
+        <translation type="vanished">Extraire</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <oldsource>Erreur</oldsource>
+        <translation type="vanished">Erreur</translation>
+    </message>
+    <message>
+        <source>%1 file (*.%1)</source>
+        <oldsource>Fichier %1 (*.%1)</oldsource>
+        <translation type="vanished">Fichier %1 (*.%1)</translation>
+    </message>
+    <message>
+        <source>All files (*)</source>
+        <oldsource>Tous les fichiers (*)</oldsource>
+        <translation type="vanished">Tous les fichiers (*)</translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation type="vanished">Ajouter</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="vanished">Supprimer</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation type="vanished">Sauvegarder</translation>
+    </message>
+    <message>
+        <source>New Name:</source>
+        <translation type="vanished">Nouveau nom :</translation>
+    </message>
+    <message>
+        <source>The name &apos;%1&apos; is invalid, don&apos;t put special characters.</source>
+        <translation type="vanished">Le nom &apos;%1&apos; est invalide, ne mettez pas de caractères spéciaux.</translation>
+    </message>
+    <message>
+        <source>A file named &apos;%1&apos; already exists, please choose another name.</source>
+        <translation type="vanished">Un fichier nommé &apos;%1&apos; existe déjà, veuillez choisir un autre nom.</translation>
+    </message>
+    <message>
+        <source>Can not Rename the file</source>
+        <translation type="vanished">Impossible de renommer le fichier</translation>
+    </message>
+    <message>
+        <source>New File</source>
+        <translation type="vanished">Nouveau fichier</translation>
+    </message>
+    <message>
+        <source>Can not modify the archive!</source>
+        <translation type="vanished">Impossible de modifier l&apos;archive !</translation>
+    </message>
+    <message>
+        <source>Can not write to file (message: %1).</source>
+        <translation type="vanished">Impossible d&apos;écrire dans le fichier (message : %1).</translation>
+    </message>
+    <message>
+        <source>Write error</source>
+        <translation type="vanished">Erreur d&apos;écriture</translation>
+    </message>
+    <message>
+        <source>Opening error</source>
+        <translation type="vanished">Erreur d&apos;ouverture</translation>
+    </message>
+    <message>
+        <source>Can not open the file (message: %1).</source>
+        <translation type="vanished">Impossible d&apos;ouvrir le fichier (message : %1).</translation>
+    </message>
+    <message>
+        <source>Can not add the file</source>
+        <translation type="vanished">Impossible d&apos;ajouter le fichier</translation>
+    </message>
+    <message>
+        <source>Cannot delete the file!</source>
+        <translation type="vanished">Impossible de supprimer le fichier !</translation>
+    </message>
+    <message>
+        <source>Save as</source>
+        <translation type="vanished">Enregistrer sous</translation>
+    </message>
+    <message>
+        <source>Lgp File (*.lgp)</source>
+        <translation type="vanished">Fichier Lgp (*.lgp)</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="vanished">Annuler</translation>
+    </message>
+    <message>
+        <source>Cannot create the archive (message: %1).</source>
+        <translation type="vanished">Impossible de créer l&apos;archive (message : %1).</translation>
+    </message>
+    <message>
+        <source>Delete ?</source>
+        <translation type="vanished">Supprimer ?</translation>
+    </message>
+    <message>
+        <source>Can not add the file &apos;%1&apos;</source>
+        <translation type="vanished">Impossible d&apos;ajouter le fichier &apos;%1&apos;</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete this file from the archive?</source>
+        <oldsource>Êtes-vous sûr de vouloir Delete ce fichier de l&apos;archive ?</oldsource>
+        <translation type="vanished">Êtes-vous sûr de vouloir supprimer ce fichier de l&apos;archive ?</translation>
+    </message>
+    <message>
+        <source>Saving...</source>
+        <translation type="vanished">Sauvegarde...</translation>
     </message>
 </context>
 <context>
@@ -1147,17 +1414,18 @@ Some scripts can refer to it!</source>
     <message>
         <location filename="../src/widgets/LgpWidget.cpp" line="512"/>
         <source>?</source>
-        <translation type="unfinished"></translation>
+        <translation>?</translation>
     </message>
     <message>
         <location filename="../src/widgets/LgpWidget.cpp" line="587"/>
         <source>Name</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Nom</oldsource>
+        <translation>Nom</translation>
     </message>
     <message>
         <location filename="../src/widgets/LgpWidget.cpp" line="588"/>
         <source>Size</source>
-        <translation type="unfinished"></translation>
+        <translation>Taille</translation>
     </message>
 </context>
 <context>
@@ -1165,45 +1433,45 @@ Some scripts can refer to it!</source>
     <message>
         <location filename="../src/widgets/LgpWidget.cpp" line="679"/>
         <source>LGP archive manager</source>
-        <translation type="unfinished"></translation>
+        <translation>Gestionnaire d&apos;archive LGP</translation>
     </message>
     <message>
         <location filename="../src/widgets/LgpWidget.cpp" line="690"/>
         <location filename="../src/widgets/LgpWidget.cpp" line="838"/>
         <location filename="../src/widgets/LgpWidget.cpp" line="1056"/>
         <source>Rename</source>
-        <translation type="unfinished"></translation>
+        <translation>Renommer</translation>
     </message>
     <message>
         <location filename="../src/widgets/LgpWidget.cpp" line="692"/>
         <source>Replace</source>
-        <translation type="unfinished"></translation>
+        <translation>Remplacer</translation>
     </message>
     <message>
         <location filename="../src/widgets/LgpWidget.cpp" line="694"/>
         <source>Extract</source>
-        <translation type="unfinished"></translation>
+        <translation>Extraire</translation>
     </message>
     <message>
         <location filename="../src/widgets/LgpWidget.cpp" line="696"/>
         <source>Extract All</source>
-        <translation type="unfinished"></translation>
+        <translation>Extraire tout</translation>
     </message>
     <message>
         <location filename="../src/widgets/LgpWidget.cpp" line="698"/>
         <source>Add</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajouter</translation>
     </message>
     <message>
         <location filename="../src/widgets/LgpWidget.cpp" line="700"/>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Supprimer</translation>
     </message>
     <message>
         <location filename="../src/widgets/LgpWidget.cpp" line="838"/>
         <location filename="../src/widgets/LgpWidget.cpp" line="1057"/>
         <source>New Name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Nouveau nom :</translation>
     </message>
     <message>
         <location filename="../src/widgets/LgpWidget.cpp" line="845"/>
@@ -1217,108 +1485,109 @@ Some scripts can refer to it!</source>
         <location filename="../src/widgets/LgpWidget.cpp" line="1091"/>
         <location filename="../src/widgets/LgpWidget.cpp" line="1119"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Erreur</translation>
     </message>
     <message>
         <location filename="../src/widgets/LgpWidget.cpp" line="845"/>
         <location filename="../src/widgets/LgpWidget.cpp" line="1042"/>
         <source>The name &apos;%1&apos; is invalid, don&apos;t put special characters.</source>
-        <translation type="unfinished"></translation>
+        <translation>Le nom &apos;%1&apos; est invalide, ne mettez pas de caractères spéciaux.</translation>
     </message>
     <message>
         <location filename="../src/widgets/LgpWidget.cpp" line="848"/>
         <location filename="../src/widgets/LgpWidget.cpp" line="1047"/>
         <source>A file named &apos;%1&apos; already exists, please choose another name.</source>
-        <translation type="unfinished"></translation>
+        <translation>Un fichier nommé &apos;%1&apos; existe déjà, veuillez choisir un autre nom.</translation>
     </message>
     <message>
         <location filename="../src/widgets/LgpWidget.cpp" line="851"/>
         <source>Can not Rename the file</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible de renommer le fichier</translation>
     </message>
     <message>
         <location filename="../src/widgets/LgpWidget.cpp" line="871"/>
         <location filename="../src/widgets/LgpWidget.cpp" line="907"/>
         <source>%1 file (*.%1)</source>
-        <translation type="unfinished"></translation>
+        <translation>Fichier %1 (*.%1)</translation>
     </message>
     <message>
         <location filename="../src/widgets/LgpWidget.cpp" line="873"/>
         <location filename="../src/widgets/LgpWidget.cpp" line="909"/>
         <location filename="../src/widgets/LgpWidget.cpp" line="1020"/>
         <source>All files (*)</source>
-        <translation type="unfinished"></translation>
+        <translation>Tous les fichiers (*)</translation>
     </message>
     <message>
         <location filename="../src/widgets/LgpWidget.cpp" line="880"/>
         <location filename="../src/widgets/LgpWidget.cpp" line="1021"/>
         <source>New File</source>
-        <translation type="unfinished"></translation>
+        <translation>Nouveau fichier</translation>
     </message>
     <message>
         <location filename="../src/widgets/LgpWidget.cpp" line="888"/>
         <source>Can not modify the archive!</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible de modifier l&apos;archive !</translation>
     </message>
     <message>
         <location filename="../src/widgets/LgpWidget.cpp" line="916"/>
         <source>Extract file</source>
-        <translation type="unfinished"></translation>
+        <translation>Extraire un fichier</translation>
     </message>
     <message>
         <location filename="../src/widgets/LgpWidget.cpp" line="931"/>
         <source>Write error</source>
-        <translation type="unfinished"></translation>
+        <translation>Erreur d&apos;écriture</translation>
     </message>
     <message>
         <location filename="../src/widgets/LgpWidget.cpp" line="931"/>
         <source>Can not write to file (message: %1).</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible d&apos;écrire dans le fichier (message : %1).</translation>
     </message>
     <message>
         <location filename="../src/widgets/LgpWidget.cpp" line="936"/>
         <source>Opening error</source>
-        <translation type="unfinished"></translation>
+        <translation>Erreur d&apos;ouverture</translation>
     </message>
     <message>
         <location filename="../src/widgets/LgpWidget.cpp" line="936"/>
         <source>Can not open the file (message: %1).</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible d&apos;ouvrir le fichier (message : %1).</translation>
     </message>
     <message>
         <location filename="../src/widgets/LgpWidget.cpp" line="949"/>
         <source>Extract all</source>
-        <translation type="unfinished"></translation>
+        <translation>Extraire tout</translation>
     </message>
     <message>
         <location filename="../src/widgets/LgpWidget.cpp" line="956"/>
         <source>Extracting...</source>
-        <translation type="unfinished"></translation>
+        <translation>Extraction...</translation>
     </message>
     <message>
         <location filename="../src/widgets/LgpWidget.cpp" line="956"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Annuler</translation>
     </message>
     <message>
         <location filename="../src/widgets/LgpWidget.cpp" line="1068"/>
         <source>Can not add the file &apos;%1&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible d&apos;ajouter le fichier &apos;%1&apos;</translation>
     </message>
     <message>
         <location filename="../src/widgets/LgpWidget.cpp" line="1081"/>
         <source>Delete?</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Delete ?</oldsource>
+        <translation>Supprimer ?</translation>
     </message>
     <message>
         <location filename="../src/widgets/LgpWidget.cpp" line="1082"/>
         <source>Are you sure you want to delete this file from the archive?</source>
-        <translation type="unfinished"></translation>
+        <translation>Êtes-vous sûr de vouloir supprimer ce fichier de l&apos;archive ?</translation>
     </message>
     <message>
         <location filename="../src/widgets/LgpWidget.cpp" line="1091"/>
         <source>Cannot delete the file!</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible de supprimer le fichier !</translation>
     </message>
 </context>
 <context>
@@ -1326,32 +1595,50 @@ Some scripts can refer to it!</source>
     <message>
         <location filename="../src/widgets/MassExportDialog.cpp" line="25"/>
         <source>Mass Export</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Exporter en masse</oldsource>
+        <translation>Exporter en masse</translation>
     </message>
     <message>
         <location filename="../src/widgets/MassExportDialog.cpp" line="32"/>
         <source>Current</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Courant</oldsource>
+        <translation>Courant</translation>
     </message>
     <message>
         <location filename="../src/widgets/MassExportDialog.cpp" line="33"/>
         <source>+</source>
-        <translation type="unfinished"></translation>
+        <translation>+</translation>
     </message>
     <message>
         <location filename="../src/widgets/MassExportDialog.cpp" line="34"/>
         <source>-</source>
-        <translation type="unfinished"></translation>
+        <translation>-</translation>
     </message>
     <message>
         <location filename="../src/widgets/MassExportDialog.cpp" line="41"/>
         <source>Export fields</source>
-        <translation type="unfinished"></translation>
+        <translation>Exporter les écrans</translation>
     </message>
     <message>
         <location filename="../src/widgets/MassExportDialog.cpp" line="44"/>
         <source>Export backgrounds</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Exporter les décors</oldsource>
+        <translation>Exporter les décors</translation>
+    </message>
+    <message>
+        <source>PNG image</source>
+        <oldsource>Image PNG</oldsource>
+        <translation type="vanished">Image PNG</translation>
+    </message>
+    <message>
+        <source>JPG image</source>
+        <oldsource>Image JPG</oldsource>
+        <translation type="vanished">Image JPG</translation>
+    </message>
+    <message>
+        <source>BMP image</source>
+        <oldsource>Image BMP</oldsource>
+        <translation type="vanished">Image BMP</translation>
     </message>
     <message>
         <location filename="../src/widgets/MassExportDialog.cpp" line="46"/>
@@ -1386,77 +1673,89 @@ Some scripts can refer to it!</source>
     <message>
         <location filename="../src/widgets/MassExportDialog.cpp" line="53"/>
         <source>Export musics</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Export sounds</oldsource>
+        <translation>Exporter les musiques</translation>
     </message>
     <message>
         <location filename="../src/widgets/MassExportDialog.cpp" line="55"/>
         <source>AKAO music</source>
-        <translation type="unfinished"></translation>
+        <oldsource>AKAO sound</oldsource>
+        <translation>Musique AKAO</translation>
     </message>
     <message>
         <location filename="../src/widgets/MassExportDialog.cpp" line="56"/>
         <source>PSF MIDI</source>
-        <translation type="unfinished"></translation>
+        <translation>PSF MIDI</translation>
     </message>
     <message>
         <location filename="../src/widgets/MassExportDialog.cpp" line="58"/>
         <source>Export texts</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Exporter les textes</oldsource>
+        <translation>Exporter les textes</translation>
     </message>
     <message>
         <location filename="../src/widgets/MassExportDialog.cpp" line="60"/>
         <source>XML Text</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Texte XML</oldsource>
+        <translation>Texte XML</translation>
     </message>
     <message>
         <location filename="../src/widgets/MassExportDialog.cpp" line="61"/>
         <source>Simple text TXT</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Texte simple TXT</oldsource>
+        <translation>Texte simple TXT</translation>
     </message>
     <message>
         <location filename="../src/widgets/MassExportDialog.cpp" line="67"/>
         <source>Choose...</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Choisir...</oldsource>
+        <translation>Choisir...</translation>
     </message>
     <message>
         <location filename="../src/widgets/MassExportDialog.cpp" line="69"/>
         <source>Overwrite existing files</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Écraser les fichiers existants</oldsource>
+        <translation>Écraser les fichiers existants</translation>
     </message>
     <message>
         <location filename="../src/widgets/MassExportDialog.cpp" line="73"/>
         <source>Export</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Exporter</oldsource>
+        <translation>Exporter</translation>
     </message>
     <message>
         <location filename="../src/widgets/MassExportDialog.cpp" line="83"/>
         <source>Export directory:</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Emplacement de l&apos;export :</oldsource>
+        <translation>Emplacement de l&apos;export :</translation>
     </message>
     <message>
         <location filename="../src/widgets/MassExportDialog.cpp" line="102"/>
         <source>PC</source>
-        <translation type="unfinished"></translation>
+        <translation>PC</translation>
     </message>
     <message>
         <location filename="../src/widgets/MassExportDialog.cpp" line="102"/>
         <source>PS</source>
-        <translation type="unfinished"></translation>
+        <translation>PS</translation>
     </message>
     <message>
         <location filename="../src/widgets/MassExportDialog.cpp" line="104"/>
         <source>FIELD File %1</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Fichier FIELD %1</oldsource>
+        <translation>Fichier FIELD %1</translation>
     </message>
     <message>
         <location filename="../src/widgets/MassExportDialog.cpp" line="105"/>
         <source>Uncompressed FIELD %1</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Fichier décompressé FIELD %1</oldsource>
+        <translation>Fichier décompressé FIELD %1</translation>
     </message>
     <message>
         <location filename="../src/widgets/MassExportDialog.cpp" line="124"/>
         <source>Choose a directory</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Choisir un dossier</oldsource>
+        <translation>Choisir un dossier</translation>
     </message>
 </context>
 <context>
@@ -1464,92 +1763,104 @@ Some scripts can refer to it!</source>
     <message>
         <location filename="../src/widgets/MassImportDialog.cpp" line="25"/>
         <source>Mass Import</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Importer en masse</oldsource>
+        <translation>Importer en masse</translation>
     </message>
     <message>
         <location filename="../src/widgets/MassImportDialog.cpp" line="28"/>
         <source>Import fields</source>
-        <translation type="unfinished"></translation>
+        <translation>Importer des écrans</translation>
     </message>
     <message>
         <location filename="../src/widgets/MassImportDialog.cpp" line="31"/>
         <source>Import sounds</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Importer les sons</oldsource>
+        <translation>Importer les sons</translation>
     </message>
     <message>
         <location filename="../src/widgets/MassImportDialog.cpp" line="33"/>
         <source>AKAO sound</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Son AKAO</oldsource>
+        <translation>Son AKAO</translation>
     </message>
     <message>
         <location filename="../src/widgets/MassImportDialog.cpp" line="35"/>
         <source>Import text</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Importer les textes</oldsource>
+        <translation>Importer les textes</translation>
     </message>
     <message>
         <location filename="../src/widgets/MassImportDialog.cpp" line="37"/>
         <source>XML Text</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Texte XML</oldsource>
+        <translation>Texte XML</translation>
     </message>
     <message>
         <location filename="../src/widgets/MassImportDialog.cpp" line="38"/>
         <source>Simple text TXT</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Texte simple TXT</oldsource>
+        <translation>Texte simple TXT</translation>
     </message>
     <message>
         <location filename="../src/widgets/MassImportDialog.cpp" line="42"/>
         <source>Choose...</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Choisir...</oldsource>
+        <translation>Choisir...</translation>
     </message>
     <message>
         <location filename="../src/widgets/MassImportDialog.cpp" line="49"/>
         <source>Current</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Courant</oldsource>
+        <translation>Courant</translation>
     </message>
     <message>
         <location filename="../src/widgets/MassImportDialog.cpp" line="50"/>
         <source>+</source>
-        <translation type="unfinished"></translation>
+        <translation>+</translation>
     </message>
     <message>
         <location filename="../src/widgets/MassImportDialog.cpp" line="51"/>
         <source>-</source>
-        <translation type="unfinished"></translation>
+        <translation>-</translation>
     </message>
     <message>
         <location filename="../src/widgets/MassImportDialog.cpp" line="58"/>
         <source>Import</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Importer</oldsource>
+        <translation>Importer</translation>
     </message>
     <message>
         <location filename="../src/widgets/MassImportDialog.cpp" line="67"/>
         <source>Source directory:</source>
-        <translation type="unfinished"></translation>
+        <translation>Emplacement de la source :</translation>
     </message>
     <message>
         <location filename="../src/widgets/MassImportDialog.cpp" line="85"/>
         <source>PC</source>
-        <translation type="unfinished"></translation>
+        <translation>PC</translation>
     </message>
     <message>
         <location filename="../src/widgets/MassImportDialog.cpp" line="85"/>
         <source>PS</source>
-        <translation type="unfinished"></translation>
+        <translation>PS</translation>
     </message>
     <message>
         <location filename="../src/widgets/MassImportDialog.cpp" line="87"/>
         <source>FIELD File %1</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Fichier FIELD %1</oldsource>
+        <translation>Fichier FIELD %1</translation>
     </message>
     <message>
         <location filename="../src/widgets/MassImportDialog.cpp" line="88"/>
         <source>Uncompressed FIELD %1</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Fichier décompressé FIELD %1</oldsource>
+        <translation>Fichier décompressé FIELD %1</translation>
     </message>
     <message>
         <location filename="../src/widgets/MassImportDialog.cpp" line="107"/>
         <source>Choose a directory</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Choisir un dossier</oldsource>
+        <translation>Choisir un dossier</translation>
     </message>
 </context>
 <context>
@@ -1557,17 +1868,18 @@ Some scripts can refer to it!</source>
     <message>
         <location filename="../src/widgets/MiscWidget.cpp" line="24"/>
         <source>Miscellaneous</source>
-        <translation type="unfinished"></translation>
+        <translation>Divers</translation>
     </message>
     <message>
         <location filename="../src/widgets/MiscWidget.cpp" line="34"/>
         <source>Field name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Nom écran :</translation>
     </message>
     <message>
         <location filename="../src/widgets/MiscWidget.cpp" line="36"/>
         <source>Author:</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Auteur :</oldsource>
+        <translation>Auteur :</translation>
     </message>
 </context>
 <context>
@@ -1575,22 +1887,22 @@ Some scripts can refer to it!</source>
     <message>
         <location filename="../src/widgets/ModelColorsLayout.cpp" line="67"/>
         <source>Color</source>
-        <translation type="unfinished"></translation>
+        <translation>Couleur</translation>
     </message>
     <message>
         <location filename="../src/widgets/ModelColorsLayout.cpp" line="68"/>
         <source>X</source>
-        <translation type="unfinished"></translation>
+        <translation>X</translation>
     </message>
     <message>
         <location filename="../src/widgets/ModelColorsLayout.cpp" line="69"/>
         <source>Y</source>
-        <translation type="unfinished"></translation>
+        <translation>Y</translation>
     </message>
     <message>
         <location filename="../src/widgets/ModelColorsLayout.cpp" line="70"/>
         <source>Z</source>
-        <translation type="unfinished"></translation>
+        <translation>Z</translation>
     </message>
 </context>
 <context>
@@ -1599,7 +1911,7 @@ Some scripts can refer to it!</source>
         <location filename="../src/widgets/ModelManager.cpp" line="25"/>
         <location filename="../src/widgets/ModelManager.cpp" line="32"/>
         <source>Field Models</source>
-        <translation type="unfinished"></translation>
+        <translation>Modèles 3D</translation>
     </message>
 </context>
 <context>
@@ -1607,69 +1919,71 @@ Some scripts can refer to it!</source>
     <message>
         <location filename="../src/widgets/ModelManagerPC.cpp" line="40"/>
         <source>Cut</source>
-        <translation type="unfinished"></translation>
+        <translation>Couper</translation>
     </message>
     <message>
         <location filename="../src/widgets/ModelManagerPC.cpp" line="41"/>
         <source>Copy</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Copier</oldsource>
+        <translation>Copier</translation>
     </message>
     <message>
         <location filename="../src/widgets/ModelManagerPC.cpp" line="42"/>
         <source>Paste</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ModelManagerPC.cpp" line="61"/>
-        <source>Id</source>
-        <translation type="unfinished"></translation>
+        <translation>Coller</translation>
     </message>
     <message>
         <location filename="../src/widgets/ModelManagerPC.cpp" line="61"/>
         <source>Animation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ModelManagerPC.cpp" line="61"/>
-        <source>?</source>
-        <translation type="unfinished"></translation>
+        <translation>Animations</translation>
     </message>
     <message>
         <location filename="../src/widgets/ModelManagerPC.cpp" line="64"/>
         <source>Name (unused)</source>
-        <translation type="unfinished"></translation>
+        <translation>Nom (non utilisé)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ModelManagerPC.cpp" line="66"/>
         <source>Unknown</source>
-        <translation type="unfinished"></translation>
+        <translation>Inconnu</translation>
     </message>
     <message>
         <location filename="../src/widgets/ModelManagerPC.cpp" line="68"/>
         <source>Model size</source>
-        <translation type="unfinished"></translation>
+        <translation>Taille modèle</translation>
     </message>
     <message>
         <location filename="../src/widgets/ModelManagerPC.cpp" line="70"/>
         <source>Global light</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Light</oldsource>
+        <translation>Lumière globale</translation>
     </message>
     <message>
         <location filename="../src/widgets/ModelManagerPC.cpp" line="72"/>
         <source>Directional light</source>
-        <translation type="unfinished"></translation>
+        <translation>Lumière directionnelle</translation>
     </message>
     <message>
         <location filename="../src/widgets/ModelManagerPC.cpp" line="147"/>
         <location filename="../src/widgets/ModelManagerPC.cpp" line="354"/>
         <source>Add a field model</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajouter un modèle 3D</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ModelManagerPC.cpp" line="61"/>
+        <source>Id</source>
+        <translation>Id</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ModelManagerPC.cpp" line="61"/>
+        <source>?</source>
+        <translation>?</translation>
     </message>
     <message>
         <location filename="../src/widgets/ModelManagerPC.cpp" line="157"/>
         <location filename="../src/widgets/ModelManagerPC.cpp" line="385"/>
         <source>OK</source>
-        <translation type="unfinished"></translation>
+        <translation>OK</translation>
     </message>
 </context>
 <context>
@@ -1677,27 +1991,32 @@ Some scripts can refer to it!</source>
     <message>
         <location filename="../src/widgets/ModelManagerPS.cpp" line="26"/>
         <source>Animation</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Animations</oldsource>
+        <translation>Animations</translation>
     </message>
     <message>
         <location filename="../src/widgets/ModelManagerPS.cpp" line="29"/>
         <source>Unknown</source>
-        <translation type="unfinished"></translation>
+        <translation>Inconnu</translation>
     </message>
     <message>
         <location filename="../src/widgets/ModelManagerPS.cpp" line="31"/>
         <source>Model size</source>
-        <translation type="unfinished"></translation>
+        <translation>Taille modèle</translation>
     </message>
     <message>
         <location filename="../src/widgets/ModelManagerPS.cpp" line="33"/>
         <source>Global light</source>
-        <translation type="unfinished"></translation>
+        <translation>Lumière globale</translation>
     </message>
     <message>
         <location filename="../src/widgets/ModelManagerPS.cpp" line="35"/>
         <source>Directional light</source>
-        <translation type="unfinished"></translation>
+        <translation>Lumière directionnelle</translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation type="vanished">Lumière</translation>
     </message>
 </context>
 <context>
@@ -1705,203 +2024,222 @@ Some scripts can refer to it!</source>
     <message>
         <location filename="../src/widgets/OpcodeList.cpp" line="35"/>
         <source>Action</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="44"/>
-        <source>Edit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="48"/>
-        <source>Add</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="51"/>
-        <location filename="../src/widgets/OpcodeList.cpp" line="799"/>
-        <source>Delete</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="55"/>
-        <source>Cut</source>
-        <translation type="unfinished"></translation>
+        <translation>Action</translation>
     </message>
     <message>
         <location filename="../src/widgets/OpcodeList.cpp" line="59"/>
         <source>Copy</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="63"/>
-        <source>Copy text</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="67"/>
-        <source>Paste</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="71"/>
-        <source>Up</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="75"/>
-        <source>Down</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Copier</oldsource>
+        <translation>Copier</translation>
     </message>
     <message>
         <location filename="../src/widgets/OpcodeList.cpp" line="79"/>
         <source>Expand the tree</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Étendre l&apos;arbre</oldsource>
+        <translation>Étendre l&apos;arbre</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/OpcodeList.cpp" line="44"/>
+        <source>Edit</source>
+        <translation>Modifier</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/OpcodeList.cpp" line="48"/>
+        <source>Add</source>
+        <translation>Ajouter</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/OpcodeList.cpp" line="55"/>
+        <source>Cut</source>
+        <translation>Couper</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/OpcodeList.cpp" line="63"/>
+        <source>Copy text</source>
+        <translation>Copier texte</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/OpcodeList.cpp" line="67"/>
+        <source>Paste</source>
+        <translation>Coller</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/OpcodeList.cpp" line="71"/>
+        <source>Up</source>
+        <translation>Déplacer vers le haut</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/OpcodeList.cpp" line="75"/>
+        <source>Down</source>
+        <translation>Déplacer vers le bas</translation>
     </message>
     <message>
         <location filename="../src/widgets/OpcodeList.cpp" line="80"/>
         <source>Undo</source>
-        <translation type="unfinished"></translation>
+        <translation>Annuler</translation>
     </message>
     <message>
         <location filename="../src/widgets/OpcodeList.cpp" line="84"/>
         <source>Redo</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Refaire</oldsource>
+        <translation>Refaire</translation>
     </message>
     <message>
         <location filename="../src/widgets/OpcodeList.cpp" line="88"/>
         <source>Edit text</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Modifier texte</oldsource>
+        <translation>Modifier texte</translation>
     </message>
     <message>
         <location filename="../src/widgets/OpcodeList.cpp" line="92"/>
         <location filename="../src/widgets/OpcodeList.cpp" line="248"/>
         <source>Disable tree</source>
-        <translation type="unfinished"></translation>
+        <translation>Désactiver arbre</translation>
     </message>
     <message>
         <location filename="../src/widgets/OpcodeList.cpp" line="93"/>
         <source>Search opcode...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="145"/>
-        <source>&amp;Script editor</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="151"/>
-        <source>Add line</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="153"/>
-        <source>Remove line</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="156"/>
-        <source>Move up</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="158"/>
-        <source>Move down</source>
-        <translation type="unfinished"></translation>
+        <translation>Chercher l&apos;opcode...</translation>
     </message>
     <message>
         <location filename="../src/widgets/OpcodeList.cpp" line="250"/>
         <source>Enable tree</source>
-        <translation type="unfinished"></translation>
+        <translation>Activer abre</translation>
     </message>
     <message>
         <location filename="../src/widgets/OpcodeList.cpp" line="282"/>
         <source>Goto label</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Aller au label</oldsource>
+        <translation>Aller au label</translation>
     </message>
     <message>
         <location filename="../src/widgets/OpcodeList.cpp" line="283"/>
         <source>Alt + Click to go to the label</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Alt + clic pour aller au label</oldsource>
+        <translation>Alt + clic pour aller au label</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/OpcodeList.cpp" line="145"/>
+        <source>&amp;Script editor</source>
+        <oldsource>Édition du &amp;script</oldsource>
+        <translation>Édition du &amp;script</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/OpcodeList.cpp" line="151"/>
+        <source>Add line</source>
+        <translation>Ajouter a line</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/OpcodeList.cpp" line="153"/>
+        <source>Remove line</source>
+        <translation>Supprimer a line</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/OpcodeList.cpp" line="156"/>
+        <source>Move up</source>
+        <translation>Monter une commande</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/OpcodeList.cpp" line="158"/>
+        <source>Move down</source>
+        <translation>Descendre une commande</translation>
     </message>
     <message>
         <location filename="../src/widgets/OpcodeList.cpp" line="285"/>
         <source>Goto script</source>
-        <translation type="unfinished"></translation>
+        <translation>Aller au script</translation>
     </message>
     <message>
         <location filename="../src/widgets/OpcodeList.cpp" line="286"/>
         <source>Alt + Click to go to the script</source>
-        <translation type="unfinished"></translation>
+        <translation>Alt + clic pour aller au script</translation>
     </message>
     <message>
         <location filename="../src/widgets/OpcodeList.cpp" line="492"/>
         <source>If this script is run,
  assume that the last non-empty script that runs</source>
-        <translation type="unfinished"></translation>
+        <translation>Si ce script est exécuté,
+ considérez que c&apos;est le dernier script non vide qui est exécuté</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/OpcodeList.cpp" line="51"/>
+        <location filename="../src/widgets/OpcodeList.cpp" line="799"/>
+        <source>Delete</source>
+        <translation>Supprimer</translation>
     </message>
     <message>
         <location filename="../src/widgets/OpcodeList.cpp" line="800"/>
         <source>Are you sure you want to delete %1?</source>
-        <translation type="unfinished"></translation>
+        <translation>Voulez-vous vraiment supprimer %1 ?</translation>
     </message>
     <message>
         <location filename="../src/widgets/OpcodeList.cpp" line="802"/>
         <source>the selected command</source>
-        <translation type="unfinished"></translation>
+        <translation>the selected command</translation>
     </message>
     <message>
         <location filename="../src/widgets/OpcodeList.cpp" line="803"/>
         <source>the selected commands</source>
-        <translation type="unfinished"></translation>
+        <translation>les commandes sélectionnées</translation>
     </message>
 </context>
 <context>
     <name>OperationsManager</name>
     <message>
+        <source>Miscellaneous operations</source>
+        <oldsource>Opérations diverses</oldsource>
+        <translation type="vanished">Opérations diverses</translation>
+    </message>
+    <message>
         <location filename="../src/widgets/OperationsManager.cpp" line="23"/>
         <source>Batch processing</source>
-        <translation type="unfinished"></translation>
+        <translation>Traitement par lot</translation>
     </message>
     <message>
         <location filename="../src/widgets/OperationsManager.cpp" line="25"/>
         <source>Clean all unused texts</source>
-        <translation type="unfinished"></translation>
+        <translation>Effacer tous les textes inutilisés</translation>
     </message>
     <message>
         <location filename="../src/widgets/OperationsManager.cpp" line="26"/>
         <source>Autosize all text windows in the game</source>
-        <translation type="unfinished"></translation>
+        <translation>Redimensionner toutes les fenêtres du jeu</translation>
     </message>
     <message>
         <location filename="../src/widgets/OperationsManager.cpp" line="27"/>
         <source>Disable all texts in the game</source>
-        <translation type="unfinished"></translation>
+        <translation>Désactiver tous les textes du jeu</translation>
     </message>
     <message>
         <location filename="../src/widgets/OperationsManager.cpp" line="28"/>
         <source>Disable all battles in the game</source>
-        <translation type="unfinished"></translation>
+        <translation>Désactiver tous combats du jeu</translation>
+    </message>
+    <message>
+        <source>Remove unused data in field model loaders</source>
+        <translation type="vanished">Supprimer les données inutiles des listes des modèles 3D</translation>
     </message>
     <message>
         <location filename="../src/widgets/OperationsManager.cpp" line="30"/>
         <source>Clean unused data in field model loaders</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Remove all unused data for field backgrounds</oldsource>
+        <translation>Supprimer les données inutilisées pour les listes de modèles 3D</translation>
     </message>
     <message>
         <location filename="../src/widgets/OperationsManager.cpp" line="31"/>
         <source>Clean unused data for field backgrounds</source>
-        <translation type="unfinished"></translation>
+        <translation>Supprimer les données inutilisées pour les décors</translation>
     </message>
     <message>
         <location filename="../src/widgets/OperationsManager.cpp" line="32"/>
         <source>Repair broken backgrounds (lastmap, fr_e)</source>
-        <translation type="unfinished"></translation>
+        <translation>Réparer les décors cassés ((lastmap, fr_e)</translation>
     </message>
     <message>
         <location filename="../src/widgets/OperationsManager.cpp" line="36"/>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Appliquer</oldsource>
+        <translation>Appliquer</translation>
     </message>
 </context>
 <context>
@@ -1910,7 +2248,7 @@ Some scripts can refer to it!</source>
         <location filename="../src/widgets/OrientationWidget.cpp" line="95"/>
         <location filename="../src/widgets/OrientationWidget.cpp" line="97"/>
         <source>Right</source>
-        <translation type="unfinished"></translation>
+        <translation>Droite</translation>
     </message>
 </context>
 <context>
@@ -1918,234 +2256,313 @@ Some scripts can refer to it!</source>
     <message>
         <location filename="../src/widgets/PsfDialog.cpp" line="37"/>
         <source>psflib</source>
-        <translation type="unfinished"></translation>
+        <translation>psflib</translation>
     </message>
     <message>
         <location filename="../src/widgets/PsfDialog.cpp" line="39"/>
         <source>Title</source>
-        <translation type="unfinished"></translation>
+        <translation>Titre</translation>
     </message>
     <message>
         <location filename="../src/widgets/PsfDialog.cpp" line="41"/>
         <source>Artist</source>
-        <translation type="unfinished"></translation>
+        <translation>Artiste</translation>
     </message>
     <message>
         <location filename="../src/widgets/PsfDialog.cpp" line="43"/>
         <source>Game</source>
-        <translation type="unfinished"></translation>
+        <translation>Jeu</translation>
     </message>
     <message>
         <location filename="../src/widgets/PsfDialog.cpp" line="45"/>
         <source>Year</source>
-        <translation type="unfinished"></translation>
+        <translation>Année</translation>
     </message>
     <message>
         <location filename="../src/widgets/PsfDialog.cpp" line="47"/>
         <source>Genre</source>
-        <translation type="unfinished"></translation>
+        <translation>Genre</translation>
     </message>
     <message>
         <location filename="../src/widgets/PsfDialog.cpp" line="49"/>
         <source>Comment</source>
-        <translation type="unfinished"></translation>
+        <translation>Commentaire</translation>
     </message>
     <message>
         <location filename="../src/widgets/PsfDialog.cpp" line="51"/>
         <source>Copyright</source>
-        <translation type="unfinished"></translation>
+        <translation>Copyright</translation>
     </message>
     <message>
         <location filename="../src/widgets/PsfDialog.cpp" line="53"/>
         <source>Author</source>
-        <translation type="unfinished"></translation>
+        <translation>Auteur</translation>
     </message>
     <message>
         <location filename="../src/widgets/PsfDialog.cpp" line="78"/>
         <source>(auto)</source>
-        <translation type="unfinished"></translation>
+        <translation>(auto)</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/core/field/Field.cpp" line="411"/>
-        <source>File size greater than 10000000</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/Data.cpp" line="506"/>
+        <source>Cloud</source>
+        <oldsource>Clad</oldsource>
+        <translation>Clad</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Field.cpp" line="424"/>
-        <source>Malformed LZS header</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/Data.cpp" line="506"/>
+        <source>Barret</source>
+        <translation>Barret</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Field.cpp" line="452"/>
-        <location filename="../src/core/field/Field.cpp" line="556"/>
-        <source>Incorrect field file size</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/Data.cpp" line="506"/>
+        <source>Tifa</source>
+        <translation>Tifa</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Field.cpp" line="465"/>
-        <location filename="../src/core/field/Field.cpp" line="564"/>
-        <source>Cannot open section 1 (texts, scripts and musics)</source>
-        <translation type="unfinished"></translation>
+        <source>Aeris</source>
+        <translation type="vanished">Aeris</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Field.cpp" line="473"/>
-        <location filename="../src/core/field/Field.cpp" line="572"/>
-        <source>Cannot open tutos section</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/Data.cpp" line="507"/>
+        <source>Red XIII</source>
+        <translation>Red XIII</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Field.cpp" line="481"/>
-        <location filename="../src/core/field/Field.cpp" line="587"/>
-        <source>Cannot open encounters section</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/Data.cpp" line="507"/>
+        <source>Yuffie</source>
+        <translation>Youfie</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Field.cpp" line="489"/>
-        <location filename="../src/core/field/Field.cpp" line="595"/>
-        <source>Cannot open walkmesh section</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/Data.cpp" line="507"/>
+        <source>Aerith</source>
+        <translation>Aerith</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Field.cpp" line="497"/>
-        <location filename="../src/core/field/Field.cpp" line="603"/>
-        <source>Cannot open camera section</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/Data.cpp" line="508"/>
+        <source>Cait Sith</source>
+        <translation>Cait Sith</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Field.cpp" line="505"/>
-        <location filename="../src/core/field/Field.cpp" line="611"/>
-        <source>Cannot open info section</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/Data.cpp" line="508"/>
+        <source>Vincent</source>
+        <translation>Vincent</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Field.cpp" line="513"/>
-        <location filename="../src/core/field/Field.cpp" line="580"/>
-        <source>Cannot open model loader section</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/Data.cpp" line="508"/>
+        <source>Cid</source>
+        <translation>Cid</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Field.cpp" line="542"/>
-        <location filename="../src/core/field/Field.cpp" line="633"/>
-        <source>Cannot open background section</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/Data.cpp" line="509"/>
+        <source>Yound Cloud</source>
+        <oldsource>Jeune Clad</oldsource>
+        <translation>Jeune Clad</translation>
     </message>
     <message>
-        <location filename="../src/core/field/FieldArchiveIOPS.cpp" line="418"/>
-        <source>Cannot remove destination archive</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/Data.cpp" line="509"/>
+        <source>Sephiroth</source>
+        <translation>Sephiroth</translation>
     </message>
     <message>
-        <location filename="../src/core/field/FieldArchiveIOPS.cpp" line="434"/>
-        <source>Cannot rename temporary file to destination path</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/Data.cpp" line="509"/>
+        <source>Chocobo</source>
+        <translation>Chocobo</translation>
+    </message>
+    <message>
+        <location filename="../src/Data.cpp" line="514"/>
+        <source>[CAMERA|L2]</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/Data.cpp" line="514"/>
+        <source>[TARGET|R2]</source>
+        <translation>[CIBLE|R2]</translation>
+    </message>
+    <message>
+        <location filename="../src/Data.cpp" line="515"/>
+        <source>[PAGE UP|L1]</source>
+        <oldsource>[PAGE HAUT|L1]</oldsource>
+        <translation>[PAGE HAUT|L1]</translation>
+    </message>
+    <message>
+        <location filename="../src/Data.cpp" line="515"/>
+        <source>[PAGE DOWN|R1]</source>
+        <translation>[PAGE BAS|R1]</translation>
+    </message>
+    <message>
+        <location filename="../src/Data.cpp" line="516"/>
+        <source>[MENU|TRIANGLE]</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/Data.cpp" line="516"/>
+        <source>[OK|CIRCLE]</source>
+        <translation>[OK|ROND]</translation>
+    </message>
+    <message>
+        <location filename="../src/Data.cpp" line="517"/>
+        <source>[CANCEL|CROSS]</source>
+        <translation>[ANNULER|CROIX]</translation>
+    </message>
+    <message>
+        <location filename="../src/Data.cpp" line="517"/>
+        <source>[SWITCH|SQUARE]</source>
+        <translation>[CHANGER|CARRE]</translation>
+    </message>
+    <message>
+        <location filename="../src/Data.cpp" line="518"/>
+        <source>[ASSIST|SELECT]</source>
+        <translation>[ASSISTER|SELECT]</translation>
+    </message>
+    <message>
+        <location filename="../src/Data.cpp" line="519"/>
+        <source>[START]</source>
+        <translation>[DEMARRER|START]</translation>
+    </message>
+    <message>
+        <location filename="../src/Data.cpp" line="520"/>
+        <source>[UP]</source>
+        <translation>[HAUT]</translation>
+    </message>
+    <message>
+        <location filename="../src/Data.cpp" line="520"/>
+        <source>[RIGHT]</source>
+        <translation>[DROITE]</translation>
+    </message>
+    <message>
+        <location filename="../src/Data.cpp" line="521"/>
+        <source>[DOWN]</source>
+        <translation>[BAS]</translation>
+    </message>
+    <message>
+        <location filename="../src/Data.cpp" line="521"/>
+        <source>[LEFT]</source>
+        <translation>[GAUCHE]</translation>
     </message>
     <message>
         <location filename="../src/core/field/GrpScript.cpp" line="113"/>
         <source>Untitled</source>
-        <translation type="unfinished"></translation>
+        <translation>Sans nom</translation>
     </message>
     <message>
         <location filename="../src/core/field/GrpScript.cpp" line="147"/>
         <source>Field model</source>
-        <translation type="unfinished"></translation>
+        <translation>Objet 3D</translation>
+    </message>
+    <message>
+        <source>Location</source>
+        <translation type="vanished">Zone</translation>
     </message>
     <message>
         <location filename="../src/core/field/GrpScript.cpp" line="151"/>
         <source>Line</source>
-        <translation type="unfinished"></translation>
+        <translation>Ligne</translation>
     </message>
     <message>
         <location filename="../src/core/field/GrpScript.cpp" line="153"/>
         <source>Animation</source>
-        <translation type="unfinished"></translation>
+        <translation>Animation</translation>
     </message>
     <message>
         <location filename="../src/core/field/GrpScript.cpp" line="155"/>
         <source>Main</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/core/field/GrpScript.cpp" line="183"/>
         <source>S0 - Init</source>
-        <translation type="unfinished"></translation>
+        <translatorcomment>S0 - Init</translatorcomment>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/core/field/GrpScript.cpp" line="185"/>
         <source>S0 - Main</source>
-        <translation type="unfinished"></translation>
+        <translation>S0 - Main</translation>
     </message>
     <message>
         <location filename="../src/core/field/GrpScript.cpp" line="188"/>
         <source>S1 - Talk</source>
-        <translation type="unfinished"></translation>
+        <oldsource>S1 - Parler</oldsource>
+        <translation>S1 - Parler</translation>
     </message>
     <message>
         <location filename="../src/core/field/GrpScript.cpp" line="191"/>
         <source>S1 - [OK]</source>
-        <translation type="unfinished"></translation>
+        <translation>S1 - [OK]</translation>
     </message>
     <message>
         <location filename="../src/core/field/GrpScript.cpp" line="196"/>
         <source>S2 - Contact</source>
-        <translation type="unfinished"></translation>
+        <oldsource>S2 - Toucher</oldsource>
+        <translation>S2 - Toucher</translation>
     </message>
     <message>
         <location filename="../src/core/field/GrpScript.cpp" line="199"/>
         <source>S2 - Move</source>
-        <translation type="unfinished"></translation>
+        <oldsource>S2 - Bouger</oldsource>
+        <translation>S2 - Bouger</translation>
     </message>
     <message>
         <location filename="../src/core/field/GrpScript.cpp" line="204"/>
         <source>S3 - Move</source>
-        <translation type="unfinished"></translation>
+        <oldsource>S3 - Bouger</oldsource>
+        <translation>S3 - Bouger</translation>
     </message>
     <message>
         <location filename="../src/core/field/GrpScript.cpp" line="209"/>
         <source>S4 - Go</source>
-        <translation type="unfinished"></translation>
+        <oldsource>S4 - Aller</oldsource>
+        <translation>S4 - Aller</translation>
     </message>
     <message>
         <location filename="../src/core/field/GrpScript.cpp" line="214"/>
         <source>S5 - Go 1x</source>
-        <translation type="unfinished"></translation>
+        <oldsource>S5 - Aller 1x</oldsource>
+        <translation>S5 - Aller 1x</translation>
     </message>
     <message>
         <location filename="../src/core/field/GrpScript.cpp" line="219"/>
         <source>S6 - Go away</source>
-        <translation type="unfinished"></translation>
+        <oldsource>S6 - Partir</oldsource>
+        <translation>S6 - Partir</translation>
     </message>
     <message>
         <location filename="../src/core/field/GrpScript.cpp" line="224"/>
         <source>Script %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Script %1</translation>
     </message>
     <message>
         <location filename="../src/core/field/GrpScript.cpp" line="488"/>
         <source>Group &apos;%1&apos;:</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Groupe &apos;%1&apos; :</oldsource>
+        <translation>Groupe &apos;%1&apos; :</translation>
     </message>
     <message>
         <location filename="../src/core/field/GrpScript.cpp" line="496"/>
         <source>Script &apos;%1&apos; :</source>
-        <translation type="unfinished"></translation>
+        <translation>Script &apos;%1&apos; :</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="354"/>
         <source> (No%1)</source>
-        <translation type="unfinished"></translation>
+        <oldsource> (n°%1)</oldsource>
+        <translation> (n°%1)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="356"/>
         <source>? (No%1)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>? (n°%1)</oldsource>
+        <translation>? (n°%1)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="368"/>
         <source>(no text)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>(Pas de texte)</oldsource>
+        <translation>(Pas de texte)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="374"/>
@@ -2155,475 +2572,813 @@ Some scripts can refer to it!</source>
         <location filename="../src/core/field/Opcode.cpp" line="410"/>
         <location filename="../src/core/field/Opcode.cpp" line="416"/>
         <source>No%1</source>
-        <translation type="unfinished"></translation>
+        <oldsource>n°%1</oldsource>
+        <translation>n°%1</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="407"/>
         <source>%1 (#%2)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>%1 (n°%2)</oldsource>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="424"/>
         <source>%1 (disc %2)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>%1 (disque %2)</oldsource>
+        <translation>%1 (disque %2)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="445"/>
-        <source>Play music [param1: music ID, 0-based]</source>
-        <translation type="unfinished"></translation>
+        <source>Play a sound effect on channel #1</source>
+        <oldsource>Jouer un effet sonore sur le canal 1</oldsource>
+        <translation type="vanished">Jouer un effet sonore sur le canal 1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="447"/>
-        <source>Play music and resume from last position [param1: music ID, 0-based]</source>
-        <translation type="unfinished"></translation>
+        <source>Play a sound effect on channel #2</source>
+        <oldsource>Jouer un effet sonore sur le canal 2</oldsource>
+        <translation type="vanished">Jouer un effet sonore sur le canal 2</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="449"/>
-        <source>Play a sound effect (will be terminated if another effect is played on channel) [param1: panning, param2: effect ID]</source>
-        <translation type="unfinished"></translation>
+        <source>Play a sound effect on channel #3</source>
+        <oldsource>Jouer un effet sonore sur le canal 3</oldsource>
+        <translation type="vanished">Jouer un effet sonore sur le canal 3</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="453"/>
-        <source>Play a sound effect (will be terminated if another effect is played on channel) [param1: panning, param2: effect ID, param3: ?]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="457"/>
-        <source>Play a sound effect (will be terminated if another effect is played on channel) [param1: panning, param2: effect ID, param3: ?, param4: ?]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="461"/>
-        <source>Play a sound effect (will be terminated if another effect is played on channel) [param1: panning, param2: effect ID, param3: ?, param4: ?, param5: ?]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="464"/>
-        <source>Play a sound effect on channel #1 [param1: panning, param2: effect ID]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="465"/>
-        <source>Play a sound effect on channel #2 [param1: panning, param2: effect ID]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="466"/>
-        <source>Play a sound effect on channel #3 [param1: panning, param2: effect ID]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="467"/>
-        <source>Play a sound effect on channel #4 [param1: panning, param2: effect ID]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="468"/>
-        <source>Play a sound effect (cannot be stopped) [param1: effect ID]</source>
-        <translation type="unfinished"></translation>
+        <source>Play a sound effect on channel #4</source>
+        <oldsource>Jouer un effet sonore sur le canal 4</oldsource>
+        <translation type="vanished">Jouer un effet sonore sur le canal 4</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="469"/>
         <source>Resumes music and sound effects</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Reprendre la musique et les effets sonores</oldsource>
+        <translation>Reprendre la musique et les effets sonores</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="470"/>
         <source>Pauses music and sound effects</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="471"/>
-        <source>Resumes only the music</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="472"/>
-        <source>Pauses only the music</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Mettre en pause la musique et les effets sonores</oldsource>
+        <translation>Mettre en pause la musique et les effets sonores</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="473"/>
         <source>Resumes only sound effects</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Reprendre uniquement les effets sonores</oldsource>
+        <translation>Reprendre uniquement les effets sonores</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="474"/>
         <source>Pauses only sound effects</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Mettre en pause uniquement les effets sonores</oldsource>
+        <translation>Mettre en pause uniquement les effets sonores</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="475"/>
-        <source>Volume control (channel #1) [param1: volume]</source>
-        <translation type="unfinished"></translation>
+        <source>Volume control (channel #1)</source>
+        <oldsource>Contrôle du volume (canal 1)</oldsource>
+        <translation type="vanished">Contrôle du volume (canal 1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="476"/>
-        <source>Volume control (channel #2) [param1: volume]</source>
-        <translation type="unfinished"></translation>
+        <source>Volume control (channel #2)</source>
+        <oldsource>Contrôle du volume (canal 2)</oldsource>
+        <translation type="vanished">Contrôle du volume (canal 2)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="477"/>
-        <source>Volume control (channel #3) [param1: volume]</source>
-        <translation type="unfinished"></translation>
+        <source>Volume control (channel #3)</source>
+        <oldsource>Contrôle du volume (canal 3)</oldsource>
+        <translation type="vanished">Contrôle du volume (canal 3)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="478"/>
-        <source>Volume control (channel #4) [param1: volume]</source>
-        <translation type="unfinished"></translation>
+        <source>Volume control (channel #4)</source>
+        <oldsource>Contrôle du volume (canal 4)</oldsource>
+        <translation type="vanished">Contrôle du volume (canal 4)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="479"/>
-        <source>Volume transitions (channel #1) [param1: transition time, param2: target volume]</source>
-        <translation type="unfinished"></translation>
+        <source>Volume transitions (channel #1)</source>
+        <oldsource>Volume transitions (canal 1)</oldsource>
+        <translation type="vanished">Volume transitions (canal 1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="480"/>
-        <source>Volume transitions (channel #2) [param1: transition time, param2: target volume]</source>
-        <translation type="unfinished"></translation>
+        <source>Volume transitions (channel #2)</source>
+        <oldsource>Volume transitions (canal 2)</oldsource>
+        <translation type="vanished">Volume transitions (canal 2)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="481"/>
-        <source>Volume transitions (channel #3) [param1: transition time, param2: target volume]</source>
-        <translation type="unfinished"></translation>
+        <source>Volume transitions (channel #3)</source>
+        <oldsource>Volume transitions (canal 3)</oldsource>
+        <translation type="vanished">Volume transitions (canal 3)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="482"/>
-        <source>Volume transitions (channel #4) [param1: transition time, param2: target volume]</source>
-        <translation type="unfinished"></translation>
+        <source>Volume transitions (channel #4)</source>
+        <oldsource>Volume transitions (canal 4)</oldsource>
+        <translation type="vanished">Volume transitions (canal 4)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="483"/>
         <source>Pan control (channel #1)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Contrôle spatial (canal 1)</oldsource>
+        <translation>Contrôle spatial (canal 1)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="484"/>
         <source>Pan control (channel #2)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Contrôle spatial (canal 2)</oldsource>
+        <translation>Contrôle spatial (canal 2)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="485"/>
         <source>Pan control (channel #3)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Contrôle spatial (canal 3)</oldsource>
+        <translation>Contrôle spatial (canal 3)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="486"/>
         <source>Pan control (channel #4)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Contrôle spatial (canal 4)</oldsource>
+        <translation>Contrôle spatial (canal 4)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="487"/>
         <source>Pan transitions (channel #1)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Transitions spatiales (canal 1)</oldsource>
+        <translation>Transitions spatiales (canal 1)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="488"/>
         <source>Pan transitions (channel #2)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Transitions spatiales (canal 2)</oldsource>
+        <translation>Transitions spatiales (canal 2)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="489"/>
         <source>Pan transitions (channel #3)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Transitions spatiales (canal 3)</oldsource>
+        <translation>Transitions spatiales (canal 3)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="490"/>
         <source>Pan transitions (channel #4)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Transitions spatiales (canal 4)</oldsource>
+        <translation>Transitions spatiales (canal 4)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="491"/>
         <source>Tempo control (channel #1)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Contrôle du tempo (canal 1)</oldsource>
+        <translation>Contrôle du tempo (canal 1)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="492"/>
         <source>Tempo control (channel #2)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Contrôle du tempo (canal 2)</oldsource>
+        <translation>Contrôle du tempo (canal 2)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="493"/>
         <source>Tempo control (channel #3)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Contrôle du tempo (canal 3)</oldsource>
+        <translation>Contrôle du tempo (canal 3)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="494"/>
         <source>Tempo control (channel #4)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Contrôle du tempo (canal 4)</oldsource>
+        <translation>Contrôle du tempo (canal 4)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="495"/>
         <source>Tempo transitions (channel #1)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Tempo transitions (canal 1)</oldsource>
+        <translation>Transitions tempo (canal 1)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="496"/>
         <source>Tempo transitions (channel #2)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Tempo transitions (canal 2)</oldsource>
+        <translation>Transitions tempo (canal 2)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="497"/>
         <source>Tempo transitions (channel #3)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Tempo transitions (canal 3)</oldsource>
+        <translation>Transitions tempo (canal 3)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="498"/>
         <source>Tempo transitions (channel #4)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Tempo transitions (canal 4)</oldsource>
+        <translation>Transitions tempo (canal 4)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="499"/>
-        <source>Volume control for all channels [param1: volume]</source>
-        <translation type="unfinished"></translation>
+        <source>Volume control for all channels</source>
+        <oldsource>Contrôle du volume sur tous les canaux</oldsource>
+        <translation type="vanished">Contrôle du volume sur tous les canaux</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="500"/>
-        <source>Volume transitions for all channels [param1: transition time, param2: target volume]</source>
-        <translation type="unfinished"></translation>
+        <source>Volume transitions for all channels</source>
+        <oldsource>Volume transitions sur tous les canaux</oldsource>
+        <translation type="vanished">Transitions du volume transitions sur tous les canaux</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="501"/>
         <source>Pan control for all channels</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Contrôle spatial sur tous les canaux</oldsource>
+        <translation>Contrôle spatial sur tous les canaux</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="502"/>
         <source>Pan transitions for all channels</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Transitions spatiales sur tous les canaux</oldsource>
+        <translation>Transitions spatiales sur tous les canaux</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="503"/>
         <source>Tempo control for all channels</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Contrôle du tempo sur tous les canaux</oldsource>
+        <translation>Contrôle du tempo sur tous les canaux</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="504"/>
         <source>Tempo transitions for all channels</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Tempo transitions sur tous les canaux</oldsource>
+        <translation>Transitions tempo  sur tous les canaux</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="505"/>
-        <source>Set music volume [param1: volume]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="506"/>
-        <source>Music volume transition [param1: transition time, param2: target volume]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="507"/>
-        <source>Fade music volume</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="508"/>
-        <source>Set music pan (noop in PC version)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="509"/>
-        <source>Music pan transition (noop in PC version)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="510"/>
-        <source>Music pan fade (noop in PC version)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="511"/>
-        <source>Set music tempo [param1: tempo, 0x20 is normal]</source>
-        <translation type="unfinished"></translation>
+        <source>Music volume transition</source>
+        <oldsource>Transition sur le volume de la musique</oldsource>
+        <translation type="vanished">Transition sur le volume de la musique</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="512"/>
         <source>Music tempo transition</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="513"/>
-        <source>Music tempo fade</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="514"/>
-        <source>Stop music-like (noop in PC version)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="515"/>
-        <source>Stop music</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="516"/>
-        <source>Stop sound effects</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Transition sur le tempo de la musique</oldsource>
+        <translation>Transition sur le tempo de la musique</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="521"/>
         <source>AKAO: %1?</source>
-        <translation type="unfinished"></translation>
+        <oldsource>AKAO : %1?</oldsource>
+        <translation>AKAO : %1?</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="558"/>
         <source>%1 and %2 and %3</source>
+        <oldsource>%1 et %2 et %3</oldsource>
+        <translation>%1 et %2 et %3</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="3552"/>
+        <source>Check if %1 and store the result in var[15][111]</source>
+        <translation>Vérifier si %1 et enregistrer le résultat dans var[15][111]</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="3594"/>
+        <source>Enables</source>
+        <translation>Permettre</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="3594"/>
+        <source>Disables</source>
+        <translation>Interdire</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="3635"/>
+        <source>Add %2 HP to party member #%1</source>
+        <translation>Augmenter de %2 HPs le membre n°%1 de l&apos;équipe</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="3652"/>
+        <source>Remove %2 HP to party member #%1</source>
+        <translation>Diminuer de %2 HPs le membre n°%1 de l&apos;équipe</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="3740"/>
+        <source>No Background/Border</source>
+        <translation>Pas de fond, ni de bordure</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="3745"/>
+        <source>Set the window #%1 mode: %2 (%3 the closing of the window by the player)</source>
+        <translation>Décoration de la fenêtre n°%1 : %2 (%3 la fermeture de la fenêtre par le joueur)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="3749"/>
+        <source>prevent</source>
+        <translation>empêcher</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="3783"/>
+        <source>Reset the window #%1</source>
+        <translation>Remettre la fenêtre n°%1 à zéro</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="3827"/>
+        <source>Close the window #%1 (stronger)</source>
+        <translation>Fermer la fenêtre n°%1 (plus fort)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="3859"/>
+        <source>Number of row in the window #%1 = %2</source>
+        <translation>Configurer le nombre de lignes de texte à %2 dans la fenêtre n°%1</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="3918"/>
+        <source>Get windows %1 color to %2 (R), %3 (G) and %4 (B)</source>
+        <translation>Obtenir la couleur du côté %1 des fenêtres et en stocker les composantes dans %2 (R), %3 (V) et %4 (B)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="3950"/>
+        <source>Set windows %1 color: RGB(%2, %3, %4)</source>
+        <translation>Changer la couleur du côté %1 des fenêtres : RVB(%2, %3, %4)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="4215"/>
+        <source>Shake (type=%1, xAmplitude=%2, xFrames=%3, yAmplitude=%2, yFrames=%3)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="568"/>
-        <source>(Empty)</source>
+        <location filename="../src/core/field/Opcode.cpp" line="4239"/>
+        <source>Perform no operation...</source>
+        <translation>Ne rien faire...</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="4395"/>
+        <source>Scroll to playable character</source>
+        <translation>Centrer sur le personnage jouable</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="4445"/>
+        <source>Wait for scroll</source>
+        <translation>Attendre la fin du dernier centrage pour continuer</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="4604"/>
+        <source>Wait for fade</source>
+        <translation>Attendre la fin du voilage de l&apos;écran pour continuer</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="4645"/>
+        <source>Retrieves the field ID number of the last field in %1</source>
+        <translation>Stocker l&apos;id de l&apos;écran précédent dans %1</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="4677"/>
+        <source>Scroll to party member #%2 (speed=%1 frames, type=%3)</source>
+        <translation>Centrer sur le personnage n°%2 de l&apos;équipe actuelle (vitesse=%1 img, type=%3)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="4711"/>
+        <source>Start battle #%1</source>
+        <translation>Commencer le combat n°%1</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="4740"/>
+        <source>%1 random battle</source>
+        <translation>%1 les combats aléatoires</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2078"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4770"/>
+        <source>The party cannot escape the battle</source>
+        <translation>Impossible de fuir</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2081"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4773"/>
+        <source>Do not show battle rewards</source>
+        <translation>Ne pas afficher d&apos;écran de récompense</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="4802"/>
+        <source>Get direction of the party member #%1 to %2</source>
+        <translation>Obtenir la direction du personnage n°%1 de l&apos;équipe actuelle et la stocker dans %2</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="4835"/>
+        <source>Get group ID of the party member #%1 to %2</source>
+        <translation>Obtenir l&apos;id du personnage n°%1 de l&apos;équipe actuelle et le stocker dans %2</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="5160"/>
+        <source>%1 talk script for the current field model</source>
+        <translation>%1 la possibilité de parler à l&apos;objet 3D</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="5267"/>
+        <source>Bit %2 ON in %1</source>
+        <translation>Mettre le bit %2 à 1 dans %1</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="5284"/>
+        <source>Bit %2 OFF in %1</source>
+        <translation>Mettre le bit %2 à 0 dans %1</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="5301"/>
+        <source>Toggle bit %2 in %1</source>
+        <translation>Inverser la valeur du bit %2 dans %1</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="5654"/>
+        <source>Set random value to %1 (8-bit)</source>
+        <translation>Affecter une valeur aléatoire à %1 (8 bits)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="5938"/>
+        <source>%1 field model</source>
+        <translation>%1 l&apos;objet 3D</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="6233"/>
+        <source>Wait for animation</source>
+        <translation>Attendre que l&apos;animation soit terminée pour continuer</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="6396"/>
+        <source>Set the field model move speed: %1</source>
+        <translation>Configurer la vitesse des déplacements de l&apos;objet 3D : %1</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="6990"/>
+        <source>Wait for offset object</source>
+        <translation>Attendre la fin de l&apos;exécution de l&apos;Offset Object pour continuer</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="7006"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7506"/>
+        <source>Set range of the talk circle for the field model: %1</source>
+        <translation>Modifier la distance nécessaire pour parler avec l&apos;objet 3D : %1</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="7065"/>
+        <source>%1 contact with field model</source>
+        <translation>%1 la possibilité de toucher l&apos;objet 3D</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="7086"/>
+        <source>Add %1 to the current party</source>
+        <translation>Ajouter %1 à l&apos;équipe actuelle</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="7107"/>
+        <source>Remove %1 from the current party</source>
+        <translation>Retirer %1 de l&apos;équipe actuelle</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="7165"/>
+        <source>If %1 is in the current party (%2)</source>
+        <translation>Si %1 est dans l&apos;équipe actuelle (%2)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="7200"/>
+        <source>not available</source>
+        <translation>n&apos;existe plus</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="7200"/>
+        <source>available</source>
+        <translation>existe</translation>
+    </message>
+    <message>
+        <source>Clear</source>
+        <translation type="vanished">Effacer</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="7339"/>
+        <source>Gateways %1</source>
+        <translation>%1 les changements de décor par le joueur</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="7366"/>
+        <source>Set line (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)</source>
+        <translation>Modifier la ligne (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="7565"/>
+        <source>Preload the field map %1</source>
+        <translation>Commencer à charger l&apos;écran %1</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="7601"/>
+        <source>%1 (param1=%2, param2=%3, param3=%4, param4=%5, param5=%6)</source>
+        <oldsource>%1 (16-bit) (param1=%2, param2=%3, param3=%4, param4=%5, param5=%6)</oldsource>
+        <translation>%1 (param1=%2, param2=%3, param3=%4, param4=%5, param5=%6)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="7691"/>
+        <source>stay</source>
+        <translation>rester immobile</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="7692"/>
+        <source>walk</source>
+        <translation>marcher</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="7693"/>
+        <source>run</source>
+        <translation>courir</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="7710"/>
+        <source>Break field model animation</source>
+        <translation>Stoppe l&apos;animation de l&apos;objet 3D</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="7719"/>
+        <source>Wait for rotation</source>
+        <translation>Attendre que la rotation soit terminée pour continuer</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="7792"/>
+        <source>Show the state #%2 of the background parameter #%1</source>
+        <translation>Afficher l&apos;état n°%2 du paramètre n°%1</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="7891"/>
+        <source>Show previous state of the background parameter #%1</source>
+        <translation>Afficher l&apos;état précédent du paramètre n°%1</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="8338"/>
+        <source>Play music #%1</source>
+        <translation>Jouer musique n°%1</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="8400"/>
+        <source>%1 (param1 (8-bit)=%2, param2=%3, param3=%4, param4=%5, param5=%6)</source>
+        <oldsource>%1 (8-bit) (param1=%2, param2=%3, param3=%4, param4=%5, param5=%6)</oldsource>
+        <translation>%1 (param1 (8 bits)=%2, param2=%3, param3=%4, param4=%5, param5=%6)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="8464"/>
+        <source>Play temporary music #%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="580"/>
-        <source>Top Left</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/core/field/Opcode.cpp" line="8507"/>
+        <source>Unlock</source>
+        <translation>Déverrouiller</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="581"/>
-        <source>Bottom Left</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/core/field/Opcode.cpp" line="8507"/>
+        <source>Lock</source>
+        <comment>test</comment>
+        <translation>Verrouiller</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="582"/>
-        <source>Top Right</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/core/field/Opcode.cpp" line="8527"/>
+        <source>Set the music #%1 for next battle</source>
+        <translation>Choisir musique n°%1 comme musique de combat</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="583"/>
-        <source>Bottom Right</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/core/field/Opcode.cpp" line="8583"/>
+        <source>Set next movie: %1</source>
+        <translation>Choisir prochaine cinématique : %1</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="8598"/>
+        <source>Play movie</source>
+        <translation>Jouer la cinématique choisie</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="591"/>
         <location filename="../src/core/field/Opcode.cpp" line="592"/>
         <source>reverse</source>
-        <translation type="unfinished"></translation>
+        <oldsource>inverse</oldsource>
+        <translation>inverse</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="445"/>
+        <source>Play music [param1: music ID, 0-based]</source>
+        <translation>Jouer musique [param1 : music id, à partir de 0]</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="447"/>
+        <source>Play music and resume from last position [param1: music ID, 0-based]</source>
+        <translation>Jouer musique et reprendre de la dernière position [param1 : musique id, à partir de 0]</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="449"/>
+        <source>Play a sound effect (will be terminated if another effect is played on channel) [param1: panning, param2: effect ID]</source>
+        <translation>Jouer un effet sonore (sera arrêté si un autre effet est joué sur le canal) [param1 : panoramique, param2 : effet id]</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="453"/>
+        <source>Play a sound effect (will be terminated if another effect is played on channel) [param1: panning, param2: effect ID, param3: ?]</source>
+        <translation>Jouer un effet sonore (sera arrêté si un autre effet est joué sur le canal) [param1 : panoramique, param2 : effet id, param3 : ?]</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="457"/>
+        <source>Play a sound effect (will be terminated if another effect is played on channel) [param1: panning, param2: effect ID, param3: ?, param4: ?]</source>
+        <translation>Jouer un effet sonore (sera arrêté si un autre effet est joué sur le canal) [param1 : panoramique, param2 : effet id, param3 : ?, param4 : ?]</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="461"/>
+        <source>Play a sound effect (will be terminated if another effect is played on channel) [param1: panning, param2: effect ID, param3: ?, param4: ?, param5: ?]</source>
+        <translation>Jouer un effet sonore (sera arrêté si un autre effet est joué sur le canal) [param1 : panoramique, param2 : effet id, param3 : ?, param4 : ?, param5 : ?]</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="464"/>
+        <source>Play a sound effect on channel #1 [param1: panning, param2: effect ID]</source>
+        <translation>Jouer un effet sonore sur le canal n°1 [param1 : panoramique, param2 : effet id]</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="465"/>
+        <source>Play a sound effect on channel #2 [param1: panning, param2: effect ID]</source>
+        <translation>Jouer un effet sonore sur le canal n°2 [param1 : panoramique, param2 : effet id]</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="466"/>
+        <source>Play a sound effect on channel #3 [param1: panning, param2: effect ID]</source>
+        <translation>Jouer un effet sonore sur le canal n°3 [param1 : panoramique, param2 : effet id]</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="467"/>
+        <source>Play a sound effect on channel #4 [param1: panning, param2: effect ID]</source>
+        <translation>Jouer un effet sonore sur le canal n°4 [param1 : panoramique, param2 : effet id]</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="468"/>
+        <source>Play a sound effect (cannot be stopped) [param1: effect ID]</source>
+        <translation>Jouer un effet sonore (ne peut pas être arrêté) [param2 : effet id]</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="475"/>
+        <source>Volume control (channel #1) [param1: volume]</source>
+        <translation>Contrôle de volume (canal #1) [param1 : volume]</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="476"/>
+        <source>Volume control (channel #2) [param1: volume]</source>
+        <translation>Contrôle de volume (canal #2) [param1 : volume]</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="477"/>
+        <source>Volume control (channel #3) [param1: volume]</source>
+        <translation>Contrôle de volume (canal #3) [param1 : volume]</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="478"/>
+        <source>Volume control (channel #4) [param1: volume]</source>
+        <translation>Contrôle de volume (canal #4) [param1 : volume]</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="479"/>
+        <source>Volume transitions (channel #1) [param1: transition time, param2: target volume]</source>
+        <translation>Transitions de volume (canal n°1) [param1 : durée, param2 : volume cible]</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="480"/>
+        <source>Volume transitions (channel #2) [param1: transition time, param2: target volume]</source>
+        <translation>Transitions de volume (canal n°2) [param1 : durée, param2 : volume cible]</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="481"/>
+        <source>Volume transitions (channel #3) [param1: transition time, param2: target volume]</source>
+        <translation>Transitions de volume (canal n°3) [param1 : durée, param2 : volume cible]</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="482"/>
+        <source>Volume transitions (channel #4) [param1: transition time, param2: target volume]</source>
+        <translation>Transitions de volume (canal n°4) [param1 : durée, param2 : volume cible]</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="499"/>
+        <source>Volume control for all channels [param1: volume]</source>
+        <translation>Contrôle de volume sur tous les canaux [param1 : volume]</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="500"/>
+        <source>Volume transitions for all channels [param1: transition time, param2: target volume]</source>
+        <translation>Transition de volume sur tous les canaux [param1 : durée, param2 : volume cible]</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="505"/>
+        <source>Set music volume [param1: volume]</source>
+        <translation>Définir le volume de la musique [param1 : volume]</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="506"/>
+        <source>Music volume transition [param1: transition time, param2: target volume]</source>
+        <translation>Volume transition de la musique [param1 : durée, param2 : volume cible]</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="508"/>
+        <source>Set music pan (noop in PC version)</source>
+        <translation>Définir panorama de la musique (ne fait rien sur la version PC)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="509"/>
+        <source>Music pan transition (noop in PC version)</source>
+        <translation>Transition de panorama de la musique (ne fait rien sur la version PC)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="510"/>
+        <source>Music pan fade (noop in PC version)</source>
+        <translation>Panorama du fondu musical (ne fait rien sur la version PC)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="511"/>
+        <source>Set music tempo [param1: tempo, 0x20 is normal]</source>
+        <translation>Définir le tempo de la musique [param1 : tempo, la valeur normale est 0x20]</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="514"/>
+        <source>Stop music-like (noop in PC version)</source>
+        <translation>Arrêter la musique ou approchant (ne fait rien dans la version PC)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="593"/>
         <source>normal</source>
-        <translation type="unfinished"></translation>
+        <translation>normal</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="626"/>
         <source>? (ID=%1)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>? (id=%1)</oldsource>
+        <translation>? (id=%1)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="646"/>
         <source>Return</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Retourner</oldsource>
+        <translation>Retourner</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="680"/>
         <source>Execute script #%3 in extern group %1 (priority %2/6) - Only if the script is not already running</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Exécuter le script n°%3 du groupe externe %1 (priorité %2/6) - Seulement si le script n&apos;est pas déjà en cours d&apos;exécution</oldsource>
+        <translation>Exécuter le script n°%3 du groupe externe %1 (priorité %2/6) - Seulement si le script n&apos;est pas déjà en cours d&apos;exécution</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="698"/>
         <source>Execute script #%3 in extern group %1 (priority %2/6)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Exécuter le script n°%3 du groupe externe %1 (priorité %2/6)</oldsource>
+        <translation>Exécuter le script n°%3 du groupe externe %1 (priorité %2/6)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="716"/>
         <source>Execute script #%3 in group %1 (priority %2/6) - Waiting for end of execution to continue</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Exécuter le script n°%3 du groupe %1 (priorité %2/6) - Attend la fin de l&apos;exécution pour continuer</oldsource>
+        <translation>Exécuter le script n°%3 du groupe %1 (priorité %2/6) - Attend la fin de l&apos;exécution pour continuer</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="753"/>
         <source>Execute script #%3 in extern group associated with the character #%1 in the current party (priority %2/6) - Only if the script is not already running</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Exécuter le script n°%3 du groupe externe lié au personnage No%1 de l&apos;équipe (priorité %2/6) - Seulement si le script n&apos;est pas déjà en cours d&apos;exécution</oldsource>
+        <translation>Exécuter le script n°%3 du groupe externe lié au personnage n°%1 de l&apos;équipe (priorité %2/6) - Seulement si le script n&apos;est pas déjà en cours d&apos;exécution</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="771"/>
         <source>Execute script #%3 in extern group associated with the character #%1 in the current party (priority %2/6)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Exécuter le script n°%3 du groupe externe lié au personnage No%1 de l&apos;équipe (priorité %2/6)</oldsource>
+        <translation>Exécuter le script n°%3 du groupe externe lié au personnage n°%1 de l&apos;équipe (priorité %2/6)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="789"/>
         <source>Execute script #%3 in group associated with the character #%1 in the current party (priority %2/6) - Waiting for end of execution to continue</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Exécuter le script n°%3 du groupe lié au personnage No%1 de l&apos;équipe (priorité %2/6) - Attend la fin de l&apos;exécution pour continuer</oldsource>
+        <translation>Exécuter le script n°%3 du groupe lié au personnage n°%1 de l&apos;équipe (priorité %2/6) - Attend la fin de l&apos;exécution pour continuer</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="808"/>
-        <source>Return and execute script #%2 from the current entity (Priority %1/6)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="831"/>
-        <source>Join party field (speed=%1)</source>
-        <translation type="unfinished"></translation>
+        <source>Return and execute script #%2 from the appellant group (Priority %1/6)</source>
+        <oldsource>Retourner et exécuter le script n°%2 du groupe appelant (priorité %1/6)</oldsource>
+        <translation type="vanished">Retourner et exécuter le script n°%2 du groupe appelant (priorité %1/6)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="861"/>
         <source>Split party field (member 1: X=%1, Y=%2, dir=%3 ; member 2 : X=%4, Y=%5, dir=%6) (speed %7)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="945"/>
-        <source>Set party from memory: %1 | %2 | %3</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="965"/>
-        <source>Get party from memory: %1 | %2 | %3</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="995"/>
-        <source>Ask for disc %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="1021"/>
-        <source>%1 arrow</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="1022"/>
-        <location filename="../src/core/field/Opcode.cpp" line="5939"/>
-        <source>Display</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="1022"/>
-        <location filename="../src/core/field/Opcode.cpp" line="5939"/>
-        <source>Hide</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Faire sortir les membres de l&apos;équipe à partir du personnage jouable (perso 1 : X=%1, Y=%2, dir=%3 ; perso 2 : X=%4, Y=%5, dir=%6) (vitesse %7)</oldsource>
+        <translation>Faire sortir les membres de l&apos;équipe à partir du personnage jouable (perso 1 : X=%1, Y=%2, dir=%3 ; perso 2 : X=%4, Y=%5, dir=%6) (vitesse %7)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="1048"/>
         <source>PNAME - Disable right menu (%1)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="1074"/>
-        <source>Set game speed (%1)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>PNAME - Désactiver le menu de droite (%1)</oldsource>
+        <translation>PNAME - Désactiver le menu de droite (%1)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="1101"/>
         <source>Set field message speed (%2) | %1 |</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Modifier la vitesse des messages (%2) | %1 |</oldsource>
+        <translation>Modifier la vitesse des messages (%2) | %1 |</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="1124"/>
         <source>Fill materia menu with all materias in full quantity</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Remplir le menu matéria de toutes les matérias en quantité maximum</oldsource>
+        <translation>Remplir le menu matéria de toutes les matérias en quantité maximum</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="1138"/>
         <source>Fills all available item entries in full quantity</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Remplir l&apos;inventaire par tous les objets en quantité maximum</oldsource>
+        <translation>Remplir l&apos;inventaire par tous les objets en quantité maximum</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="1159"/>
         <source>%1 battles</source>
-        <translation type="unfinished"></translation>
+        <oldsource>%1 les combats</oldsource>
+        <translation>%1 les combats</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="1160"/>
@@ -2636,7 +3391,8 @@ Some scripts can refer to it!</source>
         <location filename="../src/core/field/Opcode.cpp" line="7066"/>
         <location filename="../src/core/field/Opcode.cpp" line="7666"/>
         <source>Activate</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Activer</oldsource>
+        <translation>Activer</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="1160"/>
@@ -2649,47 +3405,29 @@ Some scripts can refer to it!</source>
         <location filename="../src/core/field/Opcode.cpp" line="7066"/>
         <location filename="../src/core/field/Opcode.cpp" line="7666"/>
         <source>Deactivate</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="1185"/>
-        <source>%1 movies</source>
-        <translation type="unfinished"></translation>
+        <translation>Désactiver</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="1212"/>
         <source>Change name of %1 by text %2</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Changer le nom de %1 par le texte %2</oldsource>
+        <translation>Changer le nom de %1 par le texte %2</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="1247"/>
         <source>Set game time to 0, unlock &quot;PHS&quot; and Save menu. New party: Cloud | (empty) | (empty)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="1261"/>
-        <source>Remove all items</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Set game time to 0, unlock &quot;PHS&quot; and Save menu. New party: Cloud | (empty) | (empty);</oldsource>
+        <translation>Met le temps à 0, débloque le menu &quot;PHS&quot; et &quot;Sauvegarder&quot;. Nouvelle équipe : Clad | (Vide) | (Vide)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="1289"/>
         <source>SPECIAL - </source>
-        <translation type="unfinished"></translation>
+        <translation>SPECIAL - </translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="1405"/>
         <source>Label %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message numerus="yes">
-        <location filename="../src/core/field/Opcode.cpp" line="1437"/>
-        <location filename="../src/core/field/Opcode.cpp" line="1468"/>
-        <source>Forward %n byte(s)</source>
-        <comment>With plural</comment>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
+        <translation>Label %1</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="1438"/>
@@ -2697,17 +3435,8 @@ Some scripts can refer to it!</source>
         <location filename="../src/core/field/Opcode.cpp" line="1498"/>
         <location filename="../src/core/field/Opcode.cpp" line="1529"/>
         <source>Goto label %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message numerus="yes">
-        <location filename="../src/core/field/Opcode.cpp" line="1497"/>
-        <location filename="../src/core/field/Opcode.cpp" line="1528"/>
-        <source>Back %n byte(s)</source>
-        <comment>With plural</comment>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
+        <oldsource>Aller au label %1</oldsource>
+        <translation>Aller au label %1</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="1584"/>
@@ -2717,7 +3446,423 @@ Some scripts can refer to it!</source>
         <location filename="../src/core/field/Opcode.cpp" line="1787"/>
         <location filename="../src/core/field/Opcode.cpp" line="1843"/>
         <source>If %1 %3 %2 (%4)</source>
+        <oldsource>Si %1 %3 %2 (%4)</oldsource>
+        <translation>Si %1 %3 %2 (%4)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="1591"/>
+        <location filename="../src/core/field/Opcode.cpp" line="1634"/>
+        <location filename="../src/core/field/Opcode.cpp" line="1679"/>
+        <location filename="../src/core/field/Opcode.cpp" line="1737"/>
+        <location filename="../src/core/field/Opcode.cpp" line="1793"/>
+        <location filename="../src/core/field/Opcode.cpp" line="1850"/>
+        <location filename="../src/core/field/Opcode.cpp" line="1940"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2816"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2835"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2854"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7169"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7183"/>
+        <source>else goto label %1</source>
+        <oldsource>aller au label %1 sinon</oldsource>
+        <translation>aller au label %1 sinon</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="1894"/>
+        <source>8 bit</source>
+        <translation>8 bits</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="1895"/>
+        <source>16 bit</source>
+        <translation>16 bits</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="1896"/>
+        <source>24 bit</source>
+        <translation>24 bits</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="1897"/>
+        <source>32 bit</source>
+        <translation>32 bits</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="1902"/>
+        <source>From is a pointer</source>
+        <translation>&apos;De&apos; est un pointeur</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="1906"/>
+        <source>To is a pointer</source>
+        <translation>&apos;Vers&apos; est un pointeur</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="1909"/>
+        <source>Write/Read entire savemap (from=%1, to=%2, absValue=%3, flags={%4})</source>
+        <translation>Écrire/Lire toute la savemap (de=%1, vers=%2, valeurAbsolue=%3, flags={%4})</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="1937"/>
+        <source>If Red XIII is named Nanaki (%2)</source>
+        <translation>Si Rouge XIII se nomme Nanaki (%2)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="1962"/>
+        <source>Write bytes to address 0x%1 (length=%2)</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="1997"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3543"/>
+        <source>Bike (parameter %1)</source>
+        <oldsource>Course de moto (paramètre %1)</oldsource>
+        <translation>Course de moto (paramètre %1)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="1998"/>
+        <source>Chocobo Races (parameter %1)</source>
+        <oldsource>Course de chocobo (paramètre %1)</oldsource>
+        <translation>Course de chocobo (paramètre %1)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="1999"/>
+        <source>Snowboard -normal mode- (parameter %1)</source>
+        <oldsource>Descente en snowboard -mode normal- (paramètre %1)</oldsource>
+        <translation>Descente en snowboard -mode normal- (paramètre %1)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2000"/>
+        <source>Fort Condor (parameter %1)</source>
+        <oldsource>Fort Condor (paramètre %1)</oldsource>
+        <translation>Fort Condor (paramètre %1)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2001"/>
+        <source>Submarine (parameter %1)</source>
+        <oldsource>Sous-marin (paramètre %1)</oldsource>
+        <translation>Sous-marin (paramètre %1)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2002"/>
+        <source>Speed Square (parameter %1)</source>
+        <oldsource>Speed Square (paramètre %1)</oldsource>
+        <translation>Speed Square (paramètre %1)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2003"/>
+        <source>Snowboard -Gold Saucer mode- (parameter %1)</source>
+        <oldsource>Descente en snowboard -mode Gold Saucer- (paramètre %1)</oldsource>
+        <translation>Descente en snowboard -mode Gold Saucer- (paramètre %1)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2004"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3557"/>
+        <source>%1? (parameter %2)</source>
+        <oldsource>%1? (paramètre %2)</oldsource>
+        <translation>%1? (paramètre %2)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2007"/>
+        <source>Mini-game: %5 (After the game goto field %1 (X=%2, Y=%3, triangle ID=%4))</source>
+        <oldsource>Lancer un mini-jeu : %5 (Après le jeu aller à l&apos;écran %1 (X=%2, Y=%3, triangle id=%4))</oldsource>
+        <translation>Lancer un mini-jeu : %5 (Après le jeu aller à l&apos;écran %1 (X=%2, Y=%3, triangle id=%4))</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2077"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4769"/>
+        <source>Pre-emptive attack</source>
+        <oldsource>Attaque préventive</oldsource>
+        <translation>Attaque préventive</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2083"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4774"/>
+        <source>Disable game over</source>
+        <oldsource>Désactiver Game Over</oldsource>
+        <translation>Désactiver Game Over</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2089"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4780"/>
+        <source>Battle mode: %1</source>
+        <oldsource>Mode de combat : %1</oldsource>
+        <translation>Mode de combat : %1</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2110"/>
+        <source>Stores the result of the last battle in %1</source>
+        <oldsource>Stocker le résultat du dernier combat dans %1</oldsource>
+        <translation>Stocker le résultat du dernier combat dans %1</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2166"/>
+        <source>Fades the screen to the colour RGB(%2, %3, %4) (speed=%5, type=%1)</source>
+        <oldsource>Voiler l&apos;écran avec la couleur RVB(%2, %3, %4) (vitesse=%5, type=%1)</oldsource>
+        <translation>Voiler l&apos;écran avec la couleur RVB(%2, %3, %4) (vitesse=%5, type=%1)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2210"/>
+        <source>%1 Field Model blinking</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2232"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2573"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7340"/>
+        <source>ON</source>
+        <translation>Autoriser</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2232"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2573"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7340"/>
+        <source>OFF</source>
+        <translation>Empêcher</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2231"/>
+        <source>BGMOVIE : %1</source>
+        <translation>BGMOVIE : %1</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2261"/>
+        <source>Change the state of the eye/mouth texture (eye 1=%1, eye 2=%2, mouth=%3, 3D object ID=%4)</source>
+        <oldsource>Changer l&apos;état de la texture des yeux ou de la bouche (oeil 1=%1, oeil 2=%2, bouche=%3, ID objet 3D=%4)</oldsource>
+        <translation>Changer l&apos;état de la texture des yeux ou de la bouche (oeil 1=%1, oeil 2=%2, bouche=%3, ID objet 3D=%4)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2331"/>
+        <source>Change the ambient color of the model: RGB(%1, %2, %3) RGB(%4, %5, %6) (flags=%7)</source>
+        <oldsource>Change la couleur ambiante du modèle : RVB(%1, %2, %3) RVB(%4, %5, %6) (flags=%7)</oldsource>
+        <translation>Change la couleur ambiante du modèle : RVB(%1, %2, %3) RVB(%4, %5, %6) (flags=%7)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2361"/>
+        <source>UNKNOWN4</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2371"/>
+        <source>LIGHT</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2381"/>
+        <source>UNKNOWN7</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2391"/>
+        <source>UNKNOWN8</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2401"/>
+        <source>UNKNOWN9</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2411"/>
+        <source>SBOBJ</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2421"/>
+        <source>UNKNOWNB</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2431"/>
+        <source>UNKNOWNC</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2441"/>
+        <source>SHINE</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2451"/>
+        <source>RESET</source>
+        <translation>RESET</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2479"/>
+        <source>Field Model graphic filter - %1</source>
+        <oldsource>Filtre graphique sur l&apos;objet 3D - %1</oldsource>
+        <translation>Filtre graphique sur l&apos;objet 3D - %1</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2572"/>
+        <source>SLIP : %1</source>
+        <translation>SLIP : %1</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2595"/>
+        <source>Set Z-deph for the background layer #%1 (Z=%2)</source>
+        <oldsource>Déplacer la couche %1 du décor (Z=%2)</oldsource>
+        <translation>Déplacer la couche %1 du décor (Z=%2)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2629"/>
+        <source>Animate the background layer #%1 (Horizontally=%2, Vertically=%3)</source>
+        <oldsource>Animer la couche %1 du décor (horizontalement=%2, verticalement=%3)</oldsource>
+        <translation>Animer la couche %1 du décor (horizontalement=%2, verticalement=%3)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2755"/>
+        <source>Resizes/Repositions the window #%1 (X=%2, Y=%3, width=%4, height=%5)</source>
+        <oldsource>Redimensionner fenêtre No%1 (X=%2, Y=%3, largeur=%4, hauteur=%5)</oldsource>
+        <translation>Redimensionner fenêtre n°%1 (X=%2, Y=%3, largeur=%4, hauteur=%5)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="471"/>
+        <source>Resumes only the music</source>
+        <translation>Reprendre uniquement la musique</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="472"/>
+        <source>Pauses only the music</source>
+        <translation>Mettre en pause uniquement la musique</translation>
+    </message>
+    <message>
+        <source>Set music volume</source>
+        <translation type="vanished">Modifier le volume de la musique</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="507"/>
+        <source>Fade music volume</source>
+        <translation>Attenuation du volume de la musique</translation>
+    </message>
+    <message>
+        <source>Set music pan</source>
+        <translation type="vanished">Modifier la spatialisation de la musique</translation>
+    </message>
+    <message>
+        <source>Music pan fade</source>
+        <translation type="vanished">Attenuation de la spatialisation de la musique</translation>
+    </message>
+    <message>
+        <source>Set music tempo</source>
+        <translation type="vanished">Modifier le tempo de la musique</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="513"/>
+        <source>Music tempo fade</source>
+        <translation>Attenuation du tempo de la musique</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="515"/>
+        <source>Stop music</source>
+        <translation>Arrêter la musique</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="516"/>
+        <source>Stop sound effects</source>
+        <translation>Arrêter les effets sonores</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="568"/>
+        <source>(Empty)</source>
+        <translation>(Vide)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="580"/>
+        <source>Top Left</source>
+        <translation>haut gauche</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="581"/>
+        <source>Bottom Left</source>
+        <translation>bas gauche</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="582"/>
+        <source>Top Right</source>
+        <translation>haut droit</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="583"/>
+        <source>Bottom Right</source>
+        <translation>bas droit</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="808"/>
+        <source>Return and execute script #%2 from the current entity (Priority %1/6)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="831"/>
+        <source>Join party field (speed=%1)</source>
+        <translation>Rassembler les membres de l&apos;équipe dans le personnage jouable (vitesse=%1)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="945"/>
+        <source>Set party from memory: %1 | %2 | %3</source>
+        <translation>Affecter les membres de l&apos;équipe : %1 | %2 | %3</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="965"/>
+        <source>Get party from memory: %1 | %2 | %3</source>
+        <oldsource>Get party to memory: %1 | %2 | %3</oldsource>
+        <translation>Récupérer les membres de l&apos;équipe : %1 | %2 | %3</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="995"/>
+        <source>Ask for disc %1</source>
+        <translation>Demander le CD %1</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="1021"/>
+        <source>%1 arrow</source>
+        <translation>%1 le curseur main</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="1022"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5939"/>
+        <source>Display</source>
+        <translation>Afficher</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="1022"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5939"/>
+        <source>Hide</source>
+        <translation>Cacher</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="1074"/>
+        <source>Set game speed (%1)</source>
+        <translation>Modifier la vitesse de jeu (%1)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="1185"/>
+        <source>%1 movies</source>
+        <translation>%1 les cinématiques</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="1261"/>
+        <source>Remove all items</source>
+        <translation>Supprimer tous les objets de l&apos;inventaire</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../src/core/field/Opcode.cpp" line="1437"/>
+        <location filename="../src/core/field/Opcode.cpp" line="1468"/>
+        <source>Forward %n byte(s)</source>
+        <comment>With plural</comment>
+        <translation>
+            <numerusform>Avancer de %n octet</numerusform>
+            <numerusform>Avancer de %n octets</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../src/core/field/Opcode.cpp" line="1497"/>
+        <location filename="../src/core/field/Opcode.cpp" line="1528"/>
+        <source>Back %n byte(s)</source>
+        <comment>With plural</comment>
+        <translation>
+            <numerusform>Reculer de %n octet</numerusform>
+            <numerusform>Reculer de %n octets</numerusform>
+        </translation>
     </message>
     <message numerus="yes">
         <location filename="../src/core/field/Opcode.cpp" line="1590"/>
@@ -2734,1484 +3879,901 @@ Some scripts can refer to it!</source>
         <location filename="../src/core/field/Opcode.cpp" line="7182"/>
         <source>else forward %n byte(s)</source>
         <comment>With plural</comment>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>avancer de %n octet sinon</numerusform>
+            <numerusform>avancer de %n octets sinon</numerusform>
         </translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="1591"/>
-        <location filename="../src/core/field/Opcode.cpp" line="1634"/>
-        <location filename="../src/core/field/Opcode.cpp" line="1679"/>
-        <location filename="../src/core/field/Opcode.cpp" line="1737"/>
-        <location filename="../src/core/field/Opcode.cpp" line="1793"/>
-        <location filename="../src/core/field/Opcode.cpp" line="1850"/>
-        <location filename="../src/core/field/Opcode.cpp" line="1940"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2816"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2835"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2854"/>
-        <location filename="../src/core/field/Opcode.cpp" line="7169"/>
-        <location filename="../src/core/field/Opcode.cpp" line="7183"/>
-        <source>else goto label %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="1894"/>
-        <source>8 bit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="1895"/>
-        <source>16 bit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="1896"/>
-        <source>24 bit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="1897"/>
-        <source>32 bit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="1902"/>
-        <source>From is a pointer</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="1906"/>
-        <source>To is a pointer</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="1909"/>
-        <source>Write/Read entire savemap (from=%1, to=%2, absValue=%3, flags={%4})</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="1937"/>
-        <source>If Red XIII is named Nanaki (%2)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="1962"/>
-        <source>Write bytes to address 0x%1 (length=%2)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="1997"/>
-        <location filename="../src/core/field/Opcode.cpp" line="3543"/>
-        <source>Bike (parameter %1)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="1998"/>
-        <source>Chocobo Races (parameter %1)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="1999"/>
-        <source>Snowboard -normal mode- (parameter %1)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2000"/>
-        <source>Fort Condor (parameter %1)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2001"/>
-        <source>Submarine (parameter %1)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2002"/>
-        <source>Speed Square (parameter %1)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2003"/>
-        <source>Snowboard -Gold Saucer mode- (parameter %1)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2004"/>
-        <location filename="../src/core/field/Opcode.cpp" line="3557"/>
-        <source>%1? (parameter %2)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2007"/>
-        <source>Mini-game: %5 (After the game goto field %1 (X=%2, Y=%3, triangle ID=%4))</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="2038"/>
         <source>Tutorial #%1</source>
-        <translation type="unfinished"></translation>
+        <translation>Lancer le tutoriel n°%1</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="2076"/>
         <location filename="../src/core/field/Opcode.cpp" line="4768"/>
         <source>Countdown</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2077"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4769"/>
-        <source>Pre-emptive attack</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2078"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4770"/>
-        <source>The party cannot escape the battle</source>
-        <translation type="unfinished"></translation>
+        <translation>Compte à rebours</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="2079"/>
         <location filename="../src/core/field/Opcode.cpp" line="4771"/>
         <source>Do not play the battle victory music</source>
-        <translation type="unfinished"></translation>
+        <translation>Ne pas jouer Fanfare</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="2080"/>
         <location filename="../src/core/field/Opcode.cpp" line="4772"/>
         <source>Activates the battle arena</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2081"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4773"/>
-        <source>Do not show battle rewards</source>
-        <translation type="unfinished"></translation>
+        <translation>Active l&apos;arène de combat du Gold Saucer</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="2082"/>
         <source>The party members do not perform their victory celebrations at the end of battle</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2083"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4774"/>
-        <source>Disable game over</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2089"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4780"/>
-        <source>Battle mode: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Les personnages ne font pas leur animation de victoire</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="2089"/>
         <location filename="../src/core/field/Opcode.cpp" line="4780"/>
         <source>None</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2110"/>
-        <source>Stores the result of the last battle in %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Aucun</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="2139"/>
         <source>Wait %1 frame</source>
-        <translation type="unfinished"></translation>
+        <translation>Attendre %1 img</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2166"/>
-        <source>Fades the screen to the colour RGB(%2, %3, %4) (speed=%5, type=%1)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2232"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2573"/>
-        <location filename="../src/core/field/Opcode.cpp" line="7340"/>
-        <source>ON</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2232"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2573"/>
-        <location filename="../src/core/field/Opcode.cpp" line="7340"/>
-        <source>OFF</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2231"/>
-        <source>BGMOVIE : %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2210"/>
-        <source>%1 Field Model blinking</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2261"/>
-        <source>Change the state of the eye/mouth texture (eye 1=%1, eye 2=%2, mouth=%3, 3D object ID=%4)</source>
-        <translation type="unfinished"></translation>
+        <source>Field Model blink : %1</source>
+        <translation type="vanished">L&apos;objet 3D cligne des yeux : %1</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="2296"/>
         <source>%1 blending</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2331"/>
-        <source>Change the ambient color of the model: RGB(%1, %2, %3) RGB(%4, %5, %6) (flags=%7)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2361"/>
-        <source>UNKNOWN4</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2371"/>
-        <source>LIGHT</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2381"/>
-        <source>UNKNOWN7</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2391"/>
-        <source>UNKNOWN8</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2401"/>
-        <source>UNKNOWN9</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2411"/>
-        <source>SBOBJ</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2421"/>
-        <source>UNKNOWNB</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2431"/>
-        <source>UNKNOWNC</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2441"/>
-        <source>SHINE</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2451"/>
-        <source>RESET</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2479"/>
-        <source>Field Model graphic filter - %1</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 transparence</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="2536"/>
         <source>Wait for graphic filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Attendre la fin de l&apos;exécution du filtre graphique</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="2551"/>
         <source>Move Field Model to Party Member #%1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2572"/>
-        <source>SLIP : %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2595"/>
-        <source>Set Z-deph for the background layer #%1 (Z=%2)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2629"/>
-        <source>Animate the background layer #%1 (Horizontally=%2, Vertically=%3)</source>
-        <translation type="unfinished"></translation>
+        <translation>Déplacer l&apos;objet 3D vers le membre n°%1 de l&apos;équipe</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="2664"/>
         <source>Close the window #%1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2755"/>
-        <source>Resizes/Repositions the window #%1 (X=%2, Y=%3, width=%4, height=%5)</source>
-        <translation type="unfinished"></translation>
+        <translation>Fermer la fenêtre n°%1</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="2795"/>
         <source>(no key)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>(no key</oldsource>
+        <translation>(aucune touche)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="2797"/>
         <source> or </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2812"/>
-        <source>If key %1 pressed (%2)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2831"/>
-        <source>If key %1 pressed once (%2)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2850"/>
-        <source>If key %1 released once (%2)</source>
-        <translation type="unfinished"></translation>
+        <oldsource> ou </oldsource>
+        <translation> ou </translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="2869"/>
         <source>%1 the movability of the playable character</source>
-        <translation type="unfinished"></translation>
+        <oldsource>%1 les déplacements du personnage jouable</oldsource>
+        <translation>%1 les déplacements du personnage jouable</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="2890"/>
         <source>Instantly turns the field model to face the party member #%1</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Tourner instantanément l&apos;objet 3D vers le membre de l&apos;équipe No%1</oldsource>
+        <translation>Tourner instantanément l&apos;objet 3D vers le membre de l&apos;équipe n°%1</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="2913"/>
         <source>Turns the field model to face the party member #%1 (Speed=%2, Rotation=%3)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Tourner l&apos;objet 3D vers le membre de l&apos;équipe No%1 (vitesse=%2, sens de rotation=%3)</oldsource>
+        <translation>Tourner l&apos;objet 3D vers le membre de l&apos;équipe n°%1 (vitesse=%2, sens de rotation=%3)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="2945"/>
         <source>(none)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2946"/>
-        <source>Clock (00:00)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>(vide)</oldsource>
+        <translation>(vide)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="2947"/>
         <source>Numeric (000000)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Affichage numérique</oldsource>
+        <translation>Affichage numérique</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="2951"/>
         <source>%2 in the window #%1 (left=%3, top=%4)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2992"/>
-        <source>Sets %2 in window #%1 (show %3 digits)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3041"/>
-        <source>Set Timer (H=%1, M=%2, S=%3)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3104"/>
-        <source>Add %1 gil to the party </source>
-        <translation type="unfinished"></translation>
+        <oldsource>%2 dans fenêtre No%1 (gauche=%3, haut=%4)</oldsource>
+        <translation>%2 dans fenêtre n°%1 (gauche=%3, haut=%4)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="3120"/>
         <source>Remove %1 gils from the party</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Retirer %1 gils à l&apos;équipe</oldsource>
+        <translation>Retirer %1 gils à l&apos;équipe</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="3138"/>
         <source>Copies the amount of gil in %1 and %2</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Copier le nombre de Gils dans %1 et %2</oldsource>
+        <translation>Copier le nombre de Gils dans %1 et %2</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="3165"/>
         <location filename="../src/core/field/Opcode.cpp" line="3174"/>
         <location filename="../src/core/field/Opcode.cpp" line="3192"/>
         <source>Restores full HP and MP of every party member</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Redonne les HP/MP aux membres de l&apos;équipe</oldsource>
+        <translation>Redonne les HP/MP aux membres de l&apos;équipe</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="3354"/>
+        <source>Display %1 in the main menu</source>
+        <oldsource>Afficher %1 dans le menu</oldsource>
+        <translation>Afficher %1 dans le menu</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="3451"/>
+        <source>Ask Question %2 in the window #%1 (and put selected answer in %5) first line=%3, last line=%4</source>
+        <oldsource>Poser question %2 dans la fenêtre No%1 (et mettre la réponse sélectionnée dans %5) première ligne=%3, dernière ligne=%4</oldsource>
+        <translation>Poser question %2 dans la fenêtre n°%1 (et mettre la réponse sélectionnée dans %5) première ligne=%3, dernière ligne=%4</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="3512"/>
+        <source>all magic materias are present and mastered</source>
+        <translation>toutes les matérias magiques sont présentes et au niveau maître</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="3513"/>
+        <source>all summon materias are present and mastered</source>
+        <translation>toutes les matérias d&apos;invocation sont présentes et au niveau maître</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="3514"/>
+        <source>necessary command materias are present and mastered</source>
+        <translation>les matérias de commande nécessaires sont présentes et au niveau maître</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="3515"/>
+        <source>Bahamut and Neo Bahamut materias are present</source>
+        <translation>Les matérias Bahamut et Néo Bahamut sont présentes</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="3516"/>
+        <source>22? (parameter %1)</source>
+        <translation>22? (paramètre %1)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="3524"/>
+        <source>Remove mastered magic materias and add Master Magic</source>
+        <translation>Supprimer les matérias magiques au niveau maître et ajouter magie maîtresse</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="3525"/>
+        <source>Remove mastered summon materias and add Master Summon</source>
+        <translation>Supprimer les matérias d&apos;invocation au niveau maître et ajouter invocation maître</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="3526"/>
+        <source>Remove mastered meaning command materias and add Master Command</source>
+        <translation>Supprimer les matérias de commande niveau maître nécessaires à la fusion et ajouter commande maître</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="3527"/>
+        <source>Add Bahamut Zero to the inventory</source>
+        <translation>Ajouter Bahamut ZÉRO à l&apos;inventaire</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="3528"/>
+        <source>23? (parameter %1)</source>
+        <translation>23? (paramètre %1)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="3536"/>
+        <source>Exit program (parameter %1)</source>
+        <oldsource>Fermer le programme (paramètre %1)</oldsource>
+        <translation>Fermer le programme (paramètre %1)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="3537"/>
+        <source>Encount Error (parameter %1)</source>
+        <oldsource>Encount Error (paramètre %1)</oldsource>
+        <translation>Encount Error (paramètre %1)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="3538"/>
+        <source>ff7 credits (parameter %1)</source>
+        <oldsource>Crédits de ff7 (paramètre %1)</oldsource>
+        <translation>Crédits de ff7 (paramètre %1)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="3539"/>
+        <source>Change name of %1</source>
+        <oldsource>Changer nom de %1</oldsource>
+        <translation>Changer nom de %1</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="3540"/>
+        <source>Change party (parameter %1)</source>
+        <oldsource>Changer l&apos;équipe (paramètre %1)</oldsource>
+        <translation>Changer l&apos;équipe (paramètre %1)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="3541"/>
+        <source>Shop No%1</source>
+        <oldsource>magasin No%1</oldsource>
+        <translation>magasin n°%1</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="3542"/>
+        <source>main (parameter %1)</source>
+        <oldsource>principal (paramètre %1)</oldsource>
+        <translation>principal (paramètre %1)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2812"/>
+        <source>If key %1 pressed (%2)</source>
+        <translation>Si appuie sur la touche %1 (%2)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2831"/>
+        <source>If key %1 pressed once (%2)</source>
+        <translation>Si appuie sur la touche %1 une fois (%2)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2850"/>
+        <source>If key %1 released once (%2)</source>
+        <translation>Si relache la touche %1 pour la première fois (%2)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2946"/>
+        <source>Clock (00:00)</source>
+        <translation>Horloge</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2992"/>
+        <source>Sets %2 in window #%1 (show %3 digits)</source>
+        <translation>Affecter %2 dans la fenêtre n°%1 et afficher %3 chiffres</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="3041"/>
+        <source>Set Timer (H=%1, M=%2, S=%3)</source>
+        <translation>Affecter une valeur au compte à rebours (H=%1, M=%2, S=%3)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="3104"/>
+        <source>Add %1 gil to the party </source>
+        <translation>Ajouter %1 gils à l&apos;équipe</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="3183"/>
         <source>Restores full HP and MP of every available character and removing status effects</source>
-        <translation type="unfinished"></translation>
+        <translation>Redonne les HP/MP à tous et soigne les troubles de statut</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="3213"/>
         <source>Displays the dialog %2 in the window #%1</source>
-        <translation type="unfinished"></translation>
+        <translation>Afficher message %2 dans la fenêtre n°%1</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="3260"/>
         <location filename="../src/core/field/Opcode.cpp" line="3306"/>
         <source>Set %3 to the variable #%2 in the window #%1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3354"/>
-        <source>Display %1 in the main menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Affecter %3 à la variable n°%2 dans la fenêtre n°%1</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="3412"/>
         <source>Add %2 MP to party member #%1</source>
-        <translation type="unfinished"></translation>
+        <translation>Augmenter de %2 MPs le membre n°%1 de l&apos;équipe</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="3429"/>
         <source>Remove %2 MP to party member #%1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3451"/>
-        <source>Ask Question %2 in the window #%1 (and put selected answer in %5) first line=%3, last line=%4</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3512"/>
-        <source>all magic materias are present and mastered</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3513"/>
-        <source>all summon materias are present and mastered</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3514"/>
-        <source>necessary command materias are present and mastered</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3515"/>
-        <source>Bahamut and Neo Bahamut materias are present</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3516"/>
-        <source>22? (parameter %1)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3524"/>
-        <source>Remove mastered magic materias and add Master Magic</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3525"/>
-        <source>Remove mastered summon materias and add Master Summon</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3526"/>
-        <source>Remove mastered meaning command materias and add Master Command</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3527"/>
-        <source>Add Bahamut Zero to the inventory</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3528"/>
-        <source>23? (parameter %1)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3536"/>
-        <source>Exit program (parameter %1)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3537"/>
-        <source>Encount Error (parameter %1)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3538"/>
-        <source>ff7 credits (parameter %1)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3539"/>
-        <source>Change name of %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3540"/>
-        <source>Change party (parameter %1)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3541"/>
-        <source>Shop No%1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3542"/>
-        <source>main (parameter %1)</source>
-        <translation type="unfinished"></translation>
+        <translation>Diminuer de %2 MPs le membre n°%1 de l&apos;équipe</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="3544"/>
         <source>Save (parameter %1)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Sauvegarde (paramètre %1)</oldsource>
+        <translation>Sauvegarde (paramètre %1)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="3545"/>
         <source>Remove all materias (parameter %1)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Effacer toutes les matérias (paramètre %1)</oldsource>
+        <translation>Effacer toutes les matérias (paramètre %1)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="3546"/>
         <source>Restore all materias (parameter %1)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Rétablir toutes les matérias (paramètre %1)</oldsource>
+        <translation>Rétablir toutes les matérias (paramètre %1)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="3547"/>
         <source>Remove %1&apos;s Materia</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Effacer la matéria de %1</oldsource>
+        <translation>Effacer la matéria de %1</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="3548"/>
         <source>Clear Cloud&apos;s materias (parameter %1)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Effacer les matérias de Clad (paramètre %1)</oldsource>
+        <translation>Effacer les matérias de Clad (paramètre %1)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="3549"/>
         <source>Restore Cloud&apos;s materias (parameter %1)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Rétablir les matérias de Clad (paramètre %1)</oldsource>
+        <translation>Rétablir les matérias de Clad (paramètre %1)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="3550"/>
         <location filename="../src/core/field/Opcode.cpp" line="3555"/>
         <location filename="../src/core/field/Opcode.cpp" line="3556"/>
         <source>? (parameter %1)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>? (paramètre %1)</oldsource>
+        <translation>? (paramètre %1)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="3551"/>
         <source>HP to 1 (parameter %1)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>HPs à 1 (paramètre %1)</oldsource>
+        <translation>HPs à 1 (paramètre %1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3552"/>
-        <source>Check if %1 and store the result in var[15][111]</source>
-        <translation type="unfinished"></translation>
+        <source>master ? (parameter %1)</source>
+        <oldsource>maitre ? (parameter %1)</oldsource>
+        <translation type="vanished">maitre ? (paramètre %1)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="3563"/>
         <source>Show menu %1</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Afficher menu %1</oldsource>
+        <translation>Afficher menu %1</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="3593"/>
         <source>%1 access to the main menu</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3594"/>
-        <source>Enables</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3594"/>
-        <source>Disables</source>
-        <translation type="unfinished"></translation>
+        <oldsource>%1 l&apos;accès aux menus</oldsource>
+        <translation>%1 l&apos;accès aux menus</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="3614"/>
         <source>Set battle table: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3635"/>
-        <source>Add %2 HP to party member #%1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3652"/>
-        <source>Remove %2 HP to party member #%1</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Choisir la battle table : %1</oldsource>
+        <translation>Choisir la battle table : %1</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="3676"/>
         <source>Create window #%1 (X=%2, Y=%3, Width=%4, Height=%5)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Créer la fenêtre No%1 (X=%2, Y=%3, largeur=%4, hauteur=%5)</oldsource>
+        <translation>Créer la fenêtre n°%1 (X=%2, Y=%3, largeur=%4, hauteur=%5)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="3698"/>
         <source>Move the window #%1 (Move : X=%2, Y=%3)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Déplacer la fenêtre No%1 (déplacement : X=%2, Y=%3)</oldsource>
+        <translation>Déplacer la fenêtre n°%1 (déplacement : X=%2, Y=%3)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="3739"/>
         <source>Normal</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3740"/>
-        <source>No Background/Border</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Normale</oldsource>
+        <translation>Normale</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="3741"/>
         <source>Transparent Background</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3745"/>
-        <source>Set the window #%1 mode: %2 (%3 the closing of the window by the player)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Fond semi-transparent</oldsource>
+        <translation>Fond semi-transparent</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="3749"/>
         <source>Authorize</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3749"/>
-        <source>prevent</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3783"/>
-        <source>Reset the window #%1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3827"/>
-        <source>Close the window #%1 (stronger)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3859"/>
-        <source>Number of row in the window #%1 = %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3918"/>
-        <source>Get windows %1 color to %2 (R), %3 (G) and %4 (B)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3950"/>
-        <source>Set windows %1 color: RGB(%2, %3, %4)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>autoriser</oldsource>
+        <translation>autoriser</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="4011"/>
         <source>Add %2 item(s) %1 to the inventory</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Ajouter %2 objet(s) %1 dans l&apos;inventaire</oldsource>
+        <translation>Ajouter %2 objet(s) %1 dans l&apos;inventaire</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="4029"/>
         <source>Remove %2 item(s) %1 from the inventory</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Supprimer %2 objet(s) %1 dans l&apos;inventaire</oldsource>
+        <translation>Supprimer %2 objet(s) %1 dans l&apos;inventaire</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="4047"/>
         <source>%2 = amount of item %1 in the inventory</source>
-        <translation type="unfinished"></translation>
+        <oldsource>%2 = quantité d&apos;objets %1 dans l&apos;inventaire</oldsource>
+        <translation>%2 = quantité d&apos;objets %1 dans l&apos;inventaire</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="4077"/>
         <source>Add %1 materia to the inventory (AP=%2)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Ajouter la matéria %1 dans l&apos;inventaire (AP=%2)</oldsource>
+        <translation>Ajouter la matéria %1 dans l&apos;inventaire (AP=%2)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="4120"/>
         <source>Remove %3 materia(s) %1 from the inventory (AP=%2)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Supprimer %3 matéria(s) %1 dans l&apos;inventaire (AP=%2)</oldsource>
+        <translation>Supprimer %3 matéria(s) %1 dans l&apos;inventaire (AP=%2)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="4166"/>
         <source>%4 = amount of materia %1 in the inventory (AP=%2, ?=%3)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>%4 = quantité de matéria %1 dans l&apos;inventaire (AP=%2, ?=%3)</oldsource>
+        <translation>%4 = quantité de matéria %1 dans l&apos;inventaire (AP=%2, ?=%3)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4215"/>
-        <source>Shake (type=%1, xAmplitude=%2, xFrames=%3, yAmplitude=%2, yFrames=%3)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4239"/>
-        <source>Perform no operation...</source>
-        <translation type="unfinished"></translation>
+        <source>Shake (nbSwings=%1, Amplitude=%2, speed=%3)</source>
+        <oldsource>Secouer l&apos;écran (nbOscillations=%1, Amplitude=%2, vitesse=%3)</oldsource>
+        <translation type="vanished">Secouer l&apos;écran (nbOscillations=%1, Amplitude=%2, vitesse=%3)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="4258"/>
         <source>Jump to map %1 (X=%2, Y=%3, triangle ID=%4, direction=%5)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Aller à l&apos;écran %1 (X=%2, Y=%3, triangle id=%4, direction=%5)</oldsource>
+        <translation>Aller à l&apos;écran %1 (X=%2, Y=%3, triangle id=%4, direction=%5)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="4288"/>
         <source>SCRLO (?=%1)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="4309"/>
         <source>SCRLC (?=%1)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="4333"/>
         <source>Scroll to group %2 (speed=%1, type=%3)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Centrer sur le groupe %2 (vitesse=%1, type=%3)</oldsource>
+        <translation>Centrer sur le groupe %2 (vitesse=%1, type=%3)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="4368"/>
         <source>Scroll to location (X=%1, Y=%2)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4395"/>
-        <source>Scroll to playable character</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Centrer sur zone (X=%1, Y=%2)</oldsource>
+        <translation>Centrer sur zone (X=%1, Y=%2)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="4414"/>
         <location filename="../src/core/field/Opcode.cpp" line="4464"/>
         <source>Scroll to location (X=%1, Y=%2, speed=%3)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4445"/>
-        <source>Wait for scroll</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Centrer sur zone (X=%1, Y=%2, vitesse=%3)</oldsource>
+        <translation>Centrer sur zone (X=%1, Y=%2, vitesse=%3)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="4501"/>
         <source>MPDSP : %1</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="4525"/>
         <source>Scroll to location (?=%1, ?=%2, ?=%3)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Centrer sur Zone (?=%1, ?=%2, ?=%3)</oldsource>
+        <translation>Centrer sur Zone (?=%1, ?=%2, ?=%3)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="4567"/>
         <source>Fades the screen to the colour RGB(%1, %2, %3) (speed=%4, type=%5, adjust=%6)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4604"/>
-        <source>Wait for fade</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Voiler l&apos;écran avec la couleur RVB(%1, %2, %3) (vitesse=%4, type=%5, adjust=%6)</oldsource>
+        <translation>Voiler l&apos;écran avec la couleur RVB(%1, %2, %3) (vitesse=%4, type=%5, adjust=%6)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="4620"/>
         <source>%2 the triangle #%1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4645"/>
-        <source>Retrieves the field ID number of the last field in %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4677"/>
-        <source>Scroll to party member #%2 (speed=%1 frames, type=%3)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4711"/>
-        <source>Start battle #%1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4740"/>
-        <source>%1 random battle</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4802"/>
-        <source>Get direction of the party member #%1 to %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4835"/>
-        <source>Get group ID of the party member #%1 to %2</source>
-        <translation type="unfinished"></translation>
+        <oldsource>%2 le triangle No%1</oldsource>
+        <translation>%2 le triangle n°%1</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="4872"/>
         <source>Get coordinates of the party member #%1 (store : X in %2, Y in %3, Z in %4 and triangle ID in %5)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Obtenir les coordonnées du personnage No%1 de l&apos;équipe actuelle (stocker : X dans %2, Y dans %3, Z dans %4 et l&apos;id dans %5)</oldsource>
+        <translation>Obtenir les coordonnées du personnage n°%1 de l&apos;équipe actuelle (stocker : X dans %2, Y dans %3, Z dans %4 et l&apos;id dans %5)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="5027"/>
         <location filename="../src/core/field/Opcode.cpp" line="5318"/>
         <source>%1 = %1 + %2 (8 bit)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>%1 = %1 + %2 (8 bits)</oldsource>
+        <translation>%1 = %1 + %2 (8 bits)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="5044"/>
         <location filename="../src/core/field/Opcode.cpp" line="5335"/>
         <source>%1 = %1 + %2 (16 bit)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>%1 = %1 + %2 (16 bits)</oldsource>
+        <translation>%1 = %1 + %2 (16 bits)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="5061"/>
         <location filename="../src/core/field/Opcode.cpp" line="5352"/>
         <source>%1 = %1 - %2 (8 bit)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>%1 = %1 - %2 (8 bits)</oldsource>
+        <translation>%1 = %1 - %2 (8 bits)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="5078"/>
         <location filename="../src/core/field/Opcode.cpp" line="5369"/>
         <source>%1 = %1 - %2 (16 bit)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>%1 = %1 - %2 (16 bits)</oldsource>
+        <translation>%1 = %1 - %2 (16 bits)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="5096"/>
         <location filename="../src/core/field/Opcode.cpp" line="5590"/>
         <source>%1 = %1 + 1 (8 bit)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>%1 = %1 + 1 (8 bits)</oldsource>
+        <translation>%1 = %1 + 1 (8 bits)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="5112"/>
         <location filename="../src/core/field/Opcode.cpp" line="5606"/>
         <source>%1 = %1 + 1 (16 bit)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>%1 = %1 + 1 (16 bits)</oldsource>
+        <translation>%1 = %1 + 1 (16 bits)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="5128"/>
         <location filename="../src/core/field/Opcode.cpp" line="5622"/>
         <source>%1 = %1 - 1 (8 bit)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>%1 = %1 - 1 (8 bits)</oldsource>
+        <translation>%1 = %1 - 1 (8 bits)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="5144"/>
         <location filename="../src/core/field/Opcode.cpp" line="5638"/>
         <source>%1 = %1 - 1 (16 bit)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5160"/>
-        <source>%1 talk script for the current field model</source>
-        <translation type="unfinished"></translation>
+        <oldsource>%1 = %1 - 1 (16 bits)</oldsource>
+        <translation>%1 = %1 - 1 (16 bits)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="5182"/>
         <source>Seed Random Generator : %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Seed Random Generator : %1</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="5205"/>
         <source>%1 = %2 (8 bit)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>%1 = %2 (8 bits)</oldsource>
+        <translation>%1 = %2 (8 bits)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="5222"/>
         <source>%1 = %2 (16 bit)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5267"/>
-        <source>Bit %2 ON in %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5284"/>
-        <source>Bit %2 OFF in %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5301"/>
-        <source>Toggle bit %2 in %1</source>
-        <translation type="unfinished"></translation>
+        <oldsource>%1 = %2 (16 bits)</oldsource>
+        <translation>%1 = %2 (16 bits)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="5386"/>
         <source>%1 = %1 * %2 (8 bit)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>%1 = %1 * %2 (8 bits)</oldsource>
+        <translation>%1 = %1 * %2 (8 bits)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="5403"/>
         <source>%1 = %1 * %2 (16 bit)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>%1 = %1 * %2 (16 bits)</oldsource>
+        <translation>%1 = %1 * %2 (16 bits)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="5420"/>
         <source>%1 = %1 / %2 (8 bit)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>%1 = %1 / %2 (8 bits)</oldsource>
+        <translation>%1 = %1 / %2 (8 bits)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="5437"/>
         <source>%1 = %1 / %2 (16 bit)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>%1 = %1 / %2 (16 bits)</oldsource>
+        <translation>%1 = %1 / %2 (16 bits)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="5454"/>
         <source>%1 = %1 mod %2 (8 bit)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>%1 = %1 mod %2 (8 bits)</oldsource>
+        <translation>%1 = %1 mod %2 (8 bits)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="5471"/>
         <source>%1 = %1 mod %2 (16 bit)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>%1 = %1 mod %2 (16 bits)</oldsource>
+        <translation>%1 = %1 mod %2 (16 bits)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="5488"/>
         <source>%1 = %1 &amp; %2 (8 bit)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>%1 = %1 &amp; %2 (8 bits)</oldsource>
+        <translation>%1 = %1 &amp; %2 (8 bits)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="5505"/>
         <source>%1 = %1 &amp; %2 (16 bit)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>%1 = %1 &amp; %2 (16 bits)</oldsource>
+        <translation>%1 = %1 &amp; %2 (16 bits)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="5522"/>
         <source>%1 = %1 | %2 (8 bit)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>%1 = %1 | %2 (8 bits)</oldsource>
+        <translation>%1 = %1 | %2 (8 bits)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="5539"/>
         <source>%1 = %1 | %2 (16 bit)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>%1 = %1 | %2 (16 bits)</oldsource>
+        <translation>%1 = %1 | %2 (16 bits)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="5556"/>
         <source>%1 = %1 ^ %2 (8 bit)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>%1 = %1 ^ %2 (8 bits)</oldsource>
+        <translation>%1 = %1 ^ %2 (8 bits)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="5573"/>
         <source>%1 = %1 ^ %2 (16 bit)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5654"/>
-        <source>Set random value to %1 (8-bit)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>%1 = %1 ^ %2 (16 bits)</oldsource>
+        <translation>%1 = %1 ^ %2 (16 bits)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="5670"/>
         <source>%1 = %2 &amp; 0xFF (low byte)</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 = %2 &amp; 0xFF (low byte)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="5687"/>
         <source>%1 = (%2 &gt;&gt; 8) &amp; 0xFF (high byte)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="5708"/>
         <source>%1 = (%2 &amp; 0xFF) | ((%3 &amp; 0xFF) &lt;&lt; 8)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="5745"/>
         <source>SETX %1</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="5766"/>
         <source>GETX %1</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="5792"/>
         <source>Search the value %5 in the memory (bank=%1, start=%2+%3, end=%2+%4) and put the position in %6</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Rechercher la valeur %5 dans la mémoire (bank=%1, début=%2+%3, fin=%2+%4) et mettre la position dans %6</oldsource>
+        <translation>Rechercher la valeur %5 dans la mémoire (bank=%1, début=%2+%3, fin=%2+%4) et mettre la position dans %6</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="5841"/>
         <source>Field model is playable and it is %1</source>
-        <translation type="unfinished"></translation>
+        <oldsource>L&apos;objet 3D est jouable et c&apos;est %1</oldsource>
+        <translation>L&apos;objet 3D est jouable et c&apos;est %1</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="5867"/>
         <source>This group is a field model (ID=%1)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Ce groupe est un objet 3D (id=%1)</oldsource>
+        <translation>Ce groupe est un objet 3D (id=%1)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="5889"/>
         <source>Play loop animation #%1 of the field model (speed=%2)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Play animation #%1 of the field model (speed=%2)</oldsource>
+        <translation>Joue l&apos;animation %1 de l&apos;objet 3D en boucle (vitesse=%2)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="5914"/>
         <location filename="../src/core/field/Opcode.cpp" line="6284"/>
         <source>Play animation #%1 of the field model and reset to previous state (speed=%2)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5938"/>
-        <source>%1 field model</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Joue l&apos;animation %1 de l&apos;objet 3D et retourne à l&apos;état précédent (vitesse=%2)</oldsource>
+        <translation>Joue l&apos;animation %1 de l&apos;objet 3D et retourne à l&apos;état précédent (vitesse=%2)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="5964"/>
         <source>Place field Model (X=%1, Y=%2, Z=%3, triangle ID=%4)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Place l&apos;objet 3D (X=%1, Y=%2, Z=%3, triangle id=%4)</oldsource>
+        <translation>Place l&apos;objet 3D (X=%1, Y=%2, Z=%3, triangle id=%4)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="6020"/>
         <source>Place field Model (X=%1, Y=%2, triangle ID=%4)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Place l&apos;objet 3D (X=%1, Y=%2, triangle id=%4)</oldsource>
+        <translation>Place l&apos;objet 3D (X=%1, Y=%2, triangle id=%4)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="6071"/>
         <source>Place field Model (X=%1, Y=%2, Z=%3)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Place l&apos;objet 3D (X=%1, Y=%2, Z=%3)</oldsource>
+        <translation>Place l&apos;objet 3D (X=%1, Y=%2, Z=%3)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="6121"/>
         <source>Move field Model (X=%1, Y=%2)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Déplace l&apos;objet 3D (X=%1, Y=%2)</oldsource>
+        <translation>Déplace l&apos;objet 3D (X=%1, Y=%2)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="6156"/>
         <location filename="../src/core/field/Opcode.cpp" line="6250"/>
         <source>Place field Model without animation (X=%1, Y=%2)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Déplace l&apos;objet 3D sans animation (X=%1, Y=%2)</oldsource>
+        <translation>Déplace l&apos;objet 3D sans animation (X=%1, Y=%2)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="6189"/>
         <source>Move field Model to the group %1</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Déplace l&apos;objet 3D vers le groupe %1</oldsource>
+        <translation>Déplace l&apos;objet 3D vers le groupe %1</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="6213"/>
         <source>Rotation of the field model to group %1 (Speed=%3, Rotation=%2)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="6233"/>
-        <source>Wait for animation</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Rotation de l&apos;objet 3D vers le groupe %1 (vitesse=%3, sens de rotation=%2)</oldsource>
+        <translation>Rotation de l&apos;objet 3D vers le groupe %1 (vitesse=%3, sens de rotation=%2)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="6309"/>
         <source>Play animation #%1 of the field model (speed=%2, type=1)</source>
-        <translation type="unfinished"></translation>
+        <translation>Joue l&apos;animation %1 de l&apos;objet 3D (vitesse=%2, type=1)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="6336"/>
         <location filename="../src/core/field/Opcode.cpp" line="6687"/>
         <source>Play partially the animation #%1 of the field model and reset to initial state (first frame=%2, last frame=%3, speed=%4)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Joue partiellement l&apos;animation %1 de l&apos;objet 3D et retourne à l&apos;état précédent (première img=%2, dernière img=%3, vitesse=%4)</oldsource>
+        <translation>Joue partiellement l&apos;animation %1 de l&apos;objet 3D et retourne à l&apos;état précédent (première img=%2, dernière img=%3, vitesse=%4)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="6367"/>
         <location filename="../src/core/field/Opcode.cpp" line="6718"/>
         <source>Play partially the animation #%1 of the field model (first frame=%2, last frame=%3, speed=%4)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="6396"/>
-        <source>Set the field model move speed: %1</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Joue partiellement l&apos;animation %1 de l&apos;objet 3D (première img=%2, dernière img=%3, vitesse=%4)</oldsource>
+        <translation>Joue partiellement l&apos;animation %1 de l&apos;objet 3D (première img=%2, dernière img=%3, vitesse=%4)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="6426"/>
         <source>Set field model direction: %1</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Mettre l&apos;objet 3D dans la direction : %1</oldsource>
+        <translation>Mettre l&apos;objet 3D dans la direction : %1</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="6459"/>
         <source>Rotation (direction=%1, nbRevolution=%2, speed=%3, ?=%4)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Rotation (direction=%1, nbTours=%2, vitesse=%3, ?=%4)</oldsource>
+        <translation>Rotation (direction=%1, nbTours=%2, vitesse=%3, ?=%4)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="6498"/>
         <source>Inversed rotation (direction=%1, nbRevolution=%2, speed=%3, ?=%4)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Rotation inversée (direction=%1, nbTours=%2, vitesse=%3, ?=%4)</oldsource>
+        <translation>Rotation inversée (direction=%1, nbTours=%2, vitesse=%3, ?=%4)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="6533"/>
         <source>Direct the field model towards the group %1</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Mettre l&apos;objet 3D en direction du groupe %1</oldsource>
+        <translation>Mettre l&apos;objet 3D en direction du groupe %1</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="6557"/>
         <source>Store direction of the group %1 in %2</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Stocker dans %2 la direction du groupe %1</oldsource>
+        <translation>Stocker dans %2 la direction du groupe %1</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="6591"/>
         <source>Store position of the group %1 in %2 (X) and %3 (Y)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Stocker dans %2 et %3 la position X et Y du groupe %1</oldsource>
+        <translation>Stocker dans %2 et %3 la position X et Y du groupe %1</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="6628"/>
         <source>Store triangle ID of the group %1 in %2</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Stocker dans %2 le triangle id du groupe %1</oldsource>
+        <translation>Stocker dans %2 le triangle id du groupe %1</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="6660"/>
         <source>Play animation #%1 of the field model (speed=%2, type=2)</source>
-        <translation type="unfinished"></translation>
+        <translation>Joue l&apos;animation %1 de l&apos;objet 3D (vitesse=%2, type=2)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="6747"/>
         <source>Set the field model animations speed: %1</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Configurer la vitesse des animations de l&apos;objet 3D : %1</oldsource>
+        <translation>Configurer la vitesse des animations de l&apos;objet 3D : %1</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="6776"/>
         <source>Control the group %1</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Prendre le contrôle du groupe %1</oldsource>
+        <translation>Prendre le contrôle du groupe %1</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="6802"/>
         <source>Field model jump (X=%1, Y=%2, triangle ID=%3, Steps=%4)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Faire sauter un personnage (X=%1, Y=%2, triangle id=%3, hauteur=%4)</oldsource>
+        <translation>Faire sauter un personnage (X=%1, Y=%2, triangle id=%3, hauteur=%4)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="6848"/>
         <source>Store position of the group %1 in %2 (X), %3 (Y), %4 (Z) and %5 (triangle ID)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Stocker la position du groupe %1 dans des variables (%2=X, %3=Y, %4=Z, %5=triangle id)</oldsource>
+        <translation>Stocker la position du groupe %1 dans des variables (%2=X, %3=Y, %4=Z, %5=triangle id)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="6899"/>
         <source>Climb a ladder with the animation #%6 (X=%1, Y=%2, Z=%3, triangle ID=%4, direction1=%5, direction2=%7, speed=%8)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Monter une échelle avec l&apos;animation %6 (X=%1, Y=%2, Z=%3, triangle id=%4, sens=%5, direction=%7, vitesse=%8)</oldsource>
+        <translation>Monter une échelle avec l&apos;animation %6 (X=%1, Y=%2, Z=%3, triangle id=%4, sens=%5, direction=%7, vitesse=%8)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="6953"/>
         <source>Offset Object (movement=%1, X=%2, Y=%3, Z=%4, speed=%5)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="6990"/>
-        <source>Wait for offset object</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7006"/>
-        <location filename="../src/core/field/Opcode.cpp" line="7506"/>
-        <source>Set range of the talk circle for the field model: %1</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Offset Object (mouvement=%1, X=%2, Y=%3, Z=%4, vitesse=%5)</oldsource>
+        <translation>Offset Object (mouvement=%1, X=%2, Y=%3, Z=%4, vitesse=%5)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="7036"/>
         <location filename="../src/core/field/Opcode.cpp" line="7536"/>
         <source>Set range of the contact circle for the field model: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7065"/>
-        <source>%1 contact with field model</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7086"/>
-        <source>Add %1 to the current party</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7107"/>
-        <source>Remove %1 from the current party</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Modifier la distance nécessaire pour toucher l&apos;objet 3D : %1</oldsource>
+        <translation>Modifier la distance nécessaire pour toucher l&apos;objet 3D : %1</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="7128"/>
         <source>New party: %1 | %2 | %3</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7165"/>
-        <source>If %1 is in the current party (%2)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Nouvelle équipe : %1 | %2 | %3</oldsource>
+        <translation>Nouvelle équipe : %1 | %2 | %3</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="7179"/>
         <source>If %1 exists (%2)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Si %1 existe (%2)</oldsource>
+        <translation>Si %1 existe (%2)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="7199"/>
         <source>%2 %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7200"/>
-        <source>not available</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7200"/>
-        <source>available</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="7223"/>
         <source>Locks %1 in PHS menu</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Bloque %1 dans le menu PHS</oldsource>
+        <translation>Bloque %1 dans le menu PHS</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="7244"/>
         <source>Unlock %1 in PHS menu</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Débloque %1 dans le menu PHS</oldsource>
+        <translation>Débloque %1 dans le menu PHS</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="7270"/>
         <source>Create line (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7318"/>
-        <source>%1 line</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2211"/>
-        <location filename="../src/core/field/Opcode.cpp" line="7319"/>
-        <source>Enable</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2211"/>
-        <location filename="../src/core/field/Opcode.cpp" line="7319"/>
-        <source>Disable</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7339"/>
-        <source>Gateways %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7366"/>
-        <source>Set line (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7419"/>
-        <source>%4 = ((Sinus(%1) * %2) + %3) &gt;&gt; 12</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7464"/>
-        <source>%4 = ((Cosinus(%1) * %2) + %3) &gt;&gt; 12</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7565"/>
-        <source>Preload the field map %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7580"/>
-        <source>PMJMP2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7601"/>
-        <source>%1 (param1=%2, param2=%3, param3=%4, param4=%5, param5=%6)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7665"/>
-        <source>%1 rotation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7688"/>
-        <source>Play animation #%1 for &apos;%3&apos; (speed=%2)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7691"/>
-        <source>stay</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7692"/>
-        <source>walk</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7693"/>
-        <source>run</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7710"/>
-        <source>Break field model animation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7719"/>
-        <source>Wait for rotation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7741"/>
-        <source>Multiply RGB(%6, %5, %4) on the colors in a palette (sourcePal=%1, targetPal=%2, first color=%3, color count=%7+1)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7792"/>
-        <source>Show the state #%2 of the background parameter #%1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7827"/>
-        <source>Hide the state #%2 of the background parameter #%1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7861"/>
-        <source>Show next state of the background parameter #%1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7891"/>
-        <source>Show previous state of the background parameter #%1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7921"/>
-        <source>Hide background parameter #%1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7953"/>
-        <source>Load the palette #%1 in the position %2 (color count=%3)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7991"/>
-        <source>Load the position %1 in the palette #%2 (color count=%3)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8029"/>
-        <source>Copy palette (sourcePal=%1, targetPal=%2, color count=%3)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8068"/>
-        <source>Copy partially palette (sourcePal=%1, targetPal=%2, first color=%3, color count=%4)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8113"/>
-        <source>Add RGB(%5, %4, %3) on the colors in a palette (sourcePal=%1, targetPal=%2, color count=%6)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8166"/>
-        <source>Multiply RGB(%5, %4, %3) on the colors in a palette (sourcePal=%1, targetPal=%2, color count=%6)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8216"/>
-        <source>Load the palette #%1 in the position %2 (first color=%3, color count=%4)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8247"/>
-        <source>Load the position %1 in the palette #%2 (first color=%3, color count=%4)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8275"/>
-        <source>CPPAL2 %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8296"/>
-        <source>RTPAL2 %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8317"/>
-        <source>ADPAL2 %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8338"/>
-        <source>Play music #%1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8361"/>
-        <source>Play sound #%1 (position=%2/127)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8400"/>
-        <source>%1 (param1 (8-bit)=%2, param2=%3, param3=%4, param4=%5, param5=%6)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8464"/>
-        <source>Play temporary music #%1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8485"/>
-        <source>MUSVM (music #%1)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8506"/>
-        <source>%1 music</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8507"/>
-        <source>Unlock</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8507"/>
-        <source>Lock</source>
-        <comment>test</comment>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8527"/>
-        <source>Set the music #%1 for next battle</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8550"/>
-        <source>CHMPH: Save (unknown) in %1 and (unknown) in %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8583"/>
-        <source>Set next movie: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8598"/>
-        <source>Play movie</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8614"/>
-        <source>Save Movie frame in %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8643"/>
-        <source>Camera Movie: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Créer ligne (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="8664"/>
@@ -4224,208 +4786,370 @@ Some scripts can refer to it!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Set location (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)</source>
+        <oldsource>Définit la zone (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)</oldsource>
+        <translation type="vanished">Définit la zone (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="7318"/>
+        <source>%1 line</source>
+        <translation>%1 la ligne</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2211"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7319"/>
+        <source>Enable</source>
+        <translation>Activer</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2211"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7319"/>
+        <source>Disable</source>
+        <translation>Désactiver</translation>
+    </message>
+    <message>
+        <source>%1 the location</source>
+        <oldsource>%1 la zone</oldsource>
+        <translation type="vanished">%1 la zone</translation>
+    </message>
+    <message>
+        <source>Trace</source>
+        <translation type="vanished">Tracer</translation>
+    </message>
+    <message>
+        <source>Resize location (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)</source>
+        <oldsource>Redimensionner la zone (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)</oldsource>
+        <translation type="vanished">Redimensionner la zone (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="7419"/>
+        <source>%4 = ((Sinus(%1) * %2) + %3) &gt;&gt; 12</source>
+        <translation>%4 = ((Sinus(%1) * %2) + %3) &gt;&gt; 12</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="7464"/>
+        <source>%4 = ((Cosinus(%1) * %2) + %3) &gt;&gt; 12</source>
+        <translation>%4 = ((Cosinus(%1) * %2) + %3) &gt;&gt; 12</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="7580"/>
+        <source>PMJMP2</source>
+        <translation>PMJMP2</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="7665"/>
+        <source>%1 rotation</source>
+        <translation>%1 rotation</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="7688"/>
+        <source>Play animation #%1 for &apos;%3&apos; (speed=%2)</source>
+        <oldsource>Jouer animation No%1 pour &apos;%3&apos; (vitesse=%2)</oldsource>
+        <translation>Jouer animation n°%1 pour &apos;%3&apos; (vitesse=%2)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="7741"/>
+        <source>Multiply RGB(%6, %5, %4) on the colors in a palette (sourcePal=%1, targetPal=%2, first color=%3, color count=%7+1)</source>
+        <oldsource>Multiplier RVB(%6, %5, %4) sur les couleurs d&apos;une palette (sourcePal=%1, ciblePal=%2, première couleur=%3, nombre de couleurs=%7+1)</oldsource>
+        <translation>Multiplier RVB(%6, %5, %4) sur les couleurs d&apos;une palette (sourcePal=%1, ciblePal=%2, première couleur=%3, nombre de couleurs=%7+1)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="7827"/>
+        <source>Hide the state #%2 of the background parameter #%1</source>
+        <oldsource>Cacher l&apos;état n°%2 du paramètre No%1</oldsource>
+        <translation>Cacher l&apos;état n°%2 du paramètre n°%1</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="7861"/>
+        <source>Show next state of the background parameter #%1</source>
+        <oldsource>Afficher l&apos;état suivant du paramètre No%1</oldsource>
+        <translation>Afficher l&apos;état suivant du paramètre n°%1</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="7921"/>
+        <source>Hide background parameter #%1</source>
+        <oldsource>Cacher paramètre No%1</oldsource>
+        <translation>Cacher paramètre n°%1</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="7953"/>
+        <source>Load the palette #%1 in the position %2 (color count=%3)</source>
+        <oldsource>Charger la palette No%1 à la position %2 (nombre de couleurs=%3)</oldsource>
+        <translation>Charger la palette n°%1 à la position %2 (nombre de couleurs=%3)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="7991"/>
+        <source>Load the position %1 in the palette #%2 (color count=%3)</source>
+        <oldsource>Charger la position %1 dans la palette n°%2 (nombre de couleurs=%3)</oldsource>
+        <translation>Charger la position %1 dans la palette n°%2 (nombre de couleurs=%3)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="8029"/>
+        <source>Copy palette (sourcePal=%1, targetPal=%2, color count=%3)</source>
+        <oldsource>Copier palette (sourcePal=%1, ciblePal=%2, nombre de couleurs=%3)</oldsource>
+        <translation>Copier palette (sourcePal=%1, ciblePal=%2, nombre de couleurs=%3)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="8068"/>
+        <source>Copy partially palette (sourcePal=%1, targetPal=%2, first color=%3, color count=%4)</source>
+        <oldsource>Copier un morceau de palette (sourcePal=%1, ciblePal=%2, première couleur=%3, nombre de couleurs=%4)</oldsource>
+        <translation>Copier un morceau de palette (sourcePal=%1, ciblePal=%2, première couleur=%3, nombre de couleurs=%4)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="8113"/>
+        <source>Add RGB(%5, %4, %3) on the colors in a palette (sourcePal=%1, targetPal=%2, color count=%6)</source>
+        <oldsource>Additionner RVB(%5, %4, %3) sur les couleurs d&apos;une palette (sourcePal=%1, ciblePal=%2, nombre de couleurs=%6)</oldsource>
+        <translation>Additionner RVB(%5, %4, %3) sur les couleurs d&apos;une palette (sourcePal=%1, ciblePal=%2, nombre de couleurs=%6)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="8166"/>
+        <source>Multiply RGB(%5, %4, %3) on the colors in a palette (sourcePal=%1, targetPal=%2, color count=%6)</source>
+        <oldsource>Multiplier RVB(%5, %4, %3) sur les couleurs d&apos;une palette (sourcePal=%1, ciblePal=%2, nombre de couleurs=%6)</oldsource>
+        <translation>Multiplier RVB(%5, %4, %3) sur les couleurs d&apos;une palette (sourcePal=%1, ciblePal=%2, nombre de couleurs=%6)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="8216"/>
+        <source>Load the palette #%1 in the position %2 (first color=%3, color count=%4)</source>
+        <oldsource>Charger la palette No%1 à la position %2 (première couleur=%3, nombre de couleurs=%4)</oldsource>
+        <translation>Charger la palette n°%1 à la position %2 (première couleur=%3, nombre de couleurs=%4)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="8247"/>
+        <source>Load the position %1 in the palette #%2 (first color=%3, color count=%4)</source>
+        <oldsource>Charger la position %1 dans la palette n°%2 (première couleur=%3, nombre de couleurs=%4)</oldsource>
+        <translation>Charger la position %1 dans la palette n°%2 (première couleur=%3, nombre de couleurs=%4)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="8275"/>
+        <source>CPPAL2 %1</source>
+        <translation>CPPAL2 %1</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="8296"/>
+        <source>RTPAL2 %1</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="8317"/>
+        <source>ADPAL2 %1</source>
+        <translation>ADPAL2 %1</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="8361"/>
+        <source>Play sound #%1 (position=%2/127)</source>
+        <oldsource>Jouer son No%1 (position=%2/127)</oldsource>
+        <translation>Jouer son n°%1 (position=%2/127)</translation>
+    </message>
+    <message>
+        <source>MUSVT (music #%1)</source>
+        <oldsource>MUSVT (musique No%1)</oldsource>
+        <translation type="vanished">MUSVT (musique n°%1)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="8485"/>
+        <source>MUSVM (music #%1)</source>
+        <oldsource>MUSVM (musique No%1)</oldsource>
+        <translation>MUSVM (musique n°%1)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="8506"/>
+        <source>%1 music</source>
+        <oldsource>%1 musique</oldsource>
+        <translation>%1 musique</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="8550"/>
+        <source>CHMPH: Save (unknown) in %1 and (unknown) in %2</source>
+        <oldsource>CHMPH : Sauvegarder (inconnu) dans %1 et (inconnu) dans %2</oldsource>
+        <translation>CHMPH : Sauvegarder (inconnu) dans %1 et (inconnu) dans %2</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="8614"/>
+        <source>Save Movie frame in %1</source>
+        <oldsource>Stocker Movie frame dans %1</oldsource>
+        <translation>Stocker Movie frame dans %1</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="8643"/>
+        <source>Camera Movie: %1</source>
+        <oldsource>Camera Movie : %1</oldsource>
+        <translation>Camera Movie : %1</translation>
+    </message>
+    <message>
+        <source>FMUSC (?=%1)</source>
+        <translation type="vanished">FMUSC (?=%1)</translation>
+    </message>
+    <message>
+        <source>CMUSC (music #%1, unknown1=%2, unknown2=%3, unknown2=%4, unknown4=%5, unknown5=%6, unknown6=%7)</source>
+        <oldsource>CMUSC (musique No%1, inconnu1=%2, inconnu2=%3, inconnu2=%4, inconnu4=%5, inconnu5=%6, inconnu6=%7)</oldsource>
+        <translation type="vanished">CMUSC (musique n°%1, inconnu1=%2, inconnu2=%3, inconnu2=%4, inconnu4=%5, inconnu5=%6, inconnu6=%7)</translation>
+    </message>
+    <message>
         <location filename="../src/core/field/Opcode.cpp" line="8719"/>
         <source>If music is currently playing set %1 to 1</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Si la musique est jouée mettre %1 à 1</oldsource>
+        <translation>Si la musique est jouée mettre %1 à 1</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="8742"/>
         <source>Game Over</source>
-        <translation type="unfinished"></translation>
+        <translation>Fin de partie</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Script.cpp" line="925"/>
+        <location filename="../src/core/field/Script.cpp" line="924"/>
         <source>Label %1 is declared several times.</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Le label %1 est déclaré plusieurs fois.</oldsource>
+        <translation>Le label %1 est déclaré plusieurs fois.</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Script.cpp" line="975"/>
+        <source>Label %1 is unreachable, please use a long jump.</source>
+        <oldsource>Le label %1 est inaccessible, veuillez utiliser un saut long.</oldsource>
+        <translation type="vanished">Le label %1 est inaccessible, veuillez utiliser un saut long.</translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Script.cpp" line="974"/>
         <source>Label %1 is unreachable, please bring this instruction closer.</source>
-        <translation type="unfinished"></translation>
+        <translation>Le label %1 est inaccessible, rapprochez cette instruction du label.</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Script.cpp" line="979"/>
+        <location filename="../src/core/field/Script.cpp" line="978"/>
         <source>Label %1 is unreachable because your script exceeds 65535 bytes, please reduce the size of the script.</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Le label %1 est inaccessible car votre script dépasse 65535 octets, veuillez réduire la taille du script.</oldsource>
+        <translation>Le label %1 est inaccessible car votre script dépasse 65535 octets, veuillez réduire la taille du script.</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Script.cpp" line="987"/>
+        <location filename="../src/core/field/Script.cpp" line="986"/>
         <source>The label %1 is unreachable because it is located before the opcode.</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Le label %1 est inaccessible car il se trouve avant la commande.</oldsource>
+        <translation>Le label %1 est inaccessible car il se trouve avant la commande.</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Script.cpp" line="997"/>
+        <location filename="../src/core/field/Script.cpp" line="996"/>
         <source>Script too big, it should not exceed 65535 bytes. Actual size: %1.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Section1File.cpp" line="45"/>
-        <source>Map name</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/core/field/Section1File.cpp" line="46"/>
-        <source>Hello world!</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Script trop grand, il ne doit pas dépasser les 65535 octets. Taille actuelle : %1.</oldsource>
+        <translation>Script too big, it should not exceed 65535 bytes. Actual size: %1.</translation>
     </message>
     <message>
         <location filename="../src/core/field/TutFileStandard.cpp" line="163"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Erreur</oldsource>
+        <translation>Erreur</translation>
+    </message>
+    <message>
+        <source>The file &apos;var.cfg&apos; could not be loaded.
+Make sure it is valid or delete it.</source>
+        <translation type="vanished">Le fichier &apos;var.cfg&apos; n&apos;a pas pu être chargé.
+Vérifiez que ce fichier est valide ou supprimez-le.</translation>
     </message>
     <message>
         <location filename="../src/core/field/TutFileStandard.cpp" line="167"/>
         <source>totalLength=%1
 id=%2
 </source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/core/field/TutFileStandard.cpp" line="174"/>
         <source>length=%1
 </source>
-        <translation type="unfinished"></translation>
+        <translation>length=%1
+</translation>
     </message>
     <message>
         <location filename="../src/core/field/TutFileStandard.cpp" line="181"/>
         <source>ChannelCount=%1
 </source>
-        <translation type="unfinished"></translation>
+        <translation>nbCanaux=%1
+</translation>
     </message>
     <message>
         <location filename="../src/core/IsoArchiveFF7.cpp" line="531"/>
         <source>Cannot update game binaries.</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible de mettre à jour les binaires du jeu.</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="506"/>
-        <source>Cloud</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/core/field/Section1File.cpp" line="45"/>
+        <source>Map name</source>
+        <translation>Nom de l&apos;écran</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="506"/>
-        <source>Barret</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/core/field/Section1File.cpp" line="46"/>
+        <source>Hello world!</source>
+        <translation>Salut tout le monde !</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="506"/>
-        <source>Tifa</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/core/field/FieldArchiveIOPS.cpp" line="418"/>
+        <source>Cannot remove destination archive</source>
+        <translation>Impossible de supprimer l&apos;archive de destination</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="507"/>
-        <source>Aerith</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/core/field/FieldArchiveIOPS.cpp" line="434"/>
+        <source>Cannot rename temporary file to destination path</source>
+        <translation>Impossible de renommer les fichiers temporaires vers le chemin de destination</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="507"/>
-        <source>Red XIII</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/core/field/Field.cpp" line="411"/>
+        <source>File size greater than 10000000</source>
+        <translation>Taille du fichier supérieure à 10000000</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="507"/>
-        <source>Yuffie</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/core/field/Field.cpp" line="424"/>
+        <source>Malformed LZS header</source>
+        <translation>En-tête LZS mal formée</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="508"/>
-        <source>Cait Sith</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/core/field/Field.cpp" line="452"/>
+        <location filename="../src/core/field/Field.cpp" line="556"/>
+        <source>Incorrect field file size</source>
+        <translation>Taille du fichier d&apos;écran incorrecte</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="508"/>
-        <source>Vincent</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/core/field/Field.cpp" line="465"/>
+        <location filename="../src/core/field/Field.cpp" line="564"/>
+        <source>Cannot open section 1 (texts, scripts and musics)</source>
+        <translation>Impossible d&apos;ouvrir la section 1 (textes, scripts et musiques)</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="508"/>
-        <source>Cid</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/core/field/Field.cpp" line="473"/>
+        <location filename="../src/core/field/Field.cpp" line="572"/>
+        <source>Cannot open tutos section</source>
+        <translation>Impossible d&apos;ouvrir la partie tutoriels</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="509"/>
-        <source>Yound Cloud</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/core/field/Field.cpp" line="481"/>
+        <location filename="../src/core/field/Field.cpp" line="587"/>
+        <source>Cannot open encounters section</source>
+        <translation>Impossible d&apos;ouvrir la partie rencontres aléatoires</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="509"/>
-        <source>Sephiroth</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/core/field/Field.cpp" line="489"/>
+        <location filename="../src/core/field/Field.cpp" line="595"/>
+        <source>Cannot open walkmesh section</source>
+        <translation>Impossible d&apos;ouvrir la partie walkmesh</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="509"/>
-        <source>Chocobo</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/core/field/Field.cpp" line="497"/>
+        <location filename="../src/core/field/Field.cpp" line="603"/>
+        <source>Cannot open camera section</source>
+        <translation>Impossible d&apos;ouvrir la partie caméra</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="514"/>
-        <source>[CAMERA|L2]</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/core/field/Field.cpp" line="505"/>
+        <location filename="../src/core/field/Field.cpp" line="611"/>
+        <source>Cannot open info section</source>
+        <translation>Impossible d&apos;ouvrir la partie infos</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="514"/>
-        <source>[TARGET|R2]</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/core/field/Field.cpp" line="513"/>
+        <location filename="../src/core/field/Field.cpp" line="580"/>
+        <source>Cannot open model loader section</source>
+        <translation>Impossible d&apos;ouvrir la partie qui liste les modèles 3D</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="515"/>
-        <source>[PAGE UP|L1]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Data.cpp" line="515"/>
-        <source>[PAGE DOWN|R1]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Data.cpp" line="516"/>
-        <source>[MENU|TRIANGLE]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Data.cpp" line="516"/>
-        <source>[OK|CIRCLE]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Data.cpp" line="517"/>
-        <source>[CANCEL|CROSS]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Data.cpp" line="517"/>
-        <source>[SWITCH|SQUARE]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Data.cpp" line="518"/>
-        <source>[ASSIST|SELECT]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Data.cpp" line="519"/>
-        <source>[START]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Data.cpp" line="520"/>
-        <source>[UP]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Data.cpp" line="520"/>
-        <source>[RIGHT]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Data.cpp" line="521"/>
-        <source>[DOWN]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Data.cpp" line="521"/>
-        <source>[LEFT]</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/core/field/Field.cpp" line="542"/>
+        <location filename="../src/core/field/Field.cpp" line="633"/>
+        <source>Cannot open background section</source>
+        <translation>Impossible d&apos;ouvrir la partie décors</translation>
     </message>
 </context>
 <context>
@@ -4433,1193 +5157,1330 @@ id=%2
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="48"/>
         <source>Script Editor%1</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Éditeur de script%1</oldsource>
+        <translation>Éditeur de script%1</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="48"/>
         <source> (init mode)</source>
-        <translation type="unfinished"></translation>
+        <translation> (init mode)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="52"/>
         <source>Control Structures</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="53"/>
-        <source>Mathematics</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Structures de contrôle</oldsource>
+        <translation>Structures de contrôle</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="54"/>
         <source>Windowing and messages</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Fenêtres et messages</oldsource>
+        <translation>Fenêtres et messages</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="55"/>
         <source>Party and inventory</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Équipe et inventaire</oldsource>
+        <translation>Équipe et inventaire</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="56"/>
         <source>Field Models and animations</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="57"/>
-        <source>Walkmesh and locations</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Objets 3D et animations</oldsource>
+        <translation>Objets 3D et animations</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="58"/>
         <source>Background</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="59"/>
-        <source>Fade and camera</source>
-        <translation type="unfinished"></translation>
+        <translation>Décor</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="60"/>
         <source>Audio and video</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Audio et vidéo</oldsource>
+        <translation>Audio et vidéo</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="61"/>
         <source>Modules</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="62"/>
-        <source>Unknown</source>
-        <translation type="unfinished"></translation>
+        <translation>Modules</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="78"/>
         <source>OK</source>
-        <translation type="unfinished"></translation>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="428"/>
+        <source>Return</source>
+        <oldsource>Retourner</oldsource>
+        <translation>Retourner</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="429"/>
+        <source>Return to</source>
+        <oldsource>Retourner à</oldsource>
+        <translation>Retourner à</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="431"/>
+        <source>Execute a script</source>
+        <oldsource>Exécuter un script</oldsource>
+        <translation>Exécuter un script</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="433"/>
+        <source>Execute a script from a party member</source>
+        <oldsource>Exécuter un script d&apos;un équipier</oldsource>
+        <translation>Exécuter un script d&apos;un équipier</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="436"/>
+        <source>Label</source>
+        <translation>Label</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="437"/>
+        <source>Goto label</source>
+        <oldsource>Aller au label</oldsource>
+        <translation>Aller au label</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="443"/>
+        <source>If character exsists</source>
+        <oldsource>Si personnage existe</oldsource>
+        <translation>Si personnage existe</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="450"/>
+        <source>Binary operation</source>
+        <oldsource>Opération binaire</oldsource>
+        <translation>Opération binaire</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="455"/>
+        <source>Unary operation</source>
+        <oldsource>Opération unaire</oldsource>
+        <translation>Opération unaire</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="458"/>
+        <source>Bitwise operation</source>
+        <oldsource>Opération bit à bit</oldsource>
+        <translation>Opération bit à bit</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="461"/>
+        <source>Seed Random Generator</source>
+        <translation>Seed Random Generator</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="463"/>
+        <source>Sinus</source>
+        <translation>Sinus</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="464"/>
+        <source>Cosinus</source>
+        <translation>Cosinus</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="483"/>
+        <source>Ask Question</source>
+        <oldsource>Poser une question</oldsource>
+        <translation>Poser une question</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="486"/>
+        <source>Enable/Disable menu</source>
+        <oldsource>Activer/Désactiver menu</oldsource>
+        <translation>Activer/Désactiver menu</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="491"/>
+        <source>HP/MP Maximum (1)</source>
+        <oldsource>HP/MP restaurés (1)</oldsource>
+        <translation>HP/MP restaurés (1)</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="492"/>
+        <source>HP/MP Maximum (2)</source>
+        <oldsource>HP/MP restaurés (2)</oldsource>
+        <translation>HP/MP restaurés (2)</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="493"/>
+        <source>HP/MP Maximum with Status Clear</source>
+        <oldsource>HP/MP/statut restaurés</oldsource>
+        <translation>HP/MP/statut restaurés</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="494"/>
+        <source>HP/MP Maximum (3)</source>
+        <oldsource>HP/MP restaurés (3)</oldsource>
+        <translation>HP/MP restaurés (3)</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="506"/>
+        <source>Add Materia</source>
+        <oldsource>Ajouter Matéria</oldsource>
+        <translation>Ajouter Matéria</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="507"/>
+        <source>Remove Materia</source>
+        <oldsource>Retirer Matéria</oldsource>
+        <translation>Retirer Matéria</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="508"/>
+        <source>Amount of Materia</source>
+        <oldsource>Quantité de Matérias</oldsource>
+        <translation>Quantité de Matérias</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="524"/>
+        <source>Get Group Direction (Dir)</source>
+        <oldsource>Obtenir la direction d&apos;un groupe (Dir)</oldsource>
+        <translation>Obtenir la direction d&apos;un groupe (Dir)</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="525"/>
+        <source>Get Party Member Direction (Dir)</source>
+        <oldsource>Obtenir la direction d&apos;un équipier (Dir)</oldsource>
+        <translation>Obtenir la direction d&apos;un équipier (Dir)</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="526"/>
+        <source>Get Group Triangle ID (I)</source>
+        <oldsource>Obtenir le triangle id d&apos;un groupe (I)</oldsource>
+        <translation>Obtenir le triangle id d&apos;un groupe (I)</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="527"/>
+        <source>Get Party Member Triangle ID (I)</source>
+        <oldsource>Obtenir le triangle id d&apos;un équipier (I)</oldsource>
+        <translation>Obtenir le triangle id d&apos;un équipier (I)</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="528"/>
+        <source>Get Group coordinates (X,Y)</source>
+        <oldsource>Obtenir les coordonnées d&apos;un groupe (X,Y)</oldsource>
+        <translation>Obtenir les coordonnées d&apos;un groupe (X,Y)</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="529"/>
+        <source>Get Group coordinates (X,Y,Z,I)</source>
+        <oldsource>Obtenir les coordonnées d&apos;un groupe (X,Y,Z,I)</oldsource>
+        <translation>Obtenir les coordonnées d&apos;un groupe (X,Y,Z,I)</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="530"/>
+        <source>Get Party coordinates (X,Y,Z,I)</source>
+        <oldsource>Obtenir les coordonnées d&apos;un équipier (X,Y,Z,I)</oldsource>
+        <translation>Obtenir les coordonnées d&apos;un équipier (X,Y,Z,I)</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="532"/>
+        <source>Place (X,Y,Z)</source>
+        <oldsource>Placer (X,Y,Z)</oldsource>
+        <translation>Placer (X,Y,Z)</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="533"/>
+        <source>Place (X,Y,I)</source>
+        <oldsource>Placer (X,Y,I)</oldsource>
+        <translation>Placer (X,Y,I)</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="534"/>
+        <source>Place (X,Y,Z,I)</source>
+        <oldsource>Placer (X,Y,Z,I)</oldsource>
+        <translation>Placer (X,Y,Z,I)</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="535"/>
+        <source>Place (Dir)</source>
+        <oldsource>Placer (Dir)</oldsource>
+        <translation>Placer (Dir)</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="538"/>
+        <source>Move without animation</source>
+        <oldsource>Déplacer sans animation</oldsource>
+        <translation>Déplacer sans animation</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="539"/>
+        <source>Move without animation or rotation</source>
+        <oldsource>Déplacer sans animation ni rotation</oldsource>
+        <translation>Déplacer sans animation ni rotation</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="544"/>
+        <source>Direction to Group</source>
+        <oldsource>Rotation vers un groupe</oldsource>
+        <translation>Rotation vers un groupe</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="546"/>
+        <source>Inversed Turn</source>
+        <oldsource>Rotation inversée</oldsource>
+        <translation>Rotation inversée</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="547"/>
+        <source>Direction (inversed) to Group</source>
+        <oldsource>Rotation inversée vers un groupe</oldsource>
+        <translation>Rotation inversée vers un groupe</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="548"/>
+        <source>Direction (inversed) to Party Member</source>
+        <oldsource>Rotation inversée vers un équipier</oldsource>
+        <translation>Rotation inversée vers un équipier</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="551"/>
+        <source>Play animation (loop)</source>
+        <oldsource>Jouer animation en boucle</oldsource>
+        <translation>Jouer animation en boucle</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="552"/>
+        <source>Play animation (1)</source>
+        <oldsource>Jouer animation (1)</oldsource>
+        <translation>Jouer animation (1)</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="553"/>
+        <source>Play animation (2)</source>
+        <oldsource>Jouer animation (2)</oldsource>
+        <translation>Jouer animation (2)</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="554"/>
+        <source>Play animation and return (1)</source>
+        <oldsource>Jouer animation et revenir (1)</oldsource>
+        <translation>Jouer animation et revenir (1)</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="555"/>
+        <source>Play animation and return (2)</source>
+        <oldsource>Jouer animation et revenir (2)</oldsource>
+        <translation>Jouer animation et revenir (2)</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="556"/>
+        <source>Play partial animation (1)</source>
+        <oldsource>Jouer partiellement animation (1)</oldsource>
+        <translation>Jouer partiellement animation (1)</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="557"/>
+        <source>Play partial animation (2)</source>
+        <oldsource>Jouer partiellement animation (2)</oldsource>
+        <translation>Jouer partiellement animation (2)</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="558"/>
+        <source>Play partial animation and return (1)</source>
+        <oldsource>Jouer partiellement animation et revenir (1)</oldsource>
+        <translation>Jouer partiellement animation et revenir (1)</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="559"/>
+        <source>Play partial animation and return (2)</source>
+        <oldsource>Jouer partiellement animation et revenir (2)</oldsource>
+        <translation>Jouer partiellement animation et revenir (2)</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="560"/>
+        <source>Play Stand/Walk/Run animation</source>
+        <oldsource>Jouer animation Stand/Walk/Run</oldsource>
+        <translation>Jouer animation Stand/Walk/Run</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="561"/>
+        <source>Play jump animation</source>
+        <oldsource>Jouer animation du saut</oldsource>
+        <translation>Jouer animation du saut</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="53"/>
+        <source>Mathematics</source>
+        <translation>Opérations mathématiques</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="57"/>
+        <source>Walkmesh and locations</source>
+        <translation>Zones</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="59"/>
+        <source>Fade and camera</source>
+        <translation>Transitions et caméra</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="62"/>
+        <source>Unknown</source>
+        <translation>Inconnu</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="80"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="427"/>
-        <source>Return</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="428"/>
-        <source>Return to</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="430"/>
-        <source>Execute a script</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="432"/>
-        <source>Execute a script from a party member</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="435"/>
-        <source>Label</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="436"/>
-        <source>Goto label</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="438"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="439"/>
         <source>If...then</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="440"/>
-        <source>If key pressed</source>
-        <translation type="unfinished"></translation>
+        <translation>Si...alors</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="441"/>
-        <source>If Party Member</source>
-        <translation type="unfinished"></translation>
+        <source>If key pressed</source>
+        <translation>Si touche pressée</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="442"/>
-        <source>If character exsists</source>
-        <translation type="unfinished"></translation>
+        <source>If Party Member</source>
+        <translation>Si personnage membre de l&apos;équipe</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="443"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="444"/>
         <source>[DLPB&apos;s custom opcode] If Red XIII is named Nanaki</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="445"/>
-        <source>Wait</source>
-        <translation type="unfinished"></translation>
+        <translation>[DLPB&apos;s custom opcode] Si Rouge XIII est nommé Nanaki</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="446"/>
+        <source>Wait</source>
+        <translation>Attendre</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="447"/>
         <source>No Operation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="449"/>
-        <source>Binary operation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="454"/>
-        <source>Unary operation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="457"/>
-        <source>Bitwise operation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="460"/>
-        <source>Seed Random Generator</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="461"/>
-        <source>Two Byte from two one-byte</source>
-        <translation type="unfinished"></translation>
+        <translation>Ne rien faire</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="462"/>
-        <source>Sinus</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="463"/>
-        <source>Cosinus</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="466"/>
-        <source>Window creation</source>
-        <translation type="unfinished"></translation>
+        <source>Two Byte from two one-byte</source>
+        <translation>Créer un mot de deux octets</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="467"/>
-        <source>Resizes/Repositions a window</source>
-        <translation type="unfinished"></translation>
+        <source>Window creation</source>
+        <translation>Créer une fenêtre</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="468"/>
-        <source>Set line count in window</source>
-        <translation type="unfinished"></translation>
+        <source>Resizes/Repositions a window</source>
+        <translation>Redimensionner une fenêtre</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="469"/>
-        <source>Move a window</source>
-        <translation type="unfinished"></translation>
+        <source>Set line count in window</source>
+        <translation>Modifier le nombre de lignes dans fenêtre</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="470"/>
-        <source>Set window type</source>
-        <translation type="unfinished"></translation>
+        <source>Move a window</source>
+        <translation>Déplacer une fenêtre</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="471"/>
-        <source>Reset a window</source>
-        <translation type="unfinished"></translation>
+        <source>Set window type</source>
+        <translation>Modifier type de fenêtre</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="472"/>
-        <source>Close a window (1)</source>
-        <translation type="unfinished"></translation>
+        <source>Reset a window</source>
+        <translation>Remettre une fenêtre à zéro</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="473"/>
-        <source>Close a window (2)</source>
-        <translation type="unfinished"></translation>
+        <source>Close a window (1)</source>
+        <translation>Fermer une fenêtre (1)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="475"/>
-        <source>Numerical Display</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="474"/>
+        <source>Close a window (2)</source>
+        <translation>Fermer une fenêtre (2)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="476"/>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="479"/>
-        <source>Set window variable (16-bit)</source>
-        <translation type="unfinished"></translation>
+        <source>Numerical Display</source>
+        <translation>Mettre un compteur dans fenêtre</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="477"/>
-        <source>Countdown</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="480"/>
+        <source>Set window variable (16-bit)</source>
+        <translation>Modifier variable dans fenêtre (16 bits)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="478"/>
-        <source>Set window variable (8-bit)</source>
-        <translation type="unfinished"></translation>
+        <source>Countdown</source>
+        <translation>Compte à rebours</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="481"/>
-        <source>Set window Text</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="479"/>
+        <source>Set window variable (8-bit)</source>
+        <translation>Modifier variable dans fenêtre (8 bits)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="482"/>
-        <source>Ask Question</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="484"/>
-        <source>Set map name</source>
-        <translation type="unfinished"></translation>
+        <source>Set window Text</source>
+        <translation>Afficher texte</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="485"/>
-        <source>Enable/Disable menu</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="486"/>
-        <source>Get window color</source>
-        <translation type="unfinished"></translation>
+        <source>Set map name</source>
+        <translation>Modifier le nom du lieu</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="487"/>
+        <source>Get window color</source>
+        <translation>Obtenir la couleur d&apos;une fenêtre</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="488"/>
         <source>Set window color</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="490"/>
-        <source>HP/MP Maximum (1)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="491"/>
-        <source>HP/MP Maximum (2)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="492"/>
-        <source>HP/MP Maximum with Status Clear</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="493"/>
-        <source>HP/MP Maximum (3)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="495"/>
-        <source>Increase MP</source>
-        <translation type="unfinished"></translation>
+        <translation>Changer la couleur d&apos;une fenêtre</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="496"/>
-        <source>Decrease MP</source>
-        <translation type="unfinished"></translation>
+        <source>Increase MP</source>
+        <translation>Augmenter les MPs</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="497"/>
-        <source>Increase HP</source>
-        <translation type="unfinished"></translation>
+        <source>Decrease MP</source>
+        <translation>Diminuer les MPs</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="498"/>
-        <source>Decrease HP</source>
-        <translation type="unfinished"></translation>
+        <source>Increase HP</source>
+        <translation>Augmenter les HPs</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="499"/>
-        <source>Add gil</source>
-        <translation type="unfinished"></translation>
+        <source>Decrease HP</source>
+        <translation>Diminuer les HPs</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="500"/>
-        <source>Remove gil</source>
-        <translation type="unfinished"></translation>
+        <source>Add gil</source>
+        <translation>Ajouter des gils</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="501"/>
-        <source>Amount of gil</source>
-        <translation type="unfinished"></translation>
+        <source>Remove gil</source>
+        <translation>Retirer des gils</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="502"/>
-        <source>Add Item</source>
-        <translation type="unfinished"></translation>
+        <source>Amount of gil</source>
+        <translation>Quantité d&apos;argent</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="503"/>
-        <source>Remove item</source>
-        <translation type="unfinished"></translation>
+        <source>Add Item</source>
+        <translation>Ajouter objet</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="504"/>
-        <source>Amount of item</source>
-        <translation type="unfinished"></translation>
+        <source>Remove item</source>
+        <translation>Retirer objet</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="505"/>
-        <source>Add Materia</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="506"/>
-        <source>Remove Materia</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="507"/>
-        <source>Amount of Materia</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="509"/>
-        <source>Party Change</source>
-        <translation type="unfinished"></translation>
+        <source>Amount of item</source>
+        <translation>Quantité d&apos;objets</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="510"/>
-        <source>Add Character to the party</source>
-        <translation type="unfinished"></translation>
+        <source>Party Change</source>
+        <translation>Nouvelle équipe</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="511"/>
-        <source>Remove Character from the party</source>
-        <translation type="unfinished"></translation>
+        <source>Add Character to the party</source>
+        <translation>Ajouter un personnage</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="512"/>
-        <source>Save party</source>
-        <translation type="unfinished"></translation>
+        <source>Remove Character from the party</source>
+        <translation>Retirer un personnage</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="513"/>
-        <source>Load party</source>
-        <translation type="unfinished"></translation>
+        <source>Save party</source>
+        <translation>Sauvegarder l&apos;équipe</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="514"/>
-        <source>Create/Delete character</source>
-        <translation type="unfinished"></translation>
+        <source>Load party</source>
+        <translation>Restaurer l&apos;équipe</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="515"/>
-        <source>Lock character</source>
-        <translation type="unfinished"></translation>
+        <source>Create/Delete character</source>
+        <translation>Créer/effacer personnage</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="516"/>
-        <source>Unlock character</source>
-        <translation type="unfinished"></translation>
+        <source>Lock character</source>
+        <translation>Bloquer personnage</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="519"/>
-        <source>Set Field Model</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="517"/>
+        <source>Unlock character</source>
+        <translation>Débloquer personnage</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="520"/>
-        <source>Set character to Field Model</source>
-        <translation type="unfinished"></translation>
+        <source>Set Field Model</source>
+        <translation>Définir objet 3D</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="521"/>
+        <source>Set character to Field Model</source>
+        <translation>Affecter personnage à objet 3D</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="522"/>
         <source>Group control</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="523"/>
-        <source>Get Group Direction (Dir)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="524"/>
-        <source>Get Party Member Direction (Dir)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="525"/>
-        <source>Get Group Triangle ID (I)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="526"/>
-        <source>Get Party Member Triangle ID (I)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="527"/>
-        <source>Get Group coordinates (X,Y)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="528"/>
-        <source>Get Group coordinates (X,Y,Z,I)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="529"/>
-        <source>Get Party coordinates (X,Y,Z,I)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="531"/>
-        <source>Place (X,Y,Z)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="532"/>
-        <source>Place (X,Y,I)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="533"/>
-        <source>Place (X,Y,Z,I)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="534"/>
-        <source>Place (Dir)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="536"/>
-        <source>Move</source>
-        <translation type="unfinished"></translation>
+        <translation>Prendre le contrôle d&apos;un groupe</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="537"/>
-        <source>Move without animation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="538"/>
-        <source>Move without animation or rotation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="539"/>
-        <source>Move to Group</source>
-        <translation type="unfinished"></translation>
+        <source>Move</source>
+        <translation>Déplacer</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="540"/>
-        <source>Move to Party Member</source>
-        <translation type="unfinished"></translation>
+        <source>Move to Group</source>
+        <translation>Déplacer vers un groupe</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="542"/>
-        <source>Turn</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="541"/>
+        <source>Move to Party Member</source>
+        <translation>Déplacer vers un équipier</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="543"/>
-        <source>Direction to Group</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="544"/>
-        <source>Direction to Party Member</source>
-        <translation type="unfinished"></translation>
+        <source>Turn</source>
+        <translation>Rotation</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="545"/>
-        <source>Inversed Turn</source>
-        <translation type="unfinished"></translation>
+        <source>Direction to Party Member</source>
+        <translation>Rotation vers un équipier</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="546"/>
-        <source>Direction (inversed) to Group</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="547"/>
-        <source>Direction (inversed) to Party Member</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="548"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="549"/>
         <source>Wait for Turn</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="550"/>
-        <source>Play animation (loop)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="551"/>
-        <source>Play animation (1)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="552"/>
-        <source>Play animation (2)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="553"/>
-        <source>Play animation and return (1)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="554"/>
-        <source>Play animation and return (2)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="555"/>
-        <source>Play partial animation (1)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="556"/>
-        <source>Play partial animation (2)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="557"/>
-        <source>Play partial animation and return (1)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="558"/>
-        <source>Play partial animation and return (2)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="559"/>
-        <source>Play Stand/Walk/Run animation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="560"/>
-        <source>Play jump animation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="561"/>
-        <source>Play climb animation</source>
-        <translation type="unfinished"></translation>
+        <translation>Attendre fin rotation</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="562"/>
-        <source>Party field join</source>
-        <translation type="unfinished"></translation>
+        <source>Play climb animation</source>
+        <translation>Jouer animation de l&apos;échelle</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="563"/>
-        <source>Party field split</source>
-        <translation type="unfinished"></translation>
+        <source>Party field join</source>
+        <translation>Rejoindre le leader</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="564"/>
-        <source>Stop animation</source>
-        <translation type="unfinished"></translation>
+        <source>Party field split</source>
+        <translation>Séparer les membres de l&apos;équipe</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="565"/>
-        <source>Wait for animation</source>
-        <translation type="unfinished"></translation>
+        <source>Stop animation</source>
+        <oldsource>Arrêter animation</oldsource>
+        <translation>Arrêter animation</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="567"/>
-        <source>Character Graphics - Eye open/close</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="566"/>
+        <source>Wait for animation</source>
+        <oldsource>Attendre fin animation</oldsource>
+        <translation>Attendre fin animation</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="568"/>
-        <source>Character Graphics - Activate/Deactivate blending</source>
-        <translation type="unfinished"></translation>
+        <source>Character Graphics - Eye open/close</source>
+        <oldsource>Filtre graphique - OEil ouvert/fermé</oldsource>
+        <translation>Filtre graphique - OEil ouvert/fermé</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="569"/>
-        <source>Character Graphics - ??? - AMBNT</source>
-        <translation type="unfinished"></translation>
+        <source>Character Graphics - Activate/Deactivate blending</source>
+        <oldsource>Filtre graphique - Activer/Désactiver transparence</oldsource>
+        <translation>Filtre graphique - Activer/Désactiver transparence</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="570"/>
-        <source>Character Graphics - ??? (1)</source>
-        <translation type="unfinished"></translation>
+        <source>Character Graphics - ??? - AMBNT</source>
+        <oldsource>Filtre graphique - AMBNT</oldsource>
+        <translation>Filtre graphique - ??? - AMBNT</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="571"/>
-        <source>Character Graphics - ??? (2)</source>
-        <translation type="unfinished"></translation>
+        <source>Character Graphics - ??? (1)</source>
+        <oldsource>Filtre graphique - ??? (1)</oldsource>
+        <translation>Filtre graphique - ??? (1)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="572"/>
-        <source>Character Graphics - ??? (3)</source>
-        <translation type="unfinished"></translation>
+        <source>Character Graphics - ??? (2)</source>
+        <oldsource>Filtre graphique - ??? (2)</oldsource>
+        <translation>Filtre graphique - ??? (2)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="573"/>
-        <source>Character Graphics - LIGHT</source>
-        <translation type="unfinished"></translation>
+        <source>Character Graphics - ??? (3)</source>
+        <oldsource>Filtre graphique - ??? (3)</oldsource>
+        <translation>Filtre graphique - ??? (3)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="574"/>
-        <source>Character Graphics - ??? (4)</source>
-        <translation type="unfinished"></translation>
+        <source>Character Graphics - LIGHT</source>
+        <oldsource>Filtre graphique - LIGHT</oldsource>
+        <translation>Filtre graphique - LIGHT</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="575"/>
-        <source>Character Graphics - ??? (5)</source>
-        <translation type="unfinished"></translation>
+        <source>Character Graphics - ??? (4)</source>
+        <oldsource>Filtre graphique - ??? (4)</oldsource>
+        <translation>Filtre graphique - ??? (4)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="576"/>
-        <source>Character Graphics - ??? (6)</source>
-        <translation type="unfinished"></translation>
+        <source>Character Graphics - ??? (5)</source>
+        <oldsource>Filtre graphique - ??? (5)</oldsource>
+        <translation>Filtre graphique - ??? (5)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="577"/>
-        <source>Character Graphics - SBOBJ</source>
-        <translation type="unfinished"></translation>
+        <source>Character Graphics - ??? (6)</source>
+        <oldsource>Filtre graphique - ??? (6)</oldsource>
+        <translation>Filtre graphique - ??? (6)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="578"/>
-        <source>Character Graphics - ??? (7)</source>
-        <translation type="unfinished"></translation>
+        <source>Character Graphics - SBOBJ</source>
+        <oldsource>Filtre graphique - SBOBJ</oldsource>
+        <translation>Filtre graphique - SBOBJ</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="579"/>
-        <source>Character Graphics - ??? (8)</source>
-        <translation type="unfinished"></translation>
+        <source>Character Graphics - ??? (7)</source>
+        <oldsource>Filtre graphique - ??? (7)</oldsource>
+        <translation>Filtre graphique - ??? (7)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="580"/>
-        <source>Character Graphics - SHINE</source>
-        <translation type="unfinished"></translation>
+        <source>Character Graphics - ??? (8)</source>
+        <oldsource>Filtre graphique - ??? (8)</oldsource>
+        <translation>Filtre graphique - ??? (8)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="581"/>
-        <source>Character Graphics - RESET</source>
-        <translation type="unfinished"></translation>
+        <source>Character Graphics - SHINE</source>
+        <oldsource>Filtre graphique - SHINE</oldsource>
+        <translation>Filtre graphique - SHINE</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="582"/>
-        <source>Wait For Character Graphics</source>
-        <translation type="unfinished"></translation>
+        <source>Character Graphics - RESET</source>
+        <oldsource>Filtre graphique - RESET</oldsource>
+        <translation>Filtre graphique - RESET</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="584"/>
-        <source>OFST</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="583"/>
+        <source>Wait For Character Graphics</source>
+        <oldsource>Attendre fin filtre graphique</oldsource>
+        <translation>Attendre fin filtre graphique</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="585"/>
-        <source>OFSTW</source>
-        <translation type="unfinished"></translation>
+        <source>OFST</source>
+        <translation>OFST</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="587"/>
-        <source>Movement Speed</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="586"/>
+        <source>OFSTW</source>
+        <translation>OFSTW</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="588"/>
-        <source>Animation Speed</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="589"/>
-        <source>Hide/Display Field Model</source>
-        <translation type="unfinished"></translation>
+        <source>Movement Speed</source>
+        <translation>Vitesse déplacements</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="590"/>
-        <source>Enable/Disable rotation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="591"/>
-        <source>Character Blink</source>
-        <translation type="unfinished"></translation>
+        <source>Hide/Display Field Model</source>
+        <translation>Cacher/Afficher objet 3D</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="592"/>
-        <source>Talk On/Off</source>
-        <translation type="unfinished"></translation>
+        <source>Character Blink</source>
+        <translation>Cligner des yeux</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="593"/>
-        <source>Contact On/Off</source>
-        <translation type="unfinished"></translation>
+        <source>Talk On/Off</source>
+        <translation>Activer/désactiver parler</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="594"/>
-        <source>Talk Range (8-bit)</source>
-        <translation type="unfinished"></translation>
+        <source>Contact On/Off</source>
+        <translatorcomment>\</translatorcomment>
+        <translation>Activer/désactiver toucher</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="595"/>
-        <source>Contact range (8-bit)</source>
-        <translation type="unfinished"></translation>
+        <source>Talk Range (8-bit)</source>
+        <translation>Distance pour parler (8 bits)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="596"/>
-        <source>Talk Range (16-bit)</source>
-        <translation type="unfinished"></translation>
+        <source>Contact range (8-bit)</source>
+        <translation>Distance pour toucher (8 bits)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="597"/>
-        <source>Contact range (16-bit)</source>
-        <translation type="unfinished"></translation>
+        <source>Talk Range (16-bit)</source>
+        <translation>Distance pour parler (16 bits)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="600"/>
-        <source>Create line</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="598"/>
+        <source>Contact range (16-bit)</source>
+        <translation>Distance pour toucher (16 bits)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="601"/>
-        <source>Set line</source>
-        <translation type="unfinished"></translation>
+        <source>Create line</source>
+        <oldsource>Create location</oldsource>
+        <translation>Créer ligne</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="602"/>
-        <source>Line On/Off</source>
-        <translation type="unfinished"></translation>
+        <source>Set line</source>
+        <oldsource>Set location</oldsource>
+        <translation>Modifier ligne</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="603"/>
+        <source>Line On/Off</source>
+        <oldsource>Location On/Off</oldsource>
+        <translation>Activer/Désactiver ligne</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="604"/>
         <source>Triangle On/Off</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="605"/>
-        <source>SLIP</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="608"/>
-        <source>Move background Z layer</source>
-        <translation type="unfinished"></translation>
+        <translation>Activer/Désactiver triangle</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="609"/>
-        <source>Animate background layer</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="610"/>
-        <source>Show a background state</source>
-        <translation type="unfinished"></translation>
+        <source>Move background Z layer</source>
+        <translation>Déplacer une couche du décor (Z)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="611"/>
-        <source>Hide background state</source>
-        <translation type="unfinished"></translation>
+        <source>Show a background state</source>
+        <translation>Afficher un état d&apos;un paramètre</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="612"/>
-        <source>Show next background state</source>
-        <translation type="unfinished"></translation>
+        <source>Hide background state</source>
+        <translation>Cacher un état d&apos;un paramètre</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="613"/>
-        <source>Show previous background state</source>
-        <translation type="unfinished"></translation>
+        <source>Show next background state</source>
+        <translation>Afficher l&apos;état suivant d&apos;un paramètre</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="614"/>
+        <source>Show previous background state</source>
+        <translation>Afficher l&apos;état précédent d&apos;un paramètre</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="615"/>
         <source>Hide background parameters</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="616"/>
-        <source>Store Palette</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="617"/>
-        <source>Store Palette (S)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="618"/>
-        <source>Load Palette</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="619"/>
-        <source>Load Palette (S)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="620"/>
-        <source>Copy Palette</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="621"/>
-        <source>Copy Palette (2)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="622"/>
-        <source>Partial Copy Palette</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="623"/>
-        <source>Partial Copy Palette (2)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="624"/>
-        <source>Multiply Palette</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="625"/>
-        <source>Multiply Palette (2)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="626"/>
-        <source>Add Palette</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="627"/>
-        <source>Add Palette (2)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="630"/>
-        <source>Scroll to playable character</source>
-        <translation type="unfinished"></translation>
+        <translation>Cacher un paramètre</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="631"/>
-        <source>Scroll to party member</source>
-        <translation type="unfinished"></translation>
+        <source>Scroll to playable character</source>
+        <translation>Centrer sur le personnage jouable</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="632"/>
-        <source>Scroll to group</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="634"/>
-        <source>Scroll (X,Y)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="635"/>
-        <source>Scroll (X,Y,Smooth)</source>
-        <translation type="unfinished"></translation>
+        <source>Scroll to party member</source>
+        <translation>Centrer sur personnage</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="636"/>
-        <source>Scroll (X,Y,Linear)</source>
-        <translation type="unfinished"></translation>
+        <source>Scroll (X,Y,Smooth)</source>
+        <translation>Centrer (X,Y,Vitesse amortie)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="637"/>
-        <source>SCRLO</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="638"/>
-        <source>SCRLC</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="640"/>
-        <source>Shake</source>
-        <translation type="unfinished"></translation>
+        <source>Scroll (X,Y,Linear)</source>
+        <translation>Centrer (X,Y,Vitesse linéaire)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="641"/>
+        <source>Shake</source>
+        <translation>Secouer l&apos;écran</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="642"/>
         <source>Wait for scroll</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="643"/>
-        <source>VWOFT</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="644"/>
-        <source>FADE</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="645"/>
-        <source>FADEW</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="646"/>
-        <source>NFADE</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="649"/>
-        <source>Play sound</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="650"/>
-        <source>Alter sound (8-bit)</source>
-        <translation type="unfinished"></translation>
+        <translation>Attendre fin centrage</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="651"/>
+        <source>Alter sound (8-bit)</source>
+        <translation>Modifier son (8 bits)</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="652"/>
         <source>Alter sound (16-bit)</source>
-        <translation type="unfinished"></translation>
+        <translation>Modifier son (16 bits)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="653"/>
-        <source>Play music</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="654"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="655"/>
         <source>Play temporary music</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="655"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="656"/>
         <source>MUSVM (unused)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="656"/>
-        <source>Music Unlock/Lock</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="657"/>
-        <source>Battle music</source>
-        <translation type="unfinished"></translation>
+        <source>Music Unlock/Lock</source>
+        <oldsource>Music On/Off</oldsource>
+        <translation>Déverrouiller/Verrouiller musique</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="658"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="659"/>
         <source>CHMPH (unused)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="659"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="660"/>
         <source>Get music status</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="660"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="661"/>
         <source>Field music</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="661"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="662"/>
         <source>Play basic akao operation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="663"/>
-        <source>Set next movie</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="664"/>
-        <source>Play movie</source>
-        <translation type="unfinished"></translation>
+        <source>Set next movie</source>
+        <translation>Prochaine cinématique</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="665"/>
-        <source>MVIEF</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="666"/>
-        <source>MVCAM</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="667"/>
-        <source>BGMOVIE</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="670"/>
-        <source>Play tutorial</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="671"/>
-        <source>Display a menu</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="672"/>
-        <source>Disc change screen</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="673"/>
-        <source>Minigame</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="674"/>
-        <source>Battle result load</source>
-        <translation type="unfinished"></translation>
+        <source>Play movie</source>
+        <translation>Jouer la cinématique choisie</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="675"/>
-        <source>Battle Table</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="676"/>
-        <source>Change Map</source>
-        <translation type="unfinished"></translation>
+        <source>Battle result load</source>
+        <translation>Résultat du dernier combat</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="677"/>
-        <source>Last Map ID</source>
-        <translation type="unfinished"></translation>
+        <source>Change Map</source>
+        <translation>Changer d&apos;écran</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="678"/>
-        <source>Start Battle</source>
-        <translation type="unfinished"></translation>
+        <source>Last Map ID</source>
+        <translation>ID de l&apos;écran précédent</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="679"/>
-        <source>Battle On/Off</source>
-        <translation type="unfinished"></translation>
+        <source>Start Battle</source>
+        <translation>Combattre</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="680"/>
-        <source>Battle mode</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="681"/>
-        <source>Battle mode (2)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="682"/>
-        <source>Map Jump On/Off</source>
-        <translation type="unfinished"></translation>
+        <source>Battle On/Off</source>
+        <translation>Activer/désactiver les combats</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="683"/>
-        <source>Character movability On/Off</source>
-        <translation type="unfinished"></translation>
+        <source>Map Jump On/Off</source>
+        <translation>Activer/désactiver les changements d&apos;écran</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="684"/>
-        <source>Preload field Map</source>
-        <translation type="unfinished"></translation>
+        <source>Character movability On/Off</source>
+        <translation>Activer/Désactiver déplacements</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="685"/>
-        <source>PMJMP2</source>
-        <translation type="unfinished"></translation>
+        <source>Preload field Map</source>
+        <translation>Précharger un écran</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="589"/>
+        <source>Animation Speed</source>
+        <oldsource>Vitesse animations</oldsource>
+        <translation>Vitesse animations</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="591"/>
+        <source>Enable/Disable rotation</source>
+        <oldsource>Activer/Désactiver rotation</oldsource>
+        <translation>Activer/Désactiver rotation</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="606"/>
+        <source>SLIP</source>
+        <translation>SLIP</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="610"/>
+        <source>Animate background layer</source>
+        <oldsource>Animer une couche du décor</oldsource>
+        <translation>Animer une couche du décor</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="617"/>
+        <source>Store Palette</source>
+        <translation>Enregistrer palette</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="618"/>
+        <source>Store Palette (S)</source>
+        <translation>Enregistrer palette (S)</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="619"/>
+        <source>Load Palette</source>
+        <translation>Charger palette</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="620"/>
+        <source>Load Palette (S)</source>
+        <translation>Charger palette (S)</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="621"/>
+        <source>Copy Palette</source>
+        <translation>Copier palette</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="622"/>
+        <source>Copy Palette (2)</source>
+        <translation>Copier palette (2)</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="623"/>
+        <source>Partial Copy Palette</source>
+        <translation>Copier partiellement palette</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="624"/>
+        <source>Partial Copy Palette (2)</source>
+        <translation>Copier partiellement palette (2)</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="625"/>
+        <source>Multiply Palette</source>
+        <oldsource>Multiplier Palette</oldsource>
+        <translation>Multiplier Palette</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="626"/>
+        <source>Multiply Palette (2)</source>
+        <oldsource>Multiplier Palette (2)</oldsource>
+        <translation>Multiplier Palette (2)</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="627"/>
+        <source>Add Palette</source>
+        <oldsource>Additionner Palette</oldsource>
+        <translation>Additionner Palette</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="628"/>
+        <source>Add Palette (2)</source>
+        <oldsource>Additionner Palette (2)</oldsource>
+        <translation>Additionner Palette (2)</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="633"/>
+        <source>Scroll to group</source>
+        <oldsource>Centrer sur groupe</oldsource>
+        <translation>Centrer sur groupe</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="635"/>
+        <source>Scroll (X,Y)</source>
+        <oldsource>Centrer (X,Y)</oldsource>
+        <translation>Centrer (X,Y)</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="638"/>
+        <source>SCRLO</source>
+        <translation>SCRLO</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="639"/>
+        <source>SCRLC</source>
+        <translation>SCRLC</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="644"/>
+        <source>VWOFT</source>
+        <translation>VWOFT</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="645"/>
+        <source>FADE</source>
+        <translation>FADE</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="646"/>
+        <source>FADEW</source>
+        <translation>FADEW</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="647"/>
+        <source>NFADE</source>
+        <translation>NFADE</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="650"/>
+        <source>Play sound</source>
+        <oldsource>Jouer son</oldsource>
+        <translation>Jouer son</translation>
+    </message>
+    <message>
+        <source>AKAO</source>
+        <translation type="vanished">AKAO</translation>
+    </message>
+    <message>
+        <source>AKAO2</source>
+        <translation type="vanished">AKAO2</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="654"/>
+        <source>Play music</source>
+        <oldsource>Jouer musique</oldsource>
+        <translation>Jouer musique</translation>
+    </message>
+    <message>
+        <source>MUSVT</source>
+        <translation type="vanished">MUSVT</translation>
+    </message>
+    <message>
+        <source>MUSVM</source>
+        <translation type="vanished">MUSVM</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="658"/>
+        <source>Battle music</source>
+        <oldsource>Musique de combat</oldsource>
+        <translation>Musique de combat</translation>
+    </message>
+    <message>
+        <source>CHMPH</source>
+        <translation type="vanished">CHMPH</translation>
+    </message>
+    <message>
+        <source>CHMST</source>
+        <translation type="vanished">CHMST</translation>
+    </message>
+    <message>
+        <source>FMUSC</source>
+        <translation type="vanished">FMUSC</translation>
+    </message>
+    <message>
+        <source>CMUSC</source>
+        <translation type="vanished">CMUSC</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="666"/>
+        <source>MVIEF</source>
+        <translation>MVIEF</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="667"/>
+        <source>MVCAM</source>
+        <translation>MVCAM</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="668"/>
+        <source>BGMOVIE</source>
+        <translation>BGMOVIE</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="671"/>
+        <source>Play tutorial</source>
+        <oldsource>Lancer un tutoriel</oldsource>
+        <translation>Lancer un tutoriel</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="672"/>
+        <source>Display a menu</source>
+        <oldsource>Afficher menu</oldsource>
+        <translation>Afficher menu</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="673"/>
+        <source>Disc change screen</source>
+        <oldsource>Changer de disque</oldsource>
+        <translation>Changer de disque</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="674"/>
+        <source>Minigame</source>
+        <oldsource>Mini-jeu</oldsource>
+        <translation>Mini-jeu</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="676"/>
+        <source>Battle Table</source>
+        <oldsource>Table de combat</oldsource>
+        <translation>Table de combat</translation>
+    </message>
+    <message>
+        <source>Change Field</source>
+        <oldsource>Changer d&apos;écran</oldsource>
+        <translation type="vanished">Changer d&apos;écran</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="681"/>
+        <source>Battle mode</source>
+        <oldsource>Mode de combat</oldsource>
+        <translation>Mode de combat</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="682"/>
+        <source>Battle mode (2)</source>
+        <oldsource>Mode de combat (2)</oldsource>
+        <translation>Mode de combat (2)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="686"/>
-        <source>Game Over</source>
-        <translation type="unfinished"></translation>
+        <source>PMJMP2</source>
+        <translation>PMJMP2</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="687"/>
-        <source>[DLPB&apos;s custom opcode] Write/Read to entire Savemap</source>
-        <translation type="unfinished"></translation>
+        <source>Game Over</source>
+        <translation>Fin de partie</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="688"/>
+        <source>[DLPB&apos;s custom opcode] Write/Read to entire Savemap</source>
+        <translation>[DLPB&apos;s custom opcode] Écrire/Lire vers la savemap</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="689"/>
         <source>[DLPB&apos;s custom opcode] Write to any memory address via array</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="689"/>
-        <source>SPECIAL - Cursor On/Off</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="690"/>
-        <source>SPECIAL - PNAME</source>
-        <translation type="unfinished"></translation>
+        <source>SPECIAL - Cursor On/Off</source>
+        <oldsource>SPECIAL - Activer/Désactiver curseur</oldsource>
+        <translation>SPECIAL - Curseur Affiché/Caché</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="691"/>
-        <source>SPECIAL - Game Speed</source>
-        <translation type="unfinished"></translation>
+        <source>SPECIAL - PNAME</source>
+        <translation>SPECIAL - PNAME</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="692"/>
-        <source>SPECIAL - Messages Speed</source>
-        <translation type="unfinished"></translation>
+        <source>SPECIAL - Game Speed</source>
+        <oldsource>SPECIAL - Vitesse du jeu</oldsource>
+        <translation>SPECIAL - Vitesse du jeu</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="693"/>
-        <source>SPECIAL - Full Materia</source>
-        <translation type="unfinished"></translation>
+        <source>SPECIAL - Messages Speed</source>
+        <oldsource>SPECIAL - Vitesse des message</oldsource>
+        <translation>SPECIAL - Vitesse des message</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="694"/>
-        <source>SPECIAL - Full Item</source>
-        <translation type="unfinished"></translation>
+        <source>SPECIAL - Full Materia</source>
+        <translation>SPECIAL - Toutes les matérias</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="695"/>
-        <source>SPECIAL - Battle On/Off</source>
-        <translation type="unfinished"></translation>
+        <source>SPECIAL - Full Item</source>
+        <translation>SPECIAL - Tous les objets</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="696"/>
-        <source>SPECIAL - Character movability On/Off</source>
-        <translation type="unfinished"></translation>
+        <source>SPECIAL - Battle On/Off</source>
+        <oldsource>SPECIAL - Activer/Désactiver combats</oldsource>
+        <translation>SPECIAL - Activer/Désactiver combats</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="697"/>
-        <source>SPECIAL - Rename character</source>
-        <translation type="unfinished"></translation>
+        <source>SPECIAL - Character movability On/Off</source>
+        <oldsource>SPECIAL - Activer/Désactiver mouvements</oldsource>
+        <translation>SPECIAL - Activer/Désactiver mouvements</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="698"/>
-        <source>SPECIAL - Clear Game</source>
-        <translation type="unfinished"></translation>
+        <source>SPECIAL - Rename character</source>
+        <oldsource>SPECIAL - Renommer personnage</oldsource>
+        <translation>SPECIAL - Renommer personnage</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="699"/>
-        <source>SPECIAL - Clear Items</source>
-        <translation type="unfinished"></translation>
+        <source>SPECIAL - Clear Game</source>
+        <translation>SPECIAL - Remettre à zéro le jeu</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="702"/>
-        <source>MPDSP</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="700"/>
+        <source>SPECIAL - Clear Items</source>
+        <translation>SPECIAL - Supprimertous  les objets</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="703"/>
-        <source>SETX</source>
-        <translation type="unfinished"></translation>
+        <source>MPDSP</source>
+        <translation>MPDSP</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="704"/>
-        <source>GETX</source>
-        <translation type="unfinished"></translation>
+        <source>SETX</source>
+        <translation>SETX</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditor.cpp" line="705"/>
+        <source>GETX</source>
+        <translation>GETX</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="706"/>
         <source>SEARCHX</source>
-        <translation type="unfinished"></translation>
+        <translation>SEARCHX</translation>
     </message>
 </context>
 <context>
@@ -5627,37 +6488,30 @@ id=%2
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="31"/>
         <source>Assignment</source>
-        <translation type="unfinished"></translation>
+        <translation>Affectation</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="32"/>
         <source>Addition (wrapped)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Addition (cyclique)</oldsource>
+        <translation>Addition (cyclique)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="33"/>
         <source>Addition (capped)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Addition (plafonnée)</oldsource>
+        <translation>Addition (plafonnée)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="34"/>
         <source>Subtraction (wrapped)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Soustraction (cyclique)</oldsource>
+        <translation>Soustraction (cyclique)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="35"/>
         <source>Subtraction (capped)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="36"/>
-        <source>Multiplication</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="37"/>
-        <source>Division</source>
-        <translation type="unfinished"></translation>
+        <translation>Soustraction (avec plancher à 0)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="38"/>
@@ -5667,42 +6521,61 @@ id=%2
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="39"/>
         <source>And</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="40"/>
-        <source>Or</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="41"/>
-        <source>Exclusive or</source>
-        <translation type="unfinished"></translation>
+        <translation>Et</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="42"/>
         <source>Low-byte</source>
-        <translation type="unfinished"></translation>
+        <translation>Octet de poids faible</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="43"/>
         <source>High-byte</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="46"/>
-        <source>8-bit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="47"/>
-        <source>16-bit</source>
-        <translation type="unfinished"></translation>
+        <translation>Octet de poids fort</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="58"/>
         <source>It is not possible to divide per 0 or use mod 0, or the game will crash.</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="36"/>
+        <source>Multiplication</source>
+        <translation>Multiplication</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="37"/>
+        <source>Division</source>
+        <translation>Division</translation>
+    </message>
+    <message>
+        <source>Modulas</source>
+        <oldsource>Modulo</oldsource>
+        <translation type="vanished">Modulo</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="40"/>
+        <source>Or</source>
+        <oldsource>Ou</oldsource>
+        <translation>Ou</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="41"/>
+        <source>Exclusive or</source>
+        <oldsource>Ou exclusif</oldsource>
+        <translation>Ou exclusif</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="46"/>
+        <source>8-bit</source>
+        <oldsource>8 bits</oldsource>
+        <translation>8 bits</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="47"/>
+        <source>16-bit</source>
+        <oldsource>16 bits</oldsource>
+        <translation>16 bits</translation>
     </message>
 </context>
 <context>
@@ -5710,32 +6583,35 @@ id=%2
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="580"/>
         <source>Set a bit to 1</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Mettre un bit à 1</oldsource>
+        <translation>Mettre un bit à 1</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="581"/>
         <source>Set a bit to 0</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Mettre un bit à 0</oldsource>
+        <translation>Mettre un bit à 0</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="582"/>
         <source>Toggles a bit</source>
-        <translation type="unfinished"></translation>
+        <translation>Inverser la valeur d&apos;un bit</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="585"/>
         <source>Variable</source>
-        <translation type="unfinished"></translation>
+        <translation>Variable</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="587"/>
         <source>Position</source>
-        <translation type="unfinished"></translation>
+        <translation>Position</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="589"/>
         <source>Operation</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Opération</oldsource>
+        <translation>Opération</translation>
     </message>
 </context>
 <context>
@@ -5746,7 +6622,7 @@ id=%2
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="744"/>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="748"/>
         <source>Enable</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Activer</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="732"/>
@@ -5754,7 +6630,7 @@ id=%2
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="744"/>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="748"/>
         <source>Disable</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Désactiver</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="740"/>
@@ -5764,7 +6640,7 @@ id=%2
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="740"/>
         <source>Hide</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cacher</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="752"/>
@@ -5773,7 +6649,7 @@ id=%2
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="772"/>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="776"/>
         <source>Activate</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Activer</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="752"/>
@@ -5782,19 +6658,19 @@ id=%2
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="772"/>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="776"/>
         <source>Deactivate</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Désactiver</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="760"/>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="764"/>
         <source>ON</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Autoriser</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="760"/>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="764"/>
         <source>OFF</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Empêcher</translation>
     </message>
 </context>
 <context>
@@ -5802,52 +6678,52 @@ id=%2
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorSpecialPage.cpp" line="38"/>
         <source>8 bit</source>
-        <translation type="unfinished"></translation>
+        <translation>8 bits</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorSpecialPage.cpp" line="39"/>
         <source>16 bit</source>
-        <translation type="unfinished"></translation>
+        <translation>16 bits</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorSpecialPage.cpp" line="40"/>
         <source>24 bit</source>
-        <translation type="unfinished"></translation>
+        <translation>24 bits</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorSpecialPage.cpp" line="41"/>
         <source>32 bit</source>
-        <translation type="unfinished"></translation>
+        <translation>32 bits</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorSpecialPage.cpp" line="43"/>
         <source>From is a pointer</source>
-        <translation type="unfinished"></translation>
+        <translation>&quot;De&quot; est un pointeur</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorSpecialPage.cpp" line="44"/>
         <source>To is a pointer</source>
-        <translation type="unfinished"></translation>
+        <translation>&quot;Vers&quot; est un pointeur</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorSpecialPage.cpp" line="47"/>
         <source>From</source>
-        <translation type="unfinished"></translation>
+        <translation>De</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorSpecialPage.cpp" line="49"/>
         <source>To</source>
-        <translation type="unfinished"></translation>
+        <translation>Vers</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorSpecialPage.cpp" line="51"/>
         <source>Abs Value</source>
-        <translation type="unfinished"></translation>
+        <translation>Valeur absolue</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorSpecialPage.cpp" line="53"/>
         <source>Size</source>
-        <translation type="unfinished"></translation>
+        <translation>Taille</translation>
     </message>
 </context>
 <context>
@@ -5855,7 +6731,7 @@ id=%2
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorSpecialPage.cpp" line="111"/>
         <source>Address</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Adresse</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorSpecialPage.cpp" line="113"/>
@@ -5868,42 +6744,46 @@ id=%2
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="242"/>
         <source>Script %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Script %1</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="246"/>
         <source>Asynchronous, no wait</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Asynchrone, n&apos;attend pas</oldsource>
+        <translation>Asynchrone, n&apos;attend pas</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="247"/>
         <source>Asynchronous, wait</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Asynchrone, attend</oldsource>
+        <translation>Asynchrone, attend</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="248"/>
         <source>Synchronous, wait</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Synchrone, attend</oldsource>
+        <translation>Synchrone, attend</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="251"/>
         <source>Team member</source>
-        <translation type="unfinished"></translation>
+        <translation>Équipier</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="253"/>
         <source>Script</source>
-        <translation type="unfinished"></translation>
+        <translation>Script</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="255"/>
         <source>Priority</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Priorité</oldsource>
+        <translation>Priorité</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="257"/>
         <source>Type</source>
-        <translation type="unfinished"></translation>
+        <translation>Type</translation>
     </message>
 </context>
 <context>
@@ -5911,305 +6791,336 @@ id=%2
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="109"/>
         <source>Asynchronous, no wait</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Asynchrone, n&apos;attend pas</oldsource>
+        <translation>Asynchrone, n&apos;attend pas</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="110"/>
         <source>Asynchronous, wait</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Asynchrone, attend</oldsource>
+        <translation>Asynchrone, attend</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="111"/>
         <source>Synchronous, wait</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Synchrone, attend</oldsource>
+        <translation>Synchrone, attend</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="114"/>
         <source>Group</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Groupe</oldsource>
+        <translation>Groupe</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="116"/>
         <source>Script</source>
-        <translation type="unfinished"></translation>
+        <translation>Script</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="118"/>
         <source>Priority</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Priorité</oldsource>
+        <translation>Priorité</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="120"/>
         <source>Type</source>
-        <translation type="unfinished"></translation>
+        <translation>Type</translation>
     </message>
 </context>
 <context>
     <name>ScriptEditorGenericList</name>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="43"/>
-        <source>Add a line</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="45"/>
-        <source>Delete a line</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="55"/>
-        <source>Arguments:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="601"/>
-        <source>Double long</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="602"/>
         <source>Long</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Entier long</oldsource>
+        <translation>Entier long</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="603"/>
         <source>Signed long</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Entier long signé</oldsource>
+        <translation>Entier long signé</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="604"/>
         <source>X coordinate</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Coordonnée X</oldsource>
+        <translation>Coordonnée X</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="605"/>
         <source>Y coordinate</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Coordonnée Y</oldsource>
+        <translation>Coordonnée Y</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="606"/>
         <source>Z coordinate</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="607"/>
-        <source>Map</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Coordonnée Z</oldsource>
+        <translation>Coordonnée Z</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="608"/>
         <source>Tutorial</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="609"/>
-        <source>Character</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Tutoriel</oldsource>
+        <translation>Tutoriel</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="610"/>
         <source>Disc</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Disque</oldsource>
+        <translation>Disque</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="611"/>
         <source>Minigame</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="612"/>
-        <source>Short</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="613"/>
-        <source>Speed (8-bit)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Mini-jeu</oldsource>
+        <translation>Mini-jeu</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="614"/>
         <source>Speed (16-bit)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Vitesse (16 bits)</oldsource>
+        <translation>Vitesse (16 bits)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="615"/>
         <source>Direction</source>
-        <translation type="unfinished"></translation>
+        <translation>Direction</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="616"/>
         <source>Triangle</source>
-        <translation type="unfinished"></translation>
+        <translation>Triangle</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="617"/>
         <source>Group</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Groupe</oldsource>
+        <translation>Groupe</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="618"/>
         <source>Script</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="619"/>
-        <source>Team member</source>
-        <translation type="unfinished"></translation>
+        <translation>Script</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="620"/>
         <source>Bank</source>
-        <translation type="unfinished"></translation>
+        <translation>Bank</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="621"/>
         <source>Address</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Adresse</oldsource>
+        <translation>Adresse</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="622"/>
         <source>Priority</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Priorité</oldsource>
+        <translation>Priorité</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="623"/>
         <source>Flag</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="624"/>
-        <source>Jump (short)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="625"/>
-        <source>Jump (long)</source>
-        <translation type="unfinished"></translation>
+        <translation>Flag</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="626"/>
         <source>Operator</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Opérateur</oldsource>
+        <translation>Opérateur</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="627"/>
         <source>Boolean</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="628"/>
-        <source>Layer</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Booléen</oldsource>
+        <translation>Booléen</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="629"/>
         <source>Parameter</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Paramètre</oldsource>
+        <translation>Paramètre</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="630"/>
         <source>State</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="631"/>
-        <source>Window</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="632"/>
-        <source>Width</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="633"/>
-        <source>Height</source>
-        <translation type="unfinished"></translation>
+        <oldsource>État</oldsource>
+        <translation>État</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="634"/>
         <source>Variable</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="635"/>
-        <source>Key(s)</source>
-        <translation type="unfinished"></translation>
+        <translation>Variable</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="636"/>
         <source>Rotation</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Sens de rotation</oldsource>
+        <translation>Sens de rotation</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="637"/>
         <source>Display Type</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Type d&apos;affichage</oldsource>
+        <translation>Type d&apos;affichage</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="638"/>
         <source>Text</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Texte</oldsource>
+        <translation>Texte</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="639"/>
         <source>Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Menu</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="43"/>
+        <source>Add a line</source>
+        <translation>Ajouter une ligne</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="45"/>
+        <source>Delete a line</source>
+        <translation>Effacer une ligne</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="55"/>
+        <source>Arguments:</source>
+        <translation>Paramètres :</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="601"/>
+        <source>Double long</source>
+        <translation>Entier double long</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="607"/>
+        <source>Map</source>
+        <translation>Écran</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="609"/>
+        <source>Character</source>
+        <translation>Personnage</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="612"/>
+        <source>Short</source>
+        <translation>Entier court</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="613"/>
+        <source>Speed (8-bit)</source>
+        <translation>Vitesse (8 bits)</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="619"/>
+        <source>Team member</source>
+        <translation>Équipier</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="624"/>
+        <source>Jump (short)</source>
+        <translation>Saut court</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="625"/>
+        <source>Jump (long)</source>
+        <oldsource>Jumb (long)</oldsource>
+        <translation>Saut long</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="628"/>
+        <source>Layer</source>
+        <translation>Couche</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="631"/>
+        <source>Window</source>
+        <translation>Fenêtre</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="632"/>
+        <source>Width</source>
+        <translation>Largeur</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="633"/>
+        <source>Height</source>
+        <translation>Hauteur</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="635"/>
+        <source>Key(s)</source>
+        <translation>Touche(s)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="640"/>
         <source>Window Type</source>
-        <translation type="unfinished"></translation>
+        <translation>Type de fenêtre</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="641"/>
         <source>Item</source>
-        <translation type="unfinished"></translation>
+        <translation>Objet</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="642"/>
         <source>Materia</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Matéria</oldsource>
+        <translation>Matéria</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="643"/>
         <source>Quantity</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Quantité</oldsource>
+        <translation>Quantité</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="644"/>
         <source>Color</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Couleur</oldsource>
+        <translation>Couleur</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="645"/>
         <source>Animation</source>
-        <translation type="unfinished"></translation>
+        <translation>Animation</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="646"/>
         <source>Music</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Musique</oldsource>
+        <translation>Musique</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="647"/>
         <source>Sound</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Son</oldsource>
+        <translation>Son</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="648"/>
         <source>Video</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Vidéo</oldsource>
+        <translation>Vidéo</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="649"/>
         <source>Label</source>
-        <translation type="unfinished"></translation>
+        <translation>Label</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="650"/>
         <source>Sound operation</source>
-        <translation type="unfinished"></translation>
+        <translation>Opération sur le son</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="651"/>
@@ -6239,88 +7150,94 @@ id=%2
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="657"/>
         <source>???</source>
-        <translation type="unfinished"></translation>
+        <translation>???</translation>
     </message>
 </context>
 <context>
     <name>ScriptEditorIfKeyPage</name>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="861"/>
-        <source>Keys</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="886"/>
         <source>Key pressed</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Touche pressée</oldsource>
+        <translation>Touche pressée</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="861"/>
+        <source>Keys</source>
+        <translation>Touches</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="887"/>
         <source>Key pressed once</source>
-        <translation type="unfinished"></translation>
+        <translation>Touche pressée une fois</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="888"/>
         <source>Key released once</source>
-        <translation type="unfinished"></translation>
+        <translation>Touche lâchée une fois</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="890"/>
         <source>Type</source>
-        <translation type="unfinished"></translation>
+        <translation>Type</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="892"/>
         <source>Label</source>
-        <translation type="unfinished"></translation>
+        <translation>Label</translation>
     </message>
 </context>
 <context>
     <name>ScriptEditorIfPage</name>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="617"/>
-        <source>8-bit unsigned</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="618"/>
         <source>16-bit signed</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="619"/>
-        <source>16-bit unsigned</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Sur 16 bits signés</oldsource>
+        <translation>Sur 16 bits signés</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="624"/>
         <source>Short (8-bit)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Court (8 bits)</oldsource>
+        <translation>Court (8 bits)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="625"/>
         <source>Long (16-bit)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Long (16 bits)</oldsource>
+        <translation>Long (16 bits)</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="617"/>
+        <source>8-bit unsigned</source>
+        <translation>Sur 8 bits non signés</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="619"/>
+        <source>16-bit unsigned</source>
+        <translation>Sur 16 bits non signés</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="628"/>
         <source>Test to be performed</source>
-        <translation type="unfinished"></translation>
+        <translation>Test à effectuer</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="632"/>
         <source>Compare type</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Type de comparaison</oldsource>
+        <translation>Type de comparaison</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="634"/>
         <source>Label</source>
-        <translation type="unfinished"></translation>
+        <translation>Label</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="636"/>
         <source>Jump type (expert)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Jump type</oldsource>
+        <translation>Type de saut (expert)</translation>
     </message>
 </context>
 <context>
@@ -6329,17 +7246,17 @@ id=%2
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="997"/>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="998"/>
         <source>(Empty)</source>
-        <translation type="unfinished"></translation>
+        <translation>(Vide)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="1003"/>
         <source>Character</source>
-        <translation type="unfinished"></translation>
+        <translation>Personnage</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="1005"/>
         <source>Label</source>
-        <translation type="unfinished"></translation>
+        <translation>Label</translation>
     </message>
 </context>
 <context>
@@ -6347,7 +7264,7 @@ id=%2
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="565"/>
         <source>Label</source>
-        <translation type="unfinished"></translation>
+        <translation>Label</translation>
     </message>
 </context>
 <context>
@@ -6355,22 +7272,28 @@ id=%2
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="435"/>
         <source>Short (8-bit)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Court (8 bits)</oldsource>
+        <translation>Court (8 bits)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="436"/>
         <source>Long (16-bit)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Long (16 bits)</oldsource>
+        <translation>Long (16 bits)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="439"/>
         <source>Label</source>
-        <translation type="unfinished"></translation>
+        <translation>Label</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="441"/>
         <source>Type (expert)</source>
-        <translation type="unfinished"></translation>
+        <translation>Type (expert)</translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation type="vanished">Type</translation>
     </message>
 </context>
 <context>
@@ -6378,12 +7301,13 @@ id=%2
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="404"/>
         <source>Label %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Label %1</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="414"/>
         <source>New label</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Nouveau label</oldsource>
+        <translation>Nouveau label</translation>
     </message>
 </context>
 <context>
@@ -6391,7 +7315,7 @@ id=%2
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="350"/>
         <source>Label</source>
-        <translation type="unfinished"></translation>
+        <translation>Label</translation>
     </message>
 </context>
 <context>
@@ -6399,17 +7323,20 @@ id=%2
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMoviePage.cpp" line="35"/>
         <source>Disc</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Disque</oldsource>
+        <translation>Disque</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMoviePage.cpp" line="37"/>
         <source>Video</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Vidéo</oldsource>
+        <translation>Vidéo</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMoviePage.cpp" line="49"/>
         <source>Disc %1</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Disque %1</oldsource>
+        <translation>Disque %1</translation>
     </message>
 </context>
 <context>
@@ -6417,17 +7344,18 @@ id=%2
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="47"/>
         <source>Script %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Script %1</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="51"/>
         <source>Script</source>
-        <translation type="unfinished"></translation>
+        <translation>Script</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="53"/>
         <source>Priority</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Priorité</oldsource>
+        <translation>Priorité</translation>
     </message>
 </context>
 <context>
@@ -6435,37 +7363,39 @@ id=%2
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="375"/>
         <source>Increment (wrapped)</source>
-        <translation type="unfinished"></translation>
+        <translation>Incrémentation (cyclique)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="376"/>
         <source>Increment (capped)</source>
-        <translation type="unfinished"></translation>
+        <translation>Incrémentation (plafonnée)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="377"/>
         <source>Decrement (wrapped)</source>
-        <translation type="unfinished"></translation>
+        <translation>Décrémentation (cyclique)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="378"/>
         <source>Decrement (capped)</source>
-        <translation type="unfinished"></translation>
+        <translation>Décrémentation (avec plancher à 0)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="379"/>
         <source>Random</source>
-        <translation type="unfinished"></translation>
+        <translation>Aléatoire</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="382"/>
         <source>8-bit</source>
-        <translation type="unfinished"></translation>
+        <oldsource>8 bits</oldsource>
+        <translation>8 bits</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="383"/>
         <source>16-bit</source>
-        <translation type="unfinished"></translation>
+        <oldsource>16 bits</oldsource>
+        <translation>16 bits</translation>
     </message>
 </context>
 <context>
@@ -6473,7 +7403,7 @@ id=%2
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="1057"/>
         <source>Images</source>
-        <translation type="unfinished"></translation>
+        <translation>Images</translation>
     </message>
 </context>
 <context>
@@ -6481,42 +7411,43 @@ id=%2
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="260"/>
         <source>Normal</source>
-        <translation type="unfinished"></translation>
+        <translation>Normale</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="261"/>
         <source>Without frame</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="262"/>
-        <source>Transparency</source>
-        <translation type="unfinished"></translation>
+        <translation>Sans bords</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="265"/>
         <source>Allow</source>
-        <translation type="unfinished"></translation>
+        <translation>Autoriser</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="266"/>
         <source>Prevent</source>
-        <translation type="unfinished"></translation>
+        <translation>Empêcher</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="270"/>
         <source>Window ID</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="272"/>
-        <source>Type</source>
-        <translation type="unfinished"></translation>
+        <translation>Fenêtre ID</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="274"/>
         <source>Closing</source>
-        <translation type="unfinished"></translation>
+        <translation>Fermeture</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="262"/>
+        <source>Transparency</source>
+        <oldsource>Transparent</oldsource>
+        <translation>Transparent</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="272"/>
+        <source>Type</source>
+        <translation>Type</translation>
     </message>
 </context>
 <context>
@@ -6524,75 +7455,82 @@ id=%2
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="344"/>
         <source>Window ID</source>
-        <translation type="unfinished"></translation>
+        <translation>Fenêtre ID</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="346"/>
         <source>Relative X</source>
-        <translation type="unfinished"></translation>
+        <oldsource>X relatif</oldsource>
+        <translation>X relatif</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="348"/>
         <source>Relative Y</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Y relatif</oldsource>
+        <translation>Y relatif</translation>
     </message>
 </context>
 <context>
     <name>ScriptEditorWindowPage</name>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="43"/>
-        <source>[Keep empty window]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="49"/>
         <source>Align horizontally</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Aligner horizontalement</oldsource>
+        <translation>Aligner horizontalement</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="50"/>
         <source>Align vertically</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Aligner verticalement</oldsource>
+        <translation>Aligner verticalement</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="43"/>
+        <source>[Keep empty window]</source>
+        <translation>[Laisser la fenêtre vide]</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="51"/>
         <source>Autosize</source>
-        <translation type="unfinished"></translation>
+        <translation>Taille automatique</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="56"/>
         <source>Window ID</source>
-        <translation type="unfinished"></translation>
+        <translation>Fenêtre ID</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="58"/>
         <source>X</source>
-        <translation type="unfinished"></translation>
+        <translation>X</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="60"/>
         <source>Y</source>
-        <translation type="unfinished"></translation>
+        <translation>Y</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="62"/>
         <source>W</source>
-        <translation type="unfinished"></translation>
+        <oldsource>L</oldsource>
+        <translation>L</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="66"/>
         <source>Text in preview:</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Texte en aperçu :</oldsource>
+        <translation>Texte en aperçu :</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="120"/>
         <source>Lines</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Lignes</oldsource>
+        <translation>Lignes</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="137"/>
         <source>H</source>
-        <translation type="unfinished"></translation>
+        <translation>H</translation>
     </message>
 </context>
 <context>
@@ -6608,156 +7546,243 @@ id=%2
     <message>
         <location filename="../src/widgets/ScriptManager.cpp" line="197"/>
         <source>Error on line %1 : %2</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Erreur ligne %1 : %2</oldsource>
+        <translation>Erreur ligne %1 : %2</translation>
     </message>
 </context>
 <context>
     <name>Search</name>
     <message>
-        <location filename="../src/widgets/Search.cpp" line="30"/>
-        <location filename="../src/widgets/Search.cpp" line="119"/>
-        <location filename="../src/widgets/Search.cpp" line="275"/>
-        <source>Find</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../src/widgets/Search.cpp" line="33"/>
         <source>Scripts</source>
-        <translation type="unfinished"></translation>
+        <translation>Scripts</translation>
     </message>
     <message>
         <location filename="../src/widgets/Search.cpp" line="34"/>
         <source>Texts</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/Search.cpp" line="38"/>
-        <source>Find next</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/Search.cpp" line="39"/>
-        <source>Find previous</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/Search.cpp" line="40"/>
-        <source>Find all</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Textes</oldsource>
+        <translation>Textes</translation>
     </message>
     <message>
         <location filename="../src/widgets/Search.cpp" line="106"/>
         <source>Text</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Texte</oldsource>
+        <translation>Texte</translation>
     </message>
     <message>
         <location filename="../src/widgets/Search.cpp" line="107"/>
         <source>Variable</source>
-        <translation type="unfinished"></translation>
+        <translation>Variable</translation>
     </message>
     <message>
         <location filename="../src/widgets/Search.cpp" line="108"/>
         <source>Opcode</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/Search.cpp" line="109"/>
-        <source>Run</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/Search.cpp" line="110"/>
-        <source>Map jump</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/Search.cpp" line="121"/>
-        <location filename="../src/widgets/Search.cpp" line="284"/>
-        <source>Match case</source>
-        <translation type="unfinished"></translation>
+        <translation>Opcode</translation>
     </message>
     <message>
         <location filename="../src/widgets/Search.cpp" line="122"/>
         <location filename="../src/widgets/Search.cpp" line="285"/>
         <source>Regular expression</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Utiliser les expressions régulières</oldsource>
+        <translation>Utiliser les expressions régulières</translation>
     </message>
     <message>
         <location filename="../src/widgets/Search.cpp" line="151"/>
         <source>Var</source>
-        <translation type="unfinished"></translation>
+        <translation>Var</translation>
     </message>
     <message>
         <location filename="../src/widgets/Search.cpp" line="163"/>
         <location filename="../src/widgets/Search.cpp" line="429"/>
         <source>Value</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/Search.cpp" line="164"/>
-        <source>All</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/Search.cpp" line="165"/>
-        <source>Assignment</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/Search.cpp" line="166"/>
-        <source>Bit Assignment</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Valeur</oldsource>
+        <translation>Valeur</translation>
     </message>
     <message>
         <location filename="../src/widgets/Search.cpp" line="167"/>
         <source>Test</source>
-        <translation type="unfinished"></translation>
+        <translation>Test</translation>
     </message>
     <message>
         <location filename="../src/widgets/Search.cpp" line="168"/>
         <source>Bit test</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/Search.cpp" line="169"/>
-        <source>Assignment ≠</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/Search.cpp" line="170"/>
-        <source>Assignment &lt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/Search.cpp" line="171"/>
-        <source>Assignment ≤</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/Search.cpp" line="172"/>
-        <source>Assignment &gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/Search.cpp" line="173"/>
-        <source>Assignment ≥</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Test bit</oldsource>
+        <translation>Test bit</translation>
     </message>
     <message>
         <location filename="../src/widgets/Search.cpp" line="198"/>
         <source>Script</source>
-        <translation type="unfinished"></translation>
+        <translation>Script</translation>
     </message>
     <message>
         <location filename="../src/widgets/Search.cpp" line="200"/>
         <source>Group</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Groupe</oldsource>
+        <translation>Groupe</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/Search.cpp" line="30"/>
+        <location filename="../src/widgets/Search.cpp" line="119"/>
+        <location filename="../src/widgets/Search.cpp" line="275"/>
+        <source>Find</source>
+        <translation>Rechercher</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/Search.cpp" line="38"/>
+        <source>Find next</source>
+        <translation>Chercher le suivant</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/Search.cpp" line="39"/>
+        <source>Find previous</source>
+        <translation>Chercher le précédent</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/Search.cpp" line="40"/>
+        <source>Find all</source>
+        <translation>Chercher tout</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/Search.cpp" line="109"/>
+        <source>Run</source>
+        <translation>Exec</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/Search.cpp" line="110"/>
+        <source>Map jump</source>
+        <translation>Saut d&apos;écran</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/Search.cpp" line="121"/>
+        <location filename="../src/widgets/Search.cpp" line="284"/>
+        <source>Match case</source>
+        <translation>Sensible à la casse</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/Search.cpp" line="164"/>
+        <source>All</source>
+        <translation>Tout</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/Search.cpp" line="165"/>
+        <source>Assignment</source>
+        <translation>Affectation</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/Search.cpp" line="166"/>
+        <source>Bit Assignment</source>
+        <translation>Affectation Bit</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/Search.cpp" line="169"/>
+        <source>Assignment ≠</source>
+        <translation>Affectation ≠</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/Search.cpp" line="170"/>
+        <source>Assignment &lt;</source>
+        <translation>Affectation &lt;</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/Search.cpp" line="171"/>
+        <source>Assignment ≤</source>
+        <translation>Affectation ≤</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/Search.cpp" line="172"/>
+        <source>Assignment &gt;</source>
+        <translation>Affectation &gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/Search.cpp" line="173"/>
+        <source>Assignment ≥</source>
+        <translation>Affectation ≥</translation>
     </message>
     <message>
         <location filename="../src/widgets/Search.cpp" line="219"/>
         <location filename="../src/widgets/Search.cpp" line="288"/>
         <source>Scope</source>
+        <translation>Contexte</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/Search.cpp" line="950"/>
+        <source>%1 occurrences replaced.</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All fields</source>
+        <translation type="vanished">Sur tous les écrans</translation>
+    </message>
+    <message>
+        <source>Current field</source>
+        <translation type="vanished">Uniquement l&apos;écran courant</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/Search.cpp" line="222"/>
+        <source>Current group script</source>
+        <oldsource>Uniquement le groupe courant</oldsource>
+        <translation>Uniquement le groupe courant</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/Search.cpp" line="223"/>
+        <source>Current script</source>
+        <oldsource>Uniquement le script courant</oldsource>
+        <translation>Uniquement le script courant</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/Search.cpp" line="280"/>
+        <location filename="../src/widgets/Search.cpp" line="281"/>
+        <source>Replace</source>
+        <oldsource>Remplacer</oldsource>
+        <translation>Remplacer</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/Search.cpp" line="282"/>
+        <source>Replace all</source>
+        <oldsource>Remplacer tout</oldsource>
+        <translation>Remplacer tout</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/Search.cpp" line="291"/>
+        <source>Current text</source>
+        <translation>Uniquement le texte courant</translation>
+    </message>
+    <message>
+        <source>Last field</source>
+        <translation type="vanished">Dernier écran</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/Search.cpp" line="493"/>
+        <source>Last opcode</source>
+        <translation>Dernière instruction</translation>
+    </message>
+    <message>
+        <source>First field</source>
+        <translation type="vanished">Premier écran</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/Search.cpp" line="505"/>
+        <source>First opcode</source>
+        <translation>Première instruction</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/Search.cpp" line="571"/>
+        <source>%1,
+continued from top.</source>
+        <translation>%1,
+poursuite au début.</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/Search.cpp" line="691"/>
+        <source>%1,
+chase at the end.</source>
+        <translation>%1,
+poursuite à la fin.</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/Search.cpp" line="429"/>
+        <source>Position</source>
+        <translation>Position</translation>
     </message>
     <message>
         <location filename="../src/widgets/Search.cpp" line="220"/>
@@ -6772,37 +7797,6 @@ id=%2
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/Search.cpp" line="222"/>
-        <source>Current group script</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/Search.cpp" line="223"/>
-        <source>Current script</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/Search.cpp" line="280"/>
-        <location filename="../src/widgets/Search.cpp" line="281"/>
-        <source>Replace</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/Search.cpp" line="282"/>
-        <source>Replace all</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/Search.cpp" line="291"/>
-        <source>Current text</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/Search.cpp" line="429"/>
-        <source>Position</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../src/widgets/Search.cpp" line="490"/>
         <source>Last map</source>
         <translation type="unfinished"></translation>
@@ -6810,22 +7804,20 @@ id=%2
     <message>
         <location filename="../src/widgets/Search.cpp" line="491"/>
         <source>Last group</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Dernier groupe</oldsource>
+        <translation>Dernier groupe</translation>
     </message>
     <message>
         <location filename="../src/widgets/Search.cpp" line="492"/>
         <source>Last script</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/Search.cpp" line="493"/>
-        <source>Last opcode</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Dernier script</oldsource>
+        <translation>Dernier script</translation>
     </message>
     <message>
         <location filename="../src/widgets/Search.cpp" line="494"/>
         <source>Last text</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Dernier texte</oldsource>
+        <translation>Dernier texte</translation>
     </message>
     <message>
         <location filename="../src/widgets/Search.cpp" line="502"/>
@@ -6835,39 +7827,20 @@ id=%2
     <message>
         <location filename="../src/widgets/Search.cpp" line="503"/>
         <source>First group</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Premier groupe</oldsource>
+        <translation>Premier groupe</translation>
     </message>
     <message>
         <location filename="../src/widgets/Search.cpp" line="504"/>
         <source>First script</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/Search.cpp" line="505"/>
-        <source>First opcode</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Premier script</oldsource>
+        <translation>Premier script</translation>
     </message>
     <message>
         <location filename="../src/widgets/Search.cpp" line="506"/>
         <source>First text</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/Search.cpp" line="571"/>
-        <source>%1,
-continued from top.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/Search.cpp" line="691"/>
-        <source>%1,
-chase at the end.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/Search.cpp" line="950"/>
-        <source>%1 occurrences replaced.</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Premier texte</oldsource>
+        <translation>Premier texte</translation>
     </message>
 </context>
 <context>
@@ -6875,42 +7848,45 @@ chase at the end.</source>
     <message>
         <location filename="../src/widgets/SearchAll.cpp" line="26"/>
         <source>Find All</source>
-        <translation type="unfinished"></translation>
+        <translation>Rechercher tout</translation>
     </message>
     <message>
         <location filename="../src/widgets/SearchAll.cpp" line="45"/>
         <source>Copy</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Copier</oldsource>
+        <translation>Copier</translation>
     </message>
     <message>
         <location filename="../src/widgets/SearchAll.cpp" line="65"/>
         <source>Group</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Groupe</oldsource>
+        <translation>Groupe</translation>
     </message>
     <message>
         <location filename="../src/widgets/SearchAll.cpp" line="65"/>
         <source>Script</source>
-        <translation type="unfinished"></translation>
+        <translation>Script</translation>
     </message>
     <message>
         <location filename="../src/widgets/SearchAll.cpp" line="65"/>
         <source>Lines</source>
-        <translation type="unfinished"></translation>
+        <translation>Lignes</translation>
     </message>
     <message>
         <location filename="../src/widgets/SearchAll.cpp" line="65"/>
         <source>Instruction</source>
-        <translation type="unfinished"></translation>
+        <translation>Commande</translation>
     </message>
     <message>
         <location filename="../src/widgets/SearchAll.cpp" line="73"/>
         <source>Text #</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Texte n°</oldsource>
+        <translation>Texte n°</translation>
     </message>
     <message>
         <location filename="../src/widgets/SearchAll.cpp" line="73"/>
         <source>Text</source>
-        <translation type="unfinished"></translation>
+        <translation>Texte</translation>
     </message>
 </context>
 <context>
@@ -6919,12 +7895,12 @@ chase at the end.</source>
         <location filename="../src/widgets/ScriptEditorWidgets/Delegate.cpp" line="106"/>
         <location filename="../src/widgets/ScriptEditorWidgets/Delegate.cpp" line="107"/>
         <source>(Empty)</source>
-        <translation type="unfinished"></translation>
+        <translation>(Vide)</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/Delegate.cpp" line="221"/>
         <source>Choose a new color</source>
-        <translation type="unfinished"></translation>
+        <translation>Choisir une nouvelle couleur</translation>
     </message>
 </context>
 <context>
@@ -6932,284 +7908,313 @@ chase at the end.</source>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="36"/>
         <source>Texts</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/TextManager.cpp" line="38"/>
-        <source>Show unused texts</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Textes</oldsource>
+        <translation>Textes</translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="42"/>
         <source>Add text</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/TextManager.cpp" line="43"/>
-        <source>Remove text</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Ajouter texte</oldsource>
+        <translation>Ajouter texte</translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="68"/>
         <source>Member 1</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Membre 1</oldsource>
+        <translation>Membre 1</translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="70"/>
         <source>Member 2</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Membre 2</oldsource>
+        <translation>Membre 2</translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="72"/>
         <source>Member 3</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Membre 3</oldsource>
+        <translation>Membre 3</translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="75"/>
         <source>New Page</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Nouvelle page</oldsource>
+        <translation>Nouvelle page</translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="77"/>
         <source>Choice</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Choix</oldsource>
+        <translation>Choix</translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="82"/>
         <source>Grey</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Gris</oldsource>
+        <translation>Gris</translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="84"/>
         <source>Blue</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/TextManager.cpp" line="86"/>
-        <source>Red</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/TextManager.cpp" line="88"/>
-        <source>Purple</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/TextManager.cpp" line="90"/>
-        <source>Green</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Bleu</oldsource>
+        <translation>Bleu</translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="92"/>
         <source>Cyan</source>
-        <translation type="unfinished"></translation>
+        <translation>Cyan</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/TextManager.cpp" line="38"/>
+        <source>Show unused texts</source>
+        <translation>Afficher les textes non utilisés</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/TextManager.cpp" line="43"/>
+        <source>Remove text</source>
+        <translation>Supprimer texte</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/TextManager.cpp" line="86"/>
+        <source>Red</source>
+        <translation>Rouge</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/TextManager.cpp" line="88"/>
+        <source>Purple</source>
+        <translation>Violet</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/TextManager.cpp" line="90"/>
+        <source>Green</source>
+        <translation>Vert</translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="94"/>
         <source>Yellow</source>
-        <translation type="unfinished"></translation>
+        <translation>Jaune</translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="96"/>
         <source>White</source>
-        <translation type="unfinished"></translation>
+        <translation>Blanc</translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="98"/>
         <source>Blink</source>
-        <translation type="unfinished"></translation>
+        <translation>Clignotant</translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="100"/>
         <source>Multicolor</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Multicolore</oldsource>
+        <translation>Multicolore</translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="105"/>
         <source>Pause</source>
-        <translation type="unfinished"></translation>
+        <translation>Pause</translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="107"/>
         <source>Pause 0</source>
-        <translation type="unfinished"></translation>
+        <translation>Pause 0</translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="109"/>
         <source>Pause 5</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="111"/>
         <source>Pause 10</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="113"/>
         <source>Pause 15</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="115"/>
         <source>Pause 20</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="117"/>
         <source>Pause 30</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="119"/>
         <source>Pause 40</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="121"/>
         <source>Pause 50</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="123"/>
         <source>Pause 60</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="125"/>
         <source>Pauses</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="131"/>
         <source>Var10</source>
-        <translation type="unfinished"></translation>
+        <translation>Var10</translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="133"/>
         <source>Var16</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="135"/>
         <source>Var10r</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Var10d</oldsource>
+        <translation>Var10d</translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="137"/>
         <source>Vars</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="143"/>
         <source>Circle</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Cercle</oldsource>
+        <translation>Cercle</translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="145"/>
         <source>Triangle</source>
-        <translation type="unfinished"></translation>
+        <translation>Triangle</translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="147"/>
         <source>Square</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/TextManager.cpp" line="149"/>
-        <source>Cross</source>
-        <translation type="unfinished"></translation>
+        <translation>Carré</translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="151"/>
         <source>Keys</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/TextManager.cpp" line="156"/>
-        <source>Scrolling</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/TextManager.cpp" line="158"/>
-        <source>Spaced characters</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/TextManager.cpp" line="160"/>
-        <source>Memory access</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/TextManager.cpp" line="162"/>
-        <source>New Page²</source>
-        <translation type="unfinished"></translation>
+        <translation>Touches</translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="164"/>
         <source>Others</source>
-        <translation type="unfinished"></translation>
+        <translation>Autres</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/TextManager.cpp" line="549"/>
+        <source>Window %1/%2</source>
+        <oldsource>Fenêtre %1/%2</oldsource>
+        <translation>Fenêtre %1/%2</translation>
+    </message>
+    <message>
+        <source>This text is used by one or more scripts on this field..
+Remove will replace calls to this text with calls to the text that follows.
+Are you sure you want to continue?</source>
+        <translation type="obsolete">Ce texte est utilisé par un ou plusieurs scripts de cet écran.
+Le supprimer remplacera les appels à ce texte par des appels au texte qui suit.
+Êtes-vous sûr de vouloir continuer ?</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/TextManager.cpp" line="149"/>
+        <source>Cross</source>
+        <oldsource>Croix</oldsource>
+        <translation>Croix</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/TextManager.cpp" line="156"/>
+        <source>Scrolling</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/TextManager.cpp" line="158"/>
+        <source>Spaced characters</source>
+        <oldsource>Caractères espacés</oldsource>
+        <translation>Caractères espacés</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/TextManager.cpp" line="160"/>
+        <source>Memory access</source>
+        <oldsource>Accès mémoire</oldsource>
+        <translation>Accès mémoire</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/TextManager.cpp" line="162"/>
+        <source>New Page²</source>
+        <oldsource>Nouvelle page²</oldsource>
+        <translation>Nouvelle page²</translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="209"/>
         <source>Align horizontally</source>
-        <translation type="unfinished"></translation>
+        <translation>Aligner horizontalement</translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="210"/>
         <source>Align vertically</source>
-        <translation type="unfinished"></translation>
+        <translation>Aligner verticalement</translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="211"/>
         <source>Autosize</source>
-        <translation type="unfinished"></translation>
+        <translation>Taille automatique</translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="220"/>
         <source>X</source>
-        <translation type="unfinished"></translation>
+        <translation>X</translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="221"/>
         <source>Y</source>
-        <translation type="unfinished"></translation>
+        <translation>Y</translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="222"/>
         <source>W</source>
-        <translation type="unfinished"></translation>
+        <translation>L</translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="223"/>
         <source>H</source>
-        <translation type="unfinished"></translation>
+        <translation>H</translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="387"/>
         <source>Text %1</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Texte %1</oldsource>
+        <translation>Texte %1</translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="496"/>
         <source>Text used in scripts</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Texte utilisé dans les script</oldsource>
+        <translation>Texte utilisé dans les script</translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="496"/>
         <source>This text is used by one or more scripts on this field.
 Removing this text may break scripts that reference it.
 Are you sure you want to continue?</source>
-        <translation type="unfinished"></translation>
+        <translation>Ce texte est utilisé par un ou plusieurs scripts de cet écran.
+Le supprimer remplacera les appels à ce texte par des appels au texte qui suit.
+Êtes-vous sûr de vouloir continuer ?</translation>
     </message>
     <message>
         <location filename="../src/widgets/TextManager.cpp" line="527"/>
         <source>Page %1/%2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/TextManager.cpp" line="549"/>
-        <source>Window %1/%2</source>
-        <translation type="unfinished"></translation>
+        <translation>Page %1/%2</translation>
     </message>
 </context>
 <context>
@@ -7217,17 +8222,20 @@ Are you sure you want to continue?</source>
     <message>
         <location filename="../src/widgets/TextPreview.cpp" line="57"/>
         <source>Member 1</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Membre 1</oldsource>
+        <translation>Membre 1</translation>
     </message>
     <message>
         <location filename="../src/widgets/TextPreview.cpp" line="58"/>
         <source>Member 2</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Membre 2</oldsource>
+        <translation>Membre 2</translation>
     </message>
     <message>
         <location filename="../src/widgets/TextPreview.cpp" line="59"/>
         <source>Member 3</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Membre 3</oldsource>
+        <translation>Membre 3</translation>
     </message>
 </context>
 <context>
@@ -7235,186 +8243,202 @@ Are you sure you want to continue?</source>
     <message>
         <location filename="../src/widgets/TutWidget.cpp" line="28"/>
         <source>Tutorials/Sounds</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Tutoriels/Musiques</oldsource>
+        <translation>Tutoriels/Musiques</translation>
     </message>
     <message>
         <location filename="../src/widgets/TutWidget.cpp" line="31"/>
         <source>Add</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajouter</translation>
     </message>
     <message>
         <location filename="../src/widgets/TutWidget.cpp" line="32"/>
         <source>Remove</source>
-        <translation type="unfinished"></translation>
+        <translation>Supprimer</translation>
     </message>
     <message>
         <location filename="../src/widgets/TutWidget.cpp" line="46"/>
         <source>Export...</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Exporter...</oldsource>
+        <translation>Exporter...</translation>
     </message>
     <message>
         <location filename="../src/widgets/TutWidget.cpp" line="47"/>
         <source>Import...</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Importer...</oldsource>
+        <translation>Importer...</translation>
     </message>
     <message>
         <location filename="../src/widgets/TutWidget.cpp" line="54"/>
         <source>PlayStation</source>
-        <translation type="unfinished"></translation>
+        <translation>PlayStation</translation>
     </message>
     <message>
         <location filename="../src/widgets/TutWidget.cpp" line="55"/>
         <source>PC</source>
-        <translation type="unfinished"></translation>
+        <translation>PC</translation>
     </message>
     <message>
         <location filename="../src/widgets/TutWidget.cpp" line="132"/>
         <source>%1 - %2 : %3</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 - %2 : %3</translation>
     </message>
     <message>
         <location filename="../src/widgets/TutWidget.cpp" line="145"/>
         <source>Music ID:</source>
-        <translation type="unfinished"></translation>
+        <oldsource>ID musique :</oldsource>
+        <translation>ID musique :</translation>
     </message>
     <message>
         <location filename="../src/widgets/TutWidget.cpp" line="158"/>
         <source>Repair</source>
-        <translation type="unfinished"></translation>
+        <translation>Réparer</translation>
     </message>
     <message>
         <location filename="../src/widgets/TutWidget.cpp" line="159"/>
         <source>Replace by empty AKAO</source>
-        <translation type="unfinished"></translation>
+        <translation>Remplacer par un AKAO vide</translation>
     </message>
     <message>
         <location filename="../src/widgets/TutWidget.cpp" line="160"/>
         <source>Replace by empty tuto</source>
-        <translation type="unfinished"></translation>
+        <translation>Remplacer par un tuto vide</translation>
     </message>
     <message>
         <location filename="../src/widgets/TutWidget.cpp" line="163"/>
         <source>There is an error</source>
-        <translation type="unfinished"></translation>
+        <translation>Quelque chose ne tourne pas rond</translation>
     </message>
     <message>
         <location filename="../src/widgets/TutWidget.cpp" line="217"/>
         <source>Broken %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Cassé %1</translation>
     </message>
     <message>
         <location filename="../src/widgets/TutWidget.cpp" line="219"/>
         <source>Tuto %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Tuto %1</translation>
     </message>
     <message>
         <location filename="../src/widgets/TutWidget.cpp" line="221"/>
         <source>Music %1</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Musique %1</oldsource>
+        <translation>Musique %1</translation>
     </message>
     <message>
         <location filename="../src/widgets/TutWidget.cpp" line="333"/>
         <source>Tutorial</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Tutoriel</oldsource>
+        <translation>Tutoriel</translation>
     </message>
     <message>
         <location filename="../src/widgets/TutWidget.cpp" line="334"/>
         <source>Music</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Musique</oldsource>
+        <translation>Musique</translation>
     </message>
     <message>
         <location filename="../src/widgets/TutWidget.cpp" line="351"/>
         <location filename="../src/widgets/TutWidget.cpp" line="547"/>
         <source>Import</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Importer</oldsource>
+        <translation>Importer</translation>
     </message>
     <message>
         <location filename="../src/widgets/TutWidget.cpp" line="351"/>
         <location filename="../src/widgets/TutWidget.cpp" line="543"/>
         <source>sound_%1.akao</source>
-        <translation type="unfinished"></translation>
+        <translation>son_%1.akao</translation>
     </message>
     <message>
         <location filename="../src/widgets/TutWidget.cpp" line="351"/>
         <location filename="../src/widgets/TutWidget.cpp" line="490"/>
         <location filename="../src/widgets/TutWidget.cpp" line="544"/>
         <source>Final Fantasy Sound (*.akao)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/TutWidget.cpp" line="358"/>
-        <location filename="../src/widgets/TutWidget.cpp" line="385"/>
-        <source>Tutorial used in scripts</source>
-        <translation type="unfinished"></translation>
+        <translation>Son Final Fantasy (*.akao)</translation>
     </message>
     <message>
         <location filename="../src/widgets/TutWidget.cpp" line="358"/>
         <source>Insert a tutorial here will shift the IDs of the tutorials that follows, this may be a problem.
 Are you sure you want to continue?</source>
-        <translation type="unfinished"></translation>
+        <translation>Insérer un tutoriel ici va décaler les identifiants des tutoriels qui suit, cela risque de poser problème.
+Êtes-vous sûr de vouloir continuer ?</translation>
     </message>
     <message>
         <location filename="../src/widgets/TutWidget.cpp" line="385"/>
         <source>This tutorial may be used by one or more scripts on this field.
 Delete can cause errors.
 Are you sure you want to continue?</source>
-        <translation type="unfinished"></translation>
+        <translation>Ce tutoriel est peut-être utilisé par un ou plusieurs scripts de cet écran.
+Le supprimer peut provoquer des erreurs.
+Êtes-vous sûr de vouloir continuer ?</translation>
     </message>
     <message>
         <location filename="../src/widgets/TutWidget.cpp" line="385"/>
         <source>This tutorial is used by one or more scripts on this field.
 Remove will replace calls to this tutorial with calls to the tutorial that follows.
 Are you sure you want to continue?</source>
-        <translation type="unfinished"></translation>
+        <translation>Ce tutoriel est utilisé par un ou plusieurs scripts de cet écran.
+Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui suit.
+Êtes-vous sûr de vouloir continuer ?</translation>
     </message>
     <message>
         <location filename="../src/widgets/TutWidget.cpp" line="491"/>
         <source>PSF MIDI file (*.minipsf)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/TutWidget.cpp" line="494"/>
-        <location filename="../src/widgets/TutWidget.cpp" line="540"/>
-        <source>tuto_%1.tutps</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/TutWidget.cpp" line="495"/>
-        <location filename="../src/widgets/TutWidget.cpp" line="541"/>
-        <source>Tuto Final Fantasy VII PS (*.tutps)</source>
-        <translation type="unfinished"></translation>
+        <translation>PSF MIDI file (*.minipsf)</translation>
     </message>
     <message>
         <location filename="../src/widgets/TutWidget.cpp" line="497"/>
         <source>%1.akao</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/TutWidget.cpp" line="501"/>
-        <source>Export</source>
-        <translation type="unfinished"></translation>
+        <translation>%1.akao</translation>
     </message>
     <message>
         <location filename="../src/widgets/TutWidget.cpp" line="512"/>
         <location filename="../src/widgets/TutWidget.cpp" line="557"/>
         <location filename="../src/widgets/TutWidget.cpp" line="562"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Opening error</oldsource>
+        <translation>Erreur</translation>
     </message>
     <message>
         <location filename="../src/widgets/TutWidget.cpp" line="512"/>
         <source>Opening error file</source>
-        <translation type="unfinished"></translation>
+        <translation>Erreur d&apos;ouverture du fichier</translation>
     </message>
     <message>
         <location filename="../src/widgets/TutWidget.cpp" line="557"/>
         <source>Opening Error File</source>
-        <translation type="unfinished"></translation>
+        <translation>Erreur d&apos;ouverture du fichier</translation>
     </message>
     <message>
         <location filename="../src/widgets/TutWidget.cpp" line="562"/>
         <source>File too large</source>
-        <translation type="unfinished"></translation>
+        <translation>Fichier trop gros</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/TutWidget.cpp" line="358"/>
+        <location filename="../src/widgets/TutWidget.cpp" line="385"/>
+        <source>Tutorial used in scripts</source>
+        <oldsource>Tutoriel utilisé dans les script</oldsource>
+        <translation>Tutoriel utilisé dans les script</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/TutWidget.cpp" line="494"/>
+        <location filename="../src/widgets/TutWidget.cpp" line="540"/>
+        <source>tuto_%1.tutps</source>
+        <translation>tuto_%1.tutps</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/TutWidget.cpp" line="495"/>
+        <location filename="../src/widgets/TutWidget.cpp" line="541"/>
+        <source>Tuto Final Fantasy VII PS (*.tutps)</source>
+        <translation>Tuto Final Fantasy VII PS (*.tutps)</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/TutWidget.cpp" line="501"/>
+        <source>Export</source>
+        <oldsource>Exporter</oldsource>
+        <translation>Exporter</translation>
     </message>
 </context>
 <context>
@@ -7422,102 +8446,113 @@ Are you sure you want to continue?</source>
     <message>
         <location filename="../src/widgets/VarManager.cpp" line="25"/>
         <source>Variable manager</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Gestionnaire de variables</oldsource>
+        <translation>Gestionnaire de variables</translation>
     </message>
     <message>
         <location filename="../src/widgets/VarManager.cpp" line="35"/>
         <source>Rename</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Renommer</oldsource>
+        <translation>Renommer</translation>
     </message>
     <message>
         <location filename="../src/widgets/VarManager.cpp" line="51"/>
         <source>Address</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/VarManager.cpp" line="51"/>
-        <source>Nickname</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/VarManager.cpp" line="51"/>
-        <source>Operation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/VarManager.cpp" line="51"/>
-        <source>Size</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/VarManager.cpp" line="61"/>
-        <source>Var banks 08, 09 and 10 are temporary and do not appear in the game save. &lt;br/&gt;Other banks are stored in pair: for example 01-02 is in the same memory location, but the first is used to store 8-bit values and the second is used to store 16-bit values.</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Adresse</oldsource>
+        <translation>Adresse</translation>
     </message>
     <message>
         <location filename="../src/widgets/VarManager.cpp" line="74"/>
         <source>Addresses Used</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/VarManager.cpp" line="75"/>
-        <source>Save</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Adresses utilisées</oldsource>
+        <translation>Adresses utilisées</translation>
     </message>
     <message>
         <location filename="../src/widgets/VarManager.cpp" line="264"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/VarManager.cpp" line="264"/>
-        <source>Save Failed</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Erreur</oldsource>
+        <translation>Erreur</translation>
     </message>
     <message>
         <location filename="../src/widgets/VarManager.cpp" line="272"/>
         <source>Searching</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Recherche</oldsource>
+        <translation>Recherche</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/VarManager.cpp" line="51"/>
+        <source>Nickname</source>
+        <translation>Surnom</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/VarManager.cpp" line="51"/>
+        <source>Operation</source>
+        <translation>Opération</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/VarManager.cpp" line="51"/>
+        <source>Size</source>
+        <translation>Taille</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/VarManager.cpp" line="61"/>
+        <source>Var banks 08, 09 and 10 are temporary and do not appear in the game save. &lt;br/&gt;Other banks are stored in pair: for example 01-02 is in the same memory location, but the first is used to store 8-bit values and the second is used to store 16-bit values.</source>
+        <translation>Les banks de variable 08, 09 et 10 sont temporaires et n&apos;apparaissent pas dans les sauvegardes du jeu. &lt;br/&gt;Les autres banks sont stockés par paires : par exemple 01-02 représentent le même emplacement mémoire, mais le premier est utilisé pour stocker des valeurs sur 8 bits et le second est utilisé pour stocker des valeurs sur 16 bits.</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/VarManager.cpp" line="75"/>
+        <source>Save</source>
+        <translation>Enregistrer</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/VarManager.cpp" line="264"/>
+        <source>Save Failed</source>
+        <translation>Fichier vars.cfg inaccessible.
+Échec de l&apos;enregistrement.</translation>
     </message>
     <message>
         <location filename="../src/widgets/VarManager.cpp" line="272"/>
         <source>Searching, it may take a minute...</source>
-        <translation type="unfinished"></translation>
+        <translation>Recherche des variables en cours, cela peut prendre une minute...</translation>
     </message>
     <message>
         <location filename="../src/widgets/VarManager.cpp" line="333"/>
         <source>rw</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/widgets/VarManager.cpp" line="335"/>
         <source>r</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/widgets/VarManager.cpp" line="337"/>
         <source>w</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/widgets/VarManager.cpp" line="340"/>
         <source>bitfield</source>
-        <translation type="unfinished"></translation>
+        <oldsource>bits</oldsource>
+        <translation>bits</translation>
     </message>
     <message>
         <location filename="../src/widgets/VarManager.cpp" line="343"/>
         <source>1 Byte</source>
-        <translation type="unfinished"></translation>
+        <oldsource>1 octet</oldsource>
+        <translation>1 octet</translation>
     </message>
     <message>
         <location filename="../src/widgets/VarManager.cpp" line="346"/>
         <source>2 Bytes</source>
-        <translation type="unfinished"></translation>
+        <oldsource>2 octets</oldsource>
+        <translation>2 octets</translation>
     </message>
     <message>
         <location filename="../src/widgets/VarManager.cpp" line="349"/>
         <source>2 Signed Bytes</source>
-        <translation type="unfinished"></translation>
+        <oldsource>2 octets signés</oldsource>
+        <translation>2 octets signés</translation>
     </message>
 </context>
 <context>
@@ -7525,12 +8560,13 @@ Are you sure you want to continue?</source>
     <message>
         <location filename="../src/widgets/VarOrValueWidget.cpp" line="24"/>
         <source>Value</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Valeur</oldsource>
+        <translation>Valeur</translation>
     </message>
     <message>
         <location filename="../src/widgets/VarOrValueWidget.cpp" line="25"/>
         <source>Variable</source>
-        <translation type="unfinished"></translation>
+        <translation>Variable</translation>
     </message>
 </context>
 <context>
@@ -7538,41 +8574,60 @@ Are you sure you want to continue?</source>
     <message>
         <location filename="../src/widgets/VertexWidget.cpp" line="43"/>
         <source>X</source>
-        <translation type="unfinished"></translation>
+        <translation>X</translation>
     </message>
     <message>
         <location filename="../src/widgets/VertexWidget.cpp" line="45"/>
         <source>Y</source>
-        <translation type="unfinished"></translation>
+        <translation>Y</translation>
     </message>
     <message>
         <location filename="../src/widgets/VertexWidget.cpp" line="47"/>
         <source>Z</source>
-        <translation type="unfinished"></translation>
+        <translation>Z</translation>
     </message>
 </context>
 <context>
     <name>WalkmeshManager</name>
     <message>
+        <location filename="../src/widgets/WalkmeshManager.cpp" line="56"/>
+        <source>Camera</source>
+        <oldsource>Caméra</oldsource>
+        <translation>Caméra</translation>
+    </message>
+    <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="26"/>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="57"/>
         <source>Walkmesh</source>
-        <translation type="unfinished"></translation>
+        <translation>Walkmesh</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/WalkmeshManager.cpp" line="104"/>
+        <source>Add camera</source>
+        <oldsource>Ajouter caméra</oldsource>
+        <translation>Ajouter caméra</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/WalkmeshManager.cpp" line="105"/>
+        <source>Remove camera</source>
+        <oldsource>Supprimer caméra</oldsource>
+        <translation>Supprimer caméra</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="43"/>
         <source>Use the arrow keys to move the camera.</source>
-        <translation type="unfinished"></translation>
+        <translation>Utilisez les touches directionnelles pour déplacer la caméra.</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="47"/>
         <source>Reset Camera</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Reset</oldsource>
+        <translation>Remettre à 0</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="49"/>
         <source>Show 3D models</source>
-        <translation type="unfinished"></translation>
+        <translation>Afficher modèles</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="52"/>
@@ -7580,294 +8635,315 @@ Are you sure you want to continue?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/WalkmeshManager.cpp" line="56"/>
-        <source>Camera</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="58"/>
         <source>Gateways</source>
-        <translation type="unfinished"></translation>
+        <translation>Sorties</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="59"/>
         <source>Doors</source>
-        <translation type="unfinished"></translation>
+        <translation>Portes</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="60"/>
         <source>Arrows</source>
-        <translation type="unfinished"></translation>
+        <translation>Flèches</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="61"/>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="378"/>
         <source>Camera range</source>
-        <translation type="unfinished"></translation>
+        <translation>Limites caméra</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="62"/>
         <source>Miscellaneous</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/WalkmeshManager.cpp" line="104"/>
-        <source>Add camera</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/WalkmeshManager.cpp" line="105"/>
-        <source>Remove camera</source>
-        <translation type="unfinished"></translation>
+        <translation>Divers</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="130"/>
         <source>Zoom:</source>
-        <translation type="unfinished"></translation>
+        <translation>Distance (zoom) :</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="132"/>
         <source>Camera axis:</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Axes de la caméra :</oldsource>
+        <translation>Axes de la caméra :</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="136"/>
         <source>Camera position:</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Position de la caméra :</oldsource>
+        <translation>Position de la caméra :</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="137"/>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="348"/>
         <source>X</source>
-        <translation type="unfinished"></translation>
+        <translation>X</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="139"/>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="350"/>
         <source>Y</source>
-        <translation type="unfinished"></translation>
+        <translation>Y</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="141"/>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="352"/>
         <source>Z</source>
-        <translation type="unfinished"></translation>
+        <translation>Z</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="168"/>
         <source>Add triangle</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Ajouter triangle</oldsource>
+        <translation>Ajouter triangle</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="169"/>
         <source>Remove triangle</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Supprimer triangle</oldsource>
+        <translation>Supprimer triangle</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="187"/>
         <source>Triangle accessible via the line 1-2 :</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Triangle accessible via la ligne 1-2 :</oldsource>
+        <translation>Triangle accessible via la ligne 1-2 :</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="191"/>
         <source>Triangle accessible via the line 2-3 :</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Triangle accessible via la ligne 2-3 :</oldsource>
+        <translation>Triangle accessible via la ligne 2-3 :</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="195"/>
         <source>Triangle accessible via the line 3-1 :</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Triangle accessible via la ligne 3-1 :</oldsource>
+        <translation>Triangle accessible via la ligne 3-1 :</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="200"/>
         <source>Point 1 :</source>
-        <translation type="unfinished"></translation>
+        <translation>Point 1 :</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="202"/>
         <source>Point 2 :</source>
-        <translation type="unfinished"></translation>
+        <translation>Point 2 :</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="204"/>
         <source>Point 3 :</source>
-        <translation type="unfinished"></translation>
+        <translation>Point 3 :</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="229"/>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="278"/>
         <source>Enable</source>
-        <translation type="unfinished"></translation>
+        <translation>Activer</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="233"/>
         <source>T</source>
-        <translation type="unfinished"></translation>
+        <translation>T</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="241"/>
         <source>Show an arrow</source>
-        <translation type="unfinished"></translation>
+        <translation>Afficher une flèche</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="247"/>
         <source>Exit line:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/WalkmeshManager.cpp" line="250"/>
-        <source>Destination point:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/WalkmeshManager.cpp" line="252"/>
-        <source>Character orientation:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/WalkmeshManager.cpp" line="254"/>
-        <source>Field ID:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/WalkmeshManager.cpp" line="296"/>
-        <source>Background parameter ID:</source>
-        <translation type="unfinished"></translation>
+        <translation>Ligne de sortie :</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="298"/>
         <source>Background state ID:</source>
-        <translation type="unfinished"></translation>
+        <translation>Id état décor :</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="300"/>
         <source>Behavior:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/WalkmeshManager.cpp" line="302"/>
-        <source>Sound ID:</source>
-        <translation type="unfinished"></translation>
+        <translation>Comportement :</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="308"/>
         <source>Trigger Line Door:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/WalkmeshManager.cpp" line="343"/>
-        <source>Invisible</source>
-        <translation type="unfinished"></translation>
+        <translation>Ligne déclench. porte :</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="344"/>
         <source>Red</source>
-        <translation type="unfinished"></translation>
+        <translation>Rouge</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="345"/>
         <source>Green</source>
-        <translation type="unfinished"></translation>
+        <translation>Vert</translation>
     </message>
     <message>
-        <location filename="../src/widgets/WalkmeshManager.cpp" line="358"/>
-        <source>Position:</source>
-        <translation type="unfinished"></translation>
+        <source>Up</source>
+        <translation type="vanished">Haut</translation>
     </message>
     <message>
-        <location filename="../src/widgets/WalkmeshManager.cpp" line="359"/>
-        <source>Type:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/WalkmeshManager.cpp" line="379"/>
-        <source>Layer sizes (for layer animations)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/WalkmeshManager.cpp" line="380"/>
-        <source>Layer flags</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/WalkmeshManager.cpp" line="391"/>
-        <source>Top</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/WalkmeshManager.cpp" line="393"/>
-        <source>Bottom</source>
-        <translation type="unfinished"></translation>
+        <source>Down</source>
+        <translation type="vanished">Bas</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="395"/>
         <source>Right</source>
-        <translation type="unfinished"></translation>
+        <translation>Droite</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="397"/>
         <source>Left</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/WalkmeshManager.cpp" line="405"/>
-        <source>Background layer 3 width</source>
-        <translation type="unfinished"></translation>
+        <translation>Gauche</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="407"/>
         <source>Background layer 3 height</source>
-        <translation type="unfinished"></translation>
+        <translation>Hauteur couche 3 décor</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="409"/>
         <source>Background layer 4 width</source>
-        <translation type="unfinished"></translation>
+        <translation>Largeur couche 4 décor</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="411"/>
         <source>Background layer 4 height</source>
-        <translation type="unfinished"></translation>
+        <translation>Hauteur couche 4 décor</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="420"/>
         <source>Layer 1</source>
-        <translation type="unfinished"></translation>
+        <translation>Couche 1</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="422"/>
         <source>Layer 2</source>
-        <translation type="unfinished"></translation>
+        <translation>Couche 2</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="424"/>
         <source>Layer 3</source>
-        <translation type="unfinished"></translation>
+        <translation>Couche 3</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="426"/>
         <source>Layer 4</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/WalkmeshManager.cpp" line="463"/>
-        <source>Movements orientation:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/WalkmeshManager.cpp" line="466"/>
-        <source>Camera Focus Height on the playable character:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="468"/>
         <source>Unknown:</source>
-        <translation type="unfinished"></translation>
+        <translation>Inconnu :</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="470"/>
         <source>Field map scale:</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Field scale:</oldsource>
+        <translation>Zoom écran :</translation>
+    </message>
+    <message>
+        <source>Opening error</source>
+        <translation type="vanished">Erreur d&apos;ouverture</translation>
+    </message>
+    <message>
+        <source>Error opening walkmesh</source>
+        <translation type="vanished">Erreur d&apos;ouverture du walkmesh</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/WalkmeshManager.cpp" line="250"/>
+        <source>Destination point:</source>
+        <oldsource>Point de destination :</oldsource>
+        <translation>Point de destination :</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/WalkmeshManager.cpp" line="252"/>
+        <source>Character orientation:</source>
+        <oldsource>Orientation du perso. :</oldsource>
+        <translation>Orientation du perso. :</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/WalkmeshManager.cpp" line="254"/>
+        <source>Field ID:</source>
+        <oldsource>Id écran :</oldsource>
+        <translation>Id écran :</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/WalkmeshManager.cpp" line="296"/>
+        <source>Background parameter ID:</source>
+        <oldsource>Id parametre décor :</oldsource>
+        <translation>Id parametre décor :</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/WalkmeshManager.cpp" line="302"/>
+        <source>Sound ID:</source>
+        <oldsource>Id son :</oldsource>
+        <translation>Id son :</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/WalkmeshManager.cpp" line="343"/>
+        <source>Invisible</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/WalkmeshManager.cpp" line="358"/>
+        <source>Position:</source>
+        <oldsource>Position :</oldsource>
+        <translation>Position :</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/WalkmeshManager.cpp" line="359"/>
+        <source>Type:</source>
+        <oldsource>Type :</oldsource>
+        <translation>Type :</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/WalkmeshManager.cpp" line="379"/>
+        <source>Layer sizes (for layer animations)</source>
+        <oldsource>Tailles des couches (pour les animations de couche)</oldsource>
+        <translation>Tailles des couches (pour les animations de couche)</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/WalkmeshManager.cpp" line="380"/>
+        <source>Layer flags</source>
+        <oldsource>Flags couches</oldsource>
+        <translation>Flags couches</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/WalkmeshManager.cpp" line="391"/>
+        <source>Top</source>
+        <translation>Haut</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/WalkmeshManager.cpp" line="393"/>
+        <source>Bottom</source>
+        <translation>Bas</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/WalkmeshManager.cpp" line="405"/>
+        <source>Background layer 3 width</source>
+        <oldsource>Largeur couche 3 décor</oldsource>
+        <translation>Largeur couche 3 décor</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/WalkmeshManager.cpp" line="463"/>
+        <source>Movements orientation:</source>
+        <oldsource>Orientation des mouvements :</oldsource>
+        <translation>Orientation des mouvements :</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/WalkmeshManager.cpp" line="466"/>
+        <source>Camera Focus Height on the playable character:</source>
+        <oldsource>Hauteur focus caméra sur le personnage :</oldsource>
+        <translation>Hauteur focus caméra sur le personnage :</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="513"/>
@@ -7875,7 +8951,8 @@ Are you sure you want to continue?</source>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="717"/>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="737"/>
         <source>Camera %1</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Caméra %1</oldsource>
+        <translation>Caméra %1</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="529"/>
@@ -7883,7 +8960,14 @@ Are you sure you want to continue?</source>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="864"/>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="884"/>
         <source>Triangle %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Triangle %1</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/WalkmeshManager.cpp" line="556"/>
+        <location filename="../src/widgets/WalkmeshManager.cpp" line="1244"/>
+        <source>Door %1</source>
+        <oldsource>Porte %1</oldsource>
+        <translation>Porte %1</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="544"/>
@@ -7893,24 +8977,18 @@ Are you sure you want to continue?</source>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="1248"/>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="1372"/>
         <source>Unused</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/WalkmeshManager.cpp" line="556"/>
-        <location filename="../src/widgets/WalkmeshManager.cpp" line="1244"/>
-        <source>Door %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Inutilisé</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="572"/>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="1368"/>
         <source>Arrow %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Flèche %1</translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="1049"/>
         <source>?</source>
-        <translation type="unfinished"></translation>
+        <translation>?</translation>
     </message>
 </context>
 <context>
@@ -7918,270 +8996,320 @@ Are you sure you want to continue?</source>
     <message>
         <location filename="../src/Window.cpp" line="61"/>
         <source>&amp;File</source>
-        <translation type="unfinished"></translation>
+        <oldsource>&amp;Fichier</oldsource>
+        <translation>&amp;Fichier</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="63"/>
         <source>&amp;Open...</source>
-        <translation type="unfinished"></translation>
+        <oldsource>&amp;Ouvrir...</oldsource>
+        <translation>&amp;Ouvrir...</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="64"/>
-        <source>Open &amp;Directory...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="65"/>
-        <source>&amp;Recent files</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="69"/>
-        <source>&amp;Save</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="70"/>
-        <source>Save &amp;As...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="71"/>
-        <source>&amp;Export the current map...</source>
-        <translation type="unfinished"></translation>
+        <source>&amp;Export the current field...</source>
+        <oldsource>&amp;Exporter l&apos;écran courant...</oldsource>
+        <translation type="vanished">&amp;Exporter l&apos;écran courant...</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="72"/>
         <source>&amp;Mass Export...</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Exporter en &amp;masse...</oldsource>
+        <translation>Exporter en &amp;masse...</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="73"/>
-        <source>&amp;Import to current map...</source>
-        <translation type="unfinished"></translation>
+        <source>&amp;Import the current field...</source>
+        <oldsource>&amp;Importer dans l&apos;écran courant...</oldsource>
+        <translation type="vanished">&amp;Importer dans l&apos;écran courant...</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="75"/>
         <location filename="../src/Window.cpp" line="422"/>
         <location filename="../src/Window.cpp" line="1626"/>
         <source>Archive Mana&amp;ger...</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Ges&amp;tionnaire d&apos;archive...</oldsource>
+        <translation>Ges&amp;tionnaire d&apos;archive...</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="77"/>
         <source>R&amp;un FF7</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="82"/>
-        <source>C&amp;lose</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="83"/>
-        <source>E&amp;xit</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Run FF7</oldsource>
+        <translation>&amp;Lancer FF7</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="86"/>
         <source>T&amp;ools</source>
-        <translation type="unfinished"></translation>
+        <oldsource>&amp;Outils</oldsource>
+        <translation>&amp;Outils</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="87"/>
         <source>&amp;Texts...</source>
-        <translation type="unfinished"></translation>
+        <oldsource>&amp;Textes...</oldsource>
+        <translation>&amp;Textes...</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="88"/>
-        <source>Map &amp;Models...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="89"/>
-        <source>Encounte&amp;rs...</source>
-        <translation type="unfinished"></translation>
+        <source>Field &amp;Models...</source>
+        <oldsource>&amp;Modèles 3D...</oldsource>
+        <translation type="vanished">&amp;Modèles 3D...</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="90"/>
         <source>Tutorials/&amp;Sounds...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="91"/>
-        <source>&amp;Walkmesh...</source>
-        <translation type="unfinished"></translation>
+        <oldsource>T&amp;utoriels/Musiques...</oldsource>
+        <translation>T&amp;utoriels/Musiques...</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="92"/>
         <source>&amp;Background...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="93"/>
-        <source>M&amp;iscellaneous...</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Background...</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="95"/>
         <source>Variable Mana&amp;ger...</source>
-        <translation type="unfinished"></translation>
+        <oldsource>&amp;Gestionnaire de variables...</oldsource>
+        <translation>&amp;Gestionnaire de variables...</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="96"/>
-        <source>&amp;Find...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="97"/>
-        <source>B&amp;atch processing...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="100"/>
-        <source>&amp;Settings</source>
-        <translation type="unfinished"></translation>
+        <source>Miscellaneous Oper&amp;ations...</source>
+        <oldsource>Opér&amp;ations diverses...</oldsource>
+        <translation type="vanished">Opér&amp;ations diverses...</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="102"/>
         <source>&amp;Japanese Characters</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Caractères &amp;japonais</oldsource>
+        <translation>Caractères &amp;japonais</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="106"/>
         <source>&amp;Language</source>
-        <translation type="unfinished"></translation>
+        <oldsource>&amp;Langues</oldsource>
+        <translation>&amp;Langues</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="109"/>
         <source>English (default)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="118"/>
-        <source>English</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Français (défaut)</oldsource>
+        <translation>English (défaut)</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="131"/>
         <source>&amp;Configuration...</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Configuration...</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="371"/>
+        <source>Restart the program for the settings to take effect.</source>
+        <oldsource>Relancez le programme pour que les paramètres prennent effet.</oldsource>
+        <translation>Relancez le programme pour que les paramètres prennent effet.</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="64"/>
+        <source>Open &amp;Directory...</source>
+        <translation>Ouvrir un &amp;dossier...</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="65"/>
+        <source>&amp;Recent files</source>
+        <translation>Fichiers ré&amp;cents</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="69"/>
+        <source>&amp;Save</source>
+        <translation>Enregi&amp;strer</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="70"/>
+        <source>Save &amp;As...</source>
+        <translation>Enre&amp;gistrer Sous...</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="71"/>
+        <source>&amp;Export the current map...</source>
+        <translation>&amp;Exporter l&apos;écran courant...</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="73"/>
+        <source>&amp;Import to current map...</source>
+        <translation>&amp;Importer dans l&apos;écran courant...</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="82"/>
+        <source>C&amp;lose</source>
+        <translation>Fe&amp;rmer</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="83"/>
+        <source>E&amp;xit</source>
+        <translation>&amp;Quitter</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="88"/>
+        <source>Map &amp;Models...</source>
+        <translation>&amp;Modèles 3D...</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="89"/>
+        <source>Encounte&amp;rs...</source>
+        <translation>&amp;Rencontres aléatoires...</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="91"/>
+        <source>&amp;Walkmesh...</source>
+        <translation>&amp;Zones...</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="93"/>
+        <source>M&amp;iscellaneous...</source>
+        <translation>&amp;Divers...</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="96"/>
+        <source>&amp;Find...</source>
+        <translation>Rec&amp;hercher...</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="97"/>
+        <source>B&amp;atch processing...</source>
+        <translation>Tr&amp;aitement par lot...</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="100"/>
+        <source>&amp;Settings</source>
+        <translation>&amp;Paramètres</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="118"/>
+        <source>English</source>
+        <translation>Français</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="140"/>
         <source>Main &amp;toolbar</source>
-        <translation type="unfinished"></translation>
+        <translation>Barre d&apos;outils &amp;principale</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="145"/>
         <location filename="../src/Window.cpp" line="496"/>
         <source>Open a file</source>
-        <translation type="unfinished"></translation>
+        <translation>Ouvrir un fichier</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="147"/>
         <location filename="../src/Window.cpp" line="405"/>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Sauvegarder</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="150"/>
         <source>Find</source>
-        <translation type="unfinished"></translation>
+        <translation>Rechercher</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="154"/>
         <source>Text editor</source>
-        <translation type="unfinished"></translation>
+        <translation>Editeur de texte</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="156"/>
         <source>Model loader editor</source>
-        <translation type="unfinished"></translation>
+        <translation>Liste des modèles 3D</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="160"/>
         <source>Walkmesh editor</source>
-        <translation type="unfinished"></translation>
+        <translation>Walkmesh</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="225"/>
         <location filename="../src/Window.cpp" line="227"/>
         <source>&amp;?</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="298"/>
         <source>&amp;View</source>
+        <translation>&amp;Affichage</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="1206"/>
+        <source>Uncompressed PC Field Map (*.dec)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="301"/>
-        <source>Map List</source>
+        <location filename="../src/Window.cpp" line="1357"/>
+        <source>PS Field Map (*.DAT)</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Field List</source>
+        <translation type="vanished">Liste des écrans</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="304"/>
         <source>Background Preview</source>
-        <translation type="unfinished"></translation>
+        <translation>Aperçu décor</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="370"/>
         <source>Settings changed</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="371"/>
-        <source>Restart the program for the settings to take effect.</source>
-        <translation type="unfinished"></translation>
+        <translation>Paramètres modifiés</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="403"/>
         <source>
 
 Edited files:</source>
-        <translation type="unfinished"></translation>
+        <translation>
+
+Fichiers modifiés :</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="405"/>
         <source>Would you like to save changes of %1?%2</source>
-        <translation type="unfinished"></translation>
+        <translation>Voulez-vous enregistrer les changements de %1 ?%2</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="488"/>
         <source>Compatible Files (*.lgp *.DAT *.bin *.iso *.img)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Fichiers compatibles (*.lgp *.DAT *.bin *.iso *.img)</oldsource>
+        <translation>Fichiers compatibles (*.lgp *.DAT *.bin *.iso *.img)</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="489"/>
         <source>Lgp Files (*.lgp)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Fichiers Lgp (*.lgp)</oldsource>
+        <translation>Fichiers Lgp (*.lgp)</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="490"/>
         <location filename="../src/Window.cpp" line="1065"/>
         <source>DAT File (*.DAT)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Fichier DAT (*.DAT)</oldsource>
+        <translation>Fichier DAT (*.DAT)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="491"/>
-        <source>PC field File (*)</source>
-        <translation type="unfinished"></translation>
+        <source>PC Field File (*)</source>
+        <oldsource>Fichier Field PC (*)</oldsource>
+        <translation type="vanished">Fichier Field PC (*)</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="492"/>
         <source>Disc Image (*.bin *.iso *.img)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Image disque (*.bin *.iso *.img)</oldsource>
+        <translation>Image disque (*.bin *.iso *.img)</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="546"/>
         <source>Select a folder containing the Final Fantasy VII field files</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Sélectionnez un dossier contenant des fichiers field issus de Final Fantasy VII</oldsource>
+        <translation>Sélectionnez un dossier contenant des fichiers field issus de Final Fantasy VII</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="554"/>
         <source>File Type</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Type de fichiers</oldsource>
+        <translation>Type de fichiers</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="555"/>
@@ -8189,17 +9317,253 @@ Edited files:</source>
  - Playstation field files (&quot;EXAMPLE.DAT&quot;)
  - PC Field File (&quot;example&quot;)
 </source>
-        <translation type="unfinished"></translation>
+        <oldsource>Quel type de fichiers voulez-vous chercher ?
+ - Les fichiers field PlayStation (&quot;EXEMPLE.DAT&quot;)
+ - Les fichiers field PC (&quot;exemple&quot;)
+</oldsource>
+        <translation>Quel type de fichiers voulez-vous chercher ?
+ - Les fichiers field PlayStation (&quot;EXEMPLE.DAT&quot;)
+ - Les fichiers field PC (&quot;exemple&quot;)</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="559"/>
         <source>PS</source>
-        <translation type="unfinished"></translation>
+        <translation>PS</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="560"/>
         <source>PC</source>
-        <translation type="unfinished"></translation>
+        <translation>PC</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="602"/>
+        <source>Cancel</source>
+        <translation>Annuler</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="602"/>
+        <source>Stop</source>
+        <translation>Arrêter</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="631"/>
+        <source>Opening...</source>
+        <translation>Ouverture...</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="650"/>
+        <source>Nothing found!</source>
+        <translation>Rien trouvé !</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="654"/>
+        <source>The file already exists</source>
+        <translation>Le fichier existe déjà</translation>
+    </message>
+    <message>
+        <source>Unable to remove the file</source>
+        <translation type="vanished">Impossible de supprimer le fichier</translation>
+    </message>
+    <message>
+        <source>Failed to rename file.</source>
+        <translation type="vanished">Impossible de renommer le fichier.</translation>
+    </message>
+    <message>
+        <source>Failed to copy file</source>
+        <translation type="vanished">Impossible de copier le fichier</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="675"/>
+        <source>This error should not appear, thank you for reporting it</source>
+        <translation>Cette erreur ne devrais pas s&apos;afficher, merci de le signaler</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="1041"/>
+        <source>Error Compiling Scripts:
+scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
+        <translation>Erreur de compilation des scripts :
+écran %1 (%2), groupe %3 (%4), script %5, ligne %6 : %7</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="1041"/>
+        <source>Compilation Error</source>
+        <translation>Erreur de compilation</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="1056"/>
+        <source>Save Directory As</source>
+        <translation>Enregistrer dossier sous</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="1071"/>
+        <source>Save As</source>
+        <translation>Enregistrer sous</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="1078"/>
+        <source>Saving...</source>
+        <translation>Sauvegarde...</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="663"/>
+        <location filename="../src/Window.cpp" line="1104"/>
+        <source>Unable to remove the file, check write permissions.</source>
+        <translation>Impossible de supprimer le fichier, vérifiez les droits d&apos;écriture.</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="301"/>
+        <source>Map List</source>
+        <translation>Liste des écrans</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="491"/>
+        <source>PC field File (*)</source>
+        <translation>Fichier Field PC (*)</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="666"/>
+        <source>Failed to rename the file, check write permissions.</source>
+        <translation>Impossible de renommer le fichier, vérifiez les droits d&apos;écriture.</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="669"/>
+        <source>Failed to copy the file, check write permissions.</source>
+        <translation>Impossible de copier le fichier, vérifiez les droits d&apos;écriture.</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="1095"/>
+        <source>No maps found</source>
+        <translation>Aucun écran trouvé</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="1107"/>
+        <source>Unable to rename the file, check write permissions.</source>
+        <translation>Impossible de renommer le fichier, vérifiez les droits d&apos;écriture.</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="1110"/>
+        <source>Unable to copy the file, check write permissions.</source>
+        <translation>Impossible de copier le fichier, vérifiez les droits d&apos;écriture.</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="1116"/>
+        <source>This feature is not complete</source>
+        <translation>Cette fonctionnalité n&apos;est pas terminée</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="1203"/>
+        <location filename="../src/Window.cpp" line="1356"/>
+        <source>PC Field Map (*)</source>
+        <translation>Fichier Field PC (*)</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="1204"/>
+        <source>Data DAT File (*.DAT)</source>
+        <translation>Fichier DAT (*.DAT)</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="1205"/>
+        <source>Textures MIM File (*.MIM)</source>
+        <translation>Fichier MIM (*.MIM)</translation>
+    </message>
+    <message>
+        <source>Uncompressed PC Field Map (*)</source>
+        <translation type="vanished">Écran PC décompressé (*)</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="1244"/>
+        <source>Archive is inaccessible</source>
+        <translation>L&apos;archive est inaccessible</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="1247"/>
+        <source>Error reopening file</source>
+        <translation>Erreur lors de l&apos;ouverture du fichier</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="1250"/>
+        <source>Unable to create the new file</source>
+        <translation>Impossible de créer le nouveau fichier</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="1302"/>
+        <source>An error occured when exporting</source>
+        <translation>Une erreur s&apos;est produite lors de l&apos;exportation</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="1330"/>
+        <source>An error occurred when importing</source>
+        <translation>Une erreur s&apos;est produite lors de l&apos;importation</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation type="vanished">Attention</translation>
+    </message>
+    <message>
+        <source>The background importation algorithm give bad results in-game, you have been warned!</source>
+        <translation type="vanished">L&apos;algorithme d&apos;importation des décors donne de mauvais résultats en jeu, vous êtes prévenus !</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="1424"/>
+        <source>Final Fantasy VII couldn&apos;t be launched
+%1</source>
+        <translation>Final Fantasy VII n&apos;a pas pu être lancé.
+%1</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="1540"/>
+        <location filename="../src/Window.cpp" line="1618"/>
+        <source>Opening error</source>
+        <translation>Erreur d&apos;ouverture</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="1540"/>
+        <source>Can not open encounters!</source>
+        <translation>Impossible d&apos;ouvrir les combats aléatoires !</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="1618"/>
+        <source>Can not open miscellaneous informations!</source>
+        <translation>Impossible d&apos;ouvrir les infos diverses !</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="1629"/>
+        <source>Go back to field map editor...</source>
+        <translation>Revenir sur l&apos;éditeur d&apos;écrans de jeu...</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="1649"/>
+        <source>Applying...</source>
+        <translation>Application en cours...</translation>
+    </message>
+    <message>
+        <source>By myst6re&lt;br/&gt;&lt;a href=&quot;https://github.com/myst6re/makoureactor/&quot;&gt;github.com/myst6re/makoureactor&lt;/a&gt;&lt;br/&gt;&lt;br/&gt;Thanks to:&lt;ul style=&quot;margin:0&quot;&gt;&lt;li&gt;Squall78&lt;/li&gt;&lt;li&gt;Synergy Blades&lt;/li&gt;&lt;li&gt;Akari&lt;/li&gt;&lt;li&gt;Asa&lt;/li&gt;&lt;li&gt;Aali&lt;/li&gt;&lt;/ul&gt;</source>
+        <oldsource>By myst6re&lt;br/&gt;&lt;a href=&quot;https://github.com/myst6re/makoureactor/&quot;&gt;github.com/myst6re/makoureactor&lt;/a&gt;&lt;br/&gt;&lt;br/&gt;Thanks to :&lt;ul style=&quot;margin:0&quot;&gt;&lt;li&gt;Squall78&lt;/li&gt;&lt;li&gt;Synergy Blades&lt;/li&gt;&lt;li&gt;Akari&lt;/li&gt;&lt;li&gt;Asa&lt;/li&gt;&lt;li&gt;Aali&lt;/li&gt;&lt;/ul&gt;</oldsource>
+        <translation type="vanished">Par myst6re&lt;br/&gt;&lt;a href=&quot;https://github.com/myst6re/makoureactor/&quot;&gt;github.com/myst6re/makoureactor&lt;/a&gt;&lt;br/&gt;&lt;br/&gt;Merci à :&lt;ul style=&quot;margin:0&quot;&gt;&lt;li&gt;Squall78&lt;/li&gt;&lt;li&gt;Synergy Blades&lt;/li&gt;&lt;li&gt;Akari&lt;/li&gt;&lt;li&gt;Asa&lt;/li&gt;&lt;li&gt;Aali&lt;/li&gt;&lt;/ul&gt;</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="vanished">Fermer</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="657"/>
+        <location filename="../src/Window.cpp" line="1098"/>
+        <source>The file is inaccessible</source>
+        <oldsource>Le fichier est inaccessible</oldsource>
+        <translation>Le fichier est inaccessible</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="660"/>
+        <location filename="../src/Window.cpp" line="1101"/>
+        <source>Can not create temporary file</source>
+        <oldsource>Impossible de créer un fichier temporaire</oldsource>
+        <translation>Impossible de créer un fichier temporaire</translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="672"/>
+        <source>Invalid file</source>
+        <oldsource>Le fichier est invalide</oldsource>
+        <translation>Fichier invalide</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="584"/>
@@ -8211,245 +9575,83 @@ Edited files:</source>
         <location filename="../src/Window.cpp" line="1389"/>
         <location filename="../src/Window.cpp" line="1424"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="602"/>
-        <source>Cancel</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="602"/>
-        <source>Stop</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="631"/>
-        <source>Opening...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="650"/>
-        <source>Nothing found!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="654"/>
-        <source>The file already exists</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="657"/>
-        <location filename="../src/Window.cpp" line="1098"/>
-        <source>The file is inaccessible</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="660"/>
-        <location filename="../src/Window.cpp" line="1101"/>
-        <source>Can not create temporary file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="663"/>
-        <location filename="../src/Window.cpp" line="1104"/>
-        <source>Unable to remove the file, check write permissions.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="666"/>
-        <source>Failed to rename the file, check write permissions.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="669"/>
-        <source>Failed to copy the file, check write permissions.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="672"/>
-        <source>Invalid file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="675"/>
-        <source>This error should not appear, thank you for reporting it</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Erreur</oldsource>
+        <translation>Erreur</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="943"/>
         <location filename="../src/Window.cpp" line="1614"/>
         <source>Author: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="1041"/>
-        <source>Compilation Error</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="1041"/>
-        <source>Error Compiling Scripts:
-scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="1056"/>
-        <source>Save Directory As</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Auteur : %1</oldsource>
+        <translation>Auteur : %1</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="1063"/>
         <source>Lgp File (*.lgp)</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Fichier Lgp (*.lgp)</oldsource>
+        <translation>Fichier Lgp (*.lgp)</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="1067"/>
         <source>Iso File (*.iso *.bin *.img)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="1071"/>
-        <source>Save As</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="1078"/>
-        <source>Saving...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="1095"/>
-        <source>No maps found</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="1107"/>
-        <source>Unable to rename the file, check write permissions.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="1110"/>
-        <source>Unable to copy the file, check write permissions.</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Fichier Iso (*.iso *.bin *.img)</oldsource>
+        <translation>Fichier Iso (*.iso *.bin *.img)</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="1113"/>
         <source>Invalid archive</source>
-        <translation type="unfinished"></translation>
+        <oldsource>L&apos;archive est invalide</oldsource>
+        <translation>Invalid archive</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1116"/>
-        <source>This feature is not complete</source>
-        <translation type="unfinished"></translation>
+        <source>PC Field (*)</source>
+        <oldsource>Écran PC (*)</oldsource>
+        <translation type="vanished">Écran PC (*)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1203"/>
-        <location filename="../src/Window.cpp" line="1356"/>
-        <source>PC Field Map (*)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="1204"/>
-        <source>Data DAT File (*.DAT)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="1205"/>
-        <source>Textures MIM File (*.MIM)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="1206"/>
-        <source>Uncompressed PC Field Map (*.dec)</source>
-        <translation type="unfinished"></translation>
+        <source>Uncompressed PC Field (*)</source>
+        <oldsource>Écran PC décompressé (*)</oldsource>
+        <translation type="vanished">Écran PC décompressé (*)</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="1218"/>
         <source>Export the current file</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Exporter le fichier courant</oldsource>
+        <translation>Exporter le fichier courant</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1244"/>
-        <source>Archive is inaccessible</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="1247"/>
-        <source>Error reopening file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="1250"/>
-        <source>Unable to create the new file</source>
-        <translation type="unfinished"></translation>
+        <source>Lgp archive is inaccessible</source>
+        <oldsource>lgp archive is inaccessible</oldsource>
+        <translation type="vanished">L&apos;archive Lgp est inaccessible</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="1253"/>
         <source>Not yet implemented!</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Pas encore implémenté !</oldsource>
+        <translation>Pas encore implémenté !</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="1272"/>
         <source>Export...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="1302"/>
-        <source>An error occured when exporting</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Exportation...</oldsource>
+        <translation>Exporter...</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="1321"/>
         <source>Import...</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Importation...</oldsource>
+        <translation>Importer...</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1330"/>
-        <source>An error occurred when importing</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="1357"/>
-        <source>PS Field Map (*.DAT)</source>
-        <translation type="unfinished"></translation>
+        <source>Uncompressed DAT File (*)</source>
+        <oldsource>Fichier DAT décompressé (*)</oldsource>
+        <translation type="vanished">Fichier DAT décompressé (*)</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="1367"/>
         <source>Import a file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="1424"/>
-        <source>Final Fantasy VII couldn&apos;t be launched
-%1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="1540"/>
-        <location filename="../src/Window.cpp" line="1618"/>
-        <source>Opening error</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="1540"/>
-        <source>Can not open encounters!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="1618"/>
-        <source>Can not open miscellaneous informations!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="1629"/>
-        <source>Go back to field map editor...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="1649"/>
-        <source>Applying...</source>
-        <translation type="unfinished"></translation>
+        <oldsource>Importer un fichier</oldsource>
+        <translation>Importer un fichier</translation>
     </message>
 </context>
 <context>
@@ -8457,13 +9659,14 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
     <message>
         <location filename="../src/main.cpp" line="110"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Erreur</translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="111"/>
         <source>The file &apos;var.cfg&apos; could not be loaded.
 Make sure it is valid or delete it.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Le fichier &apos;var.cfg&apos; n&apos;a pas pu être chargé.
+Vérifiez que ce fichier est valide ou supprimez-le.</translation>
     </message>
 </context>
 </TS>
