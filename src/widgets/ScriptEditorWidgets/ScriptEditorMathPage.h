@@ -82,3 +82,16 @@ private:
 	void build() override;
 	VarOrValueWidget *varOrValue;
 };
+
+class ScriptEditor2BytePage : public ScriptEditorView
+{
+	Q_OBJECT
+public:
+	explicit ScriptEditor2BytePage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
+	Opcode buildOpcode();
+	void setOpcode(const Opcode &opcode);
+private:
+	void build();
+	VarOrValueWidget *var, *varOrValue1, *varOrValue2;
+	HelpWidget *helpWidget;
+};

@@ -149,6 +149,8 @@ ScriptEditorView *ScriptEditor::buildEditorPage(PageType id)
 		return new ScriptEditorBitOpPage(scriptsAndTexts, grpScript, script, opcodeID, this);
 	case Variable:
 		return new ScriptEditorVariablePage(scriptsAndTexts, grpScript, script, opcodeID, this);
+	case ToByte:
+		return new ScriptEditor2BytePage(scriptsAndTexts, grpScript, script, opcodeID, this);
 	case Window:
 		return new ScriptEditorWindowPage(scriptsAndTexts, grpScript, script, opcodeID, this);
 	case WindowMode:
@@ -234,6 +236,9 @@ void ScriptEditor::fillEditor()
 	case OpcodeKey::BITOFF:case OpcodeKey::BITON:
 	case OpcodeKey::BITXOR:
 		_currentPageType = BitOp;
+		break;
+	case OpcodeKey::TOBYTE:
+		_currentPageType = ToByte;
 		break;
 	case OpcodeKey::RDMSD:
 	/* case OpcodeKey::BTRLD:

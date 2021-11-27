@@ -758,3 +758,102 @@ void ScriptEditorVariablePage::setOpcode(const Opcode &opcode)
 		varOrValue->setIsValue(true);
 	}
 }
+
+ScriptEditor2BytePage::ScriptEditor2BytePage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent) :
+	ScriptEditorView(scriptsAndTexts, grpScript, script, opcodeID, parent)
+{
+}
+
+void ScriptEditor2BytePage::build()
+{
+	var = new VarOrValueWidget(this);
+	var->setOnlyVar(true);
+
+	varOrValue1 = new VarOrValueWidget(this);
+	varOrValue1->setSignedValueType(false);
+	varOrValue1->setLongValueType(false);
+	
+	varOrValue2 = new VarOrValueWidget(this);
+	varOrValue2->setSignedValueType(false);
+	varOrValue2->setLongValueType(false);
+
+	QGridLayout *layout = new QGridLayout(this);
+	layout->addWidget(var, 0, 0);
+	layout->addWidget(varOrValue1, 1, 0);
+	layout->addWidget(varOrValue2, 1, 1);
+	layout->setRowStretch(2, 1);
+	layout->setColumnStretch(2, 1);
+	layout->setContentsMargins(QMargins());
+
+	connect(var, SIGNAL(changed()), SIGNAL(opcodeChanged()));
+	connect(varOrValue1, SIGNAL(changed()), SIGNAL(opcodeChanged()));
+	connect(varOrValue2, SIGNAL(changed()), SIGNAL(opcodeChanged()));
+}
+
+Opcode ScriptEditor2BytePage::buildOpcode()
+{
+	quint8 bank1, bank2, bank4, adress1;
+	int value1, value2;
+
+	var->var(bank1, adress1);
+
+	if (varOrValue1->isValue()) {
+		bank2 = 0;
+		value1 = varOrValue1->value();
+	} else {
+		quint8 adress2;
+		varOrValue1->var(bank2, adress2);
+		value1 = adress2;
+	}
+	
+	if (varOrValue2->isValue()) {
+		bank4 = 0;
+		value2 = varOrValue2->value();
+	} else {
+		quint8 adress4;
+		varOrValue2->var(bank4, adress4);
+		value2 = adress4;
+	}
+
+	OpcodeTOBYTE &toByte = opcode().op().opcodeTOBYTE;
+	toByte.banks[0] = BANK(bank1, bank2);
+	toByte.banks[1] = BANK(0, bank4);
+	toByte.value1 = quint8(value1);
+	toByte.value2 = quint8(value2);
+	toByte.var = adress1;
+
+	return opcode();
+}
+
+void ScriptEditor2BytePage::setOpcode(const Opcode &opcode)
+{
+	ScriptEditorView::setOpcode(opcode);
+
+	for (QObject *o : children()) {
+		o->blockSignals(true);
+	}
+
+	const OpcodeTOBYTE &toByte = opcode.op().opcodeTOBYTE;
+
+	var->setVar(B1(toByte.banks[0]), toByte.var);
+
+	if (B2(toByte.banks[0]) != 0) {
+		varOrValue1->setVar(B2(toByte.banks[0]), toByte.value1 & 0xFF);
+		varOrValue1->setIsValue(false);
+	} else {
+		varOrValue1->setValue(toByte.value1);
+		varOrValue1->setIsValue(true);
+	}
+	
+	if (B2(toByte.banks[1]) != 0) {
+		varOrValue2->setVar(B2(toByte.banks[1]), toByte.value2 & 0xFF);
+		varOrValue2->setIsValue(false);
+	} else {
+		varOrValue2->setValue(toByte.value2);
+		varOrValue2->setIsValue(true);
+	}
+
+	for (QObject *o : children()) {
+		o->blockSignals(false);
+	}
+}
