@@ -130,8 +130,9 @@ QWidget *Search::scriptPageWidget()
 
 	QWidget *opc = new QWidget(ret);
 	opcode = new QComboBox(opc);
-	for (quint16 i=0; i<256; ++i)
+	for (quint16 i = 0; i < 256; ++i) {
 		opcode->addItem(QString("%1 - %2").arg(i, 2, 16, QChar('0')).arg(Opcode::names[i]).toUpper());
+	}
 	opcode->addItem(QString("100 - %1").arg(Opcode::names[0x100]));
 	// set config values
 	opcode->setCurrentIndex(Config::value("SearchedOpcode").toInt() & 0xFFFF);
@@ -433,7 +434,7 @@ void Search::updateSearchVarPlaceholder(int opIndex)
 
 void Search::updateOpcode2(int opIndex)
 {
-	if (opIndex == Opcode::AKAO || opIndex == Opcode::AKAO2) {
+	if (opIndex == OpcodeKey::AKAO || opIndex == OpcodeKey::AKAO2) {
 		opcode2->clear();
 		QList<quint8> unknownItems;
 		for (quint16 i=0; i<256; ++i) {
@@ -551,6 +552,9 @@ void Search::findNext()
 	}
 
 	bool f = false;
+	
+	QElapsedTimer t;
+	t.start();
 
 	if (tabWidget->currentIndex() == 0) { // scripts page
 		if (findNextScript(sorting, scope,
@@ -566,6 +570,8 @@ void Search::findNext()
 			f = true;
 		}
 	}
+
+	qDebug() << "elasped search time" << t.elapsed();
 
 	if (!f) {
 		returnToBegin->setText(tr("%1,\ncontinued from top.")
@@ -818,8 +824,8 @@ void Search::setSearchValues()
 			QString lineEditText = champ->lineEdit()->text();
 			text = buildRegExp(lineEditText, caseSens->isChecked(), useRegexp->isChecked());
 			QStringList recentSearch = Config::value("recentSearch").toStringList();
-			int index;
-			if ((index = recentSearch.indexOf(lineEditText)) != -1) {
+			qsizetype index = recentSearch.indexOf(lineEditText);
+			if (index != -1) {
 				recentSearch.removeAt(index);
 			}
 			recentSearch.prepend(lineEditText);
@@ -868,8 +874,8 @@ void Search::setSearchValues()
 		QString lineEditText = champ2->lineEdit()->text();
 		text = buildRegExp(lineEditText, caseSens2->isChecked(), useRegexp2->isChecked());
 		QStringList recentSearch = Config::value("recentSearch").toStringList();
-		int index;
-		if ((index = recentSearch.indexOf(lineEditText)) != -1) {
+		qsizetype index = recentSearch.indexOf(lineEditText);
+		if (index != -1) {
 			recentSearch.removeAt(index);
 		}
 		recentSearch.prepend(lineEditText);
@@ -938,7 +944,7 @@ void Search::replaceAll()
 	int replacedCount = 0;
 	while (fieldArchive->searchText(text, mapID, textID, from, size, sorting, scope)) {
 		if (fieldArchive->replaceText(text, after, mapID, textID, from)) {
-			fieldArchive->field(quint32(mapID))->setModified(true);
+			fieldArchive->field(mapID)->setModified(true);
 			replacedCount += 1;
 		}
 		from += after.size();

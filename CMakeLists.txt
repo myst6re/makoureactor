@@ -630,7 +630,7 @@ else()
 endif()
 
 set(CPACK_PACKAGE_NAME makoureactor)
-set(CPACK_SOURCE_IGNORE_FILES .git/* *.user *.yml *.github/*)
+set(CPACK_SOURCE_IGNORE_FILES ".git/*;*.user;*.yml;*.github/*")
 set(CPACK_SOURCE_GENERATOR "ZIP;TGZ")
 
 include(CPack)

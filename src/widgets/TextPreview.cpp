@@ -444,7 +444,7 @@ bool TextPreview::drawTextArea(QPainter *painter)
 	}
 
 	/* Ask */
-	if (ff7Window.type == Opcode::ASK && _currentPage == pagesPos.size() - 1) {
+	if (ff7Window.type == OpcodeKey::ASK && _currentPage == pagesPos.size() - 1) {
 		QPixmap cursor(":/images/cursor.png");
 		for (int i = ff7Window.ask_first; i <= ff7Window.ask_last; ++i) {
 			painter->drawPixmap(10, 6 + 16 * i, cursor);

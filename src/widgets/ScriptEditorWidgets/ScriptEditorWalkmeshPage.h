@@ -26,8 +26,8 @@ class ScriptEditorWalkmeshPage : public ScriptEditorView
 	Q_OBJECT
 public:
 	ScriptEditorWalkmeshPage(Field *field, const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
-	OpcodeBox buildOpcode() override;
-	void setOpcode(const OpcodeBox &opcode) override;
+	Opcode buildOpcode() override;
+	void setOpcode(const Opcode &opcode) override;
 private slots:
 	void updatePreview();
 private:

@@ -46,22 +46,31 @@ void Section1File::initEmpty()
 	_texts.append(FF7Text(QObject::tr("Hello world!"), false));
 
 	QList<Script> scripts;
-	QList<OpcodeBox> opcodes;
+	QList<Opcode> opcodes;
 
-	opcodes.append(OpcodeBox(new OpcodeMPNAM(0)));
-	opcodes.append(OpcodeBox(new OpcodeRET()));
+	opcodes.append(OpcodeMPNAM());
+	opcodes.append(OpcodeRET());
 	scripts.append(Script(opcodes));
 
 	QSize s = FF7Font::calcSize(_texts.at(1).data());
 
 	opcodes.clear();
-	opcodes.append(OpcodeBox(new OpcodeWINDOW(0, 0, 0, quint16(s.width()), quint16(s.height()))));
-	opcodes.append(OpcodeBox(new OpcodeMESSAGE(quint8(0), quint8(1))));
-	opcodes.append(OpcodeBox(new OpcodeRET()));
+	OpcodeWINDOW opcodeWINDOW;
+	opcodeWINDOW.targetX = 0;
+	opcodeWINDOW.targetY = 0;
+	opcodeWINDOW.width = quint16(s.width());
+	opcodeWINDOW.height = quint16(s.height());
+	opcodeWINDOW.windowID = 0;
+	opcodes.append(opcodeWINDOW);
+	OpcodeMESSAGE opcodeMESSAGE;
+	opcodeMESSAGE.textID = 1;
+	opcodeMESSAGE.windowID = 0;
+	opcodes.append(opcodeMESSAGE);
+	opcodes.append(OpcodeRET());
 	scripts.append(Script(opcodes));
 
 	opcodes.clear();
-	opcodes.append(OpcodeBox(new OpcodeRET()));
+	opcodes.append(OpcodeRET());
 	scripts.append(Script(opcodes));
 
 	_grpScripts.append(GrpScript("dic", scripts));
@@ -80,17 +89,21 @@ void Section1File::initEmpty()
 		scripts.clear();
 
 		opcodes.clear();
-		opcodes.append(OpcodeBox(new OpcodeCHAR(modelID)));
-		opcodes.append(OpcodeBox(new OpcodePC(it.key())));
-		opcodes.append(OpcodeBox(new OpcodeRET()));
+		OpcodeCHAR_ opcodeCHAR;
+		opcodeCHAR.object3DID = modelID;
+		opcodes.append(opcodeCHAR);
+		OpcodePC opcodePC;
+		opcodePC.charID = it.key();
+		opcodes.append(opcodePC);
+		opcodes.append(OpcodeRET());
 		scripts.append(Script(opcodes));
 
 		opcodes.clear();
-		opcodes.append(OpcodeBox(new OpcodeRET()));
+		opcodes.append(OpcodeRET());
 		scripts.append(Script(opcodes));
 
 		opcodes.clear();
-		opcodes.append(OpcodeBox(new OpcodeRET()));
+		opcodes.append(OpcodeRET());
 		scripts.append(Script(opcodes));
 
 		_grpScripts.append(GrpScript(it.value(), scripts));
@@ -220,7 +233,7 @@ bool Section1File::open(const QByteArray &data)
 			quint8 scriptID = 0;
 			for (quint8 j = 0; j < scriptCount; ++j) {
 				if (positions[j + 1] > positions[j]) {
-					Script script(data, positions[j], positions[j + 1] - positions[j]);
+					Script script(constData + positions[j], positions[j + 1] - positions[j]);
 					if (!script.isValid()) {
 						qWarning() << "Section1File::open invalid script" << i << j;
 						return false;
@@ -621,7 +634,7 @@ bool Section1File::searchExec(quint8 group, quint8 script, int &groupID, int &sc
 	return searchExec(group, script, ++groupID, scriptID, opcodeID);
 }
 
-bool Section1File::searchMapJump(quint16 field, int &groupID, int &scriptID, int &opcodeID) const
+bool Section1File::searchMapJump(quint16 map, int &groupID, int &scriptID, int &opcodeID) const
 {
 	if (groupID < 0) {
 		groupID = scriptID = opcodeID = 0;
@@ -629,13 +642,13 @@ bool Section1File::searchMapJump(quint16 field, int &groupID, int &scriptID, int
 	if (groupID >= _grpScripts.size()) {
 		return false;
 	}
-	if (_grpScripts.at(groupID).searchMapJump(field, scriptID, opcodeID)) {
+	if (_grpScripts.at(groupID).searchMapJump(map, scriptID, opcodeID)) {
 		return true;
 	}
 
 	scriptID = 0;
 	opcodeID = 0;
-	return searchMapJump(field, ++groupID, scriptID, opcodeID);
+	return searchMapJump(map, ++groupID, scriptID, opcodeID);
 }
 
 bool Section1File::searchTextInScripts(const QRegularExpression &text, int &groupID, int &scriptID, int &opcodeID) const
@@ -729,7 +742,7 @@ bool Section1File::searchExecP(quint8 group, quint8 script, int &groupID, int &s
 	return searchExecP(group, script, groupID, scriptID, opcodeID);
 }
 
-bool Section1File::searchMapJumpP(quint16 field, int &groupID, int &scriptID, int &opcodeID) const
+bool Section1File::searchMapJumpP(quint16 map, int &groupID, int &scriptID, int &opcodeID) const
 {
 	if (groupID >= _grpScripts.size()) {
 		groupID = _grpScripts.size() - 1;
@@ -738,14 +751,14 @@ bool Section1File::searchMapJumpP(quint16 field, int &groupID, int &scriptID, in
 	if (groupID < 0) {
 		return false;
 	}
-	if (_grpScripts.at(groupID).searchMapJumpP(field, scriptID, opcodeID)) {
+	if (_grpScripts.at(groupID).searchMapJumpP(map, scriptID, opcodeID)) {
 		return true;
 	}
 
 	groupID -= 1;
 	scriptID = 2147483647;
 	opcodeID = 2147483647;
-	return searchMapJumpP(field, groupID, scriptID, opcodeID);
+	return searchMapJumpP(map, groupID, scriptID, opcodeID);
 }
 
 bool Section1File::searchTextInScriptsP(const QRegularExpression &text, int &groupID, int &scriptID, int &opcodeID) const

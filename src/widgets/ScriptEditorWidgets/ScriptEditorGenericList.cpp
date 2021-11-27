@@ -63,7 +63,7 @@ void ScriptEditorGenericList::build()
 	connect(delButton, SIGNAL(released()), SLOT(delLastRow()));
 }
 
-OpcodeBox ScriptEditorGenericList::buildOpcode()
+Opcode ScriptEditorGenericList::buildOpcode()
 {
 	bool isLabel;
 	QByteArray newOpcode = parseModel(&isLabel);
@@ -74,15 +74,17 @@ OpcodeBox ScriptEditorGenericList::buildOpcode()
 	if (isLabel) {
 		quint32 label;
 		memcpy(&label, newOpcode.constData() + 1, 4);
-		ScriptEditorView::setOpcode(OpcodeBox(new OpcodeLabel(label)));
+		OpcodeLABEL opcodeLABEL;
+		opcodeLABEL._label = label;
+		ScriptEditorView::setOpcode(opcodeLABEL);
 	} else {
-		ScriptEditorView::setOpcode(OpcodeBox(newOpcode));
+		ScriptEditorView::setOpcode(Opcode(newOpcode.constData(), newOpcode.size()));
 	}
 
 	return opcode();
 }
 
-void ScriptEditorGenericList::setOpcode(const OpcodeBox &opcode)
+void ScriptEditorGenericList::setOpcode(const Opcode &opcode)
 {
 	ScriptEditorView::setOpcode(opcode);
 	fillModel();
@@ -95,7 +97,7 @@ QByteArray ScriptEditorGenericList::parseModel(bool *isLabel)
 	QByteArray newOpcode;
 	quint8 byte, length, start;
 
-	*isLabel = opcode()->isLabel();
+	*isLabel = opcode().id() == OpcodeKey::LABEL;
 	byte = opcode().id() & 0xFF;
 	newOpcode.append(char(byte));
 	// Compute opcode length
@@ -103,7 +105,7 @@ QByteArray ScriptEditorGenericList::parseModel(bool *isLabel)
 	start = 1;
 	
 	if (byte == 0x0F) { // SPECIAL
-		quint8 byte2 = quint8(opcode().cast<OpcodeSPECIAL>().opcode->id());
+		quint8 byte2 = quint8(opcode().op().opcodeSPECIAL.subKey);
 		newOpcode.append(char(byte2));
 		switch (byte2) {
 		case 0xF5:case 0xF6:case 0xF7:case 0xFB:case 0xFC:
@@ -115,7 +117,7 @@ QByteArray ScriptEditorGenericList::parseModel(bool *isLabel)
 		}
 		start = 2;
 	} else if (byte == 0x28) { // KAWAI
-		quint8 byte3 = quint8(opcode().cast<OpcodeKAWAI>().opcode->id());
+		quint8 byte3 = quint8(opcode().op().opcodeSPECIAL.subKey);
 		length = quint8(model->rowCount() + 3);
 		newOpcode.append(char(length));
 		newOpcode.append(char(byte3));
@@ -204,19 +206,19 @@ void ScriptEditorGenericList::fillModel()
 	int paramSize, paramType, cur = 0, maxValue, minValue, value=0;
 	QList<int> paramTypes = this->paramTypes(opcode().id());
 	
-	if (opcode()->isLabel()) {
-		addRow(int(opcode().cast<OpcodeLabel>().label()), 0, int(pow(2, 31)) - 1, label);
+	if (opcode().id() == OpcodeKey::LABEL) {
+		addRow(int(opcode().op().opcodeLABEL._label), 0, int(pow(2, 31)) - 1, label);
 	} else if (paramTypes.isEmpty()) {
 		int start = 0;
-		if (opcode().id() == Opcode::SPECIAL) {
+		if (opcode().id() == OpcodeKey::SPECIAL) {
 			start = 1;
 		}
-		if (opcode().id() == Opcode::KAWAI) {
+		if (opcode().id() == OpcodeKey::KAWAI) {
 			start = 2;
 			addButton->show();
 			delButton->show();
 		}
-		const QByteArray params = opcode()->params();
+		const QByteArray params = opcode().params();
 		for (int i=start; i<params.size(); ++i) {
 			addRow(quint8(params.at(i)), 0, 255, inconnu);
 		}
@@ -224,7 +226,7 @@ void ScriptEditorGenericList::fillModel()
 		for (quint8 i=0; i<paramTypes.size(); ++i) {
 			paramType = paramTypes.at(i);
 			paramSize = this->paramSize(paramType);
-			value = opcode()->subParam(cur, paramSize);
+			value = opcode().subParam(cur, paramSize);
 			// qDebug() << value;
 			if (paramIsSigned(paramType)) {
 				maxValue = int(pow(2, paramSize-1)) - 1;
@@ -246,176 +248,178 @@ QList<int> ScriptEditorGenericList::paramTypes(int id)
 {
 	QList<int> paramTypes;
 	switch (id) {
-	//case Opcode::RET:break;
-	case Opcode::REQ:case Opcode::REQSW:case Opcode::REQEW:
+	//case OpcodeKey::RET:break;
+	case OpcodeKey::REQ:case OpcodeKey::REQSW:case OpcodeKey::REQEW:
 		paramTypes<<group_id<<priorite<<script_id;break;
-	case Opcode::PREQ:case Opcode::PRQSW:case Opcode::PRQEW:
+	case OpcodeKey::PREQ:case OpcodeKey::PRQSW:case OpcodeKey::PRQEW:
 		paramTypes<<party_id<<priorite<<script_id;break;
-	case Opcode::RETTO:
+	case OpcodeKey::RETTO:
 		paramTypes<<priorite<<script_id;break;
-	case Opcode::JOIN:
+	case OpcodeKey::JOIN:
 		paramTypes<<vitesse;break;
-	case Opcode::SPLIT:
+	case OpcodeKey::SPLIT:
 		paramTypes<<bank<<bank<<bank<<bank<<bank<<bank<<coord_x<<coord_y<<direction<<coord_x<<coord_y<<direction<<vitesse;break;
-	case Opcode::SPTYE:case Opcode::GTPYE:
+	case OpcodeKey::SPTYE:case OpcodeKey::GTPYE:
 		paramTypes<<bank<<bank<<bank<<bank<<party_id<<party_id<<party_id;break;
 	//case 0x0C:case 0x0D:break;
-	case Opcode::DSKCG:
+	case OpcodeKey::DSKCG:
 		paramTypes<<cd_id;break;
-	//case Opcode::SPECIAL:return;
-	case Opcode::JMPF:case Opcode::JMPB:
+	//case OpcodeKey::SPECIAL:return;
+	case OpcodeKey::JMPF:case OpcodeKey::JMPB:
 		paramTypes<<jump;break;
-	case Opcode::JMPFL:case Opcode::JMPBL:
+	case OpcodeKey::JMPFL:case OpcodeKey::JMPBL:
 		paramTypes<<jump_l;break;
-	case Opcode::IFUB:
+	case OpcodeKey::IFUB:
 		paramTypes<<bank<<bank<<byte<<byte<<operateur<<jump;break;
-	case Opcode::IFUBL:
+	case OpcodeKey::IFUBL:
 		paramTypes<<bank<<bank<<byte<<byte<<operateur<<jump_l;break;
-	case Opcode::IFSW:
+	case OpcodeKey::IFSW:
 		paramTypes<<bank<<bank<<sword<<sword<<operateur<<jump;break;
-	case Opcode::IFSWL:
+	case OpcodeKey::IFSWL:
 		paramTypes<<bank<<bank<<sword<<sword<<operateur<<jump_l;break;
-	case Opcode::IFUW:
+	case OpcodeKey::IFUW:
 		paramTypes<<bank<<bank<<word<<word<<operateur<<jump;break;
-	case Opcode::IFUWL:
+	case OpcodeKey::IFUWL:
 		paramTypes<<bank<<bank<<word<<word<<operateur<<jump_l;break;
-	case Opcode::Unknown3:
+	case OpcodeKey::Unused1A:
 		paramTypes<<word<<word<<dword<<byte;break;
-	case Opcode::Unknown4:
+	case OpcodeKey::Unused1B:
 		paramTypes<<jump_l;break;
-	case Opcode::Unknown5:
+	case OpcodeKey::Unused1C:
 		paramTypes<<dword<<byte;break;
 	//case 0x1D:case 0x1E:case 0x1F:break;
-	case Opcode::MINIGAME:
+	case OpcodeKey::MINIGAME:
 		paramTypes<<field_id<<coord_x<<coord_y<<polygone_id<<byte<<minijeu_id;break;
-	case Opcode::TUTOR:
+	case OpcodeKey::TUTOR:
 		paramTypes<<tuto_id;break;
-	case Opcode::BTMD2:
+	case OpcodeKey::BTMD2:
 		paramTypes<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit;break;
-	case Opcode::BTRLD:
+	case OpcodeKey::BTRLD:
 		paramTypes<<bank<<bank<<byte;break;
-	case Opcode::WAIT:
+	case OpcodeKey::WAIT:
 		paramTypes<<word;break;
-	case Opcode::NFADE:
-		paramTypes<<bank<<bank<<bank<<bank<<byte<<color<<vitesse<<inconnu;break;
-	case Opcode::BLINK:
+	case OpcodeKey::NFADE:
+		paramTypes<<bank<<bank<<bank<<bank<<byte<<color<<vitesse2;break;
+	case OpcodeKey::BLINK:
 		paramTypes<<boolean;break;
-	case Opcode::BGMOVIE:
+	case OpcodeKey::BGMOVIE:
 		paramTypes<<boolean;break;
-	//case Opcode::KAWAI:
-	//case Opcode::KAWIW:break;
-	case Opcode::PMOVA:
+	//case OpcodeKey::KAWAI:
+	//case OpcodeKey::KAWIW:break;
+	case OpcodeKey::PMOVA:
 		paramTypes<<party_id;break;
-	case Opcode::SLIP:
+	case OpcodeKey::SLIP:
 		paramTypes<<boolean;break;
-	case Opcode::BGPDH:
+	case OpcodeKey::BGPDH:
 		paramTypes<<bank<<bank<<layer_id<<coord_z;break;
-	case Opcode::BGSCR:
+	case OpcodeKey::BGSCR:
 		paramTypes<<bank<<bank<<layer_id<<sword<<sword;break;
-	case Opcode::WCLS:
+	case OpcodeKey::WCLS:
 		paramTypes<<window_id;break;
-	case Opcode::WSIZW:
+	case OpcodeKey::WSIZW:
 		paramTypes<<window_id<<coord_x<<coord_y<<window_w<<window_h;break;
-	case Opcode::IFKEY:case Opcode::IFKEYON:case Opcode::IFKEYOFF:
+	case OpcodeKey::IFKEY:case OpcodeKey::IFKEYON:case OpcodeKey::IFKEYOFF:
 		paramTypes<<keys<<jump;break;
-	case Opcode::UC:
+	case OpcodeKey::UC:
 		paramTypes<<boolean;break;
-	case Opcode::PDIRA:
+	case OpcodeKey::PDIRA:
 		paramTypes<<party_id;break;
-	case Opcode::PTURA:
+	case OpcodeKey::PTURA:
 		paramTypes<<party_id<<vitesse<<rotation;break;
-	case Opcode::WSPCL:
+	case OpcodeKey::WSPCL:
 		paramTypes<<window_id<<window_num<<byte<<byte;break;
-	case Opcode::WNUMB:
+	case OpcodeKey::WNUMB:
 		paramTypes<<bank<<bank<<window_id<<word<<word<<byte;break;
-	case Opcode::STTIM:
+	case OpcodeKey::STTIM:
 		paramTypes<<bank<<bank<<bank<<bank<<byte<<byte<<byte;break;
-	case Opcode::GOLDu:case Opcode::GOLDd:
+	case OpcodeKey::GOLDu:case OpcodeKey::GOLDd:
 		paramTypes<<bank<<bank<<word<<word;break;
-	case Opcode::CHGLD:
+	case OpcodeKey::CHGLD:
 		paramTypes<<bank<<bank<<adress<<adress;break;
-	//case Opcode::HMPMAX1:case Opcode::HMPMAX2:case Opcode::MHMMX:case Opcode::HMPMAX3:break;
-	case Opcode::MESSAGE:
+	//case OpcodeKey::HMPMAX1:case OpcodeKey::HMPMAX2:case OpcodeKey::MHMMX:case OpcodeKey::HMPMAX3:break;
+	case OpcodeKey::MESSAGE:
 		paramTypes<<window_id<<text_id;break;
-	case Opcode::MPARA:
+	case OpcodeKey::MPARA:
 		paramTypes<<bank<<bank<<window_id<<window_var<<byte;break;
-	case Opcode::MPRA2:
+	case OpcodeKey::MPRA2:
 		paramTypes<<bank<<bank<<window_id<<window_var<<word;break;
-	case Opcode::MPNAM:
+	case OpcodeKey::MPNAM:
 		paramTypes<<text_id;break;
-	//case Opcode::Unknown9:case Opcode::Unknown10:break;
-	case Opcode::MPu:case Opcode::MPd:
+	//case OpcodeKey::Unknown9:case OpcodeKey::Unknown10:break;
+	case OpcodeKey::MPu:case OpcodeKey::MPd:
 		paramTypes<<bank<<bank<<party_id<<word;break;
-	case Opcode::ASK:
+	case OpcodeKey::ASK:
 		paramTypes<<bank<<bank<<window_id<<text_id<<byte<<byte<<adress;break;
-	case Opcode::MENU:
+	case OpcodeKey::MENU:
 		paramTypes<<bank<<bank<<menu<<byte;break;
-	case Opcode::MENU2:
+	case OpcodeKey::MENU2:
 		paramTypes<<boolean;break;
-	case Opcode::BTLTB:
+	case OpcodeKey::BTLTB:
 		paramTypes<<byte;break;
-	//case Opcode::Unknown11:case Opcode::Unknown12:break;
-	case Opcode::HPu:case Opcode::HPd:
+	//case OpcodeKey::Unknown11:case OpcodeKey::Unknown12:break;
+	case OpcodeKey::HPu:case OpcodeKey::HPd:
 		paramTypes<<bank<<bank<<party_id<<word;break;
-	case Opcode::WINDOW:
+	case OpcodeKey::WINDOW:
 		paramTypes<<window_id<<coord_x<<coord_y<<window_w<<window_h;break;
-	case Opcode::WMOVE:
+	case OpcodeKey::WMOVE:
 		paramTypes<<window_id<<coord_x<<coord_y;break;
-	case Opcode::WMODE:
+	case OpcodeKey::WMODE:
 		paramTypes<<window_id<<window_type<<boolean;break;
-	case Opcode::WREST:case Opcode::WCLSE:
+	case OpcodeKey::WREST:case OpcodeKey::WCLSE:
 		paramTypes<<window_id;break;
-	case Opcode::WROW:
+	case OpcodeKey::WROW:
 		paramTypes<<window_id<<byte;break;
-	case Opcode::GWCOL:
+	case OpcodeKey::GWCOL:
 		paramTypes<<bank<<bank<<bank<<bank<<adress<<adress<<adress<<adress;break;
-	case Opcode::SWCOL:
+	case OpcodeKey::SWCOL:
 		paramTypes<<bank<<bank<<bank<<bank<<byte<<color;break;
-	case Opcode::STITM:case Opcode::DLITM:
+	case OpcodeKey::STITM:case OpcodeKey::DLITM:
 		paramTypes<<bank<<bank<<item_id<<quantity;break;
-	case Opcode::CKITM:
+	case OpcodeKey::CKITM:
 		paramTypes<<bank<<bank<<item_id<<adress;break;
-	case Opcode::SMTRA:
+	case OpcodeKey::SMTRA:
 		paramTypes<<bank<<bank<<bank<<bank<<materia_id<<byte<<byte<<byte;break;
-	case Opcode::DMTRA:
+	case OpcodeKey::DMTRA:
 		paramTypes<<bank<<bank<<bank<<bank<<materia_id<<byte<<byte<<byte<<quantity;break;
-	case Opcode::CMTRA:
-		paramTypes<<bank<<bank<<bank<<bank<<bank<<bank<<materia_id<<byte<<byte<<byte<<inconnu<<adress;break;
-	case Opcode::SHAKE:
-		paramTypes<<byte<<byte<<shakeType<<xAmplitude<<xFrames<<yAmplitude<<yFrames;break;
-	//case Opcode::NOP:break;
-	case Opcode::MAPJUMP:
+	case OpcodeKey::CMTRA:
+		paramTypes<<bank<<bank<<bank<<bank<<bank<<bank<<byte<<byte<<byte<<byte<<materia_id<<adress;break;
+	case OpcodeKey::SHAKE:
+		paramTypes<<bank<<bank<<bank<<bank<<shakeType<<xAmplitude<<xFrames<<yAmplitude<<yFrames;break;
+	//case OpcodeKey::NOP:break;
+	case OpcodeKey::MAPJUMP:
 		paramTypes<<field_id<<coord_x<<coord_y<<polygone_id<<direction;break;
-	//case Opcode::SCRLO:case Opcode::SCRLC://TODO
-	case Opcode::SCRLA:
+	//case OpcodeKey::SCRLO:// TODO
+	case OpcodeKey::SCRLC:
+		paramTypes<<bank<<bank<<vitesse2<<byte;break;
+	case OpcodeKey::SCRLA:
 		paramTypes<<bank<<bank<<vitesse2<<group_id<<byte;break;
-	case Opcode::SCR2D:
+	case OpcodeKey::SCR2D:
 		paramTypes<<bank<<bank<<coord_x<<coord_y;break;
-	//case Opcode::SCRCC:case Opcode::SCRLW:break;
-	case Opcode::SCR2DC:case Opcode::SCR2DL:
+	//case OpcodeKey::SCRCC:case OpcodeKey::SCRLW:break;
+	case OpcodeKey::SCR2DC:case OpcodeKey::SCR2DL:
 		paramTypes<<bank<<bank<<bank<<bank<<coord_x<<coord_y<<vitesse2;break;
-	case Opcode::MPDSP:
+	case OpcodeKey::MPDSP:
 		paramTypes<<boolean;break;
-	case Opcode::VWOFT:
+	case OpcodeKey::VWOFT:
 		paramTypes<<bank<<bank<<sword<<sword<<byte;break;
-	case Opcode::FADE:
+	case OpcodeKey::FADE:
 		paramTypes<<bank<<bank<<bank<<bank<<color<<vitesse<<byte<<byte;break;
-	//case Opcode::FADEW:break;
-	case Opcode::IDLCK:
+	//case OpcodeKey::FADEW:break;
+	case OpcodeKey::IDLCK:
 		paramTypes<<polygone_id<<boolean;break;
-	case Opcode::LSTMP:
+	case OpcodeKey::LSTMP:
 		paramTypes<<bank<<bank<<adress;break;
-	case Opcode::SCRLP:
+	case OpcodeKey::SCRLP:
 		paramTypes<<bank<<bank<<vitesse2<<party_id<<byte;break;
-	case Opcode::BATTLE:
+	case OpcodeKey::BATTLE:
 		paramTypes<<bank<<bank<<word;break;
-	case Opcode::BTLON:
+	case OpcodeKey::BTLON:
 		paramTypes<<boolean;break;
-	case Opcode::BTLMD:
+	case OpcodeKey::BTLMD:
 		paramTypes<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit;break;
-	case Opcode::PGTDR:case Opcode::GETPC:
+	case OpcodeKey::PGTDR:case OpcodeKey::GETPC:
 		paramTypes<<bank<<bank<<party_id<<adress;break;
-	case Opcode::PXYZI:
+	case OpcodeKey::PXYZI:
 		paramTypes<<bank<<bank<<bank<<bank<<party_id<<adress<<adress<<adress<<adress;break;
 	case 0x76:case 0x78:case 0x80:case 0x82:case 0x83:case 0x84:case 0x85:case 0x87:case 0x89:case 0x8B:case 0x8D:case 0x8F:case 0x91:case 0x93:case 0x9A:
 		paramTypes<<bank<<bank<<adress<<byte;break;
@@ -430,7 +434,7 @@ QList<int> ScriptEditorGenericList::paramTypes(int id)
 	case 0x9C:
 		paramTypes<<bank<<bank<<bank<<bank<<adress<<byte<<byte;break;
 	//case 0x9D:case 0x9E:case 0x9F://TODO
-	case 0xA0:
+	case OpcodeKey::PC:
 		paramTypes<<personnage_id;break;
 	case 0xA1:
 		paramTypes<<byte;break;
@@ -675,46 +679,46 @@ void ScriptEditorBooleanPage::build()
 	connect(_boolean, SIGNAL(currentIndexChanged(int)), SIGNAL(opcodeChanged()));
 }
 
-OpcodeBox ScriptEditorBooleanPage::buildOpcode()
+Opcode ScriptEditorBooleanPage::buildOpcode()
 {
 	bool disabled = _boolean->currentIndex() != 0;
 
 	switch (opcode().id()) {
-	case Opcode::LINON:
-		opcode().cast<OpcodeLINON>().enabled = !disabled;
+	case OpcodeKey::LINON:
+		opcode().op().opcodeLINON.enabled = !disabled;
 		break;
-	case Opcode::MENU2:
-		opcode().cast<OpcodeMENU2>().disabled = disabled;
+	case OpcodeKey::MENU2:
+		opcode().op().opcodeMENU2.disabled = disabled;
 		break;
-	case Opcode::VISI:
-		opcode().cast<OpcodeVISI>().show = !disabled;
+	case OpcodeKey::VISI:
+		opcode().op().opcodeVISI.show = !disabled;
 		break;
-	case Opcode::FCFIX:
-		opcode().cast<OpcodeFCFIX>().disabled = disabled;
+	case OpcodeKey::FCFIX:
+		opcode().op().opcodeFCFIX.disabled = disabled;
 		break;
-	case Opcode::BLINK:
-		opcode().cast<OpcodeBLINK>().closed = disabled;
+	case OpcodeKey::BLINK:
+		opcode().op().opcodeBLINK.closed = disabled;
 		break;
-	case Opcode::TLKON:
-		opcode().cast<OpcodeTLKON>().disabled = disabled;
+	case OpcodeKey::TLKON:
+		opcode().op().opcodeTLKON.disabled = disabled;
 		break;
-	case Opcode::SOLID:
-		opcode().cast<OpcodeSOLID>().disabled = disabled;
+	case OpcodeKey::SOLID:
+		opcode().op().opcodeSOLID.disabled = disabled;
 		break;
-	case Opcode::SLIP:
-		opcode().cast<OpcodeSLIP>().disabled = disabled;
+	case OpcodeKey::SLIP:
+		opcode().op().opcodeSLIP.disabled = disabled;
 		break;
-	case Opcode::BGMOVIE:
-		opcode().cast<OpcodeBGMOVIE>().disabled = disabled;
+	case OpcodeKey::BGMOVIE:
+		opcode().op().opcodeBGMOVIE.disabled = disabled;
 		break;
-	case Opcode::BTLON:
-		opcode().cast<OpcodeBTLON>().disabled = disabled;
+	case OpcodeKey::BTLON:
+		opcode().op().opcodeBTLON.disabled = disabled;
 		break;
-	case Opcode::MPJPO:
-		opcode().cast<OpcodeMPJPO>().prevent = disabled;
+	case OpcodeKey::MPJPO:
+		opcode().op().opcodeMPJPO.disabled = disabled;
 		break;
-	case Opcode::UC:
-		opcode().cast<OpcodeUC>().disabled = disabled;
+	case OpcodeKey::UC:
+		opcode().op().opcodeUC.disabled = disabled;
 		break;
 	default:
 		break;
@@ -723,58 +727,58 @@ OpcodeBox ScriptEditorBooleanPage::buildOpcode()
 	return opcode();
 }
 
-void ScriptEditorBooleanPage::setOpcode(const OpcodeBox &opcode)
+void ScriptEditorBooleanPage::setOpcode(const Opcode &opcode)
 {
 	ScriptEditorView::setOpcode(opcode);
 	
 	switch (opcode.id()) {
-	case Opcode::LINON:
+	case OpcodeKey::LINON:
 		setText(tr("Enable"), tr("Disable"));
-		_boolean->setCurrentIndex(!opcode.cast<OpcodeLINON>().enabled);
+		_boolean->setCurrentIndex(!opcode.op().opcodeLINON.enabled);
 		break;
-	case Opcode::MENU2:
+	case OpcodeKey::MENU2:
 		setText(tr("Enable"), tr("Disable"));
-		_boolean->setCurrentIndex(opcode.cast<OpcodeMENU2>().disabled);
+		_boolean->setCurrentIndex(opcode.op().opcodeMENU2.disabled);
 		break;
-	case Opcode::VISI:
+	case OpcodeKey::VISI:
 		setText(tr("Show"), tr("Hide"));
-		_boolean->setCurrentIndex(!opcode.cast<OpcodeVISI>().show);
+		_boolean->setCurrentIndex(!opcode.op().opcodeVISI.show);
 		break;
-	case Opcode::FCFIX:
+	case OpcodeKey::FCFIX:
 		setText(tr("Enable"), tr("Disable"));
-		_boolean->setCurrentIndex(opcode.cast<OpcodeFCFIX>().disabled);
+		_boolean->setCurrentIndex(opcode.op().opcodeFCFIX.disabled);
 		break;
-	case Opcode::BLINK:
+	case OpcodeKey::BLINK:
 		setText(tr("Enable"), tr("Disable"));
-		_boolean->setCurrentIndex(opcode.cast<OpcodeBLINK>().closed);
+		_boolean->setCurrentIndex(opcode.op().opcodeBLINK.closed);
 		break;
-	case Opcode::TLKON:
+	case OpcodeKey::TLKON:
 		setText(tr("Activate"), tr("Deactivate"));
-		_boolean->setCurrentIndex(opcode.cast<OpcodeTLKON>().disabled);
+		_boolean->setCurrentIndex(opcode.op().opcodeTLKON.disabled);
 		break;
-	case Opcode::SOLID:
+	case OpcodeKey::SOLID:
 		setText(tr("Activate"), tr("Deactivate"));
-		_boolean->setCurrentIndex(opcode.cast<OpcodeSOLID>().disabled);
+		_boolean->setCurrentIndex(opcode.op().opcodeSOLID.disabled);
 		break;
-	case Opcode::SLIP:
+	case OpcodeKey::SLIP:
 		setText(tr("ON"), tr("OFF"));
-		_boolean->setCurrentIndex(opcode.cast<OpcodeSLIP>().disabled);
+		_boolean->setCurrentIndex(opcode.op().opcodeSLIP.disabled);
 		break;
-	case Opcode::BGMOVIE:
+	case OpcodeKey::BGMOVIE:
 		setText(tr("ON"), tr("OFF"));
-		_boolean->setCurrentIndex(opcode.cast<OpcodeBGMOVIE>().disabled);
+		_boolean->setCurrentIndex(opcode.op().opcodeBGMOVIE.disabled);
 		break;
-	case Opcode::BTLON:
+	case OpcodeKey::BTLON:
 		setText(tr("Activate"), tr("Deactivate"));
-		_boolean->setCurrentIndex(opcode.cast<OpcodeBTLON>().disabled);
+		_boolean->setCurrentIndex(opcode.op().opcodeBTLON.disabled);
 		break;
-	case Opcode::MPJPO:
+	case OpcodeKey::MPJPO:
 		setText(tr("Activate"), tr("Deactivate"));
-		_boolean->setCurrentIndex(opcode.cast<OpcodeMPJPO>().prevent);
+		_boolean->setCurrentIndex(opcode.op().opcodeMPJPO.disabled);
 		break;
-	case Opcode::UC:
+	case OpcodeKey::UC:
 		setText(tr("Activate"), tr("Deactivate"));
-		_boolean->setCurrentIndex(opcode.cast<OpcodeUC>().disabled);
+		_boolean->setCurrentIndex(opcode.op().opcodeUC.disabled);
 		break;
 	default:
 		break;

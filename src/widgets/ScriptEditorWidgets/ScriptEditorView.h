@@ -29,8 +29,8 @@ public:
 	ScriptEditorView(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
 	virtual ~ScriptEditorView() override;
 
-	virtual OpcodeBox buildOpcode()=0;
-	virtual void setOpcode(const OpcodeBox &opcode);
+	virtual Opcode buildOpcode()=0;
+	virtual void setOpcode(const Opcode &opcode);
 	bool isValid() const;
 	virtual void clear();
 signals:
@@ -39,10 +39,10 @@ signals:
 protected:
 	virtual void build()=0;
 	virtual void showEvent(QShowEvent *e) override;
-	inline OpcodeBox &opcode() {
+	inline Opcode &opcode() {
 		return _opcode;
 	}
-	inline const OpcodeBox &opcode() const {
+	inline const Opcode &opcode() const {
 		return _opcode;
 	}
 	const Section1File *scriptsAndTexts() const;
@@ -54,7 +54,7 @@ private:
 	const Section1File *_scriptsAndTexts;
 	const GrpScript &_grpScript;
 	const Script &_script;
-	OpcodeBox _opcode;
+	Opcode _opcode;
 	int _opcodeID;
 	bool _builded, _valid;
 };

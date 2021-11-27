@@ -37,8 +37,8 @@ class ScriptEditorReturnToPage : public ScriptEditorWithPriorityPage
 	Q_OBJECT
 public:
 	explicit ScriptEditorReturnToPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
-	OpcodeBox buildOpcode() override;
-	void setOpcode(const OpcodeBox &opcode) override;
+	Opcode buildOpcode() override;
+	void setOpcode(const Opcode &opcode) override;
 private:
 	void build() override;
 	QComboBox *scriptList;
@@ -49,14 +49,13 @@ class ScriptEditorExecPage : public ScriptEditorWithPriorityPage
 	Q_OBJECT
 public:
 	explicit ScriptEditorExecPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
-	OpcodeBox buildOpcode() override;
-	void setOpcode(const OpcodeBox &opcode) override;
+	Opcode buildOpcode() override;
+	void setOpcode(const Opcode &opcode) override;
 private slots:
 	void updateScriptList(int groupID);
 	void changeCurrentOpcode(int index);
 private:
 	void build() override;
-	void convertOpcode(Opcode::Keys key);
 	QComboBox *groupList, *scriptList;
 	QComboBox *execType;
 };
@@ -66,13 +65,12 @@ class ScriptEditorExecCharPage : public ScriptEditorWithPriorityPage
 	Q_OBJECT
 public:
 	explicit ScriptEditorExecCharPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
-	OpcodeBox buildOpcode() override;
-	void setOpcode(const OpcodeBox &opcode) override;
+	Opcode buildOpcode() override;
+	void setOpcode(const Opcode &opcode) override;
 private slots:
 	void changeCurrentOpcode(int index);
 private:
 	void build() override;
-	void convertOpcode(Opcode::Keys key);
 	QComboBox *scriptList;
 	QSpinBox *partyID;
 	QComboBox *execType;
@@ -83,8 +81,8 @@ class ScriptEditorLabelPage : public ScriptEditorView
 	Q_OBJECT
 public:
 	explicit ScriptEditorLabelPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
-	OpcodeBox buildOpcode() override;
-	void setOpcode(const OpcodeBox &opcode) override;
+	Opcode buildOpcode() override;
+	void setOpcode(const Opcode &opcode) override;
 private:
 	void build() override;
 	QDoubleSpinBox *label;
@@ -108,13 +106,11 @@ class ScriptEditorJumpPage : public ScriptEditorJumpPageInterface
 public:
 	explicit ScriptEditorJumpPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
 	void clear() override;
-	OpcodeBox buildOpcode() override;
-	void setOpcode(const OpcodeBox &opcode) override;
+	Opcode buildOpcode() override;
+	void setOpcode(const Opcode &opcode) override;
 	bool needsLabel() const override;
 private:
 	void build() override;
-	void convertOpcode(Opcode::Keys key);
-	QComboBox *range;
 	bool addJump;
 };
 
@@ -123,8 +119,8 @@ class ScriptEditorJumpNanakiPage : public ScriptEditorJumpPageInterface
 	Q_OBJECT
 public:
 	explicit ScriptEditorJumpNanakiPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
-	OpcodeBox buildOpcode() override;
-	void setOpcode(const OpcodeBox &opcode) override;
+	Opcode buildOpcode() override;
+	void setOpcode(const Opcode &opcode) override;
 	bool needsLabel() const override;
 private:
 	void build() override;
@@ -136,16 +132,15 @@ class ScriptEditorIfPage : public ScriptEditorJumpPageInterface
 public:
 	explicit ScriptEditorIfPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
 	void clear() override;
-	OpcodeBox buildOpcode() override;
-	void setOpcode(const OpcodeBox &opcode) override;
+	Opcode buildOpcode() override;
+	void setOpcode(const Opcode &opcode) override;
 	bool needsLabel() const override;
 private slots:
 	void changeTestRange();
 private:
 	void build() override;
-	void convertOpcode(Opcode::Keys key);
 	VarOrValueWidget *varOrValue1, *varOrValue2;
-	QComboBox *operatorList, *rangeTest, *rangeJump;
+	QComboBox *operatorList, *rangeTest;
 	bool addJump;
 };
 
@@ -154,12 +149,11 @@ class ScriptEditorIfKeyPage : public ScriptEditorJumpPageInterface
 	Q_OBJECT
 public:
 	explicit ScriptEditorIfKeyPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
-	OpcodeBox buildOpcode() override;
-	void setOpcode(const OpcodeBox &opcode) override;
+	Opcode buildOpcode() override;
+	void setOpcode(const Opcode &opcode) override;
 	bool needsLabel() const override;
 private:
 	void build() override;
-	void convertOpcode(Opcode::Keys key);
 	QList<QCheckBox *> keys;
 	QComboBox *typeList;
 };
@@ -169,8 +163,8 @@ class ScriptEditorIfQPage : public ScriptEditorJumpPageInterface
 	Q_OBJECT
 public:
 	explicit ScriptEditorIfQPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
-	OpcodeBox buildOpcode() override;
-	void setOpcode(const OpcodeBox &opcode) override;
+	Opcode buildOpcode() override;
+	void setOpcode(const Opcode &opcode) override;
 	bool needsLabel() const override;
 private:
 	void build() override;
@@ -182,8 +176,8 @@ class ScriptEditorWaitPage : public ScriptEditorView
 	Q_OBJECT
 public:
 	explicit ScriptEditorWaitPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
-	OpcodeBox buildOpcode() override;
-	void setOpcode(const OpcodeBox &opcode) override;
+	Opcode buildOpcode() override;
+	void setOpcode(const Opcode &opcode) override;
 private:
 	void build() override;
 	QSpinBox *frames;

@@ -256,12 +256,12 @@ void FieldArchive::delField(int mapId)
 
 int FieldArchive::appendField(Field *field)
 {
-	int mapId = Data::maplist().indexOf(field->name());
+	qsizetype mapId = Data::maplist().indexOf(field->name());
 	if (mapId < 0) {
 		mapId = 1200 + (fileList.isEmpty() ? 0 : fileList.lastKey() + 1);
 	}
-	fileList.insert(mapId, field);
-	return mapId;
+	fileList.insert(int(mapId), field);
+	return int(mapId);
 }
 
 bool FieldArchive::isAllOpened() const
@@ -340,9 +340,9 @@ void FieldArchive::validateAsk()
 				int scriptID = 0;
 				for (const Script &script : grp.scripts()) {
 					int opcodeID = 0;
-					for (const OpcodeBox &opcode : script.opcodes()) {
-						if (opcode.id() == Opcode::ASK) {
-							const OpcodeASK &opcodeASK = opcode.cast<OpcodeASK>();
+					for (const Opcode &opcode : script.opcodes()) {
+						if (opcode.id() == OpcodeKey::ASK) {
+							const OpcodeASK &opcodeASK = opcode.op().opcodeASK;
 							quint8 textID = opcodeASK.textID,
 									firstLine = opcodeASK.firstLine,
 									lastLine = opcodeASK.lastLine;
@@ -427,15 +427,15 @@ void FieldArchive::validateOneLineSize()
 				for (const Script &script : grp.scripts()) {
 					int opcodeID = 0;
 					const OpcodeWindow *opcodeWindow = nullptr;
-					for (const OpcodeBox &opcode : script.opcodes()) {
-						if (opcode.id() == Opcode::WSIZW
-								|| opcode.id() == Opcode::WINDOW) {
-							opcodeWindow = opcode.cast<OpcodeWindow *>();
-						} else if (opcode->getTextID() >= 0 && opcodeWindow) {
+					for (const Opcode &opcode : script.opcodes()) {
+						if (opcode.id() == OpcodeKey::WSIZW
+								|| opcode.id() == OpcodeKey::WINDOW) {
+							opcodeWindow = opcode.op().opcodeWindow;
+						} else if (opcode.getTextID() >= 0 && opcodeWindow) {
 							FF7Window window;
 							opcodeWindow->getWindow(window);
-							if (opcode->getTextID() < scriptsAndTexts->textCount()) {
-								FF7Text text = scriptsAndTexts->text(opcode->getTextID());
+							if (opcode.getTextID() < scriptsAndTexts->textCount()) {
+								FF7Text text = scriptsAndTexts->text(opcode.getTextID());
 								QSize optimSize = FF7Font::calcSize(text.data());
 								if (!text.data().isEmpty() && !text.contains(QRegularExpression("\n")) && (window.w != optimSize.width() || window.h != optimSize.height())) {
 									qWarning() << name << grpScriptID << grp.name() << grp.scriptName(scriptID) << opcodeID << "width=" << window.w << "height=" << window.h << "better size=" << optimSize.width() << optimSize.height();
@@ -738,18 +738,18 @@ void FieldArchive::printScripts(const QString &filename)
 				int scriptID = 0;
 				for (const Script &script : grp.scripts()) {
 					int opcodeID = 0;
-					for (const OpcodeBox &opcode : script.opcodes()) {
+					for (const Opcode &opcode : script.opcodes()) {
 						FF7Window win;
-						/* if (opcode->getWindow(win)) {
+						/* if (opcode.getWindow(win)) {
 							deb.write(QString("%1 > %2 > %3: %4 %5\n")
 									  .arg(f->name(), grp->name())
 									  .arg(scriptID)
 									  .arg(win.x).arg(win.y).toLatin1());
-						} else if (opcode->getTextID() < 0) { */
+						} else if (opcode.getTextID() < 0) { */
 							deb.write(QString("%1 > %2 > %3: %4\n")
 									  .arg(f->inf()->mapName(), grp.name())
 									  .arg(scriptID)
-									  .arg(opcode->toString(scriptsAndTexts)).toUtf8());
+									  .arg(opcode.toString(scriptsAndTexts)).toUtf8());
 						// }
 						opcodeID++;
 					}
@@ -808,15 +808,15 @@ void FieldArchive::printScriptsDirs(const QString &filename)
 					}
 
 					int opcodeID = 0;
-					for (const OpcodeBox &opcode : script.opcodes()) {
+					for (const Opcode &opcode : script.opcodes()) {
 						// FF7Window win;
-						/* if (opcode->getWindow(win)) {
+						/* if (opcode.getWindow(win)) {
 							deb.write(QString("%1 > %2 > %3: %4 %5\n")
 									  .arg(f->name(), grp->name())
 									  .arg(scriptID)
 									  .arg(win.x).arg(win.y).toLatin1());
-						} else if (opcode->getTextID() < 0) { */
-							deb.write(opcode->toString(scriptsAndTexts).toUtf8());
+						} else if (opcode.getTextID() < 0) { */
+							deb.write(opcode.toString(scriptsAndTexts).toUtf8());
 							deb.write("\n");
 						// }
 						opcodeID++;
@@ -903,7 +903,7 @@ void FieldArchive::diffScripts()
 
 									opcode = script->opcode(opcodeID++);
 
-								} while (!opcode->getWindow(win));
+								} while (!opcode.getWindow(win));
 
 								const quint8 minDiff = 1, maxDiff = 5;
 								int diffX = qAbs(win2.x - win.x), diffY = qAbs(win2.y - win.y);
@@ -1118,9 +1118,9 @@ void FieldArchive::searchAll()
 			/* Section1File *scripts = field->scriptsAndTexts();
 			if (scripts->isOpen()) {
 				int groupID=0, scriptID=0, opcodeID=0;
-				while (scripts->searchOpcode(int(Opcode::BATTLE), groupID, scriptID, opcodeID)) {
+				while (scripts->searchOpcode(int(OpcodeKey::BATTLE), groupID, scriptID, opcodeID)) {
 					OpcodeBATTLE *op = (OpcodeBATTLE *)scripts->grpScript(groupID)->script(quint8(scriptID))->opcode(quint16(opcodeID));
-					deb1.write((field->name() % "," % QString::number(op->battleID) % "," % QString::number(groupID) % "," % QString::number(scriptID) % "," % QString::number(opcodeID) % "\n").toLocal8Bit());
+					deb1.write((field->name() % "," % QString::number(op.battleID) % "," % QString::number(groupID) % "," % QString::number(scriptID) % "," % QString::number(opcodeID) % "\n").toLocal8Bit());
 					opcodeID += 1;
 				}
 			} */
@@ -1221,11 +1221,11 @@ void FieldArchive::searchAll()
 								disableMenus = false,
 								saySomething = false;
 						for (Opcode *op : talkScript->opcodes()) {
-							if (op.id() == Opcode::UC) {
+							if (op.id() == OpcodeKey::UC) {
 								disableMovability = true;
-							} else if (op.id() == Opcode::MENU2) {
+							} else if (op.id() == OpcodeKey::MENU2) {
 								disableMenus = true;
-							} else if (op->getTextID() >= 0) {
+							} else if (op.getTextID() >= 0) {
 								saySomething = true;
 							}
 						}
@@ -1355,7 +1355,7 @@ void FieldArchive::searchAll()
 
 									opcode = script->opcode(opcodeID++);
 
-								} while (!opcode->getWindow(win));
+								} while (!opcode.getWindow(win));
 
 								const quint8 minDiff = 1, maxDiff = 5;
 								int diffX = qAbs(win2.x - win.x), diffY = qAbs(win2.y - win.y);
@@ -1529,9 +1529,9 @@ bool FieldArchive::searchExec(quint8 group, quint8 script, int &mapID, int &grou
 	}, &query, mapID, &searchIn, sorting, scope);
 }
 
-bool FieldArchive::searchMapJump(int _field, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope)
+bool FieldArchive::searchMapJump(int map, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope)
 {
-	SearchFieldQuery query(_field);
+	SearchFieldQuery query(map);
 	SearchInScript searchIn(groupID, scriptID, opcodeID);
 
 	return find([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
@@ -1602,9 +1602,9 @@ bool FieldArchive::searchExecP(quint8 group, quint8 script, int &mapID, int &gro
 	}, &query, mapID, &searchIn, sorting, scope);
 }
 
-bool FieldArchive::searchMapJumpP(int _field, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope)
+bool FieldArchive::searchMapJumpP(int map, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope)
 {
-	SearchFieldQuery query(_field);
+	SearchFieldQuery query(map);
 	SearchInScript searchIn(groupID, scriptID, opcodeID);
 
 	return findLast([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {

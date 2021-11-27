@@ -324,9 +324,9 @@ void WalkmeshWidget::paintGL()
 			int modelID = 0;
 			for (const GrpScript &group : scripts->grpScripts()) {
 				if (group.type() == GrpScript::Model) {
-					for (const OpcodeBox &op : group.script(0).opcodes()) {
-						if (op.id() == Opcode::DIR) {
-							const OpcodeDIR &opDir = op.cast<OpcodeDIR>();
+					for (const Opcode &op : group.script(0).opcodes()) {
+						if (op.id() == OpcodeKey::DIR) {
+							const OpcodeDIR &opDir = op.op().opcodeDIR;
 							if (opDir.banks == 0) {
 								modelDirection.insert(modelID, opDir.direction);
 								break;

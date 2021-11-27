@@ -42,9 +42,9 @@ void ScriptEditorWalkmeshPage::build()
 	connect(_point2, SIGNAL(valuesChanged(Vertex_s)), SLOT(updatePreview()));
 }
 
-OpcodeBox ScriptEditorWalkmeshPage::buildOpcode()
+Opcode ScriptEditorWalkmeshPage::buildOpcode()
 {
-	OpcodeLINE &opcodeLine = opcode().cast<OpcodeLINE>();
+	OpcodeLINE &opcodeLine = opcode().op().opcodeLINE;
 	Vertex_s vertex1 = _point1->values(), vertex2 = _point2->values();
 	opcodeLine.targetX1 = vertex1.x;
 	opcodeLine.targetY1 = vertex1.y;
@@ -56,11 +56,11 @@ OpcodeBox ScriptEditorWalkmeshPage::buildOpcode()
 	return opcode();
 }
 
-void ScriptEditorWalkmeshPage::setOpcode(const OpcodeBox &opcode)
+void ScriptEditorWalkmeshPage::setOpcode(const Opcode &opcode)
 {
 	ScriptEditorView::setOpcode(opcode);
 
-	const OpcodeLINE &opcodeLine = opcode.cast<OpcodeLINE>();
+	const OpcodeLINE &opcodeLine = opcode.op().opcodeLINE;
 	Vertex_s vertex;
 
 	vertex.x = opcodeLine.targetX1;

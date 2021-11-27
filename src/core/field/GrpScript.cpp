@@ -29,17 +29,21 @@ GrpScript::GrpScript(const QString &name, const QList<Script> &scripts) :
 {
 	qsizetype size = qMin(scripts.size(), SCRIPTS_SIZE);
 	for (qint8 i = 0; i < size; ++i) {
-		_scripts[i] = scripts.at(i);
+		setScript(i, scripts.at(i));
 	}
 }
 
 GrpScript GrpScript::createGroupModel(quint8 modelID, qint16 charID)
 {
 	GrpScript group;
-	QList<OpcodeBox> initOps;
-	initOps.append(OpcodeBox(new OpcodeCHAR(modelID)));
+	QList<Opcode> initOps;
+	OpcodeCHAR_ opChar;
+	opChar.object3DID = modelID;
+	initOps.append(opChar);
 	if (charID >= 0) {
-		initOps.append(OpcodeBox(new OpcodePC(quint8(charID))));
+		OpcodePC opPC;
+		opPC.charID = quint8(charID);
+		initOps.append(opPC);
 	}
 
 	group.setScript(0, Script(initOps));
@@ -63,29 +67,29 @@ void GrpScript::detectType()
 	
 	const Script &firstScript = _scripts.at(0);
 	
-	for (const OpcodeBox &opcode : firstScript.opcodes()) {
+	for (const Opcode &opcode : firstScript.opcodes()) {
 		switch (opcode.id()) {
-		case Opcode::PC: // Character definition
-			_character = opcode.cast<OpcodePC>().charID;
+		case OpcodeKey::PC: // Character definition
+			_character = opcode.op().opcodePC.charID;
 			_type = Model;
 			return;
-		case Opcode::CHAR:// 3D Model definition
+		case OpcodeKey::CHAR_:// 3D Model definition
 			_character = 0x100;
 			_type = Model;
 			break;
-		case Opcode::LINE:// Wakmesh line definition
+		case OpcodeKey::LINE:// Wakmesh line definition
 			if (_type == NoType) {
 				_type = Location;
 			}
 			return;
-		case Opcode::BGPDH:case Opcode::BGSCR:case Opcode::BGON:
-		case Opcode::BGOFF:case Opcode::BGROL:case Opcode::BGROL2:
-		case Opcode::BGCLR:// Background parameter
+		case OpcodeKey::BGPDH:case OpcodeKey::BGSCR:case OpcodeKey::BGON:
+		case OpcodeKey::BGOFF:case OpcodeKey::BGROL:case OpcodeKey::BGROL2:
+		case OpcodeKey::BGCLR:// Background parameter
 			if (_type == NoType) {
 				_type = Animation;
 			}
 			return;
-		case Opcode::MPNAM:// Map name
+		case OpcodeKey::MPNAM:// Map name
 			if (_type == NoType) {
 				_type = Director;
 			}
@@ -278,17 +282,17 @@ bool GrpScript::searchExec(quint8 group, quint8 script, int &scriptID, int &opco
 	return searchExec(group, script, ++scriptID, opcodeID);
 }
 
-bool GrpScript::searchMapJump(quint16 field, int &scriptID, int &opcodeID) const
+bool GrpScript::searchMapJump(quint16 map, int &scriptID, int &opcodeID) const
 {
 	if (!search(scriptID, opcodeID)) {
 		return false;
 	}
-	if (_scripts.at(scriptID).searchMapJump(field, opcodeID)) {
+	if (_scripts.at(scriptID).searchMapJump(map, opcodeID)) {
 		return true;
 	}
 
 	opcodeID = 0;
-	return searchMapJump(field, ++scriptID, opcodeID);
+	return searchMapJump(map, ++scriptID, opcodeID);
 }
 
 bool GrpScript::searchTextInScripts(const QRegularExpression &text, int &scriptID, int &opcodeID, const Section1File *scriptsAndTexts) const
@@ -356,17 +360,17 @@ bool GrpScript::searchExecP(quint8 group, quint8 script, int &scriptID, int &opc
 	return searchExecP(group, script, --scriptID, opcodeID);
 }
 
-bool GrpScript::searchMapJumpP(quint16 field, int &scriptID, int &opcodeID) const
+bool GrpScript::searchMapJumpP(quint16 map, int &scriptID, int &opcodeID) const
 {
 	if (!searchP(scriptID, opcodeID)) {
 		return false;
 	}
-	if (_scripts.at(scriptID).searchMapJumpP(field, opcodeID)) {
+	if (_scripts.at(scriptID).searchMapJumpP(map, opcodeID)) {
 		return true;
 	}
 
 	opcodeID = 2147483647;
-	return searchMapJumpP(field, --scriptID, opcodeID);
+	return searchMapJumpP(map, --scriptID, opcodeID);
 }
 
 bool GrpScript::searchTextInScriptsP(const QRegularExpression &text, int &scriptID, int &opcodeID, const Section1File *scriptsAndTexts) const
@@ -550,7 +554,7 @@ QDataStream &operator>>(QDataStream &stream, QList<Script> &scripts)
 		QByteArray data;
 		stream >> data;
 
-		scripts.append(Script(data));
+		scripts.append(Script(data.constData(), data.size()));
 	}
 
 	return stream;

@@ -36,9 +36,9 @@ public:
 	ScriptEditorGenericList(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
 	virtual ~ScriptEditorGenericList() override {}
 
-	virtual OpcodeBox buildOpcode() override;
+	virtual Opcode buildOpcode() override;
 public slots:
-	virtual void setOpcode(const OpcodeBox &opcode) override;
+	virtual void setOpcode(const Opcode &opcode) override;
 private slots:
 	void addParam();
 	void delLastRow();
@@ -63,8 +63,8 @@ class ScriptEditorBooleanPage : public ScriptEditorView
 	Q_OBJECT
 public:
 	explicit ScriptEditorBooleanPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
-	OpcodeBox buildOpcode() override;
-	void setOpcode(const OpcodeBox &opcode) override;
+	Opcode buildOpcode() override;
+	void setOpcode(const Opcode &opcode) override;
 	void setText(const QString &choice1, const QString &choice2);
 private:
 	void build() override;

@@ -32,7 +32,7 @@ public:
 	struct Historic {
 		HistoricType type;
 		QList<int> opcodeIDs;
-		QList<OpcodeBox> data;
+		QList<Opcode> data;
 	};
 
 	explicit OpcodeList(QWidget *parent = nullptr);
@@ -101,8 +101,8 @@ private:
 	QList<int> selectedIDs();
 
 //	QString showHistoric();
-	void changeHist(HistoricType type, int opcodeID, const OpcodeBox &data = OpcodeBox(nullptr));
-	void changeHist(HistoricType type, const QList<int> &opcodeIDs, const QList<OpcodeBox> &data);
+	void changeHist(HistoricType type, int opcodeID, const Opcode &data = Opcode());
+	void changeHist(HistoricType type, const QList<int> &opcodeIDs, const QList<Opcode> &data);
 	void clearHist();
 
 	static QPixmap &posNumber(int num, const QPixmap &fontPixmap, QPixmap &wordPixmap);

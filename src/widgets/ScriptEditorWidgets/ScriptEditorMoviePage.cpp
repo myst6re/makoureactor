@@ -79,20 +79,20 @@ void ScriptEditorMoviePage::setMovieListItemTexts(int discID)
 	}
 }
 
-OpcodeBox ScriptEditorMoviePage::buildOpcode()
+Opcode ScriptEditorMoviePage::buildOpcode()
 {
-	OpcodePMVIE &opcodePMVIE = opcode().cast<OpcodePMVIE>();
+	OpcodePMVIE &opcodePMVIE = opcode().op().opcodePMVIE;
 
 	opcodePMVIE.movieID = quint8(movieList->currentIndex());
 
 	return opcode();
 }
 
-void ScriptEditorMoviePage::setOpcode(const OpcodeBox &opcode)
+void ScriptEditorMoviePage::setOpcode(const Opcode &opcode)
 {
 	ScriptEditorView::setOpcode(opcode);
 
-	const OpcodePMVIE &opcodePMVIE = opcode.cast<OpcodePMVIE>();
+	const OpcodePMVIE &opcodePMVIE = opcode.op().opcodePMVIE;
 
 	movieList->setCurrentIndex(opcodePMVIE.movieID);
 }
