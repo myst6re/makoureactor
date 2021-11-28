@@ -865,6 +865,10 @@ ScriptEditorSinCosPage::ScriptEditorSinCosPage(const Section1File *scriptsAndTex
 
 void ScriptEditorSinCosPage::build()
 {
+	operationList = new QComboBox(this);
+	operationList->addItem(tr("Sinus"), OpcodeKey::SIN);
+	operationList->addItem(tr("Cosinus"), OpcodeKey::COS);
+
 	var = new VarOrValueWidget(this);
 	var->setOnlyVar(true);
 
@@ -881,14 +885,16 @@ void ScriptEditorSinCosPage::build()
 	varOrValue3->setLongValueType(false);
 
 	QGridLayout *layout = new QGridLayout(this);
-	layout->addWidget(var, 0, 0);
-	layout->addWidget(varOrValue1, 1, 0);
-	layout->addWidget(varOrValue2, 2, 0);
-	layout->addWidget(varOrValue3, 3, 0);
-	layout->setRowStretch(4, 1);
+	layout->addWidget(operationList, 0, 0);
+	layout->addWidget(var, 1, 0);
+	layout->addWidget(varOrValue1, 2, 0);
+	layout->addWidget(varOrValue2, 3, 0);
+	layout->addWidget(varOrValue3, 4, 0);
+	layout->setRowStretch(5, 1);
 	layout->setColumnStretch(1, 1);
 	layout->setContentsMargins(QMargins());
-
+	
+	connect(operationList, SIGNAL(currentIndexChanged(int)), SLOT(changeCurrentOpcode(int)));
 	connect(var, SIGNAL(changed()), SIGNAL(opcodeChanged()));
 	connect(varOrValue1, SIGNAL(changed()), SIGNAL(opcodeChanged()));
 	connect(varOrValue2, SIGNAL(changed()), SIGNAL(opcodeChanged()));
@@ -978,5 +984,16 @@ void ScriptEditorSinCosPage::setOpcode(const Opcode &opcode)
 
 	for (QObject *o : children()) {
 		o->blockSignals(false);
+	}
+}
+
+void ScriptEditorSinCosPage::changeCurrentOpcode(int index)
+{
+	OpcodeKey key = OpcodeKey(operationList->itemData(index).toInt());
+
+	if (key != opcode().id()) {
+		opcode().op().id = key;
+
+		emit opcodeChanged();
 	}
 }

@@ -102,7 +102,10 @@ public:
 	explicit ScriptEditorSinCosPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
 	Opcode buildOpcode();
 	void setOpcode(const Opcode &opcode);
+private slots:
+	void changeCurrentOpcode(int index);
 private:
 	void build();
+	QComboBox *operationList;
 	VarOrValueWidget *var, *varOrValue1, *varOrValue2, *varOrValue3;
 };

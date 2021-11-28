@@ -473,8 +473,7 @@ void ScriptEditor::buildList(int id)
 		comboBox->insertSeparator(comboBox->count());
 		comboBox->addItem(tr("Seed Random Generator"), QList<QVariant>() << 0x7F);
 		comboBox->addItem(tr("Two Byte from two one-byte"), QList<QVariant>() << 0x9C);
-		comboBox->addItem(tr("Sinus"), QList<QVariant>() << 0xD4);
-		comboBox->addItem(tr("Cosinus"), QList<QVariant>() << 0xD5);
+		comboBox->addItem(tr("Sinus / Cosinus"), QList<QVariant>() << 0xD4 << 0xD5);
 		return;
 	case 2:
 		comboBox->addItem(tr("Window creation"), QList<QVariant>() << 0x50);
