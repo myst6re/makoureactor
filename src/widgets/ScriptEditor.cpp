@@ -151,6 +151,8 @@ ScriptEditorView *ScriptEditor::buildEditorPage(PageType id)
 		return new ScriptEditorVariablePage(scriptsAndTexts, grpScript, script, opcodeID, this);
 	case ToByte:
 		return new ScriptEditor2BytePage(scriptsAndTexts, grpScript, script, opcodeID, this);
+	case SinCos:
+		return new ScriptEditorSinCosPage(scriptsAndTexts, grpScript, script, opcodeID, this);
 	case Window:
 		return new ScriptEditorWindowPage(scriptsAndTexts, grpScript, script, opcodeID, this);
 	case WindowMode:
@@ -239,6 +241,10 @@ void ScriptEditor::fillEditor()
 		break;
 	case OpcodeKey::TOBYTE:
 		_currentPageType = ToByte;
+		break;
+	case OpcodeKey::SIN:
+	case OpcodeKey::COS:
+		_currentPageType = SinCos;
 		break;
 	case OpcodeKey::RDMSD:
 	/* case OpcodeKey::BTRLD:

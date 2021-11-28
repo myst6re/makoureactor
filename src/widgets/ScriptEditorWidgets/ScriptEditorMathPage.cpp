@@ -857,3 +857,126 @@ void ScriptEditor2BytePage::setOpcode(const Opcode &opcode)
 		o->blockSignals(false);
 	}
 }
+
+ScriptEditorSinCosPage::ScriptEditorSinCosPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent) :
+	ScriptEditorView(scriptsAndTexts, grpScript, script, opcodeID, parent)
+{
+}
+
+void ScriptEditorSinCosPage::build()
+{
+	var = new VarOrValueWidget(this);
+	var->setOnlyVar(true);
+
+	varOrValue1 = new VarOrValueWidget(this);
+	varOrValue1->setSignedValueType(false);
+	varOrValue1->setLongValueType(false);
+	
+	varOrValue2 = new VarOrValueWidget(this);
+	varOrValue2->setSignedValueType(false);
+	varOrValue2->setLongValueType(false);
+	
+	varOrValue3 = new VarOrValueWidget(this);
+	varOrValue3->setSignedValueType(false);
+	varOrValue3->setLongValueType(false);
+
+	QGridLayout *layout = new QGridLayout(this);
+	layout->addWidget(var, 0, 0);
+	layout->addWidget(varOrValue1, 1, 0);
+	layout->addWidget(varOrValue2, 2, 0);
+	layout->addWidget(varOrValue3, 3, 0);
+	layout->setRowStretch(4, 1);
+	layout->setColumnStretch(1, 1);
+	layout->setContentsMargins(QMargins());
+
+	connect(var, SIGNAL(changed()), SIGNAL(opcodeChanged()));
+	connect(varOrValue1, SIGNAL(changed()), SIGNAL(opcodeChanged()));
+	connect(varOrValue2, SIGNAL(changed()), SIGNAL(opcodeChanged()));
+	connect(varOrValue3, SIGNAL(changed()), SIGNAL(opcodeChanged()));
+}
+
+Opcode ScriptEditorSinCosPage::buildOpcode()
+{
+	quint8 bank1, bank2, bank3, bank4, adress4;
+	int value1, value2, value3;
+
+	var->var(bank4, adress4);
+
+	if (varOrValue1->isValue()) {
+		bank1 = 0;
+		value1 = varOrValue1->value();
+	} else {
+		quint8 adress1;
+		varOrValue1->var(bank1, adress1);
+		value1 = adress1;
+	}
+
+	if (varOrValue2->isValue()) {
+		bank2 = 0;
+		value2 = varOrValue2->value();
+	} else {
+		quint8 adress2;
+		varOrValue2->var(bank2, adress2);
+		value2 = adress2;
+	}
+
+	if (varOrValue3->isValue()) {
+		bank3 = 0;
+		value3 = varOrValue3->value();
+	} else {
+		quint8 adress3;
+		varOrValue3->var(bank3, adress3);
+		value3 = adress3;
+	}
+
+	OpcodeSIN &sin = opcode().op().opcodeSIN;
+	sin.banks[0] = BANK(bank1, bank2);
+	sin.banks[1] = BANK(bank3, bank4);
+	sin.value1 = quint8(value1);
+	sin.value2 = quint8(value2);
+	sin.value3 = quint8(value3);
+	sin.var = adress4;
+
+	return opcode();
+}
+
+void ScriptEditorSinCosPage::setOpcode(const Opcode &opcode)
+{
+	ScriptEditorView::setOpcode(opcode);
+
+	for (QObject *o : children()) {
+		o->blockSignals(true);
+	}
+
+	const OpcodeSIN &sin = opcode.op().opcodeSIN;
+
+	var->setVar(B2(sin.banks[1]), sin.var);
+
+	if (B1(sin.banks[0]) != 0) {
+		varOrValue1->setVar(B1(sin.banks[0]), sin.value1 & 0xFF);
+		varOrValue1->setIsValue(false);
+	} else {
+		varOrValue1->setValue(sin.value1);
+		varOrValue1->setIsValue(true);
+	}
+
+	if (B2(sin.banks[0]) != 0) {
+		varOrValue2->setVar(B2(sin.banks[0]), sin.value2 & 0xFF);
+		varOrValue2->setIsValue(false);
+	} else {
+		varOrValue2->setValue(sin.value2);
+		varOrValue2->setIsValue(true);
+	}
+
+	if (B1(sin.banks[1]) != 0) {
+		varOrValue3->setVar(B1(sin.banks[1]), sin.value3 & 0xFF);
+		varOrValue3->setIsValue(false);
+	} else {
+		varOrValue3->setValue(sin.value3);
+		varOrValue3->setIsValue(true);
+	}
+
+	for (QObject *o : children()) {
+		o->blockSignals(false);
+	}
+}

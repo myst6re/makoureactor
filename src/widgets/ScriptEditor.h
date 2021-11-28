@@ -53,6 +53,7 @@ private:
 		UnaryOp,
 		BitOp,
 		Variable,
+		SinCos,
 		ToByte,
 		Window,
 		WindowMode,
