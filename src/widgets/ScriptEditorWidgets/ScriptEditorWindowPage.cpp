@@ -387,3 +387,112 @@ void ScriptEditorWindowMovePage::setOpcode(const Opcode &opcode)
 		o->blockSignals(false);
 	}
 }
+
+ScriptEditorWindowVariablePage::ScriptEditorWindowVariablePage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent) :
+	ScriptEditorView(scriptsAndTexts, grpScript, script, opcodeID, parent)
+{
+}
+
+void ScriptEditorWindowVariablePage::build()
+{
+	winID = new QSpinBox(this);
+	winID->setRange(0, 255);
+	winVar = new QSpinBox(this);
+	winVar->setRange(0, 255);
+
+	varOrValue = new VarOrValueWidget(this);
+	varOrValue->setLongValueType(true);
+	varOrValue->setSignedValueType(true);
+	
+	QWidget *typeGroup = new QWidget(this);
+	type1 = new QRadioButton(tr("8-bit"), typeGroup);
+	type2 = new QRadioButton(tr("16-bit"), typeGroup);
+	QHBoxLayout *typeLayout = new QHBoxLayout(typeGroup);
+	typeLayout->addWidget(type1);
+	typeLayout->addWidget(type2);
+	typeLayout->addStretch();
+	typeLayout->setContentsMargins(QMargins());
+
+	QGridLayout *layout = new QGridLayout(this);
+	layout->addWidget(new QLabel(tr("Window ID")), 0, 0);
+	layout->addWidget(winID, 0, 1);
+	layout->addWidget(new QLabel(tr("Window Variable")), 1, 0);
+	layout->addWidget(winVar, 1, 1);
+	layout->addWidget(new QLabel(tr("Value")), 2, 0);
+	layout->addWidget(varOrValue, 2, 1);
+	layout->addWidget(typeGroup, 2, 2);
+	layout->setRowStretch(3, 1);
+	layout->setColumnStretch(2, 1);
+	layout->setContentsMargins(QMargins());
+
+	connect(winID, SIGNAL(valueChanged(int)), SIGNAL(opcodeChanged()));
+	connect(winVar, SIGNAL(valueChanged(int)), SIGNAL(opcodeChanged()));
+	connect(varOrValue, SIGNAL(changed()), SIGNAL(opcodeChanged()));
+}
+
+Opcode ScriptEditorWindowVariablePage::buildOpcode()
+{
+	quint8 bank;
+	int value;
+	OpcodeKey key = opcode().id();
+	
+	if (varOrValue->isValue()) {
+		bank = 0;
+		value = varOrValue->value();
+		
+		if (value > 255 || value < 0) {
+			key = OpcodeKey::MPRA2;
+		}
+	} else {
+		quint8 adress;
+		varOrValue->var(bank, adress);
+		value = adress;
+
+		if (type2->isChecked()) {
+			key = OpcodeKey::MPRA2;
+		}
+	}
+
+	if (key == OpcodeKey::MPARA) {
+		OpcodeMPARA &opcodeMPARA = opcode().op().opcodeMPARA;
+		opcodeMPARA.banks = BANK(0, bank);
+		opcodeMPARA.windowID = quint8(winID->value());
+		opcodeMPARA.windowVarID = quint8(winVar->value());
+		opcodeMPARA.value = quint8(value);
+	} else {
+		OpcodeMPRA2 &opcodeMPRA2 = opcode().op().opcodeMPRA2;
+		opcodeMPRA2.banks = BANK(0, bank);
+		opcodeMPRA2.windowID = quint8(winID->value());
+		opcodeMPRA2.windowVarID = quint8(winVar->value());
+		opcodeMPRA2.value = quint16(value);
+	}
+
+	return opcode();
+}
+
+void ScriptEditorWindowVariablePage::setOpcode(const Opcode &opcode)
+{
+	ScriptEditorView::setOpcode(opcode);
+
+	for (QObject *o : children()) {
+		o->blockSignals(true);
+	}
+
+	if (opcode.id() == OpcodeKey::MPARA) {
+		const OpcodeMPARA &opcodeMPARA = opcode.op().opcodeMPARA;
+		winID->setValue(opcodeMPARA.windowID);
+		winVar->setValue(opcodeMPARA.windowVarID);
+		varOrValue->setVarOrValue(B2(opcodeMPARA.banks), opcodeMPARA.value);
+		type1->setChecked(true);
+	} else {
+		const OpcodeMPRA2 &opcodeMPRA2 = opcode.op().opcodeMPRA2;
+		winID->setValue(opcodeMPRA2.windowID);
+		winVar->setValue(opcodeMPRA2.windowVarID);
+		varOrValue->setVarOrValue(B2(opcodeMPRA2.banks), opcodeMPRA2.value);
+		type2->setChecked(true);
+	}
+
+	for (QObject *o : children()) {
+		o->blockSignals(false);
+	}
+}

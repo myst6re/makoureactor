@@ -76,3 +76,17 @@ private:
 	void build() override;
 	QSpinBox *winID, *x, *y;
 };
+
+class ScriptEditorWindowVariablePage : public ScriptEditorView
+{
+	Q_OBJECT
+public:
+	explicit ScriptEditorWindowVariablePage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
+	Opcode buildOpcode() override;
+	void setOpcode(const Opcode &opcode) override;
+private:
+	void build() override;
+	QSpinBox *winID, *winVar;
+	VarOrValueWidget *varOrValue;
+	QRadioButton *type1, *type2;
+};

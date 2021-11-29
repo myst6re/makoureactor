@@ -28,6 +28,7 @@ public:
 	void setValue(int value);
 	void var(quint8 &bank, quint8 &adress) const;
 	void setVar(quint8 bank, quint8 adress);
+	void setVarOrValue(quint8 bank, int valueOrAdress);
 	bool isValue() const;
 	void setIsValue(bool isValue);
 	bool isLongValueType() const;

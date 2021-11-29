@@ -1659,7 +1659,7 @@ void Opcode::deleteResizableData()
 
 #define OpcodeAddVar(op, bnk, attr, type) \
 	b = bank##bnk(); \
-	if (b != 0) { \
+	if (b > 0) { \
 		vars.append(FF7Var(b, (_opcode.opcode##op.attr) & 0xFF, FF7Var::VarSize((FF7Var::type) & 0x7), FF7Var::Flag((FF7Var::type) >> 3))); \
 	}
 

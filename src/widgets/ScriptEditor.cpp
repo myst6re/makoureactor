@@ -159,6 +159,8 @@ ScriptEditorView *ScriptEditor::buildEditorPage(PageType id)
 		return new ScriptEditorWindowModePage(scriptsAndTexts, grpScript, script, opcodeID, this);
 	case WindowMove:
 		return new ScriptEditorWindowMovePage(scriptsAndTexts, grpScript, script, opcodeID, this);
+	case WindowVar:
+		return new ScriptEditorWindowVariablePage(scriptsAndTexts, grpScript, script, opcodeID, this);
 	case Movie:
 		return new ScriptEditorMoviePage(scriptsAndTexts, grpScript, script, opcodeID, this);
 	case Walkmesh:
@@ -267,6 +269,10 @@ void ScriptEditor::fillEditor()
 		break;
 	case OpcodeKey::WMOVE:
 		_currentPageType = WindowMove;
+		break;
+	case OpcodeKey::MPARA:
+	case OpcodeKey::MPRA2:
+		_currentPageType = WindowVar;
 		break;
 	case OpcodeKey::PMVIE:
 		_currentPageType = Movie;
@@ -485,11 +491,10 @@ void ScriptEditor::buildList(int id)
 		comboBox->addItem(tr("Close a window (1)"), QList<QVariant>() << 0x2E);
 		comboBox->addItem(tr("Close a window (2)"), QList<QVariant>() << 0x54);
 		comboBox->insertSeparator(comboBox->count());
-		comboBox->addItem(tr("Numerical Display"), QList<QVariant>() << 0x36);
-		comboBox->addItem(tr("Set window variable (16-bit)"), QList<QVariant>() << 0x37);
-		comboBox->addItem(tr("Countdown"), QList<QVariant>() << 0x38);
-		comboBox->addItem(tr("Set window variable (8-bit)"), QList<QVariant>() << 0x41);
-		comboBox->addItem(tr("Set window variable (16-bit)"), QList<QVariant>() << 0x42);
+		comboBox->addItem(tr("Numerical Display"), QList<QVariant>() << OpcodeKey::WSPCL);
+		comboBox->addItem(tr("Set numerical display value"), QList<QVariant>() << OpcodeKey::WNUMB);
+		comboBox->addItem(tr("Countdown"), QList<QVariant>() << OpcodeKey::STTIM);
+		comboBox->addItem(tr("Set window variable"), QList<QVariant>() << OpcodeKey::MPARA << OpcodeKey::MPRA2);
 		comboBox->insertSeparator(comboBox->count());
 		comboBox->addItem(tr("Set window Text"), QList<QVariant>() << 0x40);
 		comboBox->addItem(tr("Ask Question"), QList<QVariant>() << 0x48);

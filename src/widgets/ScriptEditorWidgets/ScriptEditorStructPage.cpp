@@ -624,21 +624,8 @@ void ScriptEditorIfPage::setOpcode(const Opcode &opcode)
 	varOrValue2->setLongValueType(isLongValue);
 	varOrValue1->setSignedValueType(isSignedValue);
 	varOrValue2->setSignedValueType(isSignedValue);
-
-	if (i.bank1 != 0) {
-		varOrValue1->setIsValue(false);
-		varOrValue1->setVar(i.bank1, quint8(i.value1));
-	} else {
-		varOrValue1->setIsValue(true);
-		varOrValue1->setValue(i.value1);
-	}
-	if (i.bank2 != 0) {
-		varOrValue2->setIsValue(false);
-		varOrValue2->setVar(i.bank2, quint8(i.value2));
-	} else {
-		varOrValue2->setIsValue(true);
-		varOrValue2->setValue(i.value2);
-	}
+	varOrValue1->setVarOrValue(i.bank1, i.value1);
+	varOrValue2->setVarOrValue(i.bank2, i.value2);
 	varOrValue1->blockSignals(false);
 	varOrValue2->blockSignals(false);
 

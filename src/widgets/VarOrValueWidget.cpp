@@ -81,6 +81,17 @@ void VarOrValueWidget::setVar(quint8 bank, quint8 adress)
 	_adress->setValue(adress);
 }
 
+void VarOrValueWidget::setVarOrValue(quint8 bank, int valueOrAdress)
+{
+	if (bank != 0) {
+		setVar(bank, valueOrAdress & 0xFF);
+		setIsValue(false);
+	} else {
+		setValue(valueOrAdress);
+		setIsValue(true);
+	}
+}
+
 bool VarOrValueWidget::isValue() const
 {
 	return typeSelect->currentIndex() == 0;

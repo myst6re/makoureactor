@@ -718,6 +718,7 @@ PACK(struct OpcodeMPARA : public OpcodeBase {
 	quint8 value; // bank 2 8-bit
 });
 
+// FIXME: signed?
 PACK(struct OpcodeMPRA2 : public OpcodeBase {
 	quint8 banks;
 	quint8 windowID;

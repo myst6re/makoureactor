@@ -171,13 +171,7 @@ void ScriptEditorBinaryOpPage::setOpcode(const Opcode &opcode)
 	varOrValue->setLongValueType(opcodeBinaryOperation.isLong);
 	type1->setChecked(!opcodeBinaryOperation.isLong);
 	type2->setChecked(opcodeBinaryOperation.isLong);
-	if (opcodeBinaryOperation.bank2 != 0) {
-		varOrValue->setVar(opcodeBinaryOperation.bank2, opcodeBinaryOperation.value & 0xFF);
-		varOrValue->setIsValue(false);
-	} else {
-		varOrValue->setValue(opcodeBinaryOperation.value);
-		varOrValue->setIsValue(true);
-	}
+	varOrValue->setVarOrValue(opcodeBinaryOperation.bank2, opcodeBinaryOperation.value);
 
 	for (QObject *o : children()) {
 		o->blockSignals(false);
@@ -663,14 +657,7 @@ void ScriptEditorBitOpPage::setOpcode(const Opcode &opcode)
 	Q_ASSERT(opcode.bitOperation(opcodeBitOperation));
 
 	var->setVar(opcodeBitOperation.bank1, opcodeBitOperation.var);
-
-	if (opcodeBitOperation.bank2 != 0) {
-		position->setVar(opcodeBitOperation.bank2, opcodeBitOperation.position);
-		position->setIsValue(false);
-	} else {
-		position->setValue(opcodeBitOperation.position);
-		position->setIsValue(true);
-	}
+	position->setVarOrValue(opcodeBitOperation.bank2, opcodeBitOperation.position);
 
 	for (QObject *o : children()) {
 		o->blockSignals(false);
@@ -749,14 +736,7 @@ void ScriptEditorVariablePage::setOpcode(const Opcode &opcode)
 	ScriptEditorView::setOpcode(opcode);
 
 	const OpcodeRDMSD &opcodeRDMSD = opcode.op().opcodeRDMSD;
-
-	if (B2(opcodeRDMSD.banks) != 0) {
-		varOrValue->setVar(B2(opcodeRDMSD.banks), opcodeRDMSD.value);
-		varOrValue->setIsValue(false);
-	} else {
-		varOrValue->setValue(opcodeRDMSD.value);
-		varOrValue->setIsValue(true);
-	}
+	varOrValue->setVarOrValue(B2(opcodeRDMSD.banks), opcodeRDMSD.value);
 }
 
 ScriptEditor2BytePage::ScriptEditor2BytePage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent) :
@@ -836,22 +816,8 @@ void ScriptEditor2BytePage::setOpcode(const Opcode &opcode)
 	const OpcodeTOBYTE &toByte = opcode.op().opcodeTOBYTE;
 
 	var->setVar(B1(toByte.banks[0]), toByte.var);
-
-	if (B2(toByte.banks[0]) != 0) {
-		varOrValue1->setVar(B2(toByte.banks[0]), toByte.value1 & 0xFF);
-		varOrValue1->setIsValue(false);
-	} else {
-		varOrValue1->setValue(toByte.value1);
-		varOrValue1->setIsValue(true);
-	}
-	
-	if (B2(toByte.banks[1]) != 0) {
-		varOrValue2->setVar(B2(toByte.banks[1]), toByte.value2 & 0xFF);
-		varOrValue2->setIsValue(false);
-	} else {
-		varOrValue2->setValue(toByte.value2);
-		varOrValue2->setIsValue(true);
-	}
+	varOrValue1->setVarOrValue(B2(toByte.banks[0]), toByte.value1);
+	varOrValue2->setVarOrValue(B2(toByte.banks[1]), toByte.value2);
 
 	for (QObject *o : children()) {
 		o->blockSignals(false);
@@ -954,33 +920,14 @@ void ScriptEditorSinCosPage::setOpcode(const Opcode &opcode)
 		o->blockSignals(true);
 	}
 
+	operationList->setCurrentIndex(operationList->findData(opcode.id()));
+
 	const OpcodeSIN &sin = opcode.op().opcodeSIN;
 
+	varOrValue1->setVarOrValue(B1(sin.banks[0]), sin.value1);
+	varOrValue2->setVarOrValue(B2(sin.banks[0]), sin.value2);
+	varOrValue3->setVarOrValue(B1(sin.banks[1]), sin.value3);
 	var->setVar(B2(sin.banks[1]), sin.var);
-
-	if (B1(sin.banks[0]) != 0) {
-		varOrValue1->setVar(B1(sin.banks[0]), sin.value1 & 0xFF);
-		varOrValue1->setIsValue(false);
-	} else {
-		varOrValue1->setValue(sin.value1);
-		varOrValue1->setIsValue(true);
-	}
-
-	if (B2(sin.banks[0]) != 0) {
-		varOrValue2->setVar(B2(sin.banks[0]), sin.value2 & 0xFF);
-		varOrValue2->setIsValue(false);
-	} else {
-		varOrValue2->setValue(sin.value2);
-		varOrValue2->setIsValue(true);
-	}
-
-	if (B1(sin.banks[1]) != 0) {
-		varOrValue3->setVar(B1(sin.banks[1]), sin.value3 & 0xFF);
-		varOrValue3->setIsValue(false);
-	} else {
-		varOrValue3->setValue(sin.value3);
-		varOrValue3->setIsValue(true);
-	}
 
 	for (QObject *o : children()) {
 		o->blockSignals(false);
