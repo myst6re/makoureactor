@@ -7198,7 +7198,7 @@ Make sure it is valid or delete it.</source>
     <message>
         <location filename="../src/widgets/Search.cpp" line="30"/>
         <location filename="../src/widgets/Search.cpp" line="119"/>
-        <location filename="../src/widgets/Search.cpp" line="276"/>
+        <location filename="../src/widgets/Search.cpp" line="296"/>
         <source>Find</source>
         <translation type="unfinished">検索</translation>
     </message>
@@ -7246,203 +7246,203 @@ Make sure it is valid or delete it.</source>
     </message>
     <message>
         <location filename="../src/widgets/Search.cpp" line="121"/>
-        <location filename="../src/widgets/Search.cpp" line="285"/>
+        <location filename="../src/widgets/Search.cpp" line="305"/>
         <source>Match case</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/Search.cpp" line="165"/>
+        <location filename="../src/widgets/Search.cpp" line="177"/>
         <source>All</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/Search.cpp" line="166"/>
+        <location filename="../src/widgets/Search.cpp" line="178"/>
         <source>Assignment</source>
         <translation type="unfinished">代入</translation>
     </message>
     <message>
-        <location filename="../src/widgets/Search.cpp" line="167"/>
+        <location filename="../src/widgets/Search.cpp" line="179"/>
         <source>Bit Assignment</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/Search.cpp" line="170"/>
+        <location filename="../src/widgets/Search.cpp" line="182"/>
         <source>Assignment ≠</source>
         <translation type="unfinished">代入 ≠</translation>
     </message>
     <message>
-        <location filename="../src/widgets/Search.cpp" line="171"/>
+        <location filename="../src/widgets/Search.cpp" line="183"/>
         <source>Assignment &lt;</source>
         <translation type="unfinished">代入 &lt;</translation>
     </message>
     <message>
-        <location filename="../src/widgets/Search.cpp" line="172"/>
+        <location filename="../src/widgets/Search.cpp" line="184"/>
         <source>Assignment ≤</source>
         <translation type="unfinished">代入 ≤</translation>
     </message>
     <message>
-        <location filename="../src/widgets/Search.cpp" line="173"/>
+        <location filename="../src/widgets/Search.cpp" line="185"/>
         <source>Assignment &gt;</source>
         <translation type="unfinished">代入 &gt;</translation>
     </message>
     <message>
-        <location filename="../src/widgets/Search.cpp" line="174"/>
+        <location filename="../src/widgets/Search.cpp" line="186"/>
         <source>Assignment ≥</source>
         <translation type="unfinished">代入 ≥</translation>
     </message>
     <message>
-        <location filename="../src/widgets/Search.cpp" line="201"/>
+        <location filename="../src/widgets/Search.cpp" line="217"/>
         <source>Group</source>
         <translation type="unfinished">グループ</translation>
     </message>
     <message>
-        <location filename="../src/widgets/Search.cpp" line="220"/>
-        <location filename="../src/widgets/Search.cpp" line="289"/>
+        <location filename="../src/widgets/Search.cpp" line="240"/>
+        <location filename="../src/widgets/Search.cpp" line="309"/>
         <source>Scope</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/Search.cpp" line="491"/>
+        <location filename="../src/widgets/Search.cpp" line="511"/>
         <source>Last map</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/Search.cpp" line="503"/>
+        <location filename="../src/widgets/Search.cpp" line="523"/>
         <source>First map</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/Search.cpp" line="956"/>
+        <location filename="../src/widgets/Search.cpp" line="976"/>
         <source>%1 occurrences replaced.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/Search.cpp" line="223"/>
+        <location filename="../src/widgets/Search.cpp" line="243"/>
         <source>Current group script</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/Search.cpp" line="224"/>
+        <location filename="../src/widgets/Search.cpp" line="244"/>
         <source>Current script</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/Search.cpp" line="281"/>
-        <location filename="../src/widgets/Search.cpp" line="282"/>
+        <location filename="../src/widgets/Search.cpp" line="301"/>
+        <location filename="../src/widgets/Search.cpp" line="302"/>
         <source>Replace</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/Search.cpp" line="283"/>
+        <location filename="../src/widgets/Search.cpp" line="303"/>
         <source>Replace all</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/Search.cpp" line="292"/>
+        <location filename="../src/widgets/Search.cpp" line="312"/>
         <source>Current text</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/Search.cpp" line="492"/>
+        <location filename="../src/widgets/Search.cpp" line="512"/>
         <source>Last group</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/Search.cpp" line="493"/>
+        <location filename="../src/widgets/Search.cpp" line="513"/>
         <source>Last script</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/Search.cpp" line="494"/>
+        <location filename="../src/widgets/Search.cpp" line="514"/>
         <source>Last opcode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/Search.cpp" line="495"/>
+        <location filename="../src/widgets/Search.cpp" line="515"/>
         <source>Last text</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/Search.cpp" line="504"/>
+        <location filename="../src/widgets/Search.cpp" line="524"/>
         <source>First group</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/Search.cpp" line="505"/>
+        <location filename="../src/widgets/Search.cpp" line="525"/>
         <source>First script</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/Search.cpp" line="506"/>
+        <location filename="../src/widgets/Search.cpp" line="526"/>
         <source>First opcode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/Search.cpp" line="507"/>
+        <location filename="../src/widgets/Search.cpp" line="527"/>
         <source>First text</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/Search.cpp" line="577"/>
+        <location filename="../src/widgets/Search.cpp" line="597"/>
         <source>%1,
 continued from top.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/Search.cpp" line="697"/>
+        <location filename="../src/widgets/Search.cpp" line="717"/>
         <source>%1,
 chase at the end.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/widgets/Search.cpp" line="122"/>
-        <location filename="../src/widgets/Search.cpp" line="286"/>
+        <location filename="../src/widgets/Search.cpp" line="306"/>
         <source>Regular expression</source>
         <oldsource>Utiliser les expressions régulières</oldsource>
         <translation type="unfinished">正規表現</translation>
     </message>
     <message>
-        <location filename="../src/widgets/Search.cpp" line="152"/>
+        <location filename="../src/widgets/Search.cpp" line="160"/>
         <source>Var</source>
         <translation>変数</translation>
     </message>
     <message>
-        <location filename="../src/widgets/Search.cpp" line="164"/>
-        <location filename="../src/widgets/Search.cpp" line="430"/>
+        <location filename="../src/widgets/Search.cpp" line="176"/>
+        <location filename="../src/widgets/Search.cpp" line="450"/>
         <source>Value</source>
         <oldsource>Valeur</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/Search.cpp" line="168"/>
+        <location filename="../src/widgets/Search.cpp" line="180"/>
         <source>Test</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/Search.cpp" line="169"/>
+        <location filename="../src/widgets/Search.cpp" line="181"/>
         <source>Bit test</source>
         <oldsource>Test bit</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/Search.cpp" line="221"/>
-        <location filename="../src/widgets/Search.cpp" line="290"/>
+        <location filename="../src/widgets/Search.cpp" line="241"/>
+        <location filename="../src/widgets/Search.cpp" line="310"/>
         <source>All maps</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/Search.cpp" line="222"/>
-        <location filename="../src/widgets/Search.cpp" line="291"/>
+        <location filename="../src/widgets/Search.cpp" line="242"/>
+        <location filename="../src/widgets/Search.cpp" line="311"/>
         <source>Current map</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/Search.cpp" line="430"/>
+        <location filename="../src/widgets/Search.cpp" line="450"/>
         <source>Position</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/Search.cpp" line="199"/>
+        <location filename="../src/widgets/Search.cpp" line="215"/>
         <source>Script</source>
         <translation>スクリプト</translation>
     </message>

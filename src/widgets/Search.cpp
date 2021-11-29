@@ -136,8 +136,16 @@ QWidget *Search::scriptPageWidget()
 	opcode->addItem(QString("100 - %1").arg(Opcode::names[0x100]));
 	// set config values
 	opcode->setCurrentIndex(Config::value("SearchedOpcode").toInt() & 0xFFFF);
+	opcode->setEditable(true);
+	opcode->setInsertPolicy(QComboBox::NoInsert);
+	opcode->completer()->setCompletionMode(QCompleter::PopupCompletion);
+	opcode->completer()->setFilterMode(Qt::MatchContains);
 
 	opcode2 = new QComboBox(opc);
+	opcode2->setEditable(true);
+	opcode2->setInsertPolicy(QComboBox::NoInsert);
+	opcode2->completer()->setCompletionMode(QCompleter::PopupCompletion);
+	opcode2->completer()->setFilterMode(Qt::MatchContains);
 	updateOpcode2(opcode->currentIndex());
 
 	QVBoxLayout *opcodeLayout = new QVBoxLayout(opc);
@@ -158,9 +166,13 @@ QWidget *Search::scriptPageWidget()
 	variableLayout->setRowStretch(1, 1);
 	champBank->setRange(1,15);
 	champAddress->setRange(-1, 255); // -1 is an extra value to keep this field empty and search for every addresses
-	for (int i=0; i<256; ++i) {
+	for (int i = 0; i < 256; ++i) {
 		comboVarName->addItem(QString());
 	}
+	comboVarName->setEditable(true);
+	comboVarName->setInsertPolicy(QComboBox::NoInsert);
+	comboVarName->completer()->setCompletionMode(QCompleter::PopupCompletion);
+	comboVarName->completer()->setFilterMode(Qt::MatchContains);
 	champValue->setPlaceholderText(tr("Value"));
 	champOp->addItem(tr("All"));
 	champOp->addItem(tr("Assignment"));
@@ -187,6 +199,10 @@ QWidget *Search::scriptPageWidget()
 
 	QWidget *execution = new QWidget(ret);
 	executionGroup = new QComboBox(execution);
+	executionGroup->setEditable(true);
+	executionGroup->setInsertPolicy(QComboBox::NoInsert);
+	executionGroup->completer()->setCompletionMode(QCompleter::PopupCompletion);
+	executionGroup->completer()->setFilterMode(Qt::MatchContains);
 	executionScript = new QSpinBox(execution);
 	executionScript->setRange(0,31);
 
@@ -204,6 +220,10 @@ QWidget *Search::scriptPageWidget()
 
 	QWidget *jump = new QWidget(ret);
 	mapJump = new QComboBox(jump);
+	mapJump->setEditable(true);
+	mapJump->setInsertPolicy(QComboBox::NoInsert);
+	mapJump->completer()->setCompletionMode(QCompleter::PopupCompletion);
+	mapJump->completer()->setFilterMode(Qt::MatchContains);
 
 	QHBoxLayout *jumpLayout = new QHBoxLayout(jump);
 	jumpLayout->setContentsMargins(QMargins());
