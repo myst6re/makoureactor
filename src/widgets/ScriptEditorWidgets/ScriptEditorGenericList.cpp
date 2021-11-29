@@ -72,8 +72,8 @@ Opcode ScriptEditorGenericList::buildOpcode()
 	}
 
 	if (isLabel) {
-		quint32 label;
-		memcpy(&label, newOpcode.constData() + 1, 4);
+		quint16 label;
+		memcpy(&label, newOpcode.constData() + 1, 2);
 		OpcodeLABEL opcodeLABEL;
 		opcodeLABEL._label = label;
 		ScriptEditorView::setOpcode(opcodeLABEL);
@@ -133,9 +133,9 @@ QByteArray ScriptEditorGenericList::parseModel(bool *isLabel)
 
 	if (!paramTypes.isEmpty()) {
 		int cur = 8;
-		for (quint8 i=0; i<paramTypes.size(); ++i) {
+		for (quint8 i = 0; i < paramTypes.size(); ++i) {
 			int paramType = paramTypes.at(i),
-				value = model->data(model->index(i, 1), Qt::EditRole).toInt();
+			        value = model->data(model->index(i, 1), Qt::EditRole).toInt();
 
 			int paramSize = this->paramSize(paramType);
 			int startBA = cur / 8, sizeBA;
@@ -147,12 +147,12 @@ QByteArray ScriptEditorGenericList::parseModel(bool *isLabel)
 
 			if (paramSize < 8) {
 				int startLocal = cur % 8;
-				newOpcode[startBA] = char(quint8(newOpcode.at(startBA)) | (value << (8-paramSize-startLocal)));
+				newOpcode[startBA] = char(quint8(newOpcode.at(startBA)) | (value << (8 - paramSize - startLocal)));
 			} else if (paramSize == 8) {
 				newOpcode[startBA] = char(value & 0xFF);
 			} else {
 				for (int j=0; j<sizeBA; j++) {
-					newOpcode[startBA+j] = char((value>>(j*8)) & 0xFF);
+					newOpcode[startBA + j] = char((value >> (j * 8)) & 0xFF);
 				}
 			}
 
@@ -188,7 +188,7 @@ void ScriptEditorGenericList::addRow(int value, int minValue, int maxValue, int 
 	standardItem = new QStandardItem(paramName(type));
 	standardItem->setEditable(false);
 	items.append(standardItem);
-	
+
 	standardItem = new QStandardItem(QString("%1").arg(value));
 	standardItem->setData(minValue, Qt::UserRole);
 	standardItem->setData(maxValue, Qt::UserRole + 1);
@@ -207,7 +207,7 @@ void ScriptEditorGenericList::fillModel()
 	QList<int> paramTypes = this->paramTypes(opcode().id());
 	
 	if (opcode().id() == OpcodeKey::LABEL) {
-		addRow(int(opcode().op().opcodeLABEL._label), 0, int(pow(2, 31)) - 1, label);
+		addRow(int(opcode().op().opcodeLABEL._label), 0, int(pow(2, 15)) - 1, label);
 	} else if (paramTypes.isEmpty()) {
 		int start = 0;
 		if (opcode().id() == OpcodeKey::SPECIAL) {
@@ -554,7 +554,7 @@ QList<int> ScriptEditorGenericList::paramTypes(int id)
 	case 0xFE:
 		paramTypes<<bank<<bank<<adress;break;
 	//case 0xFF:break;
-	case 0x100:
+	case OpcodeKey::LABEL:
 		paramTypes<<label;break;
 	}
 	return paramTypes;
@@ -564,8 +564,9 @@ int ScriptEditorGenericList::paramSize(int type)
 {
 	switch (type) {
 	case dword:
-	case label:				return 32;
-	case color:				return 24;
+		return 32;
+	case color:
+		return 24;
 	case word:
 	case sword:
 	case jump_l:
@@ -579,11 +580,17 @@ int ScriptEditorGenericList::paramSize(int type)
 	case polygone_id:
 	case sound_id:
 	case keys:
-	case field_id:			return 16;
-	case script_id:			return 5;
-	case bank:				return 4;
-	case priorite:			return 3;
-	case bit: 				return 1;
+	case label:
+	case field_id:
+		return 16;
+	case script_id:
+		return 5;
+	case bank:
+		return 4;
+	case priorite:
+		return 3;
+	case bit:
+		return 1;
 	}
 	return 8;
 }
@@ -594,8 +601,10 @@ bool ScriptEditorGenericList::paramIsSigned(int type)
 	case sword:
 	case coord_x:
 	case coord_y:
-	case coord_z:	return true;
-	default:		return false;
+	case coord_z:
+		return true;
+	default:
+		return false;
 	}
 }
 
@@ -661,6 +670,20 @@ QString ScriptEditorGenericList::paramName(int type)
 	return tr("???");
 }
 
+ScriptEditorNoParameterPage::ScriptEditorNoParameterPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent) :
+	ScriptEditorView(scriptsAndTexts, grpScript, script, opcodeID, parent)
+{
+}
+
+void ScriptEditorNoParameterPage::build()
+{
+}
+
+Opcode ScriptEditorNoParameterPage::buildOpcode()
+{
+	return opcode();
+}
+
 ScriptEditorBooleanPage::ScriptEditorBooleanPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent) :
 	ScriptEditorView(scriptsAndTexts, grpScript, script, opcodeID, parent),
 	_boolean(nullptr)
@@ -670,6 +693,7 @@ ScriptEditorBooleanPage::ScriptEditorBooleanPage(const Section1File *scriptsAndT
 void ScriptEditorBooleanPage::build()
 {
 	_boolean = new QComboBox(this);
+	_boolean->addItems(QStringList() << QString() << QString());
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(_boolean, 0, 0);
@@ -719,6 +743,21 @@ Opcode ScriptEditorBooleanPage::buildOpcode()
 		break;
 	case OpcodeKey::UC:
 		opcode().op().opcodeUC.disabled = disabled;
+		break;
+	case OpcodeKey::SPECIAL:
+		switch (OpcodeSpecialKey(opcode().subKey())) {
+		case OpcodeSpecialKey::ARROW:
+			opcode().op().opcodeSPECIALARROW.disabled = disabled;
+			break;
+		case OpcodeSpecialKey::BTLCK:
+			opcode().op().opcodeSPECIALBTLCK.lock = disabled;
+			break;
+		case OpcodeSpecialKey::MVLCK:
+			opcode().op().opcodeSPECIALMVLCK.lock = disabled;
+			break;
+		default:
+			break;
+		}
 		break;
 	default:
 		break;
@@ -780,6 +819,25 @@ void ScriptEditorBooleanPage::setOpcode(const Opcode &opcode)
 		setText(tr("Activate"), tr("Deactivate"));
 		_boolean->setCurrentIndex(opcode.op().opcodeUC.disabled);
 		break;
+	case OpcodeKey::SPECIAL:
+		switch (OpcodeSpecialKey(opcode.subKey())) {
+		case OpcodeSpecialKey::ARROW:
+			setText(tr("Display"), tr("Hide"));
+			_boolean->setCurrentIndex(opcode.op().opcodeSPECIALARROW.disabled);
+			break;
+		case OpcodeSpecialKey::BTLCK:
+			setText(tr("Activate"), tr("Deactivate"));
+			_boolean->setCurrentIndex(opcode.op().opcodeSPECIALBTLCK.lock);
+			break;
+		case OpcodeSpecialKey::MVLCK:
+			setText(tr("Activate"), tr("Deactivate"));
+			_boolean->setCurrentIndex(opcode.op().opcodeSPECIALMVLCK.lock);
+			break;
+		default:
+			break;
+		}
+		
+		break;
 	default:
 		break;
 	}
@@ -787,10 +845,6 @@ void ScriptEditorBooleanPage::setOpcode(const Opcode &opcode)
 
 void ScriptEditorBooleanPage::setText(const QString &choice1, const QString &choice2)
 {
-	if (_boolean->count() == 0) {
-		_boolean->addItems(QStringList() << choice1 << choice2);
-	} else {
-		_boolean->setItemText(0, choice1);
-		_boolean->setItemText(1, choice2);
-	}
+	_boolean->setItemText(0, choice1);
+	_boolean->setItemText(1, choice2);
 }

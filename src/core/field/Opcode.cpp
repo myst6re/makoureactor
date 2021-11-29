@@ -2136,11 +2136,11 @@ QString Opcode::toStringSPTYE(const Section1File *scriptsAndTexts, const OpcodeS
 QString Opcode::toStringGTPYE(const Section1File *scriptsAndTexts, const OpcodeGTPYE &opcode) const
 {
 	Q_UNUSED(scriptsAndTexts)
-	return Opcode::tr("Get party from memory: %1 | %2 | %3")
+	return Opcode::tr("Get party to memory: %1 | %2 | %3")
 	        .arg(
-	            _var(opcode.varCharID1, B1(opcode.banks[0])),
-	            _var(opcode.varCharID2, B2(opcode.banks[0])),
-	            _var(opcode.varCharID3, B1(opcode.banks[1]))
+	            _bank(opcode.varCharID1, B1(opcode.banks[0])),
+	            _bank(opcode.varCharID2, B2(opcode.banks[0])),
+	            _bank(opcode.varCharID3, B1(opcode.banks[1]))
 	        );
 }
 
@@ -2168,7 +2168,7 @@ QString Opcode::toStringSPECIALARROW(const Section1File *scriptsAndTexts, const 
 {
 	Q_UNUSED(scriptsAndTexts)
 	return Opcode::tr("%1 arrow")
-	        .arg(opcode.hide == 0 ? Opcode::tr("Display") : Opcode::tr("Hide"));
+	        .arg(opcode.disabled == 0 ? Opcode::tr("Display") : Opcode::tr("Hide"));
 }
 
 QString Opcode::toStringSPECIALPNAME(const Section1File *scriptsAndTexts, const OpcodeSPECIALPNAME &opcode) const

@@ -495,36 +495,44 @@ void TextPreview::mousePressEvent(QMouseEvent *event)
 {
 	if (event->button() == Qt::LeftButton && !readOnly) {
 		FF7Window ff7Window = getWindow();
-		if (ff7Window.type!=NOWIN) {
+		if (ff7Window.type != NOWIN) {
 			QPoint real = ff7Window.realPos();
 
-			acceptMove = event->x() >= real.x() && event->x() < real.x()+maxW
-						 && event->y() >= real.y() && event->y() < real.y()+maxH;
+			acceptMove = event->x() >= real.x() && event->x() < real.x() + maxW
+			        && event->y() >= real.y() && event->y() < real.y() + maxH;
 
 			if (acceptMove) {
 				moveStartPosition = event->pos();
 				setCursor(Qt::ClosedHandCursor);
 			}
 		}
-		else
+		else {
 			acceptMove = false;
+		}
 	}
 }
 
 void TextPreview::mouseMoveEvent(QMouseEvent *event)
 {
-	if (!(event->buttons() & Qt::LeftButton) && !acceptMove)
+	if (!(event->buttons() & Qt::LeftButton) || !acceptMove) {
 		return;
+	}
 
 	FF7Window ff7Window = getWindow();
 
-	if (ff7Window.type==NOWIN)	return;
+	if (ff7Window.type == NOWIN) {
+		return;
+	}
 
 	int x = ff7Window.x + event->x() - moveStartPosition.x();
 	int y = ff7Window.y + event->y() - moveStartPosition.y();
 
-	if (x<0)	x = 0;
-	if (y<0)	y = 0;
+	if (x < 0) {
+		x = 0;
+	}
+	if (y < 0) {
+		y = 0;
+	}
 
 	ff7Window.x = qint16(x);
 	ff7Window.y = qint16(y);

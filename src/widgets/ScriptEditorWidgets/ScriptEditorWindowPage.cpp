@@ -45,7 +45,7 @@ void ScriptEditorWindowPage::build()
 	for (const FF7Text &t : scriptsAndTexts()->texts()) {
 		previewText->addItem(previewText->fontMetrics().elidedText(t.text(jp, true).simplified(), Qt::ElideRight, 640));
 	}
-	previewText->setMaximumWidth(textPreview->width()/2);
+	previewText->setMaximumWidth(textPreview->width() / 2);
 
 	hAlign = new QPushButton(tr("Align horizontally"), this);
 	vAlign = new QPushButton(tr("Align vertically"), this);
@@ -56,13 +56,13 @@ void ScriptEditorWindowPage::build()
 	layout->addWidget(textPreview, 0, 0, 8, 2);
 	layout->addWidget(new QLabel(tr("Window ID")), 0, 2);
 	layout->addWidget(winID, 0, 3);
-	layout->addWidget(xLabel = new QLabel(tr("X")), 1, 2);
+	layout->addWidget(xLabel = new QLabel(), 1, 2);
 	layout->addWidget(x, 1, 3);
 	layout->addWidget(yLabel = new QLabel(tr("Y")), 2, 2);
 	layout->addWidget(y, 2, 3);
 	layout->addWidget(wLabel = new QLabel(tr("W")), 3, 2);
 	layout->addWidget(w, 3, 3);
-	layout->addWidget(hLabel = new QLabel(), 4, 2);
+	layout->addWidget(hLabel = new QLabel(tr("H")), 4, 2);
 	layout->addWidget(h, 4, 3);
 	layout->addWidget(new QLabel(tr("Text in preview:")), 8, 0);
 	layout->addWidget(previewText, 8, 1);
@@ -96,7 +96,7 @@ Opcode ScriptEditorWindowPage::buildOpcode()
 	case OpcodeKey::WROW: {
 		OpcodeWROW &opcodeWROW = opcode().op().opcodeWROW;
 		opcodeWROW.windowID = quint8(winID->value());
-		opcodeWROW.rowCount = quint8(h->value());
+		opcodeWROW.rowCount = quint8(x->value());
 		break;
 	} default:break;
 	}
@@ -107,49 +107,52 @@ Opcode ScriptEditorWindowPage::buildOpcode()
 void ScriptEditorWindowPage::setOpcode(const Opcode &opcode)
 {
 	ScriptEditorView::setOpcode(opcode);
+	FF7Window ff7Win = FF7Window();
 
 	for (QObject *o : children()) {
 		o->blockSignals(true);
 	}
 	if (opcode.id() == OpcodeKey::WROW) {
-		xLabel->hide();
-		x->hide();
+		xLabel->setText(tr("Lines"));
+		x->setRange(0, 255);
 		yLabel->hide();
 		y->hide();
 		wLabel->hide();
 		w->hide();
+		hLabel->hide();
+		h->hide();
 		hAlign->hide();
 		vAlign->hide();
-		hLabel->setText(tr("Lines"));
-		h->setRange(0, 255);
+
 		const OpcodeWROW &opcodeWROW = opcode.op().opcodeWROW;
-		FF7Window ff7Win = FF7Window();
 		ff7Win.w = 300;
 		ff7Win.h = 9 + opcodeWROW.rowCount * 16;
 
-		textPreview->setWins(QList<FF7Window>() << ff7Win);
-		winID->setValue(opcodeWROW.windowID);
-		h->setValue(opcodeWROW.rowCount);
+		x->setValue(opcodeWROW.rowCount);
 	} else if (opcode.id() == OpcodeKey::WINDOW || opcode.id() == OpcodeKey::WSIZW) {
-		xLabel->show();
-		x->show();
+		xLabel->setText(tr("X"));
+		x->setRange(0, 65535);
 		yLabel->show();
 		y->show();
 		wLabel->show();
 		w->show();
+		hLabel->show();
+		h->show();
 		hAlign->show();
 		vAlign->show();
-		hLabel->setText(tr("H"));
-		h->setRange(0, 65535);
+
 		FF7Window ff7Win = FF7Window();
 		opcode.window(ff7Win);
-		textPreview->setWins(QList<FF7Window>() << ff7Win);
-		winID->setValue(opcode.windowID());
 		x->setValue(ff7Win.x);
 		y->setValue(ff7Win.y);
 		w->setValue(ff7Win.w);
 		h->setValue(ff7Win.h);
 	}
+
+	textPreview->setWins(QList<FF7Window>() << ff7Win);
+	textPreview->setReadOnly(!x->isVisible() || !y->isVisible());
+	winID->setValue(opcode.windowID());
+
 	for (QObject *o : children()) {
 		o->blockSignals(false);
 	}
@@ -174,13 +177,13 @@ void ScriptEditorWindowPage::setOpcode(const Opcode &opcode)
 void ScriptEditorWindowPage::updatePreview()
 {
 	FF7Window ff7Win = textPreview->getWindow();
-	if (x->isVisible()) {
+	if (h->isVisible()) {
 		ff7Win.x = qint16(x->value());
 		ff7Win.y = qint16(y->value());
 		ff7Win.w = quint16(w->value());
 		ff7Win.h = quint16(h->value());
 	} else {
-		ff7Win.h = quint16(9 + h->value() * 16);
+		ff7Win.h = quint16(9 + x->value() * 16);
 	}
 	textPreview->setWins(QList<FF7Window>() << ff7Win);
 	emit opcodeChanged();
@@ -200,7 +203,7 @@ void ScriptEditorWindowPage::updateText(int textID)
 
 void ScriptEditorWindowPage::setPositionWindow(const QPoint &point)
 {
-	if (x->isVisible()) {
+	if (h->isVisible()) {
 		x->blockSignals(true);
 		y->blockSignals(true);
 		x->setValue(point.x());
@@ -214,7 +217,7 @@ void ScriptEditorWindowPage::setPositionWindow(const QPoint &point)
 
 void ScriptEditorWindowPage::align(Qt::Alignment alignment)
 {
-	if (x->isVisible()) {
+	if (h->isVisible()) {
 		x->blockSignals(true);
 		y->blockSignals(true);
 		if (alignment.testFlag(Qt::AlignHCenter)) {
@@ -235,16 +238,19 @@ void ScriptEditorWindowPage::resizeWindow()
 	textPreview->calcSize();
 	QSize newSize = textPreview->getCalculatedSize();
 
-	w->blockSignals(true);
-	h->blockSignals(true);
-	w->setValue(newSize.width());
-	if (x->isVisible()) {
+	if (h->isVisible()) {
+		w->blockSignals(true);
+		h->blockSignals(true);
+		w->setValue(newSize.width());
 		h->setValue(newSize.height());
+		w->blockSignals(false);
+		h->blockSignals(false);
 	} else {
-		h->setValue((newSize.height() - 9) / 16);
+		x->blockSignals(true);
+		// Line count
+		x->setValue((newSize.height() - 9) / 16);
+		x->blockSignals(false);
 	}
-	w->blockSignals(false);
-	h->blockSignals(false);
 
 	updatePreview();
 }
@@ -401,17 +407,8 @@ void ScriptEditorWindowVariablePage::build()
 	winVar->setRange(0, 255);
 
 	varOrValue = new VarOrValueWidget(this);
-	varOrValue->setLongValueType(true);
+	varOrValue->setShortAndLong();
 	varOrValue->setSignedValueType(true);
-	
-	QWidget *typeGroup = new QWidget(this);
-	type1 = new QRadioButton(tr("8-bit"), typeGroup);
-	type2 = new QRadioButton(tr("16-bit"), typeGroup);
-	QHBoxLayout *typeLayout = new QHBoxLayout(typeGroup);
-	typeLayout->addWidget(type1);
-	typeLayout->addWidget(type2);
-	typeLayout->addStretch();
-	typeLayout->setContentsMargins(QMargins());
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(new QLabel(tr("Window ID")), 0, 0);
@@ -420,7 +417,6 @@ void ScriptEditorWindowVariablePage::build()
 	layout->addWidget(winVar, 1, 1);
 	layout->addWidget(new QLabel(tr("Value")), 2, 0);
 	layout->addWidget(varOrValue, 2, 1);
-	layout->addWidget(typeGroup, 2, 2);
 	layout->setRowStretch(3, 1);
 	layout->setColumnStretch(2, 1);
 	layout->setContentsMargins(QMargins());
@@ -448,19 +444,21 @@ Opcode ScriptEditorWindowVariablePage::buildOpcode()
 		varOrValue->var(bank, adress);
 		value = adress;
 
-		if (type2->isChecked()) {
+		if (varOrValue->selectedSize() == VarOrValueWidget::Long) {
 			key = OpcodeKey::MPRA2;
 		}
 	}
 
 	if (key == OpcodeKey::MPARA) {
 		OpcodeMPARA &opcodeMPARA = opcode().op().opcodeMPARA;
+		opcodeMPARA.id = OpcodeKey::MPARA;
 		opcodeMPARA.banks = BANK(0, bank);
 		opcodeMPARA.windowID = quint8(winID->value());
 		opcodeMPARA.windowVarID = quint8(winVar->value());
 		opcodeMPARA.value = quint8(value);
 	} else {
 		OpcodeMPRA2 &opcodeMPRA2 = opcode().op().opcodeMPRA2;
+		opcodeMPRA2.id = OpcodeKey::MPRA2;
 		opcodeMPRA2.banks = BANK(0, bank);
 		opcodeMPRA2.windowID = quint8(winID->value());
 		opcodeMPRA2.windowVarID = quint8(winVar->value());
@@ -483,13 +481,11 @@ void ScriptEditorWindowVariablePage::setOpcode(const Opcode &opcode)
 		winID->setValue(opcodeMPARA.windowID);
 		winVar->setValue(opcodeMPARA.windowVarID);
 		varOrValue->setVarOrValue(B2(opcodeMPARA.banks), opcodeMPARA.value);
-		type1->setChecked(true);
 	} else {
 		const OpcodeMPRA2 &opcodeMPRA2 = opcode.op().opcodeMPRA2;
 		winID->setValue(opcodeMPRA2.windowID);
 		winVar->setValue(opcodeMPRA2.windowVarID);
 		varOrValue->setVarOrValue(B2(opcodeMPRA2.banks), opcodeMPRA2.value);
-		type2->setChecked(true);
 	}
 
 	for (QObject *o : children()) {

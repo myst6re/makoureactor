@@ -533,7 +533,7 @@ void ScriptEditorIfPage::build()
 	label = new QComboBox(this);
 
 	QGridLayout *layout = new QGridLayout(this);
-	layout->addWidget(new QLabel(tr("Test to be performed")), 0, 0);
+	layout->addWidget(new QLabel(tr("Test")), 0, 0);
 	layout->addWidget(varOrValue1, 0, 1);
 	layout->addWidget(operatorList, 0, 2);
 	layout->addWidget(varOrValue2, 0, 3);
@@ -548,21 +548,11 @@ void ScriptEditorIfPage::build()
 	connect(varOrValue2, SIGNAL(changed()), SIGNAL(opcodeChanged()));
 	connect(operatorList, SIGNAL(currentIndexChanged(int)), SIGNAL(opcodeChanged()));
 	connect(label, SIGNAL(currentIndexChanged(int)), SIGNAL(opcodeChanged()));
-	connect(rangeTest, SIGNAL(currentIndexChanged(int)), SLOT(changeTestRange()));
-}
-
-void ScriptEditorIfPage::clear()
-{
-//	if (addJump) {
-//		qDebug() << "ScriptEditorIfPage deleteOpcode" << (_opcodeID+1) << _script->opcode(_opcodeID+1)->name();
-//		_script->delOpcode(_opcodeID+1);
-//		addJump = false;
-//	}
+	connect(rangeTest, SIGNAL(currentIndexChanged(int)), SLOT(updateOpcode()));
 }
 
 Opcode ScriptEditorIfPage::buildOpcode()
 {
-//	qDebug() << "opcode" << _opcode.name();
 	FF7If i;
 
 	if (rangeTest->currentIndex() == 0) { // byte test
@@ -601,14 +591,12 @@ Opcode ScriptEditorIfPage::buildOpcode()
 
 	opcode().setIfStruct(i);
 	opcode().setLabel(quint16(label->itemData(label->currentIndex()).toUInt()));
-//	qDebug() << "/opcode" << _opcode.name();
+
 	return opcode();
 }
 
 void ScriptEditorIfPage::setOpcode(const Opcode &opcode)
 {
-//	qDebug() << "setOpcode" << opcode.name();
-
 	ScriptEditorView::setOpcode(opcode);
 
 	addJump = false;
@@ -620,8 +608,16 @@ void ScriptEditorIfPage::setOpcode(const Opcode &opcode)
 
 	varOrValue1->blockSignals(true);
 	varOrValue2->blockSignals(true);
-	varOrValue1->setLongValueType(isLongValue);
-	varOrValue2->setLongValueType(isLongValue);
+	if (isLongValue) {
+		varOrValue1->setLong();
+	} else {
+		varOrValue1->setShort();
+	}
+	if (isLongValue) {
+		varOrValue2->setLong();
+	} else {
+		varOrValue2->setShort();
+	}
 	varOrValue1->setSignedValueType(isSignedValue);
 	varOrValue2->setSignedValueType(isSignedValue);
 	varOrValue1->setVarOrValue(i.bank1, i.value1);
@@ -644,8 +640,6 @@ void ScriptEditorIfPage::setOpcode(const Opcode &opcode)
 		rangeTest->setCurrentIndex(2);
 	}
 	rangeTest->blockSignals(false);
-
-//	qDebug() << "/setOpcode" << opcode.name();
 }
 
 bool ScriptEditorIfPage::needsLabel() const
@@ -653,13 +647,11 @@ bool ScriptEditorIfPage::needsLabel() const
 	return label->currentIndex() == label->count() - 1;
 }
 
-void ScriptEditorIfPage::changeTestRange()
+void ScriptEditorIfPage::updateOpcode()
 {
-//	qDebug() << "changeTestRange" << _opcode.name();
-	setOpcode(opcode());
+	setOpcode(buildOpcode());
 
 	emit opcodeChanged();
-//	qDebug() << "/changeTestRange" << _opcode.name();
 }
 
 ScriptEditorIfKeyPage::ScriptEditorIfKeyPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent) :

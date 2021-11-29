@@ -121,6 +121,8 @@ ScriptEditorView *ScriptEditor::buildEditorPage(PageType id)
 	switch (id) {
 	case GenericList:
 		return new ScriptEditorGenericList(scriptsAndTexts, grpScript, script, opcodeID, this);
+	case NoParameters:
+		return new ScriptEditorNoParameterPage(scriptsAndTexts, grpScript, script, opcodeID, this);
 	case Boolean:
 		return new ScriptEditorBooleanPage(scriptsAndTexts, grpScript, script, opcodeID, this);
 	case ReturnTo:
@@ -183,8 +185,29 @@ void ScriptEditor::fillEditor()
 
 	// Change current editor widget
 	switch (opcode.id()) {
-	case OpcodeKey::RETTO:
-		_currentPageType = ReturnTo;
+	case OpcodeKey::RET:
+	case OpcodeKey::KAWIW:
+	case OpcodeKey::HMPMAX1:
+	case OpcodeKey::HMPMAX2:
+	case OpcodeKey::MHMMX:
+	case OpcodeKey::HMPMAX3:
+	case OpcodeKey::Unused44:
+	case OpcodeKey::Unused46:
+	case OpcodeKey::Unused4C:
+	case OpcodeKey::Unused4E:
+	case OpcodeKey::NOP:
+	case OpcodeKey::SCRCC:
+	case OpcodeKey::SCRLW:
+	case OpcodeKey::FADEW:
+	case OpcodeKey::ANIMW:
+	case OpcodeKey::UnusedBE:
+	case OpcodeKey::OFSTW:
+	case OpcodeKey::PMJMP2:
+	case OpcodeKey::ANIMB:
+	case OpcodeKey::TURNW:
+	case OpcodeKey::MOVIE:
+	case OpcodeKey::GAMEOVER:
+		_currentPageType = NoParameters;
 		break;
 	case OpcodeKey::REQEW:case OpcodeKey::REQ:
 	case OpcodeKey::REQSW:
@@ -194,8 +217,25 @@ void ScriptEditor::fillEditor()
 	case OpcodeKey::PRQSW:
 		_currentPageType = ExecChar;
 		break;
-	case OpcodeKey::LABEL:
-		_currentPageType = Label;
+	case OpcodeKey::RETTO:
+		_currentPageType = ReturnTo;
+		break;
+	case OpcodeKey::SPECIAL:
+		switch (OpcodeSpecialKey(opcode.subKey())) {
+		case OpcodeSpecialKey::ARROW:
+		case OpcodeSpecialKey::BTLCK:
+		case OpcodeSpecialKey::MVLCK:
+			_currentPageType = Boolean;
+			break;
+		case OpcodeSpecialKey::FLMAT:
+		case OpcodeSpecialKey::FLITM:
+		case OpcodeSpecialKey::RSGLB:
+		case OpcodeSpecialKey::CLITM:
+			_currentPageType = NoParameters;
+			break;
+		default:
+			_currentPageType = GenericList;
+		}
 		break;
 	case OpcodeKey::JMPF:case OpcodeKey::JMPFL:
 	case OpcodeKey::JMPB:case OpcodeKey::JMPBL:
@@ -302,6 +342,9 @@ void ScriptEditor::fillEditor()
 	case OpcodeKey::MPJPO:
 	case OpcodeKey::UC:
 		_currentPageType = Boolean;
+		break;
+	case OpcodeKey::LABEL:
+		_currentPageType = Label;
 		break;
 	default:
 		_currentPageType = GenericList;

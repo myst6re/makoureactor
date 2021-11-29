@@ -39,6 +39,7 @@ private slots:
 private:
 	enum PageType {
 		GenericList = 0,
+		NoParameters,
 		Boolean,
 		ReturnTo,
 		Exec,
