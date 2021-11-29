@@ -587,8 +587,6 @@ bool Window::observerRetry(const QString &message)
 
 void Window::setObserverValue(int value)
 {
-	QApplication::processEvents();
-
 	taskBarButton->setValue(value);
 	progressDialog()->setValue(value);
 }
@@ -597,7 +595,7 @@ void Window::showProgression(const QString &message, bool canBeCanceled)
 {
 	setObserverValue(0);
 	taskBarButton->setState(QTaskBarButton::Normal);
-	timer.start(100);
+	timer.start(700);
 	progressDialog()->setLabelText(message);
 	progressDialog()->setCancelButtonText(canBeCanceled ? tr("Cancel") : tr("Stop"));
 	progressDialog()->show();

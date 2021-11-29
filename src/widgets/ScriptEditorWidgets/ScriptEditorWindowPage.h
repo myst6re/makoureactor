@@ -88,5 +88,4 @@ private:
 	void build() override;
 	QSpinBox *winID, *winVar;
 	VarOrValueWidget *varOrValue;
-	QRadioButton *type1, *type2;
 };

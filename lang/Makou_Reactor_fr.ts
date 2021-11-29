@@ -2022,42 +2022,42 @@ Certains scripts peuvent y faire référence !</translation>
 <context>
     <name>Opcode</name>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4880"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4882"/>
         <source> (No%1)</source>
         <oldsource> (n°%1)</oldsource>
         <translation> (n°%1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4882"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4884"/>
         <source>? (No%1)</source>
         <oldsource>? (n°%1)</oldsource>
         <translation>? (n°%1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4894"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4896"/>
         <source>(no text)</source>
         <oldsource>(Pas de texte)</oldsource>
         <translation>(Pas de texte)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4900"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4916"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4922"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4928"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4938"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4944"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4902"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4918"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4924"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4930"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4940"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4946"/>
         <source>No%1</source>
         <oldsource>n°%1</oldsource>
         <translation>n°%1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4934"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4936"/>
         <source>%1 (#%2)</source>
         <oldsource>%1 (n°%2)</oldsource>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4952"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4954"/>
         <source>%1 (disc %2)</source>
         <oldsource>%1 (disque %2)</oldsource>
         <translation>%1 (disque %2)</translation>
@@ -2083,25 +2083,25 @@ Certains scripts peuvent y faire référence !</translation>
         <translation type="vanished">Jouer un effet sonore sur le canal 4</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5009"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5011"/>
         <source>Resumes music and sound effects</source>
         <oldsource>Reprendre la musique et les effets sonores</oldsource>
         <translation>Reprendre la musique et les effets sonores</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5011"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5013"/>
         <source>Pauses music and sound effects</source>
         <oldsource>Mettre en pause la musique et les effets sonores</oldsource>
         <translation>Mettre en pause la musique et les effets sonores</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5017"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5019"/>
         <source>Resumes only sound effects</source>
         <oldsource>Reprendre uniquement les effets sonores</oldsource>
         <translation>Reprendre uniquement les effets sonores</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5019"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5021"/>
         <source>Pauses only sound effects</source>
         <oldsource>Mettre en pause uniquement les effets sonores</oldsource>
         <translation>Mettre en pause uniquement les effets sonores</translation>
@@ -2147,97 +2147,97 @@ Certains scripts peuvent y faire référence !</translation>
         <translation type="vanished">Volume transitions (canal 4)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5037"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5039"/>
         <source>Pan control (channel #1)</source>
         <oldsource>Contrôle spatial (canal 1)</oldsource>
         <translation>Contrôle spatial (canal 1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5039"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5041"/>
         <source>Pan control (channel #2)</source>
         <oldsource>Contrôle spatial (canal 2)</oldsource>
         <translation>Contrôle spatial (canal 2)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5041"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5043"/>
         <source>Pan control (channel #3)</source>
         <oldsource>Contrôle spatial (canal 3)</oldsource>
         <translation>Contrôle spatial (canal 3)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5043"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5045"/>
         <source>Pan control (channel #4)</source>
         <oldsource>Contrôle spatial (canal 4)</oldsource>
         <translation>Contrôle spatial (canal 4)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5045"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5047"/>
         <source>Pan transitions (channel #1)</source>
         <oldsource>Transitions spatiales (canal 1)</oldsource>
         <translation>Transitions spatiales (canal 1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5047"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5049"/>
         <source>Pan transitions (channel #2)</source>
         <oldsource>Transitions spatiales (canal 2)</oldsource>
         <translation>Transitions spatiales (canal 2)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5049"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5051"/>
         <source>Pan transitions (channel #3)</source>
         <oldsource>Transitions spatiales (canal 3)</oldsource>
         <translation>Transitions spatiales (canal 3)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5051"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5053"/>
         <source>Pan transitions (channel #4)</source>
         <oldsource>Transitions spatiales (canal 4)</oldsource>
         <translation>Transitions spatiales (canal 4)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5053"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5055"/>
         <source>Tempo control (channel #1)</source>
         <oldsource>Contrôle du tempo (canal 1)</oldsource>
         <translation>Contrôle du tempo (canal 1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5055"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5057"/>
         <source>Tempo control (channel #2)</source>
         <oldsource>Contrôle du tempo (canal 2)</oldsource>
         <translation>Contrôle du tempo (canal 2)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5057"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5059"/>
         <source>Tempo control (channel #3)</source>
         <oldsource>Contrôle du tempo (canal 3)</oldsource>
         <translation>Contrôle du tempo (canal 3)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5059"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5061"/>
         <source>Tempo control (channel #4)</source>
         <oldsource>Contrôle du tempo (canal 4)</oldsource>
         <translation>Contrôle du tempo (canal 4)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5061"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5063"/>
         <source>Tempo transitions (channel #1)</source>
         <oldsource>Tempo transitions (canal 1)</oldsource>
         <translation>Transitions tempo (canal 1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5063"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5065"/>
         <source>Tempo transitions (channel #2)</source>
         <oldsource>Tempo transitions (canal 2)</oldsource>
         <translation>Transitions tempo (canal 2)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5065"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5067"/>
         <source>Tempo transitions (channel #3)</source>
         <oldsource>Tempo transitions (canal 3)</oldsource>
         <translation>Transitions tempo (canal 3)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5067"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5069"/>
         <source>Tempo transitions (channel #4)</source>
         <oldsource>Tempo transitions (canal 4)</oldsource>
         <translation>Transitions tempo (canal 4)</translation>
@@ -2253,25 +2253,25 @@ Certains scripts peuvent y faire référence !</translation>
         <translation type="vanished">Transitions du volume transitions sur tous les canaux</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5073"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5075"/>
         <source>Pan control for all channels</source>
         <oldsource>Contrôle spatial sur tous les canaux</oldsource>
         <translation>Contrôle spatial sur tous les canaux</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5075"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5077"/>
         <source>Pan transitions for all channels</source>
         <oldsource>Transitions spatiales sur tous les canaux</oldsource>
         <translation>Transitions spatiales sur tous les canaux</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5077"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5079"/>
         <source>Tempo control for all channels</source>
         <oldsource>Contrôle du tempo sur tous les canaux</oldsource>
         <translation>Contrôle du tempo sur tous les canaux</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5079"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5081"/>
         <source>Tempo transitions for all channels</source>
         <oldsource>Tempo transitions sur tous les canaux</oldsource>
         <translation>Transitions tempo  sur tous les canaux</translation>
@@ -2282,228 +2282,228 @@ Certains scripts peuvent y faire référence !</translation>
         <translation type="vanished">Transition sur le volume de la musique</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5095"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5097"/>
         <source>Music tempo transition</source>
         <oldsource>Transition sur le tempo de la musique</oldsource>
         <translation>Transition sur le tempo de la musique</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5109"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5111"/>
         <source>AKAO: %1?</source>
         <oldsource>AKAO : %1?</oldsource>
         <translation>AKAO : %1?</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5147"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5149"/>
         <source>%1 and %2 and %3</source>
         <oldsource>%1 et %2 et %3</oldsource>
         <translation>%1 et %2 et %3</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3108"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3110"/>
         <source>Check if %1 and store the result in var[15][111]</source>
         <translation>Vérifier si %1 et enregistrer le résultat dans var[15][111]</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3154"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3156"/>
         <source>Enables</source>
         <translation>Permettre</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3154"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3156"/>
         <source>Disables</source>
         <translation>Interdire</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3173"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3175"/>
         <source>Add %2 HP to party member #%1</source>
         <translation>Augmenter de %2 HPs le membre n°%1 de l&apos;équipe</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3187"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3189"/>
         <source>Remove %2 HP to party member #%1</source>
         <translation>Diminuer de %2 HPs le membre n°%1 de l&apos;équipe</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3222"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3224"/>
         <source>No Background/Border</source>
         <translation>Pas de fond, ni de bordure</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3233"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3235"/>
         <source>Set the window #%1 mode: %2 (%3 the closing of the window by the player)</source>
         <translation>Décoration de la fenêtre n°%1 : %2 (%3 la fermeture de la fenêtre par le joueur)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3237"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3239"/>
         <source>prevent</source>
         <translation>empêcher</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3244"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3246"/>
         <source>Reset the window #%1</source>
         <translation>Remettre la fenêtre n°%1 à zéro</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3251"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3253"/>
         <source>Close the window #%1 (stronger)</source>
         <translation>Fermer la fenêtre n°%1 (plus fort)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3258"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3260"/>
         <source>Number of row in the window #%1 = %2</source>
         <translation>Configurer le nombre de lignes de texte à %2 dans la fenêtre n°%1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3266"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3268"/>
         <source>Get windows %1 color to %2 (R), %3 (G) and %4 (B)</source>
         <translation>Obtenir la couleur du côté %1 des fenêtres et en stocker les composantes dans %2 (R), %3 (V) et %4 (B)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3278"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3280"/>
         <source>Set windows %1 color: RGB(%2, %3, %4)</source>
         <translation>Changer la couleur du côté %1 des fenêtres : RVB(%2, %3, %4)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3358"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3360"/>
         <source>Perform no operation...</source>
         <translation>Ne rien faire...</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3410"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3412"/>
         <source>Scroll to playable character</source>
         <translation>Centrer sur le personnage jouable</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3428"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3430"/>
         <source>Wait for scroll</source>
         <translation>Attendre la fin du dernier centrage pour continuer</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3478"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3480"/>
         <source>Wait for fade</source>
         <translation>Attendre la fin du voilage de l&apos;écran pour continuer</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3492"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3494"/>
         <source>Retrieves the field ID number of the last field in %1</source>
         <translation>Stocker l&apos;id de l&apos;écran précédent dans %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3499"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3501"/>
         <source>Scroll to party member #%2 (speed=%1 frames, type=%3)</source>
         <translation>Centrer sur le personnage n°%2 de l&apos;équipe actuelle (vitesse=%1 img, type=%3)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3508"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3510"/>
         <source>Start battle #%1</source>
         <translation>Commencer le combat n°%1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3515"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3517"/>
         <source>%1 random battle</source>
         <translation>%1 les combats aléatoires</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2535"/>
-        <location filename="../src/core/field/Opcode.cpp" line="3533"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2537"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3535"/>
         <source>The party cannot escape the battle</source>
         <translation>Impossible de fuir</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2544"/>
-        <location filename="../src/core/field/Opcode.cpp" line="3542"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2546"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3544"/>
         <source>Do not show battle rewards</source>
         <translation>Ne pas afficher d&apos;écran de récompense</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3561"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3563"/>
         <source>Get direction of the party member #%1 to %2</source>
         <translation>Obtenir la direction du personnage n°%1 de l&apos;équipe actuelle et la stocker dans %2</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3569"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3571"/>
         <source>Get group ID of the party member #%1 to %2</source>
         <translation>Obtenir l&apos;id du personnage n°%1 de l&apos;équipe actuelle et le stocker dans %2</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3658"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3660"/>
         <source>%1 talk script for the current field model</source>
         <translation>%1 la possibilité de parler à l&apos;objet 3D</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3692"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3694"/>
         <source>Bit %2 ON in %1</source>
         <translation>Mettre le bit %2 à 1 dans %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3702"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3704"/>
         <source>Bit %2 OFF in %1</source>
         <translation>Mettre le bit %2 à 0 dans %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3712"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3714"/>
         <source>Toggle bit %2 in %1</source>
         <translation>Inverser la valeur du bit %2 dans %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3910"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3912"/>
         <source>Set random value to %1 (8-bit)</source>
         <translation>Affecter une valeur aléatoire à %1 (8 bits)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4014"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4016"/>
         <source>%1 field model</source>
         <translation>%1 l&apos;objet 3D</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4092"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4094"/>
         <source>Wait for animation</source>
         <translation>Attendre que l&apos;animation soit terminée pour continuer</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4144"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4146"/>
         <source>Set the field model move speed: %1</source>
         <translation>Configurer la vitesse des déplacements de l&apos;objet 3D : %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4313"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4315"/>
         <source>Wait for offset object</source>
         <translation>Attendre la fin de l&apos;exécution de l&apos;Offset Object pour continuer</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4319"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4477"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4321"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4479"/>
         <source>Set range of the talk circle for the field model: %1</source>
         <translation>Modifier la distance nécessaire pour parler avec l&apos;objet 3D : %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4333"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4335"/>
         <source>%1 contact with field model</source>
         <translation>%1 la possibilité de toucher l&apos;objet 3D</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4340"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4342"/>
         <source>Add %1 to the current party</source>
         <translation>Ajouter %1 à l&apos;équipe actuelle</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4347"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4349"/>
         <source>Remove %1 from the current party</source>
         <translation>Retirer %1 de l&apos;équipe actuelle</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4365"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4367"/>
         <source>If %1 is in the current party (%2)</source>
         <translation>Si %1 est dans l&apos;équipe actuelle (%2)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4391"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4393"/>
         <source>not available</source>
         <translation>n&apos;existe plus</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4391"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4393"/>
         <source>available</source>
         <translation>existe</translation>
     </message>
@@ -2512,428 +2512,433 @@ Certains scripts peuvent y faire référence !</translation>
         <translation type="vanished">Effacer</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4432"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4434"/>
         <source>Gateways %1</source>
         <translation>%1 les changements de décor par le joueur</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4439"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4441"/>
         <source>Set line (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)</source>
         <translation>Modifier la ligne (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4491"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4493"/>
         <source>Preload the field map %1</source>
         <translation>Commencer à charger l&apos;écran %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4505"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4507"/>
         <source>%1 (param1=%2, param2=%3, param3=%4, param4=%5, param5=%6)</source>
         <oldsource>%1 (16-bit) (param1=%2, param2=%3, param3=%4, param4=%5, param5=%6)</oldsource>
         <translation>%1 (param1=%2, param2=%3, param3=%4, param4=%5, param5=%6)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4530"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4532"/>
         <source>stay</source>
         <translation>rester immobile</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4532"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4534"/>
         <source>walk</source>
         <translation>marcher</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4533"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4535"/>
         <source>run</source>
         <translation>courir</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4540"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4542"/>
         <source>Break field model animation</source>
         <translation>Stoppe l&apos;animation de l&apos;objet 3D</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4547"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4549"/>
         <source>Wait for rotation</source>
         <translation>Attendre que la rotation soit terminée pour continuer</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4568"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4570"/>
         <source>Show the state #%2 of the background parameter #%1</source>
         <translation>Afficher l&apos;état n°%2 du paramètre n°%1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4595"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4597"/>
         <source>Show previous state of the background parameter #%1</source>
         <translation>Afficher l&apos;état précédent du paramètre n°%1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4750"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4752"/>
         <source>Play music #%1</source>
         <translation>Jouer musique n°%1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4767"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4769"/>
         <source>%1 (param1 (8-bit)=%2, param2=%3, param3=%4, param4=%5, param5=%6)</source>
         <oldsource>%1 (8-bit) (param1=%2, param2=%3, param3=%4, param4=%5, param5=%6)</oldsource>
         <translation>%1 (param1 (8 bits)=%2, param2=%3, param3=%4, param4=%5, param5=%6)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4796"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4798"/>
         <source>Unlock</source>
         <translation>Déverrouiller</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4796"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4798"/>
         <source>Lock</source>
         <comment>test</comment>
         <translation>Verrouiller</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4802"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4804"/>
         <source>Set the music #%1 for next battle</source>
         <translation>Choisir musique n°%1 comme musique de combat</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4819"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4821"/>
         <source>Set next movie: %1</source>
         <translation>Choisir prochaine cinématique : %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4827"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4829"/>
         <source>Play movie</source>
         <translation>Jouer la cinématique choisie</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5203"/>
-        <location filename="../src/core/field/Opcode.cpp" line="5204"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5205"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5206"/>
         <source>reverse</source>
         <oldsource>inverse</oldsource>
         <translation>inverse</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4974"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4976"/>
         <source>Play music [param1: music ID, 0-based]</source>
         <translation>Jouer musique [param1 : music id, à partir de 0]</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2098"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2100"/>
         <source>Return and execute script #%2 from the current entity (Priority %1/6)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2151"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2141"/>
+        <source>Get party to memory: %1 | %2 | %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/core/field/Opcode.cpp" line="2153"/>
         <source>Unused opcode 0x%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2177"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2179"/>
         <source>PNAME - Disable right menu (%1, bank=%2, size=%3)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2186"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2188"/>
         <source>%1 = Game Speed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2193"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2195"/>
         <source>Set field message speed: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2265"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2267"/>
         <source>SPECIAL - Unknown %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2441"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2443"/>
         <source>Write bytes to address 0x%1 (length=%2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2593"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2595"/>
         <source>%1 Field Model blinking</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2607"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2609"/>
         <source>Field Model graphic filter - Change the state of the eye/mouth texture (eye 1=%1, eye 2=%2, mouth=%3, 3D object ID=%4)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2617"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2619"/>
         <source>Field Model graphic filter - %1 blending</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2624"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2626"/>
         <source>Field Model graphic filter - Change the ambient color of the model: RGB(%1, %2, %3) RGB(%4, %5, %6) (flags=%7)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2638"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2640"/>
         <source>Field Model graphic filter - UNKNOWN4</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2645"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2647"/>
         <source>Field Model graphic filter - LIGHT</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2652"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2654"/>
         <source>Field Model graphic filter - UNKNOWN7</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2659"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2661"/>
         <source>Field Model graphic filter - UNKNOWN8</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2666"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2668"/>
         <source>Field Model graphic filter - UNKNOWN9</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2673"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2675"/>
         <source>Field Model graphic filter - SBOBJ</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2680"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2682"/>
         <source>Field Model graphic filter - UNKNOWNB</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2687"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2689"/>
         <source>Field Model graphic filter - UNKNOWNC</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2694"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2696"/>
         <source>Field Model graphic filter - SHINE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2701"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2703"/>
         <source>Field Model graphic filter - RESET</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2723"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2725"/>
         <source>Field Model graphic filter - Unknown %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2731"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2733"/>
         <source>Wait for Field Model graphic filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3036"/>
-        <location filename="../src/core/field/Opcode.cpp" line="3070"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3038"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3072"/>
         <source>%1 (char ID)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3335"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3337"/>
         <source>%4 = amount of materia %1 in the inventory (AP=%2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3346"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3348"/>
         <source>Shake (type=%1, xAmplitude=%2, xFrames=%3, yAmplitude=%2, yFrames=%3)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3452"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3454"/>
         <source>Scroll to location (?=%1, ?=%2, enable=%3)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3948"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3950"/>
         <source>SETX[%1][%2 + %3] = %4</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3960"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3962"/>
         <source>%1 = GETX[%2][%3 + %4]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4705"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4707"/>
         <source>Copy palette 2 (sourceTile=%1, targetTile=%2, sourcePal=%3, targetPal=%4, color count=%3 + 1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4719"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4721"/>
         <source>Copy partially palette 2 %1 (sourceTile=%1, targetTile=%2, sourcePal=%3, targetPal=%4, first color=%5)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4735"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4737"/>
         <source>Add RGB(%6, %5, %4) on the colors in a palette (2) (sourceTile=%1, targetTile=%2, first color=%3, color count=%7)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4781"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4783"/>
         <source>Play temporary music #%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4847"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4849"/>
         <source>Set next field music for when we will be back to the map: #%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4854"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4856"/>
         <source>CMUSC (music #%1, operation=%2, param1=%3, param2=%4)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4977"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4979"/>
         <source>Play music and resume from last position [param1: music ID, 0-based]</source>
         <translation>Jouer musique et reprendre de la dernière position [param1 : musique id, à partir de 0]</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4980"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4982"/>
         <source>Play a sound effect (will be terminated if another effect is played on channel) [param1: panning, param2: effect ID]</source>
         <translation>Jouer un effet sonore (sera arrêté si un autre effet est joué sur le canal) [param1 : panoramique, param2 : effet id]</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4985"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4987"/>
         <source>Play a sound effect (will be terminated if another effect is played on channel) [param1: panning, param2: effect ID, param3: ?]</source>
         <translation>Jouer un effet sonore (sera arrêté si un autre effet est joué sur le canal) [param1 : panoramique, param2 : effet id, param3 : ?]</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4990"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4992"/>
         <source>Play a sound effect (will be terminated if another effect is played on channel) [param1: panning, param2: effect ID, param3: ?, param4: ?]</source>
         <translation>Jouer un effet sonore (sera arrêté si un autre effet est joué sur le canal) [param1 : panoramique, param2 : effet id, param3 : ?, param4 : ?]</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4995"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4997"/>
         <source>Play a sound effect (will be terminated if another effect is played on channel) [param1: panning, param2: effect ID, param3: ?, param4: ?, param5: ?]</source>
         <translation>Jouer un effet sonore (sera arrêté si un autre effet est joué sur le canal) [param1 : panoramique, param2 : effet id, param3 : ?, param4 : ?, param5 : ?]</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4999"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5001"/>
         <source>Play a sound effect on channel #1 [param1: panning, param2: effect ID]</source>
         <translation>Jouer un effet sonore sur le canal n°1 [param1 : panoramique, param2 : effet id]</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5001"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5003"/>
         <source>Play a sound effect on channel #2 [param1: panning, param2: effect ID]</source>
         <translation>Jouer un effet sonore sur le canal n°2 [param1 : panoramique, param2 : effet id]</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5003"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5005"/>
         <source>Play a sound effect on channel #3 [param1: panning, param2: effect ID]</source>
         <translation>Jouer un effet sonore sur le canal n°3 [param1 : panoramique, param2 : effet id]</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5005"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5007"/>
         <source>Play a sound effect on channel #4 [param1: panning, param2: effect ID]</source>
         <translation>Jouer un effet sonore sur le canal n°4 [param1 : panoramique, param2 : effet id]</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5007"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5009"/>
         <source>Play a sound effect (cannot be stopped) [param1: effect ID]</source>
         <translation>Jouer un effet sonore (ne peut pas être arrêté) [param2 : effet id]</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5021"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5023"/>
         <source>Volume control (channel #1) [param1: volume]</source>
         <translation>Contrôle de volume (canal #1) [param1 : volume]</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5023"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5025"/>
         <source>Volume control (channel #2) [param1: volume]</source>
         <translation>Contrôle de volume (canal #2) [param1 : volume]</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5025"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5027"/>
         <source>Volume control (channel #3) [param1: volume]</source>
         <translation>Contrôle de volume (canal #3) [param1 : volume]</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5027"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5029"/>
         <source>Volume control (channel #4) [param1: volume]</source>
         <translation>Contrôle de volume (canal #4) [param1 : volume]</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5029"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5031"/>
         <source>Volume transitions (channel #1) [param1: transition time, param2: target volume]</source>
         <translation>Transitions de volume (canal n°1) [param1 : durée, param2 : volume cible]</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5031"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5033"/>
         <source>Volume transitions (channel #2) [param1: transition time, param2: target volume]</source>
         <translation>Transitions de volume (canal n°2) [param1 : durée, param2 : volume cible]</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5033"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5035"/>
         <source>Volume transitions (channel #3) [param1: transition time, param2: target volume]</source>
         <translation>Transitions de volume (canal n°3) [param1 : durée, param2 : volume cible]</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5035"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5037"/>
         <source>Volume transitions (channel #4) [param1: transition time, param2: target volume]</source>
         <translation>Transitions de volume (canal n°4) [param1 : durée, param2 : volume cible]</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5069"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5071"/>
         <source>Volume control for all channels [param1: volume]</source>
         <translation>Contrôle de volume sur tous les canaux [param1 : volume]</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5071"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5073"/>
         <source>Volume transitions for all channels [param1: transition time, param2: target volume]</source>
         <translation>Transition de volume sur tous les canaux [param1 : durée, param2 : volume cible]</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5081"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5083"/>
         <source>Set music volume [param1: volume]</source>
         <translation>Définir le volume de la musique [param1 : volume]</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5083"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5085"/>
         <source>Music volume transition [param1: transition time, param2: target volume]</source>
         <translation>Volume transition de la musique [param1 : durée, param2 : volume cible]</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5087"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5089"/>
         <source>Set music pan (noop in PC version)</source>
         <translation>Définir panorama de la musique (ne fait rien sur la version PC)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5089"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5091"/>
         <source>Music pan transition (noop in PC version)</source>
         <translation>Transition de panorama de la musique (ne fait rien sur la version PC)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5091"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5093"/>
         <source>Music pan fade (noop in PC version)</source>
         <translation>Panorama du fondu musical (ne fait rien sur la version PC)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5093"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5095"/>
         <source>Set music tempo [param1: tempo, 0x20 is normal]</source>
         <translation>Définir le tempo de la musique [param1 : tempo, la valeur normale est 0x20]</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5099"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5101"/>
         <source>Stop music-like (noop in PC version)</source>
         <translation>Arrêter la musique ou approchant (ne fait rien dans la version PC)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5160"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5162"/>
         <source>%1 and %2 and %3 and %4</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5205"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5207"/>
         <source>normal</source>
         <translation>normal</translation>
     </message>
@@ -2943,43 +2948,43 @@ Certains scripts peuvent y faire référence !</translation>
         <translation type="vanished">? (id=%1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2041"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2043"/>
         <source>Return</source>
         <oldsource>Retourner</oldsource>
         <translation>Retourner</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2046"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2048"/>
         <source>Execute script #%3 in extern group %1 (priority %2/6) - Only if the script is not already running</source>
         <oldsource>Exécuter le script n°%3 du groupe externe %1 (priorité %2/6) - Seulement si le script n&apos;est pas déjà en cours d&apos;exécution</oldsource>
         <translation>Exécuter le script n°%3 du groupe externe %1 (priorité %2/6) - Seulement si le script n&apos;est pas déjà en cours d&apos;exécution</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2054"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2056"/>
         <source>Execute script #%3 in extern group %1 (priority %2/6)</source>
         <oldsource>Exécuter le script n°%3 du groupe externe %1 (priorité %2/6)</oldsource>
         <translation>Exécuter le script n°%3 du groupe externe %1 (priorité %2/6)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2062"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2064"/>
         <source>Execute script #%3 in group %1 (priority %2/6) - Waiting for end of execution to continue</source>
         <oldsource>Exécuter le script n°%3 du groupe %1 (priorité %2/6) - Attend la fin de l&apos;exécution pour continuer</oldsource>
         <translation>Exécuter le script n°%3 du groupe %1 (priorité %2/6) - Attend la fin de l&apos;exécution pour continuer</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2071"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2073"/>
         <source>Execute script #%3 in extern group associated with the character #%1 in the current party (priority %2/6) - Only if the script is not already running</source>
         <oldsource>Exécuter le script n°%3 du groupe externe lié au personnage No%1 de l&apos;équipe (priorité %2/6) - Seulement si le script n&apos;est pas déjà en cours d&apos;exécution</oldsource>
         <translation>Exécuter le script n°%3 du groupe externe lié au personnage n°%1 de l&apos;équipe (priorité %2/6) - Seulement si le script n&apos;est pas déjà en cours d&apos;exécution</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2080"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2082"/>
         <source>Execute script #%3 in extern group associated with the character #%1 in the current party (priority %2/6)</source>
         <oldsource>Exécuter le script n°%3 du groupe externe lié au personnage No%1 de l&apos;équipe (priorité %2/6)</oldsource>
         <translation>Exécuter le script n°%3 du groupe externe lié au personnage n°%1 de l&apos;équipe (priorité %2/6)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2089"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2091"/>
         <source>Execute script #%3 in group associated with the character #%1 in the current party (priority %2/6) - Waiting for end of execution to continue</source>
         <oldsource>Exécuter le script n°%3 du groupe lié au personnage No%1 de l&apos;équipe (priorité %2/6) - Attend la fin de l&apos;exécution pour continuer</oldsource>
         <translation>Exécuter le script n°%3 du groupe lié au personnage n°%1 de l&apos;équipe (priorité %2/6) - Attend la fin de l&apos;exécution pour continuer</translation>
@@ -2990,7 +2995,7 @@ Certains scripts peuvent y faire référence !</translation>
         <translation type="vanished">Retourner et exécuter le script n°%2 du groupe appelant (priorité %1/6)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2113"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2115"/>
         <source>Split party field (member 1: X=%1, Y=%2, dir=%3 ; member 2 : X=%4, Y=%5, dir=%6) (speed %7)</source>
         <oldsource>Faire sortir les membres de l&apos;équipe à partir du personnage jouable (perso 1 : X=%1, Y=%2, dir=%3 ; perso 2 : X=%4, Y=%5, dir=%6) (vitesse %7)</oldsource>
         <translation>Faire sortir les membres de l&apos;équipe à partir du personnage jouable (perso 1 : X=%1, Y=%2, dir=%3 ; perso 2 : X=%4, Y=%5, dir=%6) (vitesse %7)</translation>
@@ -3006,58 +3011,58 @@ Certains scripts peuvent y faire référence !</translation>
         <translation type="vanished">Modifier la vitesse des messages (%2) | %1 |</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2201"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2203"/>
         <source>Fill materia menu with all materias in full quantity</source>
         <oldsource>Remplir le menu matéria de toutes les matérias en quantité maximum</oldsource>
         <translation>Remplir le menu matéria de toutes les matérias en quantité maximum</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2208"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2210"/>
         <source>Fills all available item entries in full quantity</source>
         <oldsource>Remplir l&apos;inventaire par tous les objets en quantité maximum</oldsource>
         <translation>Remplir l&apos;inventaire par tous les objets en quantité maximum</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2215"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2217"/>
         <source>%1 battles</source>
         <oldsource>%1 les combats</oldsource>
         <translation>%1 les combats</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2216"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2223"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2618"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2827"/>
-        <location filename="../src/core/field/Opcode.cpp" line="3486"/>
-        <location filename="../src/core/field/Opcode.cpp" line="3516"/>
-        <location filename="../src/core/field/Opcode.cpp" line="3659"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4334"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4520"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2218"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2225"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2620"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2829"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3488"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3518"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3661"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4336"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4522"/>
         <source>Activate</source>
         <oldsource>Activer</oldsource>
         <translation>Activer</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2216"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2223"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2618"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2827"/>
-        <location filename="../src/core/field/Opcode.cpp" line="3486"/>
-        <location filename="../src/core/field/Opcode.cpp" line="3516"/>
-        <location filename="../src/core/field/Opcode.cpp" line="3659"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4334"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4520"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2218"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2225"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2620"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2829"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3488"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3518"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3661"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4336"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4522"/>
         <source>Deactivate</source>
         <translation>Désactiver</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2228"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2230"/>
         <source>Change name of %1 by text %2</source>
         <oldsource>Changer le nom de %1 par le texte %2</oldsource>
         <translation>Changer le nom de %1 par le texte %2</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2239"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2241"/>
         <source>Set game time to 0, unlock &quot;PHS&quot; and Save menu. New party: Cloud | (empty) | (empty)</source>
         <oldsource>Set game time to 0, unlock &quot;PHS&quot; and Save menu. New party: Cloud | (empty) | (empty);</oldsource>
         <translation>Met le temps à 0, débloque le menu &quot;PHS&quot; et &quot;Sauvegarder&quot;. Nouvelle équipe : Clad | (Vide) | (Vide)</translation>
@@ -3067,192 +3072,192 @@ Certains scripts peuvent y faire référence !</translation>
         <translation type="vanished">SPECIAL - </translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2272"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2274"/>
         <source>Label %1</source>
         <translation>Label %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2280"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2288"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2296"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2304"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2282"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2290"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2298"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2306"/>
         <source>Goto label %1</source>
         <oldsource>Aller au label %1</oldsource>
         <translation>Aller au label %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2311"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2325"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2339"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2353"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2367"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2381"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2313"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2327"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2341"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2355"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2369"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2383"/>
         <source>If %1 %3 %2 (%4)</source>
         <oldsource>Si %1 %3 %2 (%4)</oldsource>
         <translation>Si %1 %3 %2 (%4)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2318"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2332"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2346"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2360"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2374"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2388"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2435"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2793"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2806"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2819"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4370"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4382"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2320"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2334"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2348"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2362"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2376"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2390"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2437"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2795"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2808"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2821"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4372"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4384"/>
         <source>else goto label %1</source>
         <oldsource>aller au label %1 sinon</oldsource>
         <translation>aller au label %1 sinon</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2399"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2401"/>
         <source>8 bit</source>
         <translation>8 bits</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2402"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2404"/>
         <source>16 bit</source>
         <translation>16 bits</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2405"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2407"/>
         <source>24 bit</source>
         <translation>24 bits</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2408"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2410"/>
         <source>32 bit</source>
         <translation>32 bits</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2415"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2417"/>
         <source>From is a pointer</source>
         <translation>&apos;De&apos; est un pointeur</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2419"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2421"/>
         <source>To is a pointer</source>
         <translation>&apos;Vers&apos; est un pointeur</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2422"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2424"/>
         <source>Write/Read entire savemap (from=%1, to=%2, absValue=%3, flags={%4})</source>
         <translation>Écrire/Lire toute la savemap (de=%1, vers=%2, valeurAbsolue=%3, flags={%4})</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2432"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2434"/>
         <source>If Red XIII is named Nanaki (%2)</source>
         <translation>Si Rouge XIII se nomme Nanaki (%2)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2471"/>
-        <location filename="../src/core/field/Opcode.cpp" line="3052"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2473"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3054"/>
         <source>Bike (parameter %1)</source>
         <oldsource>Course de moto (paramètre %1)</oldsource>
         <translation>Course de moto (paramètre %1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2475"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2477"/>
         <source>Chocobo Races (parameter %1)</source>
         <oldsource>Course de chocobo (paramètre %1)</oldsource>
         <translation>Course de chocobo (paramètre %1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2479"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2481"/>
         <source>Snowboard -normal mode- (parameter %1)</source>
         <oldsource>Descente en snowboard -mode normal- (paramètre %1)</oldsource>
         <translation>Descente en snowboard -mode normal- (paramètre %1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2483"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2485"/>
         <source>Fort Condor (parameter %1)</source>
         <oldsource>Fort Condor (paramètre %1)</oldsource>
         <translation>Fort Condor (paramètre %1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2487"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2489"/>
         <source>Submarine (parameter %1)</source>
         <oldsource>Sous-marin (paramètre %1)</oldsource>
         <translation>Sous-marin (paramètre %1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2491"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2493"/>
         <source>Speed Square (parameter %1)</source>
         <oldsource>Speed Square (paramètre %1)</oldsource>
         <translation>Speed Square (paramètre %1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2495"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2497"/>
         <source>Snowboard -Gold Saucer mode- (parameter %1)</source>
         <oldsource>Descente en snowboard -mode Gold Saucer- (paramètre %1)</oldsource>
         <translation>Descente en snowboard -mode Gold Saucer- (paramètre %1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2499"/>
-        <location filename="../src/core/field/Opcode.cpp" line="3140"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2501"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3142"/>
         <source>%1? (parameter %2)</source>
         <oldsource>%1? (paramètre %2)</oldsource>
         <translation>%1? (paramètre %2)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2505"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2507"/>
         <source>Mini-game: %5 (After the game goto field %1 (X=%2, Y=%3, triangle ID=%4))</source>
         <oldsource>Lancer un mini-jeu : %5 (Après le jeu aller à l&apos;écran %1 (X=%2, Y=%3, triangle id=%4))</oldsource>
         <translation>Lancer un mini-jeu : %5 (Après le jeu aller à l&apos;écran %1 (X=%2, Y=%3, triangle id=%4))</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2532"/>
-        <location filename="../src/core/field/Opcode.cpp" line="3530"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2534"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3532"/>
         <source>Pre-emptive attack</source>
         <oldsource>Attaque préventive</oldsource>
         <translation>Attaque préventive</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2550"/>
-        <location filename="../src/core/field/Opcode.cpp" line="3545"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2552"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3547"/>
         <source>Disable game over</source>
         <oldsource>Désactiver Game Over</oldsource>
         <translation>Désactiver Game Over</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2559"/>
-        <location filename="../src/core/field/Opcode.cpp" line="3554"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2561"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3556"/>
         <source>Battle mode: %1</source>
         <oldsource>Mode de combat : %1</oldsource>
         <translation>Mode de combat : %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2566"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2568"/>
         <source>Stores the result of the last battle in %1</source>
         <oldsource>Stocker le résultat du dernier combat dans %1</oldsource>
         <translation>Stocker le résultat du dernier combat dans %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2580"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2582"/>
         <source>Fades the screen to the colour RGB(%2, %3, %4) (speed=%5, type=%1)</source>
         <oldsource>Voiler l&apos;écran avec la couleur RVB(%2, %3, %4) (vitesse=%5, type=%1)</oldsource>
         <translation>Voiler l&apos;écran avec la couleur RVB(%2, %3, %4) (vitesse=%5, type=%1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2601"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2745"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4433"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2603"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2747"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4435"/>
         <source>ON</source>
         <translation>Autoriser</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2601"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2745"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4433"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2603"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2747"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4435"/>
         <source>OFF</source>
         <translation>Empêcher</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2600"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2602"/>
         <source>BGMOVIE : %1</source>
         <translation>BGMOVIE : %1</translation>
     </message>
@@ -3276,35 +3281,35 @@ Certains scripts peuvent y faire référence !</translation>
         <translation type="vanished">Filtre graphique sur l&apos;objet 3D - %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2744"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2746"/>
         <source>SLIP : %1</source>
         <translation>SLIP : %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2751"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2753"/>
         <source>Set Z-deph for the background layer #%1 (Z=%2)</source>
         <oldsource>Déplacer la couche %1 du décor (Z=%2)</oldsource>
         <translation>Déplacer la couche %1 du décor (Z=%2)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2759"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2761"/>
         <source>Animate the background layer #%1 (Horizontally=%2, Vertically=%3)</source>
         <oldsource>Animer la couche %1 du décor (horizontalement=%2, verticalement=%3)</oldsource>
         <translation>Animer la couche %1 du décor (horizontalement=%2, verticalement=%3)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2777"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2779"/>
         <source>Resizes/Repositions the window #%1 (X=%2, Y=%3, width=%4, height=%5)</source>
         <oldsource>Redimensionner fenêtre No%1 (X=%2, Y=%3, largeur=%4, hauteur=%5)</oldsource>
         <translation>Redimensionner fenêtre n°%1 (X=%2, Y=%3, largeur=%4, hauteur=%5)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5013"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5015"/>
         <source>Resumes only the music</source>
         <translation>Reprendre uniquement la musique</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5015"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5017"/>
         <source>Pauses only the music</source>
         <translation>Mettre en pause uniquement la musique</translation>
     </message>
@@ -3313,7 +3318,7 @@ Certains scripts peuvent y faire référence !</translation>
         <translation type="vanished">Modifier le volume de la musique</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5085"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5087"/>
         <source>Fade music volume</source>
         <translation>Attenuation du volume de la musique</translation>
     </message>
@@ -3330,80 +3335,79 @@ Certains scripts peuvent y faire référence !</translation>
         <translation type="vanished">Modifier le tempo de la musique</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5097"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5099"/>
         <source>Music tempo fade</source>
         <translation>Attenuation du tempo de la musique</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5101"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5103"/>
         <source>Stop music</source>
         <translation>Arrêter la musique</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5103"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5105"/>
         <source>Stop sound effects</source>
         <translation>Arrêter les effets sonores</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5177"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5179"/>
         <source>(Empty)</source>
         <translation>(Vide)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5192"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5194"/>
         <source>Top Left</source>
         <translation>haut gauche</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5193"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5195"/>
         <source>Bottom Left</source>
         <translation>bas gauche</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5194"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5196"/>
         <source>Top Right</source>
         <translation>haut droit</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5195"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5197"/>
         <source>Bottom Right</source>
         <translation>bas droit</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2106"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2108"/>
         <source>Join party field (speed=%1)</source>
         <translation>Rassembler les membres de l&apos;équipe dans le personnage jouable (vitesse=%1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2128"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2130"/>
         <source>Set party from memory: %1 | %2 | %3</source>
         <translation>Affecter les membres de l&apos;équipe : %1 | %2 | %3</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2139"/>
         <source>Get party from memory: %1 | %2 | %3</source>
         <oldsource>Get party to memory: %1 | %2 | %3</oldsource>
-        <translation>Récupérer les membres de l&apos;équipe : %1 | %2 | %3</translation>
+        <translation type="vanished">Récupérer les membres de l&apos;équipe : %1 | %2 | %3</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2163"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2165"/>
         <source>Ask for disc %1</source>
         <translation>Demander le CD %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2170"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2172"/>
         <source>%1 arrow</source>
         <translation>%1 le curseur main</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2171"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4015"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2173"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4017"/>
         <source>Display</source>
         <translation>Afficher</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2171"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4015"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2173"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4017"/>
         <source>Hide</source>
         <translation>Cacher</translation>
     </message>
@@ -3412,18 +3416,18 @@ Certains scripts peuvent y faire référence !</translation>
         <translation type="vanished">Modifier la vitesse de jeu (%1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2222"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2224"/>
         <source>%1 movies</source>
         <translation>%1 les cinématiques</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2246"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2248"/>
         <source>Remove all items</source>
         <translation>Supprimer tous les objets de l&apos;inventaire</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/core/field/Opcode.cpp" line="2279"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2287"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2281"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2289"/>
         <source>Forward %n byte(s)</source>
         <comment>With plural</comment>
         <translation>
@@ -3432,8 +3436,8 @@ Certains scripts peuvent y faire référence !</translation>
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/core/field/Opcode.cpp" line="2295"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2303"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2297"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2305"/>
         <source>Back %n byte(s)</source>
         <comment>With plural</comment>
         <translation>
@@ -3442,18 +3446,18 @@ Certains scripts peuvent y faire référence !</translation>
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/core/field/Opcode.cpp" line="2317"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2331"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2345"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2359"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2373"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2387"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2434"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2792"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2805"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2818"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4369"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4381"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2319"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2333"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2347"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2361"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2375"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2389"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2436"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2794"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2807"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2820"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4371"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4383"/>
         <source>else forward %n byte(s)</source>
         <comment>With plural</comment>
         <translation>
@@ -3462,41 +3466,41 @@ Certains scripts peuvent y faire référence !</translation>
         </translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2516"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2518"/>
         <source>Tutorial #%1</source>
         <translation>Lancer le tutoriel n°%1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2529"/>
-        <location filename="../src/core/field/Opcode.cpp" line="3527"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2531"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3529"/>
         <source>Countdown</source>
         <translation>Compte à rebours</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2538"/>
-        <location filename="../src/core/field/Opcode.cpp" line="3536"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2540"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3538"/>
         <source>Do not play the battle victory music</source>
         <translation>Ne pas jouer Fanfare</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2541"/>
-        <location filename="../src/core/field/Opcode.cpp" line="3539"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2543"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3541"/>
         <source>Activates the battle arena</source>
         <translation>Active l&apos;arène de combat du Gold Saucer</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2547"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2549"/>
         <source>The party members do not perform their victory celebrations at the end of battle</source>
         <translation>Les personnages ne font pas leur animation de victoire</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2560"/>
-        <location filename="../src/core/field/Opcode.cpp" line="3555"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2562"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3557"/>
         <source>None</source>
         <translation>Aucun</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2573"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2575"/>
         <source>Wait %1 frame</source>
         <translation>Attendre %1 img</translation>
     </message>
@@ -3513,294 +3517,294 @@ Certains scripts peuvent y faire référence !</translation>
         <translation type="vanished">Attendre la fin de l&apos;exécution du filtre graphique</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2737"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2739"/>
         <source>Move Field Model to Party Member #%1</source>
         <translation>Déplacer l&apos;objet 3D vers le membre n°%1 de l&apos;équipe</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2770"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2772"/>
         <source>Close the window #%1</source>
         <translation>Fermer la fenêtre n°%1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5218"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5220"/>
         <source>(no key)</source>
         <oldsource>(no key</oldsource>
         <translation>(aucune touche)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5220"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5222"/>
         <source> or </source>
         <oldsource> ou </oldsource>
         <translation> ou </translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2826"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2828"/>
         <source>%1 the movability of the playable character</source>
         <oldsource>%1 les déplacements du personnage jouable</oldsource>
         <translation>%1 les déplacements du personnage jouable</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2833"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2835"/>
         <source>Instantly turns the field model to face the party member #%1</source>
         <oldsource>Tourner instantanément l&apos;objet 3D vers le membre de l&apos;équipe No%1</oldsource>
         <translation>Tourner instantanément l&apos;objet 3D vers le membre de l&apos;équipe n°%1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2840"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2842"/>
         <source>Turns the field model to face the party member #%1 (Speed=%2, Rotation=%3)</source>
         <oldsource>Tourner l&apos;objet 3D vers le membre de l&apos;équipe No%1 (vitesse=%2, sens de rotation=%3)</oldsource>
         <translation>Tourner l&apos;objet 3D vers le membre de l&apos;équipe n°%1 (vitesse=%2, sens de rotation=%3)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2852"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2854"/>
         <source>(none)</source>
         <oldsource>(vide)</oldsource>
         <translation>(vide)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2858"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2860"/>
         <source>Numeric (000000)</source>
         <oldsource>Affichage numérique</oldsource>
         <translation>Affichage numérique</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2866"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2868"/>
         <source>%2 in the window #%1 (left=%3, top=%4)</source>
         <oldsource>%2 dans fenêtre No%1 (gauche=%3, haut=%4)</oldsource>
         <translation>%2 dans fenêtre n°%1 (gauche=%3, haut=%4)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2903"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2905"/>
         <source>Remove %1 gils from the party</source>
         <oldsource>Retirer %1 gils à l&apos;équipe</oldsource>
         <translation>Retirer %1 gils à l&apos;équipe</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2910"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2912"/>
         <source>Copies the amount of gil in %1 and %2</source>
         <oldsource>Copier le nombre de Gils dans %1 et %2</oldsource>
         <translation>Copier le nombre de Gils dans %1 et %2</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2921"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2928"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2942"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2923"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2930"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2944"/>
         <source>Restores full HP and MP of every party member</source>
         <oldsource>Redonne les HP/MP aux membres de l&apos;équipe</oldsource>
         <translation>Redonne les HP/MP aux membres de l&apos;équipe</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2972"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2974"/>
         <source>Display %1 in the main menu</source>
         <oldsource>Afficher %1 dans le menu</oldsource>
         <translation>Afficher %1 dans le menu</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3006"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3008"/>
         <source>Ask Question %2 in the window #%1 (and put selected answer in %5) first line=%3, last line=%4</source>
         <oldsource>Poser question %2 dans la fenêtre No%1 (et mettre la réponse sélectionnée dans %5) première ligne=%3, dernière ligne=%4</oldsource>
         <translation>Poser question %2 dans la fenêtre n°%1 (et mettre la réponse sélectionnée dans %5) première ligne=%3, dernière ligne=%4</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3092"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3094"/>
         <source>all magic materias are present and mastered</source>
         <translation>toutes les matérias magiques sont présentes et au niveau maître</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3095"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3097"/>
         <source>all summon materias are present and mastered</source>
         <translation>toutes les matérias d&apos;invocation sont présentes et au niveau maître</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3098"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3100"/>
         <source>necessary command materias are present and mastered</source>
         <translation>les matérias de commande nécessaires sont présentes et au niveau maître</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3101"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3103"/>
         <source>Bahamut and Neo Bahamut materias are present</source>
         <translation>Les matérias Bahamut et Néo Bahamut sont présentes</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3104"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3106"/>
         <source>22? (parameter %1)</source>
         <translation>22? (paramètre %1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3114"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3116"/>
         <source>Remove mastered magic materias and add Master Magic</source>
         <translation>Supprimer les matérias magiques au niveau maître et ajouter magie maîtresse</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3117"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3119"/>
         <source>Remove mastered summon materias and add Master Summon</source>
         <translation>Supprimer les matérias d&apos;invocation au niveau maître et ajouter invocation maître</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3120"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3122"/>
         <source>Remove mastered meaning command materias and add Master Command</source>
         <translation>Supprimer les matérias de commande niveau maître nécessaires à la fusion et ajouter commande maître</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3123"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3125"/>
         <source>Add Bahamut Zero to the inventory</source>
         <translation>Ajouter Bahamut ZÉRO à l&apos;inventaire</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3126"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3128"/>
         <source>23? (parameter %1)</source>
         <translation>23? (paramètre %1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3022"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3024"/>
         <source>Exit program (parameter %1)</source>
         <oldsource>Fermer le programme (paramètre %1)</oldsource>
         <translation>Fermer le programme (paramètre %1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3026"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3028"/>
         <source>Encount Error (parameter %1)</source>
         <oldsource>Encount Error (paramètre %1)</oldsource>
         <translation>Encount Error (paramètre %1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3030"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3032"/>
         <source>ff7 credits (parameter %1)</source>
         <oldsource>Crédits de ff7 (paramètre %1)</oldsource>
         <translation>Crédits de ff7 (paramètre %1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3034"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3036"/>
         <source>Change name of %1</source>
         <oldsource>Changer nom de %1</oldsource>
         <translation>Changer nom de %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3040"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3042"/>
         <source>Change party (parameter %1)</source>
         <oldsource>Changer l&apos;équipe (paramètre %1)</oldsource>
         <translation>Changer l&apos;équipe (paramètre %1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3044"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3046"/>
         <source>Shop No%1</source>
         <oldsource>magasin No%1</oldsource>
         <translation>magasin n°%1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3048"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3050"/>
         <source>main (parameter %1)</source>
         <oldsource>principal (paramètre %1)</oldsource>
         <translation>principal (paramètre %1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2788"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2790"/>
         <source>If key %1 pressed (%2)</source>
         <translation>Si appuie sur la touche %1 (%2)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2801"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2803"/>
         <source>If key %1 pressed once (%2)</source>
         <translation>Si appuie sur la touche %1 une fois (%2)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2814"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2816"/>
         <source>If key %1 released once (%2)</source>
         <translation>Si relache la touche %1 pour la première fois (%2)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2855"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2857"/>
         <source>Clock (00:00)</source>
         <translation>Horloge</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2876"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2878"/>
         <source>Sets %2 in window #%1 (show %3 digits)</source>
         <translation>Affecter %2 dans la fenêtre n°%1 et afficher %3 chiffres</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2885"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2887"/>
         <source>Set Timer (H=%1, M=%2, S=%3)</source>
         <translation>Affecter une valeur au compte à rebours (H=%1, M=%2, S=%3)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2896"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2898"/>
         <source>Add %1 gil to the party </source>
         <translation>Ajouter %1 gils à l&apos;équipe</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2935"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2937"/>
         <source>Restores full HP and MP of every available character and removing status effects</source>
         <translation>Redonne les HP/MP à tous et soigne les troubles de statut</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2947"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2949"/>
         <source>Displays the dialog %2 in the window #%1</source>
         <translation>Afficher message %2 dans la fenêtre n°%1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2955"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2964"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2957"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2966"/>
         <source>Set %3 to the variable #%2 in the window #%1</source>
         <translation>Affecter %3 à la variable n°%2 dans la fenêtre n°%1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2985"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2987"/>
         <source>Add %2 MP to party member #%1</source>
         <translation>Augmenter de %2 MPs le membre n°%1 de l&apos;équipe</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2999"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3001"/>
         <source>Remove %2 MP to party member #%1</source>
         <translation>Diminuer de %2 MPs le membre n°%1 de l&apos;équipe</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3056"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3058"/>
         <source>Save (parameter %1)</source>
         <oldsource>Sauvegarde (paramètre %1)</oldsource>
         <translation>Sauvegarde (paramètre %1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3060"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3062"/>
         <source>Remove all materias (parameter %1)</source>
         <oldsource>Effacer toutes les matérias (paramètre %1)</oldsource>
         <translation>Effacer toutes les matérias (paramètre %1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3064"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3066"/>
         <source>Restore all materias (parameter %1)</source>
         <oldsource>Rétablir toutes les matérias (paramètre %1)</oldsource>
         <translation>Rétablir toutes les matérias (paramètre %1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3068"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3070"/>
         <source>Remove %1&apos;s Materia</source>
         <oldsource>Effacer la matéria de %1</oldsource>
         <translation>Effacer la matéria de %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3074"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3076"/>
         <source>Clear Cloud&apos;s materias (parameter %1)</source>
         <oldsource>Effacer les matérias de Clad (paramètre %1)</oldsource>
         <translation>Effacer les matérias de Clad (paramètre %1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3078"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3080"/>
         <source>Restore Cloud&apos;s materias (parameter %1)</source>
         <oldsource>Rétablir les matérias de Clad (paramètre %1)</oldsource>
         <translation>Rétablir les matérias de Clad (paramètre %1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3082"/>
-        <location filename="../src/core/field/Opcode.cpp" line="3132"/>
-        <location filename="../src/core/field/Opcode.cpp" line="3136"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3084"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3134"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3138"/>
         <source>? (parameter %1)</source>
         <oldsource>? (paramètre %1)</oldsource>
         <translation>? (paramètre %1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3086"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3088"/>
         <source>HP to 1 (parameter %1)</source>
         <oldsource>HPs à 1 (paramètre %1)</oldsource>
         <translation>HPs à 1 (paramètre %1)</translation>
@@ -3811,79 +3815,79 @@ Certains scripts peuvent y faire référence !</translation>
         <translation type="vanished">maitre ? (paramètre %1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3146"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3148"/>
         <source>Show menu %1</source>
         <oldsource>Afficher menu %1</oldsource>
         <translation>Afficher menu %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3153"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3155"/>
         <source>%1 access to the main menu</source>
         <oldsource>%1 l&apos;accès aux menus</oldsource>
         <translation>%1 l&apos;accès aux menus</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3160"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3162"/>
         <source>Set battle table: %1</source>
         <oldsource>Choisir la battle table : %1</oldsource>
         <translation>Choisir la battle table : %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3195"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3197"/>
         <source>Create window #%1 (X=%2, Y=%3, Width=%4, Height=%5)</source>
         <oldsource>Créer la fenêtre No%1 (X=%2, Y=%3, largeur=%4, hauteur=%5)</oldsource>
         <translation>Créer la fenêtre n°%1 (X=%2, Y=%3, largeur=%4, hauteur=%5)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3206"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3208"/>
         <source>Move the window #%1 (Move : X=%2, Y=%3)</source>
         <oldsource>Déplacer la fenêtre No%1 (déplacement : X=%2, Y=%3)</oldsource>
         <translation>Déplacer la fenêtre n°%1 (déplacement : X=%2, Y=%3)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3219"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3221"/>
         <source>Normal</source>
         <oldsource>Normale</oldsource>
         <translation>Normale</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3225"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3227"/>
         <source>Transparent Background</source>
         <oldsource>Fond semi-transparent</oldsource>
         <translation>Fond semi-transparent</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3237"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3239"/>
         <source>Authorize</source>
         <oldsource>autoriser</oldsource>
         <translation>autoriser</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3290"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3292"/>
         <source>Add %2 item(s) %1 to the inventory</source>
         <oldsource>Ajouter %2 objet(s) %1 dans l&apos;inventaire</oldsource>
         <translation>Ajouter %2 objet(s) %1 dans l&apos;inventaire</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3299"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3301"/>
         <source>Remove %2 item(s) %1 from the inventory</source>
         <oldsource>Supprimer %2 objet(s) %1 dans l&apos;inventaire</oldsource>
         <translation>Supprimer %2 objet(s) %1 dans l&apos;inventaire</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3308"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3310"/>
         <source>%2 = amount of item %1 in the inventory</source>
         <oldsource>%2 = quantité d&apos;objets %1 dans l&apos;inventaire</oldsource>
         <translation>%2 = quantité d&apos;objets %1 dans l&apos;inventaire</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3317"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3319"/>
         <source>Add %1 materia to the inventory (AP=%2)</source>
         <oldsource>Ajouter la matéria %1 dans l&apos;inventaire (AP=%2)</oldsource>
         <translation>Ajouter la matéria %1 dans l&apos;inventaire (AP=%2)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3326"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3328"/>
         <source>Remove %3 materia(s) %1 from the inventory (AP=%2)</source>
         <oldsource>Supprimer %3 matéria(s) %1 dans l&apos;inventaire (AP=%2)</oldsource>
         <translation>Supprimer %3 matéria(s) %1 dans l&apos;inventaire (AP=%2)</translation>
@@ -3899,42 +3903,42 @@ Certains scripts peuvent y faire référence !</translation>
         <translation type="vanished">Secouer l&apos;écran (nbOscillations=%1, Amplitude=%2, vitesse=%3)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3364"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3366"/>
         <source>Jump to map %1 (X=%2, Y=%3, triangle ID=%4, direction=%5)</source>
         <oldsource>Aller à l&apos;écran %1 (X=%2, Y=%3, triangle id=%4, direction=%5)</oldsource>
         <translation>Aller à l&apos;écran %1 (X=%2, Y=%3, triangle id=%4, direction=%5)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3375"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3377"/>
         <source>SCRLO (?=%1)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3382"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3384"/>
         <source>SCRLC (?=%1)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3388"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3390"/>
         <source>Scroll to group %2 (speed=%1, type=%3)</source>
         <oldsource>Centrer sur le groupe %2 (vitesse=%1, type=%3)</oldsource>
         <translation>Centrer sur le groupe %2 (vitesse=%1, type=%3)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3399"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3401"/>
         <source>Scroll to location (X=%1, Y=%2)</source>
         <oldsource>Centrer sur zone (X=%1, Y=%2)</oldsource>
         <translation>Centrer sur zone (X=%1, Y=%2)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3416"/>
-        <location filename="../src/core/field/Opcode.cpp" line="3434"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3418"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3436"/>
         <source>Scroll to location (X=%1, Y=%2, speed=%3)</source>
         <oldsource>Centrer sur zone (X=%1, Y=%2, vitesse=%3)</oldsource>
         <translation>Centrer sur zone (X=%1, Y=%2, vitesse=%3)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3445"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3447"/>
         <source>MPDSP : %1</source>
         <translation></translation>
     </message>
@@ -3944,397 +3948,397 @@ Certains scripts peuvent y faire référence !</translation>
         <translation type="vanished">Centrer sur Zone (?=%1, ?=%2, ?=%3)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3463"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3465"/>
         <source>Fades the screen to the colour RGB(%1, %2, %3) (speed=%4, type=%5, adjust=%6)</source>
         <oldsource>Voiler l&apos;écran avec la couleur RVB(%1, %2, %3) (vitesse=%4, type=%5, adjust=%6)</oldsource>
         <translation>Voiler l&apos;écran avec la couleur RVB(%1, %2, %3) (vitesse=%4, type=%5, adjust=%6)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3484"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3486"/>
         <source>%2 the triangle #%1</source>
         <oldsource>%2 le triangle No%1</oldsource>
         <translation>%2 le triangle n°%1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3577"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3579"/>
         <source>Get coordinates of the party member #%1 (store : X in %2, Y in %3, Z in %4 and triangle ID in %5)</source>
         <oldsource>Obtenir les coordonnées du personnage No%1 de l&apos;équipe actuelle (stocker : X dans %2, Y dans %3, Z dans %4 et l&apos;id dans %5)</oldsource>
         <translation>Obtenir les coordonnées du personnage n°%1 de l&apos;équipe actuelle (stocker : X dans %2, Y dans %3, Z dans %4 et l&apos;id dans %5)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3590"/>
-        <location filename="../src/core/field/Opcode.cpp" line="3722"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3592"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3724"/>
         <source>%1 = %1 + %2 (8 bit)</source>
         <oldsource>%1 = %1 + %2 (8 bits)</oldsource>
         <translation>%1 = %1 + %2 (8 bits)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3600"/>
-        <location filename="../src/core/field/Opcode.cpp" line="3732"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3602"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3734"/>
         <source>%1 = %1 + %2 (16 bit)</source>
         <oldsource>%1 = %1 + %2 (16 bits)</oldsource>
         <translation>%1 = %1 + %2 (16 bits)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3610"/>
-        <location filename="../src/core/field/Opcode.cpp" line="3742"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3612"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3744"/>
         <source>%1 = %1 - %2 (8 bit)</source>
         <oldsource>%1 = %1 - %2 (8 bits)</oldsource>
         <translation>%1 = %1 - %2 (8 bits)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3620"/>
-        <location filename="../src/core/field/Opcode.cpp" line="3752"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3622"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3754"/>
         <source>%1 = %1 - %2 (16 bit)</source>
         <oldsource>%1 = %1 - %2 (16 bits)</oldsource>
         <translation>%1 = %1 - %2 (16 bits)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3630"/>
-        <location filename="../src/core/field/Opcode.cpp" line="3882"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3632"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3884"/>
         <source>%1 = %1 + 1 (8 bit)</source>
         <oldsource>%1 = %1 + 1 (8 bits)</oldsource>
         <translation>%1 = %1 + 1 (8 bits)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3637"/>
-        <location filename="../src/core/field/Opcode.cpp" line="3889"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3639"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3891"/>
         <source>%1 = %1 + 1 (16 bit)</source>
         <oldsource>%1 = %1 + 1 (16 bits)</oldsource>
         <translation>%1 = %1 + 1 (16 bits)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3644"/>
-        <location filename="../src/core/field/Opcode.cpp" line="3896"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3646"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3898"/>
         <source>%1 = %1 - 1 (8 bit)</source>
         <oldsource>%1 = %1 - 1 (8 bits)</oldsource>
         <translation>%1 = %1 - 1 (8 bits)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3651"/>
-        <location filename="../src/core/field/Opcode.cpp" line="3903"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3653"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3905"/>
         <source>%1 = %1 - 1 (16 bit)</source>
         <oldsource>%1 = %1 - 1 (16 bits)</oldsource>
         <translation>%1 = %1 - 1 (16 bits)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3665"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3667"/>
         <source>Seed Random Generator : %1</source>
         <translation>Seed Random Generator : %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3672"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3674"/>
         <source>%1 = %2 (8 bit)</source>
         <oldsource>%1 = %2 (8 bits)</oldsource>
         <translation>%1 = %2 (8 bits)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3682"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3684"/>
         <source>%1 = %2 (16 bit)</source>
         <oldsource>%1 = %2 (16 bits)</oldsource>
         <translation>%1 = %2 (16 bits)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3762"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3764"/>
         <source>%1 = %1 * %2 (8 bit)</source>
         <oldsource>%1 = %1 * %2 (8 bits)</oldsource>
         <translation>%1 = %1 * %2 (8 bits)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3772"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3774"/>
         <source>%1 = %1 * %2 (16 bit)</source>
         <oldsource>%1 = %1 * %2 (16 bits)</oldsource>
         <translation>%1 = %1 * %2 (16 bits)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3782"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3784"/>
         <source>%1 = %1 / %2 (8 bit)</source>
         <oldsource>%1 = %1 / %2 (8 bits)</oldsource>
         <translation>%1 = %1 / %2 (8 bits)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3792"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3794"/>
         <source>%1 = %1 / %2 (16 bit)</source>
         <oldsource>%1 = %1 / %2 (16 bits)</oldsource>
         <translation>%1 = %1 / %2 (16 bits)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3802"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3804"/>
         <source>%1 = %1 mod %2 (8 bit)</source>
         <oldsource>%1 = %1 mod %2 (8 bits)</oldsource>
         <translation>%1 = %1 mod %2 (8 bits)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3812"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3814"/>
         <source>%1 = %1 mod %2 (16 bit)</source>
         <oldsource>%1 = %1 mod %2 (16 bits)</oldsource>
         <translation>%1 = %1 mod %2 (16 bits)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3822"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3824"/>
         <source>%1 = %1 &amp; %2 (8 bit)</source>
         <oldsource>%1 = %1 &amp; %2 (8 bits)</oldsource>
         <translation>%1 = %1 &amp; %2 (8 bits)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3832"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3834"/>
         <source>%1 = %1 &amp; %2 (16 bit)</source>
         <oldsource>%1 = %1 &amp; %2 (16 bits)</oldsource>
         <translation>%1 = %1 &amp; %2 (16 bits)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3842"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3844"/>
         <source>%1 = %1 | %2 (8 bit)</source>
         <oldsource>%1 = %1 | %2 (8 bits)</oldsource>
         <translation>%1 = %1 | %2 (8 bits)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3852"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3854"/>
         <source>%1 = %1 | %2 (16 bit)</source>
         <oldsource>%1 = %1 | %2 (16 bits)</oldsource>
         <translation>%1 = %1 | %2 (16 bits)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3862"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3864"/>
         <source>%1 = %1 ^ %2 (8 bit)</source>
         <oldsource>%1 = %1 ^ %2 (8 bits)</oldsource>
         <translation>%1 = %1 ^ %2 (8 bits)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3872"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3874"/>
         <source>%1 = %1 ^ %2 (16 bit)</source>
         <oldsource>%1 = %1 ^ %2 (16 bits)</oldsource>
         <translation>%1 = %1 ^ %2 (16 bits)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3917"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3919"/>
         <source>%1 = %2 &amp; 0xFF (low byte)</source>
         <translation>%1 = %2 &amp; 0xFF (low byte)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3927"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3929"/>
         <source>%1 = (%2 &gt;&gt; 8) &amp; 0xFF (high byte)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3937"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3939"/>
         <source>%1 = (%2 &amp; 0xFF) | ((%3 &amp; 0xFF) &lt;&lt; 8)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3970"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3972"/>
         <source>Search the value %5 in the memory (bank=%1, start=%2+%3, end=%2+%4) and put the position in %6</source>
         <oldsource>Rechercher la valeur %5 dans la mémoire (bank=%1, début=%2+%3, fin=%2+%4) et mettre la position dans %6</oldsource>
         <translation>Rechercher la valeur %5 dans la mémoire (bank=%1, début=%2+%3, fin=%2+%4) et mettre la position dans %6</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3984"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3986"/>
         <source>Field model is playable and it is %1</source>
         <oldsource>L&apos;objet 3D est jouable et c&apos;est %1</oldsource>
         <translation>L&apos;objet 3D est jouable et c&apos;est %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3991"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3993"/>
         <source>This group is a field model (ID=%1)</source>
         <oldsource>Ce groupe est un objet 3D (id=%1)</oldsource>
         <translation>Ce groupe est un objet 3D (id=%1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3998"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4000"/>
         <source>Play loop animation #%1 of the field model (speed=%2)</source>
         <oldsource>Play animation #%1 of the field model (speed=%2)</oldsource>
         <translation>Joue l&apos;animation %1 de l&apos;objet 3D en boucle (vitesse=%2)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4006"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4108"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4008"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4110"/>
         <source>Play animation #%1 of the field model and reset to previous state (speed=%2)</source>
         <oldsource>Joue l&apos;animation %1 de l&apos;objet 3D et retourne à l&apos;état précédent (vitesse=%2)</oldsource>
         <translation>Joue l&apos;animation %1 de l&apos;objet 3D et retourne à l&apos;état précédent (vitesse=%2)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4021"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4023"/>
         <source>Place field Model (X=%1, Y=%2, Z=%3, triangle ID=%4)</source>
         <oldsource>Place l&apos;objet 3D (X=%1, Y=%2, Z=%3, triangle id=%4)</oldsource>
         <translation>Place l&apos;objet 3D (X=%1, Y=%2, Z=%3, triangle id=%4)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4033"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4035"/>
         <source>Place field Model (X=%1, Y=%2, triangle ID=%4)</source>
         <oldsource>Place l&apos;objet 3D (X=%1, Y=%2, triangle id=%4)</oldsource>
         <translation>Place l&apos;objet 3D (X=%1, Y=%2, triangle id=%4)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4044"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4046"/>
         <source>Place field Model (X=%1, Y=%2, Z=%3)</source>
         <oldsource>Place l&apos;objet 3D (X=%1, Y=%2, Z=%3)</oldsource>
         <translation>Place l&apos;objet 3D (X=%1, Y=%2, Z=%3)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4055"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4057"/>
         <source>Move field Model (X=%1, Y=%2)</source>
         <oldsource>Déplace l&apos;objet 3D (X=%1, Y=%2)</oldsource>
         <translation>Déplace l&apos;objet 3D (X=%1, Y=%2)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4065"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4098"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4067"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4100"/>
         <source>Place field Model without animation (X=%1, Y=%2)</source>
         <oldsource>Déplace l&apos;objet 3D sans animation (X=%1, Y=%2)</oldsource>
         <translation>Déplace l&apos;objet 3D sans animation (X=%1, Y=%2)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4074"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4076"/>
         <source>Move field Model to the group %1</source>
         <oldsource>Déplace l&apos;objet 3D vers le groupe %1</oldsource>
         <translation>Déplace l&apos;objet 3D vers le groupe %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4080"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4082"/>
         <source>Rotation of the field model to group %1 (Speed=%3, Rotation=%2)</source>
         <oldsource>Rotation de l&apos;objet 3D vers le groupe %1 (vitesse=%3, sens de rotation=%2)</oldsource>
         <translation>Rotation de l&apos;objet 3D vers le groupe %1 (vitesse=%3, sens de rotation=%2)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4116"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4118"/>
         <source>Play animation #%1 of the field model (speed=%2, type=1)</source>
         <translation>Joue l&apos;animation %1 de l&apos;objet 3D (vitesse=%2, type=1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4124"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4220"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4126"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4222"/>
         <source>Play partially the animation #%1 of the field model and reset to initial state (first frame=%2, last frame=%3, speed=%4)</source>
         <oldsource>Joue partiellement l&apos;animation %1 de l&apos;objet 3D et retourne à l&apos;état précédent (première img=%2, dernière img=%3, vitesse=%4)</oldsource>
         <translation>Joue partiellement l&apos;animation %1 de l&apos;objet 3D et retourne à l&apos;état précédent (première img=%2, dernière img=%3, vitesse=%4)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4134"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4230"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4136"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4232"/>
         <source>Play partially the animation #%1 of the field model (first frame=%2, last frame=%3, speed=%4)</source>
         <oldsource>Joue partiellement l&apos;animation %1 de l&apos;objet 3D (première img=%2, dernière img=%3, vitesse=%4)</oldsource>
         <translation>Joue partiellement l&apos;animation %1 de l&apos;objet 3D (première img=%2, dernière img=%3, vitesse=%4)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4151"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4153"/>
         <source>Set field model direction: %1</source>
         <oldsource>Mettre l&apos;objet 3D dans la direction : %1</oldsource>
         <translation>Mettre l&apos;objet 3D dans la direction : %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4158"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4160"/>
         <source>Rotation (direction=%1, nbRevolution=%2, speed=%3, ?=%4)</source>
         <oldsource>Rotation (direction=%1, nbTours=%2, vitesse=%3, ?=%4)</oldsource>
         <translation>Rotation (direction=%1, nbTours=%2, vitesse=%3, ?=%4)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4168"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4170"/>
         <source>Inversed rotation (direction=%1, nbRevolution=%2, speed=%3, ?=%4)</source>
         <oldsource>Rotation inversée (direction=%1, nbTours=%2, vitesse=%3, ?=%4)</oldsource>
         <translation>Rotation inversée (direction=%1, nbTours=%2, vitesse=%3, ?=%4)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4177"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4179"/>
         <source>Direct the field model towards the group %1</source>
         <oldsource>Mettre l&apos;objet 3D en direction du groupe %1</oldsource>
         <translation>Mettre l&apos;objet 3D en direction du groupe %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4183"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4185"/>
         <source>Store direction of the group %1 in %2</source>
         <oldsource>Stocker dans %2 la direction du groupe %1</oldsource>
         <translation>Stocker dans %2 la direction du groupe %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4192"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4194"/>
         <source>Store position of the group %1 in %2 (X) and %3 (Y)</source>
         <oldsource>Stocker dans %2 et %3 la position X et Y du groupe %1</oldsource>
         <translation>Stocker dans %2 et %3 la position X et Y du groupe %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4202"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4204"/>
         <source>Store triangle ID of the group %1 in %2</source>
         <oldsource>Stocker dans %2 le triangle id du groupe %1</oldsource>
         <translation>Stocker dans %2 le triangle id du groupe %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4212"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4214"/>
         <source>Play animation #%1 of the field model (speed=%2, type=2)</source>
         <translation>Joue l&apos;animation %1 de l&apos;objet 3D (vitesse=%2, type=2)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4240"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4242"/>
         <source>Set the field model animations speed: %1</source>
         <oldsource>Configurer la vitesse des animations de l&apos;objet 3D : %1</oldsource>
         <translation>Configurer la vitesse des animations de l&apos;objet 3D : %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4252"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4254"/>
         <source>Control the group %1</source>
         <oldsource>Prendre le contrôle du groupe %1</oldsource>
         <translation>Prendre le contrôle du groupe %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4259"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4261"/>
         <source>Field model jump (X=%1, Y=%2, triangle ID=%3, Steps=%4)</source>
         <oldsource>Faire sauter un personnage (X=%1, Y=%2, triangle id=%3, hauteur=%4)</oldsource>
         <translation>Faire sauter un personnage (X=%1, Y=%2, triangle id=%3, hauteur=%4)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4270"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4272"/>
         <source>Store position of the group %1 in %2 (X), %3 (Y), %4 (Z) and %5 (triangle ID)</source>
         <oldsource>Stocker la position du groupe %1 dans des variables (%2=X, %3=Y, %4=Z, %5=triangle id)</oldsource>
         <translation>Stocker la position du groupe %1 dans des variables (%2=X, %3=Y, %4=Z, %5=triangle id)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4283"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4285"/>
         <source>Climb a ladder with the animation #%6 (X=%1, Y=%2, Z=%3, triangle ID=%4, direction1=%5, direction2=%7, speed=%8)</source>
         <oldsource>Monter une échelle avec l&apos;animation %6 (X=%1, Y=%2, Z=%3, triangle id=%4, sens=%5, direction=%7, vitesse=%8)</oldsource>
         <translation>Monter une échelle avec l&apos;animation %6 (X=%1, Y=%2, Z=%3, triangle id=%4, sens=%5, direction=%7, vitesse=%8)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4299"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4301"/>
         <source>Offset Object (movement=%1, X=%2, Y=%3, Z=%4, speed=%5)</source>
         <oldsource>Offset Object (mouvement=%1, X=%2, Y=%3, Z=%4, vitesse=%5)</oldsource>
         <translation>Offset Object (mouvement=%1, X=%2, Y=%3, Z=%4, vitesse=%5)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4326"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4484"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4328"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4486"/>
         <source>Set range of the contact circle for the field model: %1</source>
         <oldsource>Modifier la distance nécessaire pour toucher l&apos;objet 3D : %1</oldsource>
         <translation>Modifier la distance nécessaire pour toucher l&apos;objet 3D : %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4354"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4356"/>
         <source>New party: %1 | %2 | %3</source>
         <oldsource>Nouvelle équipe : %1 | %2 | %3</oldsource>
         <translation>Nouvelle équipe : %1 | %2 | %3</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4377"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4379"/>
         <source>If %1 exists (%2)</source>
         <oldsource>Si %1 existe (%2)</oldsource>
         <translation>Si %1 existe (%2)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4389"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4391"/>
         <source>%2 %1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4399"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4401"/>
         <source>Locks %1 in PHS menu</source>
         <oldsource>Bloque %1 dans le menu PHS</oldsource>
         <translation>Bloque %1 dans le menu PHS</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4406"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4408"/>
         <source>Unlock %1 in PHS menu</source>
         <oldsource>Débloque %1 dans le menu PHS</oldsource>
         <translation>Débloque %1 dans le menu PHS</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4413"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4415"/>
         <source>Create line (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)</source>
         <translation>Créer ligne (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)</translation>
     </message>
@@ -4344,19 +4348,19 @@ Certains scripts peuvent y faire référence !</translation>
         <translation type="vanished">Définit la zone (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4425"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4427"/>
         <source>%1 line</source>
         <translation>%1 la ligne</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2594"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4426"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2596"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4428"/>
         <source>Enable</source>
         <translation>Activer</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2594"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4426"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2596"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4428"/>
         <source>Disable</source>
         <translation>Désactiver</translation>
     </message>
@@ -4375,99 +4379,99 @@ Certains scripts peuvent y faire référence !</translation>
         <translation type="vanished">Redimensionner la zone (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4453"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4455"/>
         <source>%4 = ((Sinus(%1) * %2) + %3) &gt;&gt; 12</source>
         <translation>%4 = ((Sinus(%1) * %2) + %3) &gt;&gt; 12</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4465"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4467"/>
         <source>%4 = ((Cosinus(%1) * %2) + %3) &gt;&gt; 12</source>
         <translation>%4 = ((Cosinus(%1) * %2) + %3) &gt;&gt; 12</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4499"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4501"/>
         <source>PMJMP2</source>
         <translation>PMJMP2</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4519"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4521"/>
         <source>%1 rotation</source>
         <translation>%1 rotation</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4526"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4528"/>
         <source>Play animation #%1 for &apos;%3&apos; (speed=%2)</source>
         <oldsource>Jouer animation No%1 pour &apos;%3&apos; (vitesse=%2)</oldsource>
         <translation>Jouer animation n°%1 pour &apos;%3&apos; (vitesse=%2)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4553"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4555"/>
         <source>Multiply RGB(%6, %5, %4) on the colors in a palette (sourcePal=%1, targetPal=%2, first color=%3, color count=%7+1)</source>
         <oldsource>Multiplier RVB(%6, %5, %4) sur les couleurs d&apos;une palette (sourcePal=%1, ciblePal=%2, première couleur=%3, nombre de couleurs=%7+1)</oldsource>
         <translation>Multiplier RVB(%6, %5, %4) sur les couleurs d&apos;une palette (sourcePal=%1, ciblePal=%2, première couleur=%3, nombre de couleurs=%7+1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4578"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4580"/>
         <source>Hide the state #%2 of the background parameter #%1</source>
         <oldsource>Cacher l&apos;état n°%2 du paramètre No%1</oldsource>
         <translation>Cacher l&apos;état n°%2 du paramètre n°%1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4588"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4590"/>
         <source>Show next state of the background parameter #%1</source>
         <oldsource>Afficher l&apos;état suivant du paramètre No%1</oldsource>
         <translation>Afficher l&apos;état suivant du paramètre n°%1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4602"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4604"/>
         <source>Hide background parameter #%1</source>
         <oldsource>Cacher paramètre No%1</oldsource>
         <translation>Cacher paramètre n°%1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4609"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4611"/>
         <source>Load the palette #%1 in the position %2 (color count=%3)</source>
         <oldsource>Charger la palette No%1 à la position %2 (nombre de couleurs=%3)</oldsource>
         <translation>Charger la palette n°%1 à la position %2 (nombre de couleurs=%3)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4620"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4622"/>
         <source>Load the position %1 in the palette #%2 (color count=%3)</source>
         <oldsource>Charger la position %1 dans la palette n°%2 (nombre de couleurs=%3)</oldsource>
         <translation>Charger la position %1 dans la palette n°%2 (nombre de couleurs=%3)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4631"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4633"/>
         <source>Copy palette (sourcePal=%1, targetPal=%2, color count=%3)</source>
         <oldsource>Copier palette (sourcePal=%1, ciblePal=%2, nombre de couleurs=%3)</oldsource>
         <translation>Copier palette (sourcePal=%1, ciblePal=%2, nombre de couleurs=%3)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4642"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4644"/>
         <source>Copy partially palette (sourcePal=%1, targetPal=%2, first color=%3, color count=%4)</source>
         <oldsource>Copier un morceau de palette (sourcePal=%1, ciblePal=%2, première couleur=%3, nombre de couleurs=%4)</oldsource>
         <translation>Copier un morceau de palette (sourcePal=%1, ciblePal=%2, première couleur=%3, nombre de couleurs=%4)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4654"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4656"/>
         <source>Add RGB(%5, %4, %3) on the colors in a palette (sourcePal=%1, targetPal=%2, color count=%6)</source>
         <oldsource>Additionner RVB(%5, %4, %3) sur les couleurs d&apos;une palette (sourcePal=%1, ciblePal=%2, nombre de couleurs=%6)</oldsource>
         <translation>Additionner RVB(%5, %4, %3) sur les couleurs d&apos;une palette (sourcePal=%1, ciblePal=%2, nombre de couleurs=%6)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4668"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4670"/>
         <source>Multiply RGB(%5, %4, %3) on the colors in a palette (sourcePal=%1, targetPal=%2, color count=%6)</source>
         <oldsource>Multiplier RVB(%5, %4, %3) sur les couleurs d&apos;une palette (sourcePal=%1, ciblePal=%2, nombre de couleurs=%6)</oldsource>
         <translation>Multiplier RVB(%5, %4, %3) sur les couleurs d&apos;une palette (sourcePal=%1, ciblePal=%2, nombre de couleurs=%6)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4682"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4684"/>
         <source>Load the palette #%1 in the position %2 (first color=%3, color count=%4)</source>
         <oldsource>Charger la palette No%1 à la position %2 (première couleur=%3, nombre de couleurs=%4)</oldsource>
         <translation>Charger la palette n°%1 à la position %2 (première couleur=%3, nombre de couleurs=%4)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4692"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4694"/>
         <source>Load the position %1 in the palette #%2 (first color=%3, color count=%4)</source>
         <oldsource>Charger la position %1 dans la palette n°%2 (première couleur=%3, nombre de couleurs=%4)</oldsource>
         <translation>Charger la position %1 dans la palette n°%2 (première couleur=%3, nombre de couleurs=%4)</translation>
@@ -4481,7 +4485,7 @@ Certains scripts peuvent y faire référence !</translation>
         <translation type="vanished">ADPAL2 %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4757"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4759"/>
         <source>Play sound #%1 (position=%2/127)</source>
         <oldsource>Jouer son No%1 (position=%2/127)</oldsource>
         <translation>Jouer son n°%1 (position=%2/127)</translation>
@@ -4492,31 +4496,31 @@ Certains scripts peuvent y faire référence !</translation>
         <translation type="vanished">MUSVT (musique n°%1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4788"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4790"/>
         <source>MUSVM (music #%1)</source>
         <oldsource>MUSVM (musique No%1)</oldsource>
         <translation>MUSVM (musique n°%1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4795"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4797"/>
         <source>%1 music</source>
         <oldsource>%1 musique</oldsource>
         <translation>%1 musique</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4809"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4811"/>
         <source>CHMPH: Save (unknown) in %1 and (unknown) in %2</source>
         <oldsource>CHMPH : Sauvegarder (inconnu) dans %1 et (inconnu) dans %2</oldsource>
         <translation>CHMPH : Sauvegarder (inconnu) dans %1 et (inconnu) dans %2</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4833"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4835"/>
         <source>Save Movie frame in %1</source>
         <oldsource>Stocker Movie frame dans %1</oldsource>
         <translation>Stocker Movie frame dans %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4840"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4842"/>
         <source>Camera Movie: %1</source>
         <oldsource>Camera Movie : %1</oldsource>
         <translation>Camera Movie : %1</translation>
@@ -4531,13 +4535,13 @@ Certains scripts peuvent y faire référence !</translation>
         <translation type="vanished">CMUSC (musique n°%1, inconnu1=%2, inconnu2=%3, inconnu2=%4, inconnu4=%5, inconnu5=%6, inconnu6=%7)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4866"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4868"/>
         <source>If music is currently playing set %1 to 1</source>
         <oldsource>Si la musique est jouée mettre %1 à 1</oldsource>
         <translation>Si la musique est jouée mettre %1 à 1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4874"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4876"/>
         <source>Game Over</source>
         <translation>Fin de partie</translation>
     </message>
@@ -5304,36 +5308,36 @@ id=%2
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="447"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="490"/>
         <source>Return</source>
         <oldsource>Retourner</oldsource>
         <translation>Retourner</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="448"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="491"/>
         <source>Return to</source>
         <oldsource>Retourner à</oldsource>
         <translation>Retourner à</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="450"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="493"/>
         <source>Execute a script</source>
         <oldsource>Exécuter un script</oldsource>
         <translation>Exécuter un script</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="452"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="495"/>
         <source>Execute a script from a party member</source>
         <oldsource>Exécuter un script d&apos;un équipier</oldsource>
         <translation>Exécuter un script d&apos;un équipier</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="455"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="498"/>
         <source>Label</source>
         <translation>Label</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="456"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="499"/>
         <source>Goto label</source>
         <oldsource>Aller au label</oldsource>
         <translation>Aller au label</translation>
@@ -5344,25 +5348,25 @@ id=%2
         <translation type="vanished">Si personnage existe</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="469"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="512"/>
         <source>Binary operation</source>
         <oldsource>Opération binaire</oldsource>
         <translation>Opération binaire</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="474"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="517"/>
         <source>Unary operation</source>
         <oldsource>Opération unaire</oldsource>
         <translation>Opération unaire</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="477"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="520"/>
         <source>Bitwise operation</source>
         <oldsource>Opération bit à bit</oldsource>
         <translation>Opération bit à bit</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="480"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="523"/>
         <source>Seed Random Generator</source>
         <translation>Seed Random Generator</translation>
     </message>
@@ -5375,223 +5379,223 @@ id=%2
         <translation type="vanished">Cosinus</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="500"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="543"/>
         <source>Ask Question</source>
         <oldsource>Poser une question</oldsource>
         <translation>Poser une question</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="503"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="546"/>
         <source>Enable/Disable menu</source>
         <oldsource>Activer/Désactiver menu</oldsource>
         <translation>Activer/Désactiver menu</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="508"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="551"/>
         <source>HP/MP Maximum (1)</source>
         <oldsource>HP/MP restaurés (1)</oldsource>
         <translation>HP/MP restaurés (1)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="509"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="552"/>
         <source>HP/MP Maximum (2)</source>
         <oldsource>HP/MP restaurés (2)</oldsource>
         <translation>HP/MP restaurés (2)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="510"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="553"/>
         <source>HP/MP Maximum with Status Clear</source>
         <oldsource>HP/MP/statut restaurés</oldsource>
         <translation>HP/MP/statut restaurés</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="511"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="554"/>
         <source>HP/MP Maximum (3)</source>
         <oldsource>HP/MP restaurés (3)</oldsource>
         <translation>HP/MP restaurés (3)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="523"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="566"/>
         <source>Add Materia</source>
         <oldsource>Ajouter Matéria</oldsource>
         <translation>Ajouter Matéria</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="524"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="567"/>
         <source>Remove Materia</source>
         <oldsource>Retirer Matéria</oldsource>
         <translation>Retirer Matéria</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="525"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="568"/>
         <source>Amount of Materia</source>
         <oldsource>Quantité de Matérias</oldsource>
         <translation>Quantité de Matérias</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="541"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="584"/>
         <source>Get Group Direction (Dir)</source>
         <oldsource>Obtenir la direction d&apos;un groupe (Dir)</oldsource>
         <translation>Obtenir la direction d&apos;un groupe (Dir)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="542"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="585"/>
         <source>Get Party Member Direction (Dir)</source>
         <oldsource>Obtenir la direction d&apos;un équipier (Dir)</oldsource>
         <translation>Obtenir la direction d&apos;un équipier (Dir)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="543"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="586"/>
         <source>Get Group Triangle ID (I)</source>
         <oldsource>Obtenir le triangle id d&apos;un groupe (I)</oldsource>
         <translation>Obtenir le triangle id d&apos;un groupe (I)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="544"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="587"/>
         <source>Get Party Member Triangle ID (I)</source>
         <oldsource>Obtenir le triangle id d&apos;un équipier (I)</oldsource>
         <translation>Obtenir le triangle id d&apos;un équipier (I)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="545"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="588"/>
         <source>Get Group coordinates (X,Y)</source>
         <oldsource>Obtenir les coordonnées d&apos;un groupe (X,Y)</oldsource>
         <translation>Obtenir les coordonnées d&apos;un groupe (X,Y)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="546"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="589"/>
         <source>Get Group coordinates (X,Y,Z,I)</source>
         <oldsource>Obtenir les coordonnées d&apos;un groupe (X,Y,Z,I)</oldsource>
         <translation>Obtenir les coordonnées d&apos;un groupe (X,Y,Z,I)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="547"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="590"/>
         <source>Get Party coordinates (X,Y,Z,I)</source>
         <oldsource>Obtenir les coordonnées d&apos;un équipier (X,Y,Z,I)</oldsource>
         <translation>Obtenir les coordonnées d&apos;un équipier (X,Y,Z,I)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="549"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="592"/>
         <source>Place (X,Y,Z)</source>
         <oldsource>Placer (X,Y,Z)</oldsource>
         <translation>Placer (X,Y,Z)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="550"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="593"/>
         <source>Place (X,Y,I)</source>
         <oldsource>Placer (X,Y,I)</oldsource>
         <translation>Placer (X,Y,I)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="551"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="594"/>
         <source>Place (X,Y,Z,I)</source>
         <oldsource>Placer (X,Y,Z,I)</oldsource>
         <translation>Placer (X,Y,Z,I)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="552"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="595"/>
         <source>Place (Dir)</source>
         <oldsource>Placer (Dir)</oldsource>
         <translation>Placer (Dir)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="555"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="598"/>
         <source>Move without animation</source>
         <oldsource>Déplacer sans animation</oldsource>
         <translation>Déplacer sans animation</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="556"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="599"/>
         <source>Move without animation or rotation</source>
         <oldsource>Déplacer sans animation ni rotation</oldsource>
         <translation>Déplacer sans animation ni rotation</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="561"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="604"/>
         <source>Direction to Group</source>
         <oldsource>Rotation vers un groupe</oldsource>
         <translation>Rotation vers un groupe</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="563"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="606"/>
         <source>Inversed Turn</source>
         <oldsource>Rotation inversée</oldsource>
         <translation>Rotation inversée</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="564"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="607"/>
         <source>Direction (inversed) to Group</source>
         <oldsource>Rotation inversée vers un groupe</oldsource>
         <translation>Rotation inversée vers un groupe</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="565"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="608"/>
         <source>Direction (inversed) to Party Member</source>
         <oldsource>Rotation inversée vers un équipier</oldsource>
         <translation>Rotation inversée vers un équipier</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="568"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="611"/>
         <source>Play animation (loop)</source>
         <oldsource>Jouer animation en boucle</oldsource>
         <translation>Jouer animation en boucle</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="569"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="612"/>
         <source>Play animation (1)</source>
         <oldsource>Jouer animation (1)</oldsource>
         <translation>Jouer animation (1)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="570"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="613"/>
         <source>Play animation (2)</source>
         <oldsource>Jouer animation (2)</oldsource>
         <translation>Jouer animation (2)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="571"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="614"/>
         <source>Play animation and return (1)</source>
         <oldsource>Jouer animation et revenir (1)</oldsource>
         <translation>Jouer animation et revenir (1)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="572"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="615"/>
         <source>Play animation and return (2)</source>
         <oldsource>Jouer animation et revenir (2)</oldsource>
         <translation>Jouer animation et revenir (2)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="573"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="616"/>
         <source>Play partial animation (1)</source>
         <oldsource>Jouer partiellement animation (1)</oldsource>
         <translation>Jouer partiellement animation (1)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="574"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="617"/>
         <source>Play partial animation (2)</source>
         <oldsource>Jouer partiellement animation (2)</oldsource>
         <translation>Jouer partiellement animation (2)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="575"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="618"/>
         <source>Play partial animation and return (1)</source>
         <oldsource>Jouer partiellement animation et revenir (1)</oldsource>
         <translation>Jouer partiellement animation et revenir (1)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="576"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="619"/>
         <source>Play partial animation and return (2)</source>
         <oldsource>Jouer partiellement animation et revenir (2)</oldsource>
         <translation>Jouer partiellement animation et revenir (2)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="577"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="620"/>
         <source>Play Stand/Walk/Run animation</source>
         <oldsource>Jouer animation Stand/Walk/Run</oldsource>
         <translation>Jouer animation Stand/Walk/Run</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="578"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="621"/>
         <source>Play jump animation</source>
         <oldsource>Jouer animation du saut</oldsource>
         <translation>Jouer animation du saut</translation>
@@ -5622,92 +5626,92 @@ id=%2
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="458"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="501"/>
         <source>If...then</source>
         <translation>Si...alors</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="460"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="503"/>
         <source>If key pressed</source>
         <translation>Si touche pressée</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="461"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="504"/>
         <source>If Party Member</source>
         <translation>Si personnage membre de l&apos;équipe</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="462"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="505"/>
         <source>If character exists</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="463"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="506"/>
         <source>[DLPB&apos;s custom opcode] If Red XIII is named Nanaki</source>
         <translation>[DLPB&apos;s custom opcode] Si Rouge XIII est nommé Nanaki</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="465"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="508"/>
         <source>Wait</source>
         <translation>Attendre</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="466"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="509"/>
         <source>No Operation</source>
         <translation>Ne rien faire</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="481"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="524"/>
         <source>Two Byte from two one-byte</source>
         <translation>Créer un mot de deux octets</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="482"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="525"/>
         <source>Sinus / Cosinus</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="485"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="528"/>
         <source>Window creation</source>
         <translation>Créer une fenêtre</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="486"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="529"/>
         <source>Resizes/Repositions a window</source>
         <translation>Redimensionner une fenêtre</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="487"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="530"/>
         <source>Set line count in window</source>
         <translation>Modifier le nombre de lignes dans fenêtre</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="488"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="531"/>
         <source>Move a window</source>
         <translation>Déplacer une fenêtre</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="489"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="532"/>
         <source>Set window type</source>
         <translation>Modifier type de fenêtre</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="490"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="533"/>
         <source>Reset a window</source>
         <translation>Remettre une fenêtre à zéro</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="491"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="534"/>
         <source>Close a window (1)</source>
         <translation>Fermer une fenêtre (1)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="492"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="535"/>
         <source>Close a window (2)</source>
         <translation>Fermer une fenêtre (2)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="494"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="537"/>
         <source>Numerical Display</source>
         <translation>Mettre un compteur dans fenêtre</translation>
     </message>
@@ -5716,12 +5720,12 @@ id=%2
         <translation type="vanished">Modifier variable dans fenêtre (16 bits)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="496"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="539"/>
         <source>Countdown</source>
         <translation>Compte à rebours</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="495"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="538"/>
         <source>Set numerical display value</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5730,654 +5734,654 @@ id=%2
         <translation type="vanished">Modifier variable dans fenêtre (8 bits)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="499"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="542"/>
         <source>Set window Text</source>
         <translation>Afficher texte</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="502"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="545"/>
         <source>Set map name</source>
         <translation>Modifier le nom du lieu</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="504"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="547"/>
         <source>Get window color</source>
         <translation>Obtenir la couleur d&apos;une fenêtre</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="505"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="548"/>
         <source>Set window color</source>
         <translation>Changer la couleur d&apos;une fenêtre</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="513"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="556"/>
         <source>Increase MP</source>
         <translation>Augmenter les MPs</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="514"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="557"/>
         <source>Decrease MP</source>
         <translation>Diminuer les MPs</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="515"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="558"/>
         <source>Increase HP</source>
         <translation>Augmenter les HPs</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="516"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="559"/>
         <source>Decrease HP</source>
         <translation>Diminuer les HPs</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="517"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="560"/>
         <source>Add gil</source>
         <translation>Ajouter des gils</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="518"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="561"/>
         <source>Remove gil</source>
         <translation>Retirer des gils</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="519"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="562"/>
         <source>Amount of gil</source>
         <translation>Quantité d&apos;argent</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="520"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="563"/>
         <source>Add Item</source>
         <translation>Ajouter objet</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="521"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="564"/>
         <source>Remove item</source>
         <translation>Retirer objet</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="522"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="565"/>
         <source>Amount of item</source>
         <translation>Quantité d&apos;objets</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="527"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="570"/>
         <source>Party Change</source>
         <translation>Nouvelle équipe</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="528"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="571"/>
         <source>Add Character to the party</source>
         <translation>Ajouter un personnage</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="529"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="572"/>
         <source>Remove Character from the party</source>
         <translation>Retirer un personnage</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="530"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="573"/>
         <source>Save party</source>
         <translation>Sauvegarder l&apos;équipe</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="531"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="574"/>
         <source>Load party</source>
         <translation>Restaurer l&apos;équipe</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="532"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="575"/>
         <source>Create/Delete character</source>
         <translation>Créer/effacer personnage</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="533"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="576"/>
         <source>Lock character</source>
         <translation>Bloquer personnage</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="534"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="577"/>
         <source>Unlock character</source>
         <translation>Débloquer personnage</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="537"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="580"/>
         <source>Set Field Model</source>
         <translation>Définir objet 3D</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="538"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="581"/>
         <source>Set character to Field Model</source>
         <translation>Affecter personnage à objet 3D</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="539"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="582"/>
         <source>Group control</source>
         <translation>Prendre le contrôle d&apos;un groupe</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="554"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="597"/>
         <source>Move</source>
         <translation>Déplacer</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="557"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="600"/>
         <source>Move to Group</source>
         <translation>Déplacer vers un groupe</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="558"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="601"/>
         <source>Move to Party Member</source>
         <translation>Déplacer vers un équipier</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="560"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="603"/>
         <source>Turn</source>
         <translation>Rotation</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="562"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="605"/>
         <source>Direction to Party Member</source>
         <translation>Rotation vers un équipier</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="566"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="609"/>
         <source>Wait for Turn</source>
         <translation>Attendre fin rotation</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="579"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="622"/>
         <source>Play climb animation</source>
         <translation>Jouer animation de l&apos;échelle</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="580"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="623"/>
         <source>Party field join</source>
         <translation>Rejoindre le leader</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="581"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="624"/>
         <source>Party field split</source>
         <translation>Séparer les membres de l&apos;équipe</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="582"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="625"/>
         <source>Stop animation</source>
         <oldsource>Arrêter animation</oldsource>
         <translation>Arrêter animation</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="583"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="626"/>
         <source>Wait for animation</source>
         <oldsource>Attendre fin animation</oldsource>
         <translation>Attendre fin animation</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="585"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="628"/>
         <source>Character Graphics - Eye open/close</source>
         <oldsource>Filtre graphique - OEil ouvert/fermé</oldsource>
         <translation>Filtre graphique - OEil ouvert/fermé</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="586"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="629"/>
         <source>Character Graphics - Activate/Deactivate blending</source>
         <oldsource>Filtre graphique - Activer/Désactiver transparence</oldsource>
         <translation>Filtre graphique - Activer/Désactiver transparence</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="587"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="630"/>
         <source>Character Graphics - ??? - AMBNT</source>
         <oldsource>Filtre graphique - AMBNT</oldsource>
         <translation>Filtre graphique - ??? - AMBNT</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="588"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="631"/>
         <source>Character Graphics - ??? (1)</source>
         <oldsource>Filtre graphique - ??? (1)</oldsource>
         <translation>Filtre graphique - ??? (1)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="589"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="632"/>
         <source>Character Graphics - ??? (2)</source>
         <oldsource>Filtre graphique - ??? (2)</oldsource>
         <translation>Filtre graphique - ??? (2)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="590"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="633"/>
         <source>Character Graphics - ??? (3)</source>
         <oldsource>Filtre graphique - ??? (3)</oldsource>
         <translation>Filtre graphique - ??? (3)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="591"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="634"/>
         <source>Character Graphics - LIGHT</source>
         <oldsource>Filtre graphique - LIGHT</oldsource>
         <translation>Filtre graphique - LIGHT</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="592"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="635"/>
         <source>Character Graphics - ??? (4)</source>
         <oldsource>Filtre graphique - ??? (4)</oldsource>
         <translation>Filtre graphique - ??? (4)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="593"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="636"/>
         <source>Character Graphics - ??? (5)</source>
         <oldsource>Filtre graphique - ??? (5)</oldsource>
         <translation>Filtre graphique - ??? (5)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="594"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="637"/>
         <source>Character Graphics - ??? (6)</source>
         <oldsource>Filtre graphique - ??? (6)</oldsource>
         <translation>Filtre graphique - ??? (6)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="595"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="638"/>
         <source>Character Graphics - SBOBJ</source>
         <oldsource>Filtre graphique - SBOBJ</oldsource>
         <translation>Filtre graphique - SBOBJ</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="596"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="639"/>
         <source>Character Graphics - ??? (7)</source>
         <oldsource>Filtre graphique - ??? (7)</oldsource>
         <translation>Filtre graphique - ??? (7)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="597"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="640"/>
         <source>Character Graphics - ??? (8)</source>
         <oldsource>Filtre graphique - ??? (8)</oldsource>
         <translation>Filtre graphique - ??? (8)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="598"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="641"/>
         <source>Character Graphics - SHINE</source>
         <oldsource>Filtre graphique - SHINE</oldsource>
         <translation>Filtre graphique - SHINE</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="599"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="642"/>
         <source>Character Graphics - RESET</source>
         <oldsource>Filtre graphique - RESET</oldsource>
         <translation>Filtre graphique - RESET</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="600"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="643"/>
         <source>Wait For Character Graphics</source>
         <oldsource>Attendre fin filtre graphique</oldsource>
         <translation>Attendre fin filtre graphique</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="602"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="645"/>
         <source>OFST</source>
         <translation>OFST</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="603"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="646"/>
         <source>OFSTW</source>
         <translation>OFSTW</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="605"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="648"/>
         <source>Movement Speed</source>
         <translation>Vitesse déplacements</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="607"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="650"/>
         <source>Hide/Display Field Model</source>
         <translation>Cacher/Afficher objet 3D</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="609"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="652"/>
         <source>Character Blink</source>
         <translation>Cligner des yeux</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="610"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="653"/>
         <source>Talk On/Off</source>
         <translation>Activer/désactiver parler</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="611"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="654"/>
         <source>Contact On/Off</source>
         <translatorcomment>\</translatorcomment>
         <translation>Activer/désactiver toucher</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="612"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="655"/>
         <source>Talk Range (8-bit)</source>
         <translation>Distance pour parler (8 bits)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="613"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="656"/>
         <source>Contact range (8-bit)</source>
         <translation>Distance pour toucher (8 bits)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="614"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="657"/>
         <source>Talk Range (16-bit)</source>
         <translation>Distance pour parler (16 bits)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="615"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="658"/>
         <source>Contact range (16-bit)</source>
         <translation>Distance pour toucher (16 bits)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="618"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="661"/>
         <source>Create line</source>
         <oldsource>Create location</oldsource>
         <translation>Créer ligne</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="619"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="662"/>
         <source>Set line</source>
         <oldsource>Set location</oldsource>
         <translation>Modifier ligne</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="620"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="663"/>
         <source>Line On/Off</source>
         <oldsource>Location On/Off</oldsource>
         <translation>Activer/Désactiver ligne</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="621"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="664"/>
         <source>Triangle On/Off</source>
         <translation>Activer/Désactiver triangle</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="626"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="669"/>
         <source>Move background Z layer</source>
         <translation>Déplacer une couche du décor (Z)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="628"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="671"/>
         <source>Show a background state</source>
         <translation>Afficher un état d&apos;un paramètre</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="629"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="672"/>
         <source>Hide background state</source>
         <translation>Cacher un état d&apos;un paramètre</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="630"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="673"/>
         <source>Show next background state</source>
         <translation>Afficher l&apos;état suivant d&apos;un paramètre</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="631"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="674"/>
         <source>Show previous background state</source>
         <translation>Afficher l&apos;état précédent d&apos;un paramètre</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="632"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="675"/>
         <source>Hide background parameters</source>
         <translation>Cacher un paramètre</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="648"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="691"/>
         <source>Scroll to playable character</source>
         <translation>Centrer sur le personnage jouable</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="649"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="692"/>
         <source>Scroll to party member</source>
         <translation>Centrer sur personnage</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="653"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="696"/>
         <source>Scroll (X,Y,Smooth)</source>
         <translation>Centrer (X,Y,Vitesse amortie)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="654"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="697"/>
         <source>Scroll (X,Y,Linear)</source>
         <translation>Centrer (X,Y,Vitesse linéaire)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="658"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="701"/>
         <source>Shake</source>
         <translation>Secouer l&apos;écran</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="659"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="702"/>
         <source>Wait for scroll</source>
         <translation>Attendre fin centrage</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="668"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="711"/>
         <source>Alter sound (8-bit)</source>
         <translation>Modifier son (8 bits)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="669"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="712"/>
         <source>Alter sound (16-bit)</source>
         <translation>Modifier son (16 bits)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="672"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="715"/>
         <source>Play temporary music</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="673"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="716"/>
         <source>MUSVM (unused)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="674"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="717"/>
         <source>Music Unlock/Lock</source>
         <oldsource>Music On/Off</oldsource>
         <translation>Déverrouiller/Verrouiller musique</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="676"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="719"/>
         <source>CHMPH (unused)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="677"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="720"/>
         <source>Get music status</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="678"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="721"/>
         <source>Field music</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="679"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="722"/>
         <source>Play basic akao operation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="681"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="724"/>
         <source>Set next movie</source>
         <translation>Prochaine cinématique</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="682"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="725"/>
         <source>Play movie</source>
         <translation>Jouer la cinématique choisie</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="692"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="735"/>
         <source>Battle result load</source>
         <translation>Résultat du dernier combat</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="694"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="737"/>
         <source>Change Map</source>
         <translation>Changer d&apos;écran</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="695"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="738"/>
         <source>Last Map ID</source>
         <translation>ID de l&apos;écran précédent</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="696"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="739"/>
         <source>Start Battle</source>
         <translation>Combattre</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="697"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="740"/>
         <source>Battle On/Off</source>
         <translation>Activer/désactiver les combats</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="700"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="743"/>
         <source>Map Jump On/Off</source>
         <translation>Activer/désactiver les changements d&apos;écran</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="701"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="744"/>
         <source>Character movability On/Off</source>
         <translation>Activer/Désactiver déplacements</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="702"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="745"/>
         <source>Preload field Map</source>
         <translation>Précharger un écran</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="606"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="649"/>
         <source>Animation Speed</source>
         <oldsource>Vitesse animations</oldsource>
         <translation>Vitesse animations</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="497"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="540"/>
         <source>Set window variable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="608"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="651"/>
         <source>Enable/Disable rotation</source>
         <oldsource>Activer/Désactiver rotation</oldsource>
         <translation>Activer/Désactiver rotation</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="623"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="666"/>
         <source>SLIP</source>
         <translation>SLIP</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="627"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="670"/>
         <source>Animate background layer</source>
         <oldsource>Animer une couche du décor</oldsource>
         <translation>Animer une couche du décor</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="634"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="677"/>
         <source>Store Palette</source>
         <translation>Enregistrer palette</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="635"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="678"/>
         <source>Store Palette (S)</source>
         <translation>Enregistrer palette (S)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="636"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="679"/>
         <source>Load Palette</source>
         <translation>Charger palette</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="637"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="680"/>
         <source>Load Palette (S)</source>
         <translation>Charger palette (S)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="638"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="681"/>
         <source>Copy Palette</source>
         <translation>Copier palette</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="639"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="682"/>
         <source>Copy Palette (2)</source>
         <translation>Copier palette (2)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="640"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="683"/>
         <source>Partial Copy Palette</source>
         <translation>Copier partiellement palette</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="641"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="684"/>
         <source>Partial Copy Palette (2)</source>
         <translation>Copier partiellement palette (2)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="642"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="685"/>
         <source>Multiply Palette</source>
         <oldsource>Multiplier Palette</oldsource>
         <translation>Multiplier Palette</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="643"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="686"/>
         <source>Multiply Palette (2)</source>
         <oldsource>Multiplier Palette (2)</oldsource>
         <translation>Multiplier Palette (2)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="644"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="687"/>
         <source>Add Palette</source>
         <oldsource>Additionner Palette</oldsource>
         <translation>Additionner Palette</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="645"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="688"/>
         <source>Add Palette (2)</source>
         <oldsource>Additionner Palette (2)</oldsource>
         <translation>Additionner Palette (2)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="650"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="693"/>
         <source>Scroll to group</source>
         <oldsource>Centrer sur groupe</oldsource>
         <translation>Centrer sur groupe</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="652"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="695"/>
         <source>Scroll (X,Y)</source>
         <oldsource>Centrer (X,Y)</oldsource>
         <translation>Centrer (X,Y)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="655"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="698"/>
         <source>SCRLO</source>
         <translation>SCRLO</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="656"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="699"/>
         <source>SCRLC</source>
         <translation>SCRLC</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="661"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="704"/>
         <source>VWOFT</source>
         <translation>VWOFT</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="662"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="705"/>
         <source>FADE</source>
         <translation>FADE</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="663"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="706"/>
         <source>FADEW</source>
         <translation>FADEW</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="664"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="707"/>
         <source>NFADE</source>
         <translation>NFADE</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="667"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="710"/>
         <source>Play sound</source>
         <oldsource>Jouer son</oldsource>
         <translation>Jouer son</translation>
@@ -6391,7 +6395,7 @@ id=%2
         <translation type="vanished">AKAO2</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="671"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="714"/>
         <source>Play music</source>
         <oldsource>Jouer musique</oldsource>
         <translation>Jouer musique</translation>
@@ -6405,7 +6409,7 @@ id=%2
         <translation type="vanished">MUSVM</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="675"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="718"/>
         <source>Battle music</source>
         <oldsource>Musique de combat</oldsource>
         <translation>Musique de combat</translation>
@@ -6427,46 +6431,46 @@ id=%2
         <translation type="vanished">CMUSC</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="683"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="726"/>
         <source>MVIEF</source>
         <translation>MVIEF</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="684"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="727"/>
         <source>MVCAM</source>
         <translation>MVCAM</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="685"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="728"/>
         <source>BGMOVIE</source>
         <translation>BGMOVIE</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="688"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="731"/>
         <source>Play tutorial</source>
         <oldsource>Lancer un tutoriel</oldsource>
         <translation>Lancer un tutoriel</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="689"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="732"/>
         <source>Display a menu</source>
         <oldsource>Afficher menu</oldsource>
         <translation>Afficher menu</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="690"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="733"/>
         <source>Disc change screen</source>
         <oldsource>Changer de disque</oldsource>
         <translation>Changer de disque</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="691"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="734"/>
         <source>Minigame</source>
         <oldsource>Mini-jeu</oldsource>
         <translation>Mini-jeu</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="693"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="736"/>
         <source>Battle Table</source>
         <oldsource>Table de combat</oldsource>
         <translation>Table de combat</translation>
@@ -6477,115 +6481,115 @@ id=%2
         <translation type="vanished">Changer d&apos;écran</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="698"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="741"/>
         <source>Battle mode</source>
         <oldsource>Mode de combat</oldsource>
         <translation>Mode de combat</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="699"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="742"/>
         <source>Battle mode (2)</source>
         <oldsource>Mode de combat (2)</oldsource>
         <translation>Mode de combat (2)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="703"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="746"/>
         <source>PMJMP2</source>
         <translation>PMJMP2</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="704"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="747"/>
         <source>Game Over</source>
         <translation>Fin de partie</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="705"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="748"/>
         <source>[DLPB&apos;s custom opcode] Write/Read to entire Savemap</source>
         <translation>[DLPB&apos;s custom opcode] Écrire/Lire vers la savemap</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="706"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="749"/>
         <source>[DLPB&apos;s custom opcode] Write to any memory address via array</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="707"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="750"/>
         <source>SPECIAL - Cursor On/Off</source>
         <oldsource>SPECIAL - Activer/Désactiver curseur</oldsource>
         <translation>SPECIAL - Curseur Affiché/Caché</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="708"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="751"/>
         <source>SPECIAL - PNAME</source>
         <translation>SPECIAL - PNAME</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="709"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="752"/>
         <source>SPECIAL - Game Speed</source>
         <oldsource>SPECIAL - Vitesse du jeu</oldsource>
         <translation>SPECIAL - Vitesse du jeu</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="710"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="753"/>
         <source>SPECIAL - Messages Speed</source>
         <oldsource>SPECIAL - Vitesse des message</oldsource>
         <translation>SPECIAL - Vitesse des message</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="711"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="754"/>
         <source>SPECIAL - Full Materia</source>
         <translation>SPECIAL - Toutes les matérias</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="712"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="755"/>
         <source>SPECIAL - Full Item</source>
         <translation>SPECIAL - Tous les objets</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="713"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="756"/>
         <source>SPECIAL - Battle On/Off</source>
         <oldsource>SPECIAL - Activer/Désactiver combats</oldsource>
         <translation>SPECIAL - Activer/Désactiver combats</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="714"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="757"/>
         <source>SPECIAL - Character movability On/Off</source>
         <oldsource>SPECIAL - Activer/Désactiver mouvements</oldsource>
         <translation>SPECIAL - Activer/Désactiver mouvements</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="715"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="758"/>
         <source>SPECIAL - Rename character</source>
         <oldsource>SPECIAL - Renommer personnage</oldsource>
         <translation>SPECIAL - Renommer personnage</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="716"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="759"/>
         <source>SPECIAL - Clear Game</source>
         <translation>SPECIAL - Remettre à zéro le jeu</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="717"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="760"/>
         <source>SPECIAL - Clear Items</source>
         <translation>SPECIAL - Supprimertous  les objets</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="720"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="763"/>
         <source>MPDSP</source>
         <translation>MPDSP</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="721"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="764"/>
         <source>SETX</source>
         <translation>SETX</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="722"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="765"/>
         <source>GETX</source>
         <translation>GETX</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="723"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="766"/>
         <source>SEARCHX</source>
         <translation>SEARCHX</translation>
     </message>
@@ -6688,34 +6692,34 @@ id=%2
 <context>
     <name>ScriptEditorBitOpPage</name>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="588"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="605"/>
         <source>Set a bit to 1</source>
         <oldsource>Mettre un bit à 1</oldsource>
         <translation>Mettre un bit à 1</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="589"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="606"/>
         <source>Set a bit to 0</source>
         <oldsource>Mettre un bit à 0</oldsource>
         <translation>Mettre un bit à 0</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="590"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="607"/>
         <source>Toggles a bit</source>
         <translation>Inverser la valeur d&apos;un bit</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="593"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="610"/>
         <source>Variable</source>
         <translation>Variable</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="595"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="612"/>
         <source>Position</source>
         <translation>Position</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="597"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="614"/>
         <source>Operation</source>
         <oldsource>Opération</oldsource>
         <translation>Opération</translation>
@@ -6724,60 +6728,70 @@ id=%2
 <context>
     <name>ScriptEditorBooleanPage</name>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="736"/>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="740"/>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="748"/>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="752"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="775"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="779"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="787"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="791"/>
         <source>Enable</source>
         <translation type="unfinished">Activer</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="736"/>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="740"/>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="748"/>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="752"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="775"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="779"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="787"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="791"/>
         <source>Disable</source>
         <translation type="unfinished">Désactiver</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="744"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="783"/>
         <source>Show</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="744"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="783"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="825"/>
         <source>Hide</source>
         <translation type="unfinished">Cacher</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="756"/>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="760"/>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="772"/>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="776"/>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="780"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="795"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="799"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="811"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="815"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="819"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="829"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="833"/>
         <source>Activate</source>
         <translation type="unfinished">Activer</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="756"/>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="760"/>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="772"/>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="776"/>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="780"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="795"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="799"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="811"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="815"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="819"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="829"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="833"/>
         <source>Deactivate</source>
         <translation type="unfinished">Désactiver</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="764"/>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="768"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="803"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="807"/>
         <source>ON</source>
         <translation type="unfinished">Autoriser</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="764"/>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="768"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="803"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="807"/>
         <source>OFF</source>
         <translation type="unfinished">Empêcher</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="825"/>
+        <source>Display</source>
+        <translation type="unfinished">Afficher</translation>
     </message>
 </context>
 <context>
@@ -6939,151 +6953,151 @@ id=%2
 <context>
     <name>ScriptEditorGenericList</name>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="606"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="615"/>
         <source>Long</source>
         <oldsource>Entier long</oldsource>
         <translation>Entier long</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="607"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="616"/>
         <source>Signed long</source>
         <oldsource>Entier long signé</oldsource>
         <translation>Entier long signé</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="608"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="617"/>
         <source>X coordinate</source>
         <oldsource>Coordonnée X</oldsource>
         <translation>Coordonnée X</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="609"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="618"/>
         <source>Y coordinate</source>
         <oldsource>Coordonnée Y</oldsource>
         <translation>Coordonnée Y</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="610"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="619"/>
         <source>Z coordinate</source>
         <oldsource>Coordonnée Z</oldsource>
         <translation>Coordonnée Z</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="612"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="621"/>
         <source>Tutorial</source>
         <oldsource>Tutoriel</oldsource>
         <translation>Tutoriel</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="614"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="623"/>
         <source>Disc</source>
         <oldsource>Disque</oldsource>
         <translation>Disque</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="615"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="624"/>
         <source>Minigame</source>
         <oldsource>Mini-jeu</oldsource>
         <translation>Mini-jeu</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="618"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="627"/>
         <source>Speed (16-bit)</source>
         <oldsource>Vitesse (16 bits)</oldsource>
         <translation>Vitesse (16 bits)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="619"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="628"/>
         <source>Direction</source>
         <translation>Direction</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="620"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="629"/>
         <source>Triangle</source>
         <translation>Triangle</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="621"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="630"/>
         <source>Group</source>
         <oldsource>Groupe</oldsource>
         <translation>Groupe</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="622"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="631"/>
         <source>Script</source>
         <translation>Script</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="624"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="633"/>
         <source>Bank</source>
         <translation>Bank</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="625"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="634"/>
         <source>Address</source>
         <oldsource>Adresse</oldsource>
         <translation>Adresse</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="626"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="635"/>
         <source>Priority</source>
         <oldsource>Priorité</oldsource>
         <translation>Priorité</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="627"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="636"/>
         <source>Flag</source>
         <translation>Flag</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="630"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="639"/>
         <source>Operator</source>
         <oldsource>Opérateur</oldsource>
         <translation>Opérateur</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="631"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="640"/>
         <source>Boolean</source>
         <oldsource>Booléen</oldsource>
         <translation>Booléen</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="633"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="642"/>
         <source>Parameter</source>
         <oldsource>Paramètre</oldsource>
         <translation>Paramètre</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="634"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="643"/>
         <source>State</source>
         <oldsource>État</oldsource>
         <translation>État</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="638"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="647"/>
         <source>Variable</source>
         <translation>Variable</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="640"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="649"/>
         <source>Rotation</source>
         <oldsource>Sens de rotation</oldsource>
         <translation>Sens de rotation</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="641"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="650"/>
         <source>Display Type</source>
         <oldsource>Type d&apos;affichage</oldsource>
         <translation>Type d&apos;affichage</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="642"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="651"/>
         <source>Text</source>
         <oldsource>Texte</oldsource>
         <translation>Texte</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="643"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="652"/>
         <source>Menu</source>
         <translation>Menu</translation>
     </message>
@@ -7103,159 +7117,159 @@ id=%2
         <translation>Paramètres :</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="605"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="614"/>
         <source>Double long</source>
         <translation>Entier double long</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="611"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="620"/>
         <source>Map</source>
         <translation>Écran</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="613"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="622"/>
         <source>Character</source>
         <translation>Personnage</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="616"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="625"/>
         <source>Short</source>
         <translation>Entier court</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="617"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="626"/>
         <source>Speed (8-bit)</source>
         <translation>Vitesse (8 bits)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="623"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="632"/>
         <source>Team member</source>
         <translation>Équipier</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="628"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="637"/>
         <source>Jump (short)</source>
         <translation>Saut court</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="629"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="638"/>
         <source>Jump (long)</source>
         <oldsource>Jumb (long)</oldsource>
         <translation>Saut long</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="632"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="641"/>
         <source>Layer</source>
         <translation>Couche</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="635"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="644"/>
         <source>Window</source>
         <translation>Fenêtre</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="636"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="645"/>
         <source>Width</source>
         <translation>Largeur</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="637"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="646"/>
         <source>Height</source>
         <translation>Hauteur</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="639"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="648"/>
         <source>Key(s)</source>
         <translation>Touche(s)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="644"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="653"/>
         <source>Window Type</source>
         <translation>Type de fenêtre</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="645"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="654"/>
         <source>Item</source>
         <translation>Objet</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="646"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="655"/>
         <source>Materia</source>
         <oldsource>Matéria</oldsource>
         <translation>Matéria</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="647"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="656"/>
         <source>Quantity</source>
         <oldsource>Quantité</oldsource>
         <translation>Quantité</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="648"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="657"/>
         <source>Color</source>
         <oldsource>Couleur</oldsource>
         <translation>Couleur</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="649"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="658"/>
         <source>Animation</source>
         <translation>Animation</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="650"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="659"/>
         <source>Music</source>
         <oldsource>Musique</oldsource>
         <translation>Musique</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="651"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="660"/>
         <source>Sound</source>
         <oldsource>Son</oldsource>
         <translation>Son</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="652"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="661"/>
         <source>Video</source>
         <oldsource>Vidéo</oldsource>
         <translation>Vidéo</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="653"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="662"/>
         <source>Label</source>
         <translation>Label</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="654"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="663"/>
         <source>Sound operation</source>
         <translation>Opération sur le son</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="655"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="664"/>
         <source>Shake type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="656"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="665"/>
         <source>X Amplitude</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="657"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="666"/>
         <source>X Frames</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="658"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="667"/>
         <source>Y Amplitude</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="659"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="668"/>
         <source>Y Frames</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="661"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="670"/>
         <source>???</source>
         <translation>???</translation>
     </message>
@@ -7263,33 +7277,33 @@ id=%2
 <context>
     <name>ScriptEditorIfKeyPage</name>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="698"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="700"/>
         <source>Key pressed</source>
         <oldsource>Touche pressée</oldsource>
         <translation>Touche pressée</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="673"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="675"/>
         <source>Keys</source>
         <translation>Touches</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="699"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="701"/>
         <source>Key pressed once</source>
         <translation>Touche pressée une fois</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="700"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="702"/>
         <source>Key released once</source>
         <translation>Touche lâchée une fois</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="702"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="704"/>
         <source>Type</source>
         <translation>Type</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="704"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="706"/>
         <source>Label</source>
         <translation>Label</translation>
     </message>
@@ -7324,8 +7338,12 @@ id=%2
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="536"/>
+        <source>Test</source>
+        <translation type="unfinished">Test</translation>
+    </message>
+    <message>
         <source>Test to be performed</source>
-        <translation>Test à effectuer</translation>
+        <translation type="vanished">Test à effectuer</translation>
     </message>
     <message>
         <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="540"/>
@@ -7347,18 +7365,18 @@ id=%2
 <context>
     <name>ScriptEditorIfQPage</name>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="791"/>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="792"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="793"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="794"/>
         <source>(Empty)</source>
         <translation>(Vide)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="797"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="799"/>
         <source>Character</source>
         <translation>Personnage</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="799"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="801"/>
         <source>Label</source>
         <translation>Label</translation>
     </message>
@@ -7462,12 +7480,12 @@ id=%2
 <context>
     <name>ScriptEditorSinCosPage</name>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="835"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="853"/>
         <source>Sinus</source>
         <translation type="unfinished">Sinus</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="836"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="854"/>
         <source>Cosinus</source>
         <translation type="unfinished">Cosinus</translation>
     </message>
@@ -7475,38 +7493,38 @@ id=%2
 <context>
     <name>ScriptEditorUnaryOpPage</name>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="382"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="391"/>
         <source>Increment (wrapped)</source>
         <translation>Incrémentation (cyclique)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="383"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="392"/>
         <source>Increment (capped)</source>
         <translation>Incrémentation (plafonnée)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="384"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="393"/>
         <source>Decrement (wrapped)</source>
         <translation>Décrémentation (cyclique)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="385"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="394"/>
         <source>Decrement (capped)</source>
         <translation>Décrémentation (avec plancher à 0)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="386"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="395"/>
         <source>Random</source>
         <translation>Aléatoire</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="389"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="398"/>
         <source>8-bit</source>
         <oldsource>8 bits</oldsource>
         <translation>8 bits</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="390"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="399"/>
         <source>16-bit</source>
         <oldsource>16 bits</oldsource>
         <translation>16 bits</translation>
@@ -7515,7 +7533,7 @@ id=%2
 <context>
     <name>ScriptEditorWaitPage</name>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="849"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="851"/>
         <source>Images</source>
         <translation>Images</translation>
     </message>
@@ -7523,43 +7541,43 @@ id=%2
 <context>
     <name>ScriptEditorWindowModePage</name>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="264"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="270"/>
         <source>Normal</source>
         <translation>Normale</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="265"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="271"/>
         <source>Without frame</source>
         <translation>Sans bords</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="269"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="275"/>
         <source>Allow</source>
         <translation>Autoriser</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="270"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="276"/>
         <source>Prevent</source>
         <translation>Empêcher</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="274"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="280"/>
         <source>Window ID</source>
         <translation>Fenêtre ID</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="278"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="284"/>
         <source>Closing</source>
         <translation>Fermeture</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="266"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="272"/>
         <source>Transparency</source>
         <oldsource>Transparent</oldsource>
         <translation>Transparent</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="276"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="282"/>
         <source>Type</source>
         <translation>Type</translation>
     </message>
@@ -7567,18 +7585,18 @@ id=%2
 <context>
     <name>ScriptEditorWindowMovePage</name>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="348"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="354"/>
         <source>Window ID</source>
         <translation>Fenêtre ID</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="350"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="356"/>
         <source>Relative X</source>
         <oldsource>X relatif</oldsource>
         <translation>X relatif</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="352"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="358"/>
         <source>Relative Y</source>
         <oldsource>Y relatif</oldsource>
         <translation>Y relatif</translation>
@@ -7614,7 +7632,7 @@ id=%2
         <translation>Fenêtre ID</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="59"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="133"/>
         <source>X</source>
         <translation>X</translation>
     </message>
@@ -7636,13 +7654,13 @@ id=%2
         <translation>Texte en aperçu :</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="123"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="116"/>
         <source>Lines</source>
         <oldsource>Lignes</oldsource>
         <translation>Lignes</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="142"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="65"/>
         <source>H</source>
         <translation>H</translation>
     </message>
@@ -7650,27 +7668,25 @@ id=%2
 <context>
     <name>ScriptEditorWindowVariablePage</name>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="408"/>
         <source>8-bit</source>
-        <translation type="unfinished">8 bits</translation>
+        <translation type="obsolete">8 bits</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="409"/>
         <source>16-bit</source>
-        <translation type="unfinished">16 bits</translation>
+        <translation type="obsolete">16 bits</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="417"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="414"/>
         <source>Window ID</source>
         <translation type="unfinished">Fenêtre ID</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="419"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="416"/>
         <source>Window Variable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="421"/>
+        <location filename="../src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="418"/>
         <source>Value</source>
         <translation type="unfinished">Valeur</translation>
     </message>
@@ -8700,15 +8716,24 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
 <context>
     <name>VarOrValueWidget</name>
     <message>
-        <location filename="../src/widgets/VarOrValueWidget.cpp" line="24"/>
+        <location filename="../src/widgets/VarOrValueWidget.cpp" line="229"/>
         <source>Value</source>
         <oldsource>Valeur</oldsource>
         <translation>Valeur</translation>
     </message>
     <message>
-        <location filename="../src/widgets/VarOrValueWidget.cpp" line="25"/>
+        <location filename="../src/widgets/VarOrValueWidget.cpp" line="233"/>
+        <source>8-bit Var</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/VarOrValueWidget.cpp" line="237"/>
+        <source>16-bit Var</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Variable</source>
-        <translation>Variable</translation>
+        <translation type="vanished">Variable</translation>
     </message>
 </context>
 <context>
@@ -9166,7 +9191,7 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
     <message>
         <location filename="../src/Window.cpp" line="75"/>
         <location filename="../src/Window.cpp" line="422"/>
-        <location filename="../src/Window.cpp" line="1626"/>
+        <location filename="../src/Window.cpp" line="1624"/>
         <source>Archive Mana&amp;ger...</source>
         <oldsource>Ges&amp;tionnaire d&apos;archive...</oldsource>
         <translation>Ges&amp;tionnaire d&apos;archive...</translation>
@@ -9374,12 +9399,12 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
         <translation>&amp;Affichage</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1206"/>
+        <location filename="../src/Window.cpp" line="1204"/>
         <source>Uncompressed PC Field Map (*.dec)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1357"/>
+        <location filename="../src/Window.cpp" line="1355"/>
         <source>PS Field Map (*.DAT)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -9425,7 +9450,7 @@ Fichiers modifiés :</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="490"/>
-        <location filename="../src/Window.cpp" line="1065"/>
+        <location filename="../src/Window.cpp" line="1063"/>
         <source>DAT File (*.DAT)</source>
         <oldsource>Fichier DAT (*.DAT)</oldsource>
         <translation>Fichier DAT (*.DAT)</translation>
@@ -9478,27 +9503,27 @@ Fichiers modifiés :</translation>
         <translation>PC</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="602"/>
+        <location filename="../src/Window.cpp" line="600"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="602"/>
+        <location filename="../src/Window.cpp" line="600"/>
         <source>Stop</source>
         <translation>Arrêter</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="631"/>
+        <location filename="../src/Window.cpp" line="629"/>
         <source>Opening...</source>
         <translation>Ouverture...</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="650"/>
+        <location filename="../src/Window.cpp" line="648"/>
         <source>Nothing found!</source>
         <translation>Rien trouvé !</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="654"/>
+        <location filename="../src/Window.cpp" line="652"/>
         <source>The file already exists</source>
         <translation>Le fichier existe déjà</translation>
     </message>
@@ -9515,40 +9540,40 @@ Fichiers modifiés :</translation>
         <translation type="vanished">Impossible de copier le fichier</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="675"/>
+        <location filename="../src/Window.cpp" line="673"/>
         <source>This error should not appear, thank you for reporting it</source>
         <translation>Cette erreur ne devrais pas s&apos;afficher, merci de le signaler</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1041"/>
+        <location filename="../src/Window.cpp" line="1039"/>
         <source>Error Compiling Scripts:
 scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
         <translation>Erreur de compilation des scripts :
 écran %1 (%2), groupe %3 (%4), script %5, ligne %6 : %7</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1041"/>
+        <location filename="../src/Window.cpp" line="1039"/>
         <source>Compilation Error</source>
         <translation>Erreur de compilation</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1056"/>
+        <location filename="../src/Window.cpp" line="1054"/>
         <source>Save Directory As</source>
         <translation>Enregistrer dossier sous</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1071"/>
+        <location filename="../src/Window.cpp" line="1069"/>
         <source>Save As</source>
         <translation>Enregistrer sous</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1078"/>
+        <location filename="../src/Window.cpp" line="1076"/>
         <source>Saving...</source>
         <translation>Sauvegarde...</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="663"/>
-        <location filename="../src/Window.cpp" line="1104"/>
+        <location filename="../src/Window.cpp" line="661"/>
+        <location filename="../src/Window.cpp" line="1102"/>
         <source>Unable to remove the file, check write permissions.</source>
         <translation>Impossible de supprimer le fichier, vérifiez les droits d&apos;écriture.</translation>
     </message>
@@ -9563,48 +9588,48 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
         <translation>Fichier Field PC (*)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="666"/>
+        <location filename="../src/Window.cpp" line="664"/>
         <source>Failed to rename the file, check write permissions.</source>
         <translation>Impossible de renommer le fichier, vérifiez les droits d&apos;écriture.</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="669"/>
+        <location filename="../src/Window.cpp" line="667"/>
         <source>Failed to copy the file, check write permissions.</source>
         <translation>Impossible de copier le fichier, vérifiez les droits d&apos;écriture.</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1095"/>
+        <location filename="../src/Window.cpp" line="1093"/>
         <source>No maps found</source>
         <translation>Aucun écran trouvé</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1107"/>
+        <location filename="../src/Window.cpp" line="1105"/>
         <source>Unable to rename the file, check write permissions.</source>
         <translation>Impossible de renommer le fichier, vérifiez les droits d&apos;écriture.</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1110"/>
+        <location filename="../src/Window.cpp" line="1108"/>
         <source>Unable to copy the file, check write permissions.</source>
         <translation>Impossible de copier le fichier, vérifiez les droits d&apos;écriture.</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1116"/>
+        <location filename="../src/Window.cpp" line="1114"/>
         <source>This feature is not complete</source>
         <translation>Cette fonctionnalité n&apos;est pas terminée</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1203"/>
-        <location filename="../src/Window.cpp" line="1356"/>
+        <location filename="../src/Window.cpp" line="1201"/>
+        <location filename="../src/Window.cpp" line="1354"/>
         <source>PC Field Map (*)</source>
         <translation>Fichier Field PC (*)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1204"/>
+        <location filename="../src/Window.cpp" line="1202"/>
         <source>Data DAT File (*.DAT)</source>
         <translation>Fichier DAT (*.DAT)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1205"/>
+        <location filename="../src/Window.cpp" line="1203"/>
         <source>Textures MIM File (*.MIM)</source>
         <translation>Fichier MIM (*.MIM)</translation>
     </message>
@@ -9613,27 +9638,27 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
         <translation type="vanished">Écran PC décompressé (*)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1244"/>
+        <location filename="../src/Window.cpp" line="1242"/>
         <source>Archive is inaccessible</source>
         <translation>L&apos;archive est inaccessible</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1247"/>
+        <location filename="../src/Window.cpp" line="1245"/>
         <source>Error reopening file</source>
         <translation>Erreur lors de l&apos;ouverture du fichier</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1250"/>
+        <location filename="../src/Window.cpp" line="1248"/>
         <source>Unable to create the new file</source>
         <translation>Impossible de créer le nouveau fichier</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1302"/>
+        <location filename="../src/Window.cpp" line="1300"/>
         <source>An error occured when exporting</source>
         <translation>Une erreur s&apos;est produite lors de l&apos;exportation</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1330"/>
+        <location filename="../src/Window.cpp" line="1328"/>
         <source>An error occurred when importing</source>
         <translation>Une erreur s&apos;est produite lors de l&apos;importation</translation>
     </message>
@@ -9646,35 +9671,35 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
         <translation type="vanished">L&apos;algorithme d&apos;importation des décors donne de mauvais résultats en jeu, vous êtes prévenus !</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1424"/>
+        <location filename="../src/Window.cpp" line="1422"/>
         <source>Final Fantasy VII couldn&apos;t be launched
 %1</source>
         <translation>Final Fantasy VII n&apos;a pas pu être lancé.
 %1</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1540"/>
-        <location filename="../src/Window.cpp" line="1618"/>
+        <location filename="../src/Window.cpp" line="1538"/>
+        <location filename="../src/Window.cpp" line="1616"/>
         <source>Opening error</source>
         <translation>Erreur d&apos;ouverture</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1540"/>
+        <location filename="../src/Window.cpp" line="1538"/>
         <source>Can not open encounters!</source>
         <translation>Impossible d&apos;ouvrir les combats aléatoires !</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1618"/>
+        <location filename="../src/Window.cpp" line="1616"/>
         <source>Can not open miscellaneous informations!</source>
         <translation>Impossible d&apos;ouvrir les infos diverses !</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1629"/>
+        <location filename="../src/Window.cpp" line="1627"/>
         <source>Go back to field map editor...</source>
         <translation>Revenir sur l&apos;éditeur d&apos;écrans de jeu...</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1649"/>
+        <location filename="../src/Window.cpp" line="1647"/>
         <source>Applying...</source>
         <translation>Application en cours...</translation>
     </message>
@@ -9688,59 +9713,59 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
         <translation type="vanished">Fermer</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="657"/>
-        <location filename="../src/Window.cpp" line="1098"/>
+        <location filename="../src/Window.cpp" line="655"/>
+        <location filename="../src/Window.cpp" line="1096"/>
         <source>The file is inaccessible</source>
         <oldsource>Le fichier est inaccessible</oldsource>
         <translation>Le fichier est inaccessible</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="660"/>
-        <location filename="../src/Window.cpp" line="1101"/>
+        <location filename="../src/Window.cpp" line="658"/>
+        <location filename="../src/Window.cpp" line="1099"/>
         <source>Can not create temporary file</source>
         <oldsource>Impossible de créer un fichier temporaire</oldsource>
         <translation>Impossible de créer un fichier temporaire</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="672"/>
+        <location filename="../src/Window.cpp" line="670"/>
         <source>Invalid file</source>
         <oldsource>Le fichier est invalide</oldsource>
         <translation>Fichier invalide</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="584"/>
-        <location filename="../src/Window.cpp" line="679"/>
-        <location filename="../src/Window.cpp" line="1120"/>
-        <location filename="../src/Window.cpp" line="1257"/>
-        <location filename="../src/Window.cpp" line="1302"/>
-        <location filename="../src/Window.cpp" line="1330"/>
-        <location filename="../src/Window.cpp" line="1389"/>
-        <location filename="../src/Window.cpp" line="1424"/>
+        <location filename="../src/Window.cpp" line="677"/>
+        <location filename="../src/Window.cpp" line="1118"/>
+        <location filename="../src/Window.cpp" line="1255"/>
+        <location filename="../src/Window.cpp" line="1300"/>
+        <location filename="../src/Window.cpp" line="1328"/>
+        <location filename="../src/Window.cpp" line="1387"/>
+        <location filename="../src/Window.cpp" line="1422"/>
         <source>Error</source>
         <oldsource>Erreur</oldsource>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="943"/>
-        <location filename="../src/Window.cpp" line="1614"/>
+        <location filename="../src/Window.cpp" line="941"/>
+        <location filename="../src/Window.cpp" line="1612"/>
         <source>Author: %1</source>
         <oldsource>Auteur : %1</oldsource>
         <translation>Auteur : %1</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1063"/>
+        <location filename="../src/Window.cpp" line="1061"/>
         <source>Lgp File (*.lgp)</source>
         <oldsource>Fichier Lgp (*.lgp)</oldsource>
         <translation>Fichier Lgp (*.lgp)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1067"/>
+        <location filename="../src/Window.cpp" line="1065"/>
         <source>Iso File (*.iso *.bin *.img)</source>
         <oldsource>Fichier Iso (*.iso *.bin *.img)</oldsource>
         <translation>Fichier Iso (*.iso *.bin *.img)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1113"/>
+        <location filename="../src/Window.cpp" line="1111"/>
         <source>Invalid archive</source>
         <oldsource>L&apos;archive est invalide</oldsource>
         <translation>Invalid archive</translation>
@@ -9756,7 +9781,7 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
         <translation type="vanished">Écran PC décompressé (*)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1218"/>
+        <location filename="../src/Window.cpp" line="1216"/>
         <source>Export the current file</source>
         <oldsource>Exporter le fichier courant</oldsource>
         <translation>Exporter le fichier courant</translation>
@@ -9767,19 +9792,19 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
         <translation type="vanished">L&apos;archive Lgp est inaccessible</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1253"/>
+        <location filename="../src/Window.cpp" line="1251"/>
         <source>Not yet implemented!</source>
         <oldsource>Pas encore implémenté !</oldsource>
         <translation>Pas encore implémenté !</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1272"/>
+        <location filename="../src/Window.cpp" line="1270"/>
         <source>Export...</source>
         <oldsource>Exportation...</oldsource>
         <translation>Exporter...</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1321"/>
+        <location filename="../src/Window.cpp" line="1319"/>
         <source>Import...</source>
         <oldsource>Importation...</oldsource>
         <translation>Importer...</translation>
@@ -9790,7 +9815,7 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
         <translation type="vanished">Fichier DAT décompressé (*)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1367"/>
+        <location filename="../src/Window.cpp" line="1365"/>
         <source>Import a file</source>
         <oldsource>Importer un fichier</oldsource>
         <translation>Importer un fichier</translation>

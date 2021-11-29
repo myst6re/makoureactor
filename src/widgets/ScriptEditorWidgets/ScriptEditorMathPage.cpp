@@ -168,7 +168,13 @@ void ScriptEditorBinaryOpPage::setOpcode(const Opcode &opcode)
 
 	var->setVar(opcodeBinaryOperation.bank1, opcodeBinaryOperation.var);
 
-	varOrValue->setLongValueType(opcodeBinaryOperation.isLong);
+	if (opcodeBinaryOperation.isLong) {
+		var->setLong();
+		varOrValue->setLong();
+	} else {
+		var->setShort();
+		varOrValue->setShort();
+	}
 	type1->setChecked(!opcodeBinaryOperation.isLong);
 	type2->setChecked(opcodeBinaryOperation.isLong);
 	varOrValue->setVarOrValue(opcodeBinaryOperation.bank2, opcodeBinaryOperation.value);
@@ -180,10 +186,11 @@ void ScriptEditorBinaryOpPage::setOpcode(const Opcode &opcode)
 
 void ScriptEditorBinaryOpPage::updateValueRange()
 {
-	varOrValue->setLongValueType(type2->isChecked());
 	OpcodeKey key = opcode().id();
 
 	if (type1->isChecked()) {
+		var->setShort();
+		varOrValue->setShort();
 		switch (key) {
 		case OpcodeKey::SETWORD:
 			key = OpcodeKey::SETBYTE;
@@ -222,6 +229,8 @@ void ScriptEditorBinaryOpPage::updateValueRange()
 			break;
 		}
 	} else {
+		var->setLong();
+		varOrValue->setLong();
 		switch (key) {
 		case OpcodeKey::SETBYTE:
 			key = OpcodeKey::SETWORD;
@@ -459,6 +468,11 @@ void ScriptEditorUnaryOpPage::setOpcode(const Opcode &opcode)
 	Q_ASSERT(opcode.unaryOperation(opcodeUnaryOperation));
 
 	var->setVar(opcodeUnaryOperation.bank2, opcodeUnaryOperation.var);
+	if (opcodeUnaryOperation.isLong) {
+		var->setLong();
+	} else {
+		var->setShort();
+	}
 
 	type1->setChecked(!opcodeUnaryOperation.isLong);
 	type2->setChecked(opcodeUnaryOperation.isLong);
@@ -473,6 +487,7 @@ void ScriptEditorUnaryOpPage::updateValueRange()
 	OpcodeKey key = opcode().id();
 
 	if (type1->isChecked()) {
+		var->setShort();
 		switch (key) {
 		case OpcodeKey::INC2X:
 			key = OpcodeKey::INCX;
@@ -490,6 +505,7 @@ void ScriptEditorUnaryOpPage::updateValueRange()
 			break;
 		}
 	} else {
+		var->setLong();
 		switch (key) {
 		case OpcodeKey::INCX:
 			key = OpcodeKey::INC2X;
@@ -579,9 +595,10 @@ void ScriptEditorBitOpPage::build()
 {
 	var = new VarOrValueWidget(this);
 	var->setOnlyVar(true);
+	var->setShort();
 
 	position = new VarOrValueWidget(this);
-	position->setLongValueType(false);
+	position->setShort();
 	position->setSignedValueType(false);
 
 	operationList = new QComboBox(this);
@@ -699,7 +716,7 @@ void ScriptEditorVariablePage::build()
 {
 	varOrValue = new VarOrValueWidget(this);
 	varOrValue->setSignedValueType(false);
-	varOrValue->setLongValueType(false);
+	varOrValue->setShort();
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(varOrValue, 0, 0);
@@ -748,14 +765,15 @@ void ScriptEditor2BytePage::build()
 {
 	var = new VarOrValueWidget(this);
 	var->setOnlyVar(true);
+	var->setLong();
 
 	varOrValue1 = new VarOrValueWidget(this);
 	varOrValue1->setSignedValueType(false);
-	varOrValue1->setLongValueType(false);
-	
+	varOrValue1->setShort();
+
 	varOrValue2 = new VarOrValueWidget(this);
 	varOrValue2->setSignedValueType(false);
-	varOrValue2->setLongValueType(false);
+	varOrValue2->setShort();
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(var, 0, 0);
@@ -836,19 +854,20 @@ void ScriptEditorSinCosPage::build()
 	operationList->addItem(tr("Cosinus"), OpcodeKey::COS);
 
 	var = new VarOrValueWidget(this);
+	var->setLong();
 	var->setOnlyVar(true);
 
 	varOrValue1 = new VarOrValueWidget(this);
-	varOrValue1->setSignedValueType(false);
-	varOrValue1->setLongValueType(false);
+	varOrValue1->setSignedValueType(true);
+	varOrValue1->setLong();
 	
 	varOrValue2 = new VarOrValueWidget(this);
-	varOrValue2->setSignedValueType(false);
-	varOrValue2->setLongValueType(false);
+	varOrValue2->setSignedValueType(true);
+	varOrValue2->setLong();
 	
 	varOrValue3 = new VarOrValueWidget(this);
-	varOrValue3->setSignedValueType(false);
-	varOrValue3->setLongValueType(false);
+	varOrValue3->setSignedValueType(true);
+	varOrValue3->setLong();
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(operationList, 0, 0);
@@ -904,9 +923,9 @@ Opcode ScriptEditorSinCosPage::buildOpcode()
 	OpcodeSIN &sin = opcode().op().opcodeSIN;
 	sin.banks[0] = BANK(bank1, bank2);
 	sin.banks[1] = BANK(bank3, bank4);
-	sin.value1 = quint8(value1);
-	sin.value2 = quint8(value2);
-	sin.value3 = quint8(value3);
+	sin.value1 = qint16(value1);
+	sin.value2 = qint16(value2);
+	sin.value3 = qint16(value3);
 	sin.var = adress4;
 
 	return opcode();

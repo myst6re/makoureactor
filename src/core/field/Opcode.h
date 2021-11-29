@@ -382,7 +382,7 @@ PACK(struct OpcodeSPECIAL : public OpcodeBase {
 });
 
 PACK(struct OpcodeSPECIALARROW : public OpcodeSPECIAL {
-	quint8 hide;
+	quint8 disabled;
 });
 
 // FIXME: 4 parameters, not 1

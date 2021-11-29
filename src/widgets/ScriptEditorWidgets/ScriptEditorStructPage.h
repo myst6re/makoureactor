@@ -131,12 +131,11 @@ class ScriptEditorIfPage : public ScriptEditorJumpPageInterface
 	Q_OBJECT
 public:
 	explicit ScriptEditorIfPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
-	void clear() override;
 	Opcode buildOpcode() override;
 	void setOpcode(const Opcode &opcode) override;
 	bool needsLabel() const override;
 private slots:
-	void changeTestRange();
+	void updateOpcode();
 private:
 	void build() override;
 	VarOrValueWidget *varOrValue1, *varOrValue2;

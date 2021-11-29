@@ -58,6 +58,16 @@ private:
 	QStandardItemModel *model;
 };
 
+class ScriptEditorNoParameterPage : public ScriptEditorView
+{
+	Q_OBJECT
+public:
+	explicit ScriptEditorNoParameterPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
+	Opcode buildOpcode() override;
+private:
+	void build() override;
+};
+
 class ScriptEditorBooleanPage : public ScriptEditorView
 {
 	Q_OBJECT
@@ -69,5 +79,4 @@ public:
 private:
 	void build() override;
 	QComboBox *_boolean;
-	QLabel *_label1, *_label2;
 };
