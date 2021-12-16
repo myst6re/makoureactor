@@ -68,10 +68,10 @@ void ScriptEditorBinaryOpPage::build()
 	layout->setColumnStretch(1, 1);
 	layout->setContentsMargins(QMargins());
 
-	connect(var, SIGNAL(changed()), SIGNAL(opcodeChanged()));
-	connect(varOrValue, SIGNAL(changed()), SIGNAL(opcodeChanged()));
-	connect(type1, SIGNAL(toggled(bool)), SLOT(updateValueRange()));
-	connect(operationList, SIGNAL(currentIndexChanged(int)), SLOT(changeCurrentOpcode(int)));
+	connect(var, &VarOrValueWidget::changed, this, &ScriptEditorBinaryOpPage::opcodeChanged);
+	connect(varOrValue, &VarOrValueWidget::changed, this, &ScriptEditorBinaryOpPage::opcodeChanged);
+	connect(type1, &QRadioButton::toggled, this, &ScriptEditorBinaryOpPage::updateValueRange);
+	connect(operationList, &QComboBox::currentIndexChanged, this, &ScriptEditorBinaryOpPage::changeCurrentOpcode);
 }
 
 Opcode ScriptEditorBinaryOpPage::buildOpcode()
@@ -411,9 +411,9 @@ void ScriptEditorUnaryOpPage::build()
 	layout->setColumnStretch(1, 1);
 	layout->setContentsMargins(QMargins());
 
-	connect(var, SIGNAL(changed()), SIGNAL(opcodeChanged()));
-	connect(type1, SIGNAL(toggled(bool)), SLOT(updateValueRange()));
-	connect(operationList, SIGNAL(currentIndexChanged(int)), SLOT(changeCurrentOpcode(int)));
+	connect(var, &VarOrValueWidget::changed, this, &ScriptEditorUnaryOpPage::opcodeChanged);
+	connect(type1, &QRadioButton::toggled, this, &ScriptEditorUnaryOpPage::updateValueRange);
+	connect(operationList, &QComboBox::currentIndexChanged, this, &ScriptEditorUnaryOpPage::changeCurrentOpcode);
 }
 
 Opcode ScriptEditorUnaryOpPage::buildOpcode()
@@ -616,9 +616,10 @@ void ScriptEditorBitOpPage::build()
 	layout->setRowStretch(3, 1);
 	layout->setContentsMargins(QMargins());
 
-	connect(var, SIGNAL(changed()), SIGNAL(opcodeChanged()));
-	connect(position, SIGNAL(changed()), SIGNAL(opcodeChanged()));
-	connect(operationList, SIGNAL(currentIndexChanged(int)), SLOT(changeCurrentOpcode(int)));
+
+	connect(var, &VarOrValueWidget::changed, this, &ScriptEditorBitOpPage::opcodeChanged);
+	connect(position, &VarOrValueWidget::changed, this, &ScriptEditorBitOpPage::opcodeChanged);
+	connect(operationList, &QComboBox::currentIndexChanged, this, &ScriptEditorBitOpPage::changeCurrentOpcode);
 }
 
 Opcode ScriptEditorBitOpPage::buildOpcode()
@@ -724,7 +725,7 @@ void ScriptEditorVariablePage::build()
 	layout->setColumnStretch(1, 1);
 	layout->setContentsMargins(QMargins());
 
-	connect(varOrValue, SIGNAL(changed()), SIGNAL(opcodeChanged()));
+	connect(varOrValue, &VarOrValueWidget::changed, this, &ScriptEditorVariablePage::opcodeChanged);
 }
 
 Opcode ScriptEditorVariablePage::buildOpcode()
@@ -783,10 +784,9 @@ void ScriptEditor2BytePage::build()
 	layout->setColumnStretch(2, 1);
 	layout->setContentsMargins(QMargins());
 
-	connect(var, SIGNAL(changed()), SIGNAL(opcodeChanged()));
-	connect(varOrValue1, SIGNAL(changed()), SIGNAL(opcodeChanged()));
-	connect(varOrValue2, SIGNAL(changed()), SIGNAL(opcodeChanged()));
-}
+	connect(var, &VarOrValueWidget::changed, this, &ScriptEditor2BytePage::opcodeChanged);
+	connect(varOrValue1, &VarOrValueWidget::changed, this, &ScriptEditor2BytePage::opcodeChanged);
+	connect(varOrValue2, &VarOrValueWidget::changed, this, &ScriptEditor2BytePage::opcodeChanged);}
 
 Opcode ScriptEditor2BytePage::buildOpcode()
 {
@@ -879,11 +879,11 @@ void ScriptEditorSinCosPage::build()
 	layout->setColumnStretch(1, 1);
 	layout->setContentsMargins(QMargins());
 	
-	connect(operationList, SIGNAL(currentIndexChanged(int)), SLOT(changeCurrentOpcode(int)));
-	connect(var, SIGNAL(changed()), SIGNAL(opcodeChanged()));
-	connect(varOrValue1, SIGNAL(changed()), SIGNAL(opcodeChanged()));
-	connect(varOrValue2, SIGNAL(changed()), SIGNAL(opcodeChanged()));
-	connect(varOrValue3, SIGNAL(changed()), SIGNAL(opcodeChanged()));
+	connect(operationList, &QComboBox::currentIndexChanged, this, &ScriptEditorSinCosPage::changeCurrentOpcode);
+	connect(var, &VarOrValueWidget::changed, this, &ScriptEditorSinCosPage::opcodeChanged);
+	connect(varOrValue1, &VarOrValueWidget::changed, this, &ScriptEditorSinCosPage::opcodeChanged);
+	connect(varOrValue2, &VarOrValueWidget::changed, this, &ScriptEditorSinCosPage::opcodeChanged);
+	connect(varOrValue3, &VarOrValueWidget::changed, this, &ScriptEditorSinCosPage::opcodeChanged);
 }
 
 Opcode ScriptEditorSinCosPage::buildOpcode()

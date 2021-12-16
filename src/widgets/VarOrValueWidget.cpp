@@ -57,12 +57,12 @@ VarOrValueWidget::VarOrValueWidget(QWidget *parent) :
 	_typeSelect->setCurrentIndex(0);
 	_varOrValuelayout->setCurrentIndex(0);
 
-	connect(_typeSelect, SIGNAL(currentIndexChanged(int)), SLOT(updateVarOrValueLayout()));
-	connect(_typeSelect, SIGNAL(currentIndexChanged(int)), SLOT(updateBankList()));
-	connect(_typeSelect, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()));
-	connect(_bank, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()));
-	connect(_value, SIGNAL(valueChanged(int)), SIGNAL(changed()));
-	connect(_adress, SIGNAL(valueChanged(int)), SIGNAL(changed()));
+	connect(_typeSelect, &QComboBox::currentIndexChanged, this, &VarOrValueWidget::updateVarOrValueLayout);
+	connect(_typeSelect, &QComboBox::currentIndexChanged, this, &VarOrValueWidget::updateBankList);
+	connect(_typeSelect, &QComboBox::currentIndexChanged, this, &VarOrValueWidget::changed);
+	connect(_bank, &QComboBox::currentIndexChanged, this, &VarOrValueWidget::changed);
+	connect(_value, &QSpinBox::valueChanged, this, &VarOrValueWidget::changed);
+	connect(_adress, &QSpinBox::valueChanged, this, &VarOrValueWidget::changed);
 }
 
 int VarOrValueWidget::value() const

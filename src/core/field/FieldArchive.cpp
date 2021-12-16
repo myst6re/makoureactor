@@ -108,8 +108,8 @@ FieldArchive::FieldArchive(FieldArchiveIO *io) :
 	_io(io), _observer(nullptr)
 {
 	//	fileWatcher.addPath(path);
-	//	connect(&fileWatcher, SIGNAL(fileChanged(QString)), this, SIGNAL(fileChanged(QString)));
-	//	connect(&fileWatcher, SIGNAL(directoryChanged(QString)), this, SIGNAL(directoryChanged(QString)));
+	//	connect(&fileWatcher, &QFileSystemWatcher::fileChanged, this, &FieldArchive::fileChanged);
+	//	connect(&fileWatcher, &QFileSystemWatcher::directoryChanged, this, &FieldArchive::directoryChanged);
 }
 
 FieldArchive::~FieldArchive()

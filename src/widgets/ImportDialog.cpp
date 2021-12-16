@@ -111,12 +111,12 @@ ImportDialog::ImportDialog(bool sourceSameTypeAsTarget, bool isDat, const QStrin
 	layout->addWidget(buttonBox);
 	layout->addStretch();
 
-	connect(buttonBox, SIGNAL(accepted()), SLOT(accept()));
-	connect(buttonBox, SIGNAL(rejected()), SLOT(reject()));
-	connect(changePathButtonMim, SIGNAL(clicked()), SLOT(setMimPathByUser()));
-	connect(changePathButtonBsx, SIGNAL(clicked()), SLOT(setBsxPathByUser()));
-	connect(mim, SIGNAL(toggled(bool)), pathWidgetMim, SLOT(setEnabled(bool)));
-	connect(model, SIGNAL(toggled(bool)), pathWidgetBsx, SLOT(setEnabled(bool)));
+	connect(buttonBox, &QDialogButtonBox::accepted, this, &ImportDialog::accept);
+	connect(buttonBox, &QDialogButtonBox::rejected, this, &ImportDialog::reject);
+	connect(changePathButtonMim, &QPushButton::clicked, this, &ImportDialog::setMimPathByUser);
+	connect(changePathButtonBsx, &QPushButton::clicked, this, &ImportDialog::setBsxPathByUser);
+	connect(mim, &QCheckBox::toggled, pathWidgetMim, &QWidget::setEnabled);
+	connect(model, &QCheckBox::toggled, pathWidgetBsx, &QWidget::setEnabled);
 }
 
 Field::FieldSections ImportDialog::parts() const

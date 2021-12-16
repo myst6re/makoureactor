@@ -394,7 +394,7 @@ LgpItemModel::LgpItemModel(Lgp *lgp, QObject *parent) :
 	}
 //	root->debug();
 
-//	connect(&iconThread, SIGNAL(iconLoaded(QString,QIcon)), SLOT(setIcon(QString,QIcon)));
+//	connect(&iconThread, &IconThread::iconLoaded, this, &LgpItemModel::setIcon);
 
 	QFileIconProvider iconProvider;
 	fileIcon = iconProvider.icon(QFileIconProvider::File);
@@ -716,16 +716,16 @@ LgpWidget::LgpWidget(Lgp *lgp, QWidget *parent) :
 	layout->addWidget(treeView, 1, 0);
 	layout->addWidget(preview, 1, 1);
 
-	connect(renameButton, SIGNAL(released()), SLOT(renameCurrent()));
-	connect(replaceButton, SIGNAL(released()), SLOT(replaceCurrent()));
-	connect(extractButton, SIGNAL(released()), SLOT(extractCurrent()));
-	connect(extractAllButton, SIGNAL(released()), SLOT(extractAll()));
-	connect(addButton, SIGNAL(released()), SLOT(add()));
-	connect(removeButton, SIGNAL(released()), SLOT(removeCurrent()));
-	connect(treeView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(setButtonsState()));
-	connect(treeView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(changePreview()));
-	connect(preview, SIGNAL(currentImageChanged(int)), SLOT(changeImageInPreview(int)));
-	connect(preview, SIGNAL(currentPaletteChanged(int)), SLOT(changeImagePaletteInPreview(int)));
+	connect(renameButton, &QPushButton::released, this, &LgpWidget::renameCurrent);
+	connect(replaceButton, &QPushButton::released, this, &LgpWidget::replaceCurrent);
+	connect(extractButton, &QPushButton::released, this, &LgpWidget::extractCurrent);
+	connect(extractAllButton, &QPushButton::released, this, &LgpWidget::extractAll);
+	connect(addButton, &QPushButton::released, this, &LgpWidget::add);
+	connect(removeButton, &QPushButton::released, this, &LgpWidget::removeCurrent);
+	connect(treeView->selectionModel(), &QItemSelectionModel::selectionChanged, this, &LgpWidget::setButtonsState);
+	connect(treeView->selectionModel(), &QItemSelectionModel::selectionChanged, this, &LgpWidget::changePreview);
+	connect(preview, &ArchivePreview::currentImageChanged, this, &LgpWidget::changeImageInPreview);
+	connect(preview, &ArchivePreview::currentPaletteChanged, this, &LgpWidget::changeImagePaletteInPreview);
 
 	setButtonsState();
 }

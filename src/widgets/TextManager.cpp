@@ -256,28 +256,28 @@ TextManager::TextManager(QWidget *parent) :
 	setLayout(layout);
 	adjustSize();
 
-	connect(liste1, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)), SLOT(selectText(QListWidgetItem*,QListWidgetItem*)));
-	connect(dispUnusedText, SIGNAL(toggled(bool)), SLOT(showList()));
-	connect(toolBar, SIGNAL(actionTriggered(QAction*)), SLOT(insertTag(QAction*)));
-	connect(toolBar2, SIGNAL(actionTriggered(QAction*)), SLOT(insertTag(QAction*)));
-	connect(menu1, SIGNAL(triggered(QAction*)), SLOT(insertTag(QAction*)));
-	connect(menu2, SIGNAL(triggered(QAction*)), SLOT(insertTag(QAction*)));
-	connect(menuVars, SIGNAL(triggered(QAction*)), SLOT(insertTag(QAction*)));
-	connect(menuKeys, SIGNAL(triggered(QAction*)), SLOT(insertTag(QAction*)));
-	connect(textEdit, SIGNAL(textChanged()), SLOT(setTextChanged()));
-	connect(prevPage, SIGNAL(released()), SLOT(prevTextPreviewPage()));
-	connect(nextPage, SIGNAL(released()), SLOT(nextTextPreviewPage()));
-	connect(prevWin, SIGNAL(released()), SLOT(prevTextPreviewWin()));
-	connect(nextWin, SIGNAL(released()), SLOT(nextTextPreviewWin()));
-	connect(textPreview, SIGNAL(positionChanged(const QPoint&)), SLOT(changePosition(const QPoint&)));
-	connect(textPreview, SIGNAL(pageChanged(int)), SLOT(changeTextPreviewPage()));
-	connect(xCoord, SIGNAL(valueChanged(int)), SLOT(changeXCoord(int)));
-	connect(yCoord, SIGNAL(valueChanged(int)), SLOT(changeYCoord(int)));
-	connect(wSize, SIGNAL(valueChanged(int)), SLOT(changeWSize(int)));
-	connect(hSize, SIGNAL(valueChanged(int)), SLOT(changeHSize(int)));
-	connect(hAlign, SIGNAL(clicked()), SLOT(alignHorizontally()));
-	connect(vAlign, SIGNAL(clicked()), SLOT(alignVertically()));
-	connect(autoSize, SIGNAL(clicked()), SLOT(resizeWindow()));
+	connect(liste1, &QListWidget::currentItemChanged, this, &TextManager::selectText);
+	connect(dispUnusedText, &QCheckBox::toggled, this, &TextManager::showList);
+	connect(toolBar, &QToolBar::actionTriggered, this, &TextManager::insertTag);
+	connect(toolBar2, &QToolBar::actionTriggered, this, &TextManager::insertTag);
+	connect(menu1, &QMenu::triggered, this, &TextManager::insertTag);
+	connect(menu2, &QMenu::triggered, this, &TextManager::insertTag);
+	connect(menuVars, &QMenu::triggered, this, &TextManager::insertTag);
+	connect(menuKeys, &QMenu::triggered, this, &TextManager::insertTag);
+	connect(textEdit, &QPlainTextEdit::textChanged, this, &TextManager::setTextChanged);
+	connect(prevPage, &QPushButton::released, this, &TextManager::prevTextPreviewPage);
+	connect(nextPage, &QPushButton::released, this, &TextManager::nextTextPreviewPage);
+	connect(prevWin, &QPushButton::released, this, &TextManager::prevTextPreviewWin);
+	connect(nextWin, &QPushButton::released, this, &TextManager::nextTextPreviewWin);
+	connect(textPreview, &TextPreview::positionChanged, this, &TextManager::changePosition);
+	connect(textPreview, &TextPreview::pageChanged, this, &TextManager::changeTextPreviewPage);
+	connect(xCoord, &QSpinBox::valueChanged, this, &TextManager::changeXCoord);
+	connect(yCoord, &QSpinBox::valueChanged, this, &TextManager::changeYCoord);
+	connect(wSize, &QSpinBox::valueChanged, this, &TextManager::changeWSize);
+	connect(hSize, &QSpinBox::valueChanged, this, &TextManager::changeHSize);
+	connect(hAlign, &QPushButton::clicked, this, &TextManager::alignHorizontally);
+	connect(vAlign, &QPushButton::clicked, this, &TextManager::alignVertically);
+	connect(autoSize, &QPushButton::clicked, this, &TextManager::resizeWindow);
 }
 
 void TextManager::focusInEvent(QFocusEvent *)

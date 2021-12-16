@@ -23,8 +23,7 @@ ScriptList::ScriptList(QWidget *parent) :
 {
 	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	setContextMenuPolicy(Qt::ActionsContextMenu);
-	connect(this, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
-	        SLOT(evidence(QListWidgetItem*,QListWidgetItem*)));
+	connect(this, &ScriptList::currentItemChanged, this, &ScriptList::evidence);
 }
 
 void ScriptList::evidence(QListWidgetItem *current, QListWidgetItem *previous)

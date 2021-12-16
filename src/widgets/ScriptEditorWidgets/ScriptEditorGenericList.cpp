@@ -58,9 +58,9 @@ void ScriptEditorGenericList::build()
 	layout->addLayout(buttonLayout);
 	layout->setContentsMargins(QMargins());
 
-	connect(model, SIGNAL(itemChanged(QStandardItem*)), SIGNAL(opcodeChanged()));
-	connect(addButton, SIGNAL(released()), SLOT(addParam()));
-	connect(delButton, SIGNAL(released()), SLOT(delLastRow()));
+	connect(model, &QStandardItemModel::itemChanged, this, &ScriptEditorGenericList::opcodeChanged);
+	connect(addButton, &QPushButton::released, this, &ScriptEditorGenericList::addParam);
+	connect(delButton, &QPushButton::released, this, &ScriptEditorGenericList::delLastRow);
 }
 
 Opcode ScriptEditorGenericList::buildOpcode()
@@ -700,7 +700,7 @@ void ScriptEditorBooleanPage::build()
 	layout->setRowStretch(1, 1);
 	layout->setContentsMargins(QMargins());
 
-	connect(_boolean, SIGNAL(currentIndexChanged(int)), SIGNAL(opcodeChanged()));
+	connect(_boolean, &QComboBox::currentIndexChanged, this, &ScriptEditorBooleanPage::opcodeChanged);
 }
 
 Opcode ScriptEditorBooleanPage::buildOpcode()

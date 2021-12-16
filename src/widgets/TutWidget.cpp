@@ -57,7 +57,7 @@ TutWidget::TutWidget(QWidget *parent) :
 	exportLayout->addWidget(versionPS);
 	exportLayout->addWidget(versionPC);
 
-	connect(versionPS, SIGNAL(toggled(bool)), SLOT(changeVersion(bool)));
+	connect(versionPS, &QRadioButton::toggled, this, &TutWidget::changeVersion);
 
 	exportLayout->addStretch();
 	exportLayout->addWidget(exportButton);
@@ -68,10 +68,10 @@ TutWidget::TutWidget(QWidget *parent) :
 	layout->addWidget(_list, 1, 0);
 	layout->addWidget(stackedWidget, 1, 1);
 
-	connect(list, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)), SLOT(showText(QListWidgetItem*,QListWidgetItem*)));
+	connect(list, &QListWidget::currentItemChanged, this, &TutWidget::showText);
 
-	connect(exportButton, SIGNAL(released()), SLOT(exportation()));
-	connect(importButton, SIGNAL(released()), SLOT(importation()));
+	connect(exportButton, &QPushButton::released, this, &TutWidget::exportation);
+	connect(importButton, &QPushButton::released, this, &TutWidget::importation);
 }
 
 void TutWidget::fill(Field *field, TutFilePC *tutPC, bool reload)
@@ -116,7 +116,7 @@ QWidget *TutWidget::buildTutPage()
 	textEdit->setLineWrapMode(QPlainTextEdit::NoWrap);
 	new TextHighlighter(textEdit->document(), true);
 
-	connect(textEdit, SIGNAL(textChanged()), SLOT(setTextChanged()));
+	connect(textEdit, &QPlainTextEdit::textChanged, this, &TutWidget::setTextChanged);
 
 	return textEdit;
 }
@@ -167,9 +167,9 @@ QWidget *TutWidget::buildBrokenPage()
 	layout->addStretch();
 	layout->setContentsMargins(QMargins());
 
-	connect(repairButton, SIGNAL(released()), SLOT(repairBroken()));
-	connect(createNewAkaoButton, SIGNAL(released()), SLOT(replaceByEmptyAkao()));
-	connect(createNewTutoButton, SIGNAL(released()), SLOT(replaceByEmptyTuto()));
+	connect(repairButton, &QPushButton::released, this, &TutWidget::repairBroken);
+	connect(createNewAkaoButton, &QPushButton::released, this, &TutWidget::replaceByEmptyAkao);
+	connect(createNewTutoButton, &QPushButton::released, this, &TutWidget::replaceByEmptyTuto);
 
 	return ret;
 }
@@ -338,8 +338,8 @@ void TutWidget::add()
 		chooseLayout->addWidget(tutType, 0, 0);
 		chooseLayout->addWidget(akaoType, 0, 1);
 		chooseLayout->addWidget(buttonBox, 1, 0, 1, 2);
-		connect(buttonBox, SIGNAL(accepted()), &chooseType, SLOT(accept()));
-		connect(buttonBox, SIGNAL(rejected()), &chooseType, SLOT(reject()));
+		connect(buttonBox, &QDialogButtonBox::accepted, &chooseType, &QDialog::accept);
+		connect(buttonBox, &QDialogButtonBox::rejected, &chooseType, &QDialog::reject);
 		if (chooseType.exec() != QDialog::Accepted) {
 			return;
 		}

@@ -60,46 +60,46 @@ Window::Window() :
 	/* "File" Menu */
 	QMenu *fileMenu = menuBar->addMenu(tr("&File"));
 
-	actionOpen = fileMenu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogOpenButton), tr("&Open..."), this, SLOT(openFile()), QKeySequence("Ctrl+O"));
-	fileMenu->addAction(tr("Open &Directory..."), this, SLOT(openDir()), QKeySequence("Shift+Ctrl+O"));
+	actionOpen = fileMenu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogOpenButton), tr("&Open..."), this, [&] { openFile(QString());}, QKeySequence("Ctrl+O"));
+	fileMenu->addAction(tr("Open &Directory..."), this, &Window::openDir, QKeySequence("Shift+Ctrl+O"));
 	_recentMenu = new QMenu(tr("&Recent files"), this);
 	fillRecentMenu();
-	connect(_recentMenu, SIGNAL(triggered(QAction*)), SLOT(openRecentFile(QAction*)));
+	connect(_recentMenu, &QMenu::triggered, this, &Window::openRecentFile);
 	fileMenu->addMenu(_recentMenu);
-	actionSave = fileMenu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton), tr("&Save"), this, SLOT(save()), QKeySequence("Ctrl+S"));
-	actionSaveAs = fileMenu->addAction(tr("Save &As..."), this, SLOT(saveAs()), QKeySequence("Shift+Ctrl+S"));
-	actionExport = fileMenu->addAction(tr("&Export the current map..."), this, SLOT(exportCurrentMap()), QKeySequence("Ctrl+E"));
-	actionMassExport = fileMenu->addAction(tr("&Mass Export..."), this, SLOT(massExport()), QKeySequence("Shift+Ctrl+E"));
-	actionImport = fileMenu->addAction(tr("&Import to current map..."), this, SLOT(importToCurrentMap()), QKeySequence("Ctrl+I"));
-//	actionMassImport = fileMenu->addAction(tr("Mass &import..."), this, SLOT(massImport()), QKeySequence("Shift+Ctrl+I"));
-	actionArchive = fileMenu->addAction(tr("Archive Mana&ger..."), this, SLOT(archiveManager()), QKeySequence("Ctrl+K"));
+	actionSave = fileMenu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton), tr("&Save"), this, &Window::save, QKeySequence("Ctrl+S"));
+	actionSaveAs = fileMenu->addAction(tr("Save &As..."), this, &Window::saveAs, QKeySequence("Shift+Ctrl+S"));
+	actionExport = fileMenu->addAction(tr("&Export the current map..."), this, &Window::exportCurrentMap, QKeySequence("Ctrl+E"));
+	actionMassExport = fileMenu->addAction(tr("&Mass Export..."), this, &Window::massExport, QKeySequence("Shift+Ctrl+E"));
+	actionImport = fileMenu->addAction(tr("&Import to current map..."), this, &Window::importToCurrentMap, QKeySequence("Ctrl+I"));
+//	actionMassImport = fileMenu->addAction(tr("Mass &import..."), this, &Window::massImport, QKeySequence("Shift+Ctrl+I"));
+	actionArchive = fileMenu->addAction(tr("Archive Mana&ger..."), this, &Window::archiveManager, QKeySequence("Ctrl+K"));
 	fileMenu->addSeparator();
-	actionRun = fileMenu->addAction(QIcon(":/images/ff7.png"), tr("R&un FF7"), this, SLOT(runFF7()));
+	actionRun = fileMenu->addAction(QIcon(":/images/ff7.png"), tr("R&un FF7"), this, &Window::runFF7);
 	actionRun->setShortcut(Qt::Key_F8);
 	actionRun->setShortcutContext(Qt::ApplicationShortcut);
 	actionRun->setEnabled(!Data::ff7AppPath().isEmpty());
 	fileMenu->addSeparator();
-	actionClose = fileMenu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogCloseButton), tr("C&lose"), this, SLOT(closeFile()));
-	fileMenu->addAction(tr("E&xit"), this, SLOT(close()), QKeySequence::Quit)->setMenuRole(QAction::QuitRole);
+	actionClose = fileMenu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogCloseButton), tr("C&lose"), this, &Window::closeFile);
+	fileMenu->addAction(tr("E&xit"), this, &Window::close, QKeySequence::Quit)->setMenuRole(QAction::QuitRole);
 
 	/* "Tools" Menu */
 	menu = menuBar->addMenu(tr("T&ools"));
-	QAction *actionText = menu->addAction(QIcon(":/images/text-editor.png"), tr("&Texts..."), this, SLOT(textManager()), QKeySequence("Ctrl+T"));
-	actionModels = menu->addAction(QIcon(":/images/model.png"), tr("Map &Models..."), this, SLOT(modelManager()), QKeySequence("Ctrl+M"));
-	actionEncounter = menu->addAction(tr("Encounte&rs..."), this, SLOT(encounterManager()), QKeySequence("Ctrl+N"));
-	menu->addAction(tr("Tutorials/&Sounds..."), this, SLOT(tutManager()), QKeySequence("Ctrl+K"));
-	QAction *actionWalkmesh = menu->addAction(QIcon(":/images/location.png"), tr("&Walkmesh..."), this, SLOT(walkmeshManager()), QKeySequence("Ctrl+W"));
-	menu->addAction(QIcon(":/images/background.png"), tr("&Background..."), this, SLOT(backgroundManager()), QKeySequence("Ctrl+B"));
-	actionMisc = menu->addAction(tr("M&iscellaneous..."), this, SLOT(miscManager()));
+	QAction *actionText = menu->addAction(QIcon(":/images/text-editor.png"), tr("&Texts..."), this, [&] {textManager(-1, 0, 0, true);}, QKeySequence("Ctrl+T"));
+	actionModels = menu->addAction(QIcon(":/images/model.png"), tr("Map &Models..."), this, &Window::modelManager, QKeySequence("Ctrl+M"));
+	actionEncounter = menu->addAction(tr("Encounte&rs..."), this, &Window::encounterManager, QKeySequence("Ctrl+N"));
+	menu->addAction(tr("Tutorials/&Sounds..."), this, &Window::tutManager, QKeySequence("Ctrl+K"));
+	QAction *actionWalkmesh = menu->addAction(QIcon(":/images/location.png"), tr("&Walkmesh..."), this, &Window::walkmeshManager, QKeySequence("Ctrl+W"));
+	menu->addAction(QIcon(":/images/background.png"), tr("&Background..."), this, &Window::backgroundManager, QKeySequence("Ctrl+B"));
+	actionMisc = menu->addAction(tr("M&iscellaneous..."), this, &Window::miscManager);
 	menu->addSeparator();
-	menu->addAction(tr("Variable Mana&ger..."), this, SLOT(varManager()), QKeySequence("Ctrl+G"));
-	actionFind = menu->addAction(QIcon(":/images/find.png"), tr("&Find..."), this, SLOT(searchManager()), QKeySequence::Find);
-	actionMiscOperations = menu->addAction(tr("B&atch processing..."), this, SLOT(miscOperations()));
+	menu->addAction(tr("Variable Mana&ger..."), this, &Window::varManager, QKeySequence("Ctrl+G"));
+	actionFind = menu->addAction(QIcon(":/images/find.png"), tr("&Find..."), this, &Window::searchManager, QKeySequence::Find);
+	actionMiscOperations = menu->addAction(tr("B&atch processing..."), this, &Window::miscOperations);
 
 	/* "Settings" Menu */
 	menu = menuBar->addMenu(tr("&Settings"));
 
-	actionJp_txt = menu->addAction(tr("&Japanese Characters"), this, SLOT(jpText(bool)));
+	actionJp_txt = menu->addAction(tr("&Japanese Characters"), this, &Window::jpText);
 	actionJp_txt->setCheckable(true);
 	actionJp_txt->setChecked(Config::value("jp_txt", false).toBool());
 
@@ -126,9 +126,9 @@ Window::Window() :
 			action->setChecked(Config::value("lang").toString() == lang);
 		}
 	}
-	connect(menuLang, SIGNAL(triggered(QAction*)), this, SLOT(changeLanguage(QAction*)));
+	connect(menuLang, &QMenu::triggered, this, &Window::changeLanguage);
 
-	menu->addAction(tr("&Configuration..."), this, SLOT(config()))->setMenuRole(QAction::PreferencesRole);
+	menu->addAction(tr("&Configuration..."), this, &Window::config)->setMenuRole(QAction::PreferencesRole);
 	
 #if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 	qreal scale = qApp->desktop()->physicalDpiX() / qApp->desktop()->logicalDpiX();
@@ -167,7 +167,7 @@ Window::Window() :
 		fieldModel = new FieldModel();
 //		modelThread = new FieldModelThread(this);
 
-//		connect(modelThread, SIGNAL(modelLoaded(Field*,FieldModelFile*,int,int,bool)), SLOT(showModel(Field*,FieldModelFile*)));
+//		connect(modelThread, &FieldModelThread::modelLoaded, this, &Window::showModel);
 	} else {
 		fieldModel = nullptr;
 	}
@@ -222,27 +222,27 @@ Window::Window() :
 	searchDialog = new Search(this);
 	menuBar->addMenu(createPopupMenu());
 #ifndef Q_OS_MAC
-	menuBar->addAction(tr("&?"), this, SLOT(about()))->setMenuRole(QAction::AboutRole);
+	menuBar->addAction(tr("&?"), this, &Window::about)->setMenuRole(QAction::AboutRole);
 #else
-	fileMenu->addAction(tr("&?"), this, SLOT(about()))->setMenuRole(QAction::AboutRole);
+	fileMenu->addAction(tr("&?"), this, &Window::about)->setMenuRole(QAction::AboutRole);
 #endif
 
 	setMenuBar(menuBar);
 
-	connect(_fieldList, SIGNAL(itemSelectionChanged()), SLOT(openField()));
-	connect(_fieldList, SIGNAL(changed()), SLOT(setModified()));
-	connect(_fieldList, SIGNAL(fieldDeleted()), SLOT(setFieldDeleted()));
-	connect(zoneImage, SIGNAL(clicked()), SLOT(backgroundManager()));
-	connect(searchDialog, SIGNAL(found(int,int,int,int)), SLOT(gotoOpcode(int,int,int,int)));
-	connect(searchDialog, SIGNAL(foundText(int,int,qsizetype,qsizetype)), SLOT(gotoText(int,int,qsizetype,qsizetype)));
-	connect(_scriptManager, SIGNAL(groupScriptCurrentChanged(int)), SLOT(showModel(int)));
-	connect(_scriptManager, SIGNAL(editText(int)), SLOT(textManager(int)));
-	connect(_scriptManager, SIGNAL(changed()), SLOT(setModified()));
-	connect(_scriptManager, SIGNAL(searchOpcode(int)), SLOT(searchOpcode(int)));
-	connect(emptyFieldWidget, SIGNAL(createMapClicked()), SLOT(createCurrentMap()));
-	connect(emptyFieldWidget, SIGNAL(importMapClicked()), SLOT(importToCurrentMap()));
+	connect(_fieldList, &FieldList::itemSelectionChanged, this, [&] {openField(false);});
+	connect(_fieldList, &FieldList::changed, this, [&] {setModified(true);});
+	connect(_fieldList, &FieldList::fieldDeleted, this, &Window::setFieldDeleted);
+	connect(zoneImage, &ApercuBG::clicked, this, &Window::backgroundManager);
+	connect(searchDialog, &Search::found, this, &Window::gotoOpcode);
+	connect(searchDialog, &Search::foundText, this, &Window::gotoText);
+	connect(_scriptManager, &ScriptManager::groupScriptCurrentChanged, this, qOverload<int>(&Window::showModel));
+	connect(_scriptManager, &ScriptManager::editText, this, [&](int id) {textManager(id, 0, 0, true);});
+	connect(_scriptManager, &ScriptManager::changed, this, [&] {setModified(true);});
+	connect(_scriptManager, &ScriptManager::searchOpcode, this, &Window::searchOpcode);
+	connect(emptyFieldWidget, &EmptyFieldWidget::createMapClicked, this, &Window::createCurrentMap);
+	connect(emptyFieldWidget, &EmptyFieldWidget::importMapClicked, this, &Window::importToCurrentMap);
 
-	connect(&timer, SIGNAL(timeout()), SLOT(processEvents()));
+	connect(&timer, &QTimer::timeout, this, &Window::processEvents);
 
 	_fieldList->sortItems(Config::value("fieldListSortColumn", 1).toInt(),
 	                     Qt::SortOrder(Config::value("fieldListSortOrder").toBool()));
@@ -298,10 +298,10 @@ QMenu *Window::createPopupMenu()
 	QMenu *menu = new QMenu(tr("&View"), this);
 	menu->addAction(toolBar->toggleViewAction());
 	QAction *action;
-	action = menu->addAction(tr("Map List"), this, SLOT(toggleFieldList()));
+	action = menu->addAction(tr("Map List"), this, &Window::toggleFieldList);
 	action->setCheckable(true);
 	action->setChecked(!verticalSplitter->isCollapsed(0));
-	action = menu->addAction(tr("Background Preview"), this, SLOT(toggleBackgroundPreview()));
+	action = menu->addAction(tr("Background Preview"), this, &Window::toggleBackgroundPreview);
 	action->setCheckable(true);
 	action->setChecked(!horizontalSplitter->isCollapsed(1));
 	menu->addSeparator();
@@ -1388,7 +1388,7 @@ void Window::importToCurrentMap()
 		return;
 	}
 
-	setModified();
+    setModified(true);
 	index = path.lastIndexOf('/');
 	Config::setValue("importPath", index == -1 ? path : path.left(index));
 	openField(true);
@@ -1466,9 +1466,9 @@ void Window::textManager(int textID, int from, int size, bool activate)
 {
 	if (!_textDialog) {
 		_textDialog = new TextManager(this);
-		connect(_textDialog, SIGNAL(modified()), SLOT(setModified()));
-		connect(_textDialog, SIGNAL(opcodeModified(int,int,int)), _scriptManager, SLOT(refreshOpcode(int,int,int)));
-		connect(_scriptManager, SIGNAL(changed()), _textDialog, SLOT(updateFromScripts()));
+		connect(_textDialog, &TextManager::modified, this, [&] {setModified(true);});
+		connect(_textDialog, &TextManager::opcodeModified, _scriptManager, &ScriptManager::refreshOpcode);
+		connect(_scriptManager, &ScriptManager::changed, _textDialog, &TextManager::updateFromScripts);
 	}
 
 	if (field && field->scriptsAndTexts()->isOpen()) {
@@ -1498,7 +1498,7 @@ void Window::modelManager()
 		} else {
 			_modelManager = new ModelManagerPS(this);
 		}
-		connect(_modelManager, SIGNAL(modified()), SLOT(setModified()));
+		connect(_modelManager, &ModelManager::modified, this, [&] {setModified(true);});
 	}
 
 	if (field) {
@@ -1532,7 +1532,7 @@ void Window::encounterManager()
 			if (dialog.exec()==QDialog::Accepted)
 			{
 				if (encounter->isModified())
-					setModified();
+				setModified(true);
 			}
 		} else {
 			QMessageBox::warning(this, tr("Opening error"), tr("Can not open encounters!"));
@@ -1544,7 +1544,7 @@ void Window::tutManager()
 {
 	if (!_tutManager) {
 		_tutManager = new TutWidget(this);
-		connect(_tutManager, SIGNAL(modified()), SLOT(setModified()));
+		connect(_tutManager, &TutWidget::modified, this, [&] {setModified(true);});
 	}
 
 	if (field && field->tutosAndSounds()->isOpen()) {
@@ -1566,7 +1566,7 @@ void Window::walkmeshManager()
 {
 	if (!_walkmeshManager) {
 		_walkmeshManager = new WalkmeshManager(this);
-		connect(_walkmeshManager, SIGNAL(modified()), SLOT(setModified()));
+		connect(_walkmeshManager, &WalkmeshManager::modified, this, [&] {setModified(true);});
 	}
 
 	if (field) {
@@ -1584,8 +1584,8 @@ void Window::backgroundManager()
 {
 	if (!_backgroundManager) {
 		_backgroundManager = new BGDialog(this);
-		connect(_backgroundManager, SIGNAL(modified()), SLOT(setModified()));
-		connect(_backgroundManager, SIGNAL(modified()), zoneImage, SLOT(drawBackground()));
+		connect(_backgroundManager, &BGDialog::modified, this, [&] {setModified(true);});
+		connect(_backgroundManager, &BGDialog::modified, zoneImage, &ApercuBG::drawBackground);
 	}
 
 	if (field) {
@@ -1608,7 +1608,7 @@ void Window::miscManager()
 			if (dialog.exec()==QDialog::Accepted)
 			{
 				if (inf->isModified() || field->isModified()) {
-					setModified();
+					setModified(true);
 					authorLbl->setText(tr("Author: %1").arg(field->scriptsAndTexts()->author()));
 				}
 			}
@@ -1627,7 +1627,7 @@ void Window::archiveManager()
 		actionArchive->setText(tr("Go back to field map editor..."));
 		if (_lgpWidget == nullptr) {
 			_lgpWidget = new LgpWidget(static_cast<Lgp *>(fieldArchive->io()->device()), this);
-			connect(_lgpWidget, SIGNAL(modified()), SLOT(setModified()));
+			connect(_lgpWidget, &LgpWidget::modified, this, [&] {setModified(true);});
 			_mainStackedWidget->addWidget(_lgpWidget);
 		}
 		_mainStackedWidget->setCurrentWidget(_lgpWidget);
@@ -1675,7 +1675,7 @@ void Window::miscOperations()
 		hideProgression();
 
 		if (fieldArchive->isModified()) {
-			setModified();
+		setModified(true);
 		}
 	}
 }

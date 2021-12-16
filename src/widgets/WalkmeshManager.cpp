@@ -73,12 +73,12 @@ WalkmeshManager::WalkmeshManager(QWidget *parent) :
 	layout->addWidget(tabWidget, 5, 0, 1, 4);
 
 	if (walkmesh) {
-		connect(slider1, SIGNAL(valueChanged(int)), walkmesh, SLOT(setXRotation(int)));
-		connect(slider2, SIGNAL(valueChanged(int)), walkmesh, SLOT(setYRotation(int)));
-		connect(slider3, SIGNAL(valueChanged(int)), walkmesh, SLOT(setZRotation(int)));
-		connect(resetCamera, SIGNAL(clicked()), SLOT(resetCamera()));
-		connect(showModels, SIGNAL(toggled(bool)), walkmesh, SLOT(setModelsVisible(bool)));
-		connect(showBackground, SIGNAL(toggled(bool)), walkmesh, SLOT(setBackgroundVisible(bool)));
+		connect(slider1, &QSlider::valueChanged, walkmesh, &WalkmeshWidget::setXRotation);
+		connect(slider2, &QSlider::valueChanged, walkmesh, &WalkmeshWidget::setYRotation);
+		connect(slider3, &QSlider::valueChanged, walkmesh, &WalkmeshWidget::setZRotation);
+		connect(resetCamera, &QPushButton::clicked, this, &WalkmeshManager::resetCamera);
+		connect(showModels, &QCheckBox::toggled, walkmesh, &WalkmeshWidget::setModelsVisible);
+		connect(showBackground, &QCheckBox::toggled, walkmesh, &WalkmeshWidget::setBackgroundVisible);
 	}
 }
 
@@ -101,8 +101,8 @@ QWidget *WalkmeshManager::buildCameraPage()
 	QWidget *ret = new QWidget(this);
 
 	ListWidget *listWidget = new ListWidget(ret);
-	listWidget->addAction(ListWidget::Add, tr("Add camera"), this, SLOT(addCamera()));
-	listWidget->addAction(ListWidget::Rem, tr("Remove camera"), this, SLOT(removeCamera()));
+	listWidget->addAction(ListWidget::Add, tr("Add camera"), this, SLOT(addCamera));
+	listWidget->addAction(ListWidget::Rem, tr("Remove camera"), this, SLOT(removeCamera));
 
 	caToolbar = listWidget->toolBar();
 	camList = listWidget->listWidget();
@@ -145,17 +145,18 @@ QWidget *WalkmeshManager::buildCameraPage()
 	caLayout->setColumnStretch(4, 1);
 	caLayout->setColumnStretch(6, 1);
 
-	connect(camList, SIGNAL(currentRowChanged(int)), SLOT(setCurrentCamera(int)));
+	connect(camList, &QListWidget::currentRowChanged, this, &WalkmeshManager::setCurrentCamera);
 
-	connect(caVectorXEdit, SIGNAL(valuesChanged(Vertex_s)), SLOT(editCaVector(Vertex_s)));
-	connect(caVectorYEdit, SIGNAL(valuesChanged(Vertex_s)), SLOT(editCaVector(Vertex_s)));
-	connect(caVectorZEdit, SIGNAL(valuesChanged(Vertex_s)), SLOT(editCaVector(Vertex_s)));
+	//qOverload is not aware of the Vertex_s type for conversion
+	connect(caVectorXEdit, &VertexWidget::valuesChanged, this, [&] (const Vertex_s &vertex) { editCaVector(vertex);} );
+	connect(caVectorYEdit, &VertexWidget::valuesChanged, this, [&] (const Vertex_s &vertex) { editCaVector(vertex);} );
+	connect(caVectorZEdit, &VertexWidget::valuesChanged, this, [&] (const Vertex_s &vertex) { editCaVector(vertex);} );
 
-	connect(caSpaceXEdit, SIGNAL(valueChanged(double)), SLOT(editCaPos(double)));
-	connect(caSpaceYEdit, SIGNAL(valueChanged(double)), SLOT(editCaPos(double)));
-	connect(caSpaceZEdit, SIGNAL(valueChanged(double)), SLOT(editCaPos(double)));
+	connect(caSpaceXEdit, &QDoubleSpinBox::valueChanged,this , qOverload<double>(&WalkmeshManager::editCaPos));
+	connect(caSpaceYEdit, &QDoubleSpinBox::valueChanged,this , qOverload<double>(&WalkmeshManager::editCaPos));
+	connect(caSpaceZEdit, &QDoubleSpinBox::valueChanged,this , qOverload<double>(&WalkmeshManager::editCaPos));
 
-	connect(caZoomEdit, SIGNAL(valueChanged(int)), SLOT(editCaZoom(int)));
+	connect(caZoomEdit, &QSpinBox::valueChanged, this, &WalkmeshManager::editCaZoom);
 
 	return ret;
 }
@@ -165,8 +166,8 @@ QWidget *WalkmeshManager::buildWalkmeshPage()
 	QWidget *ret = new QWidget(this);
 
 	ListWidget *listWidget = new ListWidget(ret);
-	listWidget->addAction(ListWidget::Add, tr("Add triangle"), this, SLOT(addTriangle()));
-	listWidget->addAction(ListWidget::Rem, tr("Remove triangle"), this, SLOT(removeTriangle()));
+	listWidget->addAction(ListWidget::Add, tr("Add triangle"), this, SLOT(addTriangle));
+	listWidget->addAction(ListWidget::Rem, tr("Remove triangle"), this, SLOT(removeTriangle));
 
 	idToolbar = listWidget->toolBar();
 	idList = listWidget->listWidget();
@@ -208,13 +209,13 @@ QWidget *WalkmeshManager::buildWalkmeshPage()
 	layout->addLayout(accessLayout2, 5, 1, 1, 2);
 	layout->setRowStretch(6, 1);
 
-	connect(idList, SIGNAL(currentRowChanged(int)), SLOT(setCurrentId(int)));
-	connect(idVertices[0], SIGNAL(valuesChanged(Vertex_s)), SLOT(editIdTriangle(Vertex_s)));
-	connect(idVertices[1], SIGNAL(valuesChanged(Vertex_s)), SLOT(editIdTriangle(Vertex_s)));
-	connect(idVertices[2], SIGNAL(valuesChanged(Vertex_s)), SLOT(editIdTriangle(Vertex_s)));
-	connect(idAccess[0], SIGNAL(valueChanged(int)), SLOT(editIdAccess(int)));
-	connect(idAccess[1], SIGNAL(valueChanged(int)), SLOT(editIdAccess(int)));
-	connect(idAccess[2], SIGNAL(valueChanged(int)), SLOT(editIdAccess(int)));
+	connect(idList, &QListWidget::currentRowChanged, this, &WalkmeshManager::setCurrentId);
+	connect(idVertices[0], &VertexWidget::valuesChanged, this, [&] (const Vertex_s &vertex_s) { editIdTriangle(vertex_s); });
+	connect(idVertices[1], &VertexWidget::valuesChanged, this, [&] (const Vertex_s &vertex_s) { editIdTriangle(vertex_s); });
+	connect(idVertices[2], &VertexWidget::valuesChanged, this, [&] (const Vertex_s &vertex_s) { editIdTriangle(vertex_s); });
+	connect(idAccess[0], &QSpinBox::valueChanged, this, qOverload<int>(&WalkmeshManager::editIdAccess));
+	connect(idAccess[1], &QSpinBox::valueChanged, this, qOverload<int>(&WalkmeshManager::editIdAccess));
+	connect(idAccess[2], &QSpinBox::valueChanged, this, qOverload<int>(&WalkmeshManager::editIdAccess));
 
 	return ret;
 }
@@ -256,14 +257,14 @@ QWidget *WalkmeshManager::buildGatewaysPage()
 	layout->addWidget(arrowDisplay, 6, 1, 1, 2);
 	layout->setRowStretch(7, 1);
 
-	connect(gateList, SIGNAL(currentRowChanged(int)), SLOT(setCurrentGateway(int)));
-	connect(gateEnabled, SIGNAL(toggled(bool)), SLOT(editGateEnabled(bool)));
-	connect(exitPoints[0], SIGNAL(valuesChanged(Vertex_s)), SLOT(editExitPoint(Vertex_s)));
-	connect(exitPoints[1], SIGNAL(valuesChanged(Vertex_s)), SLOT(editExitPoint(Vertex_s)));
-	connect(entryPoint, SIGNAL(valuesChanged(Vertex_s)), SLOT(editEntryPoint(Vertex_s)));
-	connect(fieldId, SIGNAL(valueChanged(int)), SLOT(editFieldId(int)));
-	connect(arrowDisplay, SIGNAL(toggled(bool)), SLOT(editArrowDisplay(bool)));
-	connect(exitDirection, SIGNAL(valueChanged(int)), SLOT(editExitDirection(int)));
+	connect(gateList, &QListWidget::currentRowChanged, this, &WalkmeshManager::setCurrentGateway);
+	connect(gateEnabled, &QCheckBox::toggled, this, &WalkmeshManager::editGateEnabled);
+	connect(exitPoints[0], &VertexWidget::valuesChanged, this, [&] (const Vertex_s &vertex_s){ editExitPoint(vertex_s); });
+	connect(exitPoints[1], &VertexWidget::valuesChanged, this, [&] (const Vertex_s &vertex_s){ editExitPoint(vertex_s); });
+	connect(entryPoint, &VertexWidget::valuesChanged, this, [&] (const Vertex_s &vertex_s){ editEntryPoint(vertex_s);});
+	connect(fieldId, &QSpinBox::valueChanged, this, &WalkmeshManager::editFieldId);
+	connect(arrowDisplay, &QCheckBox::toggled, this, &WalkmeshManager::editArrowDisplay);
+	connect(exitDirection, &QSpinBox::valueChanged, this, &WalkmeshManager::editExitDirection);
 
 	return ret;
 }
@@ -311,14 +312,14 @@ QWidget *WalkmeshManager::buildDoorsPage()
 	layout->addLayout(idsLayout, 3, 1, 1, 2);
 	layout->setRowStretch(4, 1);
 
-	connect(doorList, SIGNAL(currentRowChanged(int)), SLOT(setCurrentDoor(int)));
-	connect(doorEnabled, SIGNAL(toggled(bool)), SLOT(editDoorEnabled(bool)));
-	connect(doorPosition[0], SIGNAL(valuesChanged(Vertex_s)), SLOT(editDoorPoint(Vertex_s)));
-	connect(doorPosition[1], SIGNAL(valuesChanged(Vertex_s)), SLOT(editDoorPoint(Vertex_s)));
-	connect(bgParamId, SIGNAL(valueChanged(int)), SLOT(editParamId(int)));
-	connect(bgStateId, SIGNAL(valueChanged(int)), SLOT(editStateId(int)));
-	connect(doorBehavior, SIGNAL(valueChanged(int)), SLOT(editBehavior(int)));
-	connect(doorSoundId, SIGNAL(valueChanged(int)), SLOT(editSoundId(int)));
+	connect(doorList, &QListWidget::currentRowChanged, this, &WalkmeshManager::setCurrentDoor);
+	connect(doorEnabled, &QCheckBox::toggled, this, &WalkmeshManager::editDoorEnabled);
+	connect(doorPosition[0], &VertexWidget::valuesChanged, this, [&] (const Vertex_s &vertex_s){ editDoorPoint(vertex_s);});
+	connect(doorPosition[1], &VertexWidget::valuesChanged, this, [&] (const Vertex_s &vertex_s){ editDoorPoint(vertex_s);});
+	connect(bgParamId, &QSpinBox::valueChanged, this, &WalkmeshManager::editParamId);
+	connect(bgStateId, &QSpinBox::valueChanged, this, &WalkmeshManager::editStateId);
+	connect(doorBehavior, &QSpinBox::valueChanged, this, &WalkmeshManager::editBehavior);
+	connect(doorSoundId, &QSpinBox::valueChanged, this, &WalkmeshManager::editSoundId);
 
 	return ret;
 }
@@ -362,11 +363,11 @@ QWidget *WalkmeshManager::buildArrowPage()
 	layout->setRowStretch(2, 1);
 	layout->setColumnStretch(2, 1);
 
-	connect(arrowList, SIGNAL(currentRowChanged(int)), SLOT(setCurrentArrow(int)));
-	connect(arrowX, SIGNAL(valueChanged(int)), SLOT(editArrowX(int)));
-	connect(arrowY, SIGNAL(valueChanged(int)), SLOT(editArrowY(int)));
-	connect(arrowZ, SIGNAL(valueChanged(int)), SLOT(editArrowZ(int)));
-	connect(arrowType, SIGNAL(currentIndexChanged(int)), SLOT(editArrowType(int)));
+	connect(arrowList, &QListWidget::currentRowChanged, this, &WalkmeshManager::setCurrentArrow);
+	connect(arrowX, &QSpinBox::valueChanged, this, &WalkmeshManager::editArrowX);
+	connect(arrowY, &QSpinBox::valueChanged, this, &WalkmeshManager::editArrowY);
+	connect(arrowZ, &QSpinBox::valueChanged, this, &WalkmeshManager::editArrowZ);
+	connect(arrowType, &QComboBox::currentIndexChanged, this, &WalkmeshManager::editArrowType);
 
 	return ret;
 }
@@ -434,9 +435,9 @@ QWidget *WalkmeshManager::buildCameraRangePage()
 	//layout->addStretch();
 
 	for (int i=0; i<4; ++i) {
-		connect(rangeEdit[i], SIGNAL(valueChanged(int)), SLOT(editRange(int)));
-		connect(bgSizeEdit[i], SIGNAL(valueChanged(int)), SLOT(editRange(int)));
-		connect(bgFlagEdit[i], SIGNAL(valueChanged(int)), SLOT(editRange(int)));
+		connect(rangeEdit[i], &QSpinBox::valueChanged, this, qOverload<int>(&WalkmeshManager::editRange));
+		connect(bgSizeEdit[i], &QSpinBox::valueChanged, this, qOverload<int>(&WalkmeshManager::editRange));
+		connect(bgFlagEdit[i], &QSpinBox::valueChanged, this, qOverload<int>(&WalkmeshManager::editRange));
 	}
 
 	return ret;
@@ -471,11 +472,11 @@ QWidget *WalkmeshManager::buildMiscPage()
 	layout->addWidget(mapScale, 3, 1, 1, 2);
 	layout->setRowStretch(4, 1);
 
-	connect(navigation, SIGNAL(valueEdited(int)), navigation2, SLOT(setValue(int)));
-	connect(navigation2, SIGNAL(valueChanged(int)), SLOT(editNavigation(int)));
-	connect(cameraFocusHeight, SIGNAL(valueChanged(int)), SLOT(editCameraFocusHeight(int)));
-	connect(unknown, SIGNAL(dataEdited(QByteArray)), SLOT(editUnknown(QByteArray)));
-	connect(mapScale, SIGNAL(valueChanged(int)), SLOT(editMapScale(int)));
+	connect(navigation, &OrientationWidget::valueEdited, navigation2, &QSpinBox::setValue);
+	connect(navigation2, &QSpinBox::valueChanged, this, &WalkmeshManager::editNavigation);
+	connect(cameraFocusHeight, &QSpinBox::valueChanged, this, &WalkmeshManager::editCameraFocusHeight);
+	connect(unknown, &HexLineEdit::dataEdited, this, &WalkmeshManager::editUnknown);
+	connect(mapScale, &QSpinBox::valueChanged, this, &WalkmeshManager::editMapScale);
 
 	return ret;
 }

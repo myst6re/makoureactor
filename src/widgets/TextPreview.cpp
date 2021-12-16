@@ -34,7 +34,7 @@ TextPreview::TextPreview(QWidget *parent) :
 {
 	pagesPos.append(0);
 
-	connect(&timer, SIGNAL(timeout()), SLOT(animate()));
+	connect(&timer, &QTimer::timeout, this, &TextPreview::animate);
 
 	setFixedSize(320, 224);
 	clear();

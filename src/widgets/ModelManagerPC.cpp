@@ -30,10 +30,10 @@ ModelManagerPC::ModelManagerPC(QWidget *parent) :
 	
 	QToolBar *toolBar1 = new QToolBar();
 	toolBar1->setIconSize(QSize(int(scale * 14), int(scale * 14)));
-	toolBar1->addAction(QIcon(":/images/plus.png"), QString(), this, SLOT(addModel()));
-	toolBar1->addAction(QIcon(":/images/minus.png"), QString(), this, SLOT(delModel()));
-	toolBar1->addAction(QIcon(":/images/up.png"), QString(), this, SLOT(upModel()));
-	toolBar1->addAction(QIcon(":/images/down.png"), QString(), this, SLOT(downModel()));
+	toolBar1->addAction(QIcon(":/images/plus.png"), QString(), this, &ModelManagerPC::addModel);
+	toolBar1->addAction(QIcon(":/images/minus.png"), QString(), this, &ModelManagerPC::delModel);
+	toolBar1->addAction(QIcon(":/images/up.png"), QString(), this, &ModelManagerPC::upModel);
+	toolBar1->addAction(QIcon(":/images/down.png"), QString(), this, &ModelManagerPC::downModel);
 
 	models->setContextMenuPolicy(Qt::ActionsContextMenu);
 	models->setSelectionMode(QAbstractItemView::ExtendedSelection);
@@ -52,10 +52,10 @@ ModelManagerPC::ModelManagerPC(QWidget *parent) :
 
 	toolBar2 = new QToolBar();
 	toolBar2->setIconSize(QSize(int(scale * 14), int(scale * 14)));
-	toolBar2->addAction(QIcon(":/images/plus.png"), QString(), this, SLOT(addAnim()));
-	toolBar2->addAction(QIcon(":/images/minus.png"), QString(), this, SLOT(delAnim()));
-	toolBar2->addAction(QIcon(":/images/up.png"), QString(), this, SLOT(upAnim()));
-	toolBar2->addAction(QIcon(":/images/down.png"), QString(), this, SLOT(downAnim()));
+	toolBar2->addAction(QIcon(":/images/plus.png"), QString(), this, &ModelManagerPC::addAnim);
+	toolBar2->addAction(QIcon(":/images/minus.png"), QString(), this, &ModelManagerPC::delAnim);
+	toolBar2->addAction(QIcon(":/images/up.png"), QString(), this, &ModelManagerPC::upAnim);
+	toolBar2->addAction(QIcon(":/images/down.png"), QString(), this, &ModelManagerPC::downAnim);
 
 	modelAnims->setColumnCount(3);
 	modelAnims->setHeaderLabels(QStringList() << tr("Id") << tr("Animation") << tr("?"));
@@ -84,18 +84,18 @@ ModelManagerPC::ModelManagerPC(QWidget *parent) :
 
 	adjustSize();
 
-	connect(models, SIGNAL(doubleClicked(QModelIndex)), models, SLOT(edit(QModelIndex)));
-	connect(models, SIGNAL(itemChanged(QTreeWidgetItem*,int)), SLOT(renameOKModel(QTreeWidgetItem*)));
+	connect(models, &QTreeWidget::doubleClicked, models, qOverload<const QModelIndex &>(&QTreeWidget::edit));
+	connect(models, &QTreeWidget::itemChanged, this, &ModelManagerPC::renameOKModel);
 
-	connect(modelAnims, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), SLOT(editAnim(QTreeWidgetItem*,int)));
-	connect(modelAnims, SIGNAL(itemChanged(QTreeWidgetItem*,int)), SLOT(renameOKAnim(QTreeWidgetItem*,int)));
+	connect(modelAnims, &QTreeWidget::itemDoubleClicked, this, &ModelManagerPC::editAnim);
+	connect(modelAnims, &QTreeWidget::itemChanged, this, &ModelManagerPC::renameOKAnim);
 
-	connect(modelName, SIGNAL(textEdited(QString)), SLOT(setModelName(QString)));
+	connect(modelName, &QLineEdit::textEdited, this, &ModelManagerPC::setModelName);
 
-	connect(cutModelAction, SIGNAL(triggered()), SLOT(cutCurrentModel()));
-	connect(copyModelAction, SIGNAL(triggered()), SLOT(copyCurrentModel()));
-	connect(pasteModelAction, SIGNAL(triggered()), SLOT(pasteOnCurrentModel()));
-	connect(modelAnims, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), SLOT(updateActionsState()));
+	connect(cutModelAction, &QAction::triggered, this, &ModelManagerPC::cutCurrentModel);
+	connect(copyModelAction, &QAction::triggered, this, &ModelManagerPC::copyCurrentModel);
+	connect(pasteModelAction, &QAction::triggered, this, &ModelManagerPC::pasteOnCurrentModel);
+	connect(modelAnims, &QTreeWidget::currentItemChanged, this, &ModelManagerPC::updateActionsState);
 }
 
 QList<QStringList> ModelManagerPC::modelNames() const
@@ -160,8 +160,8 @@ void ModelManagerPC::addModel()
 		layout.addWidget(&list);
 		layout.addWidget(&OKButton);
 
-		connect(&list, SIGNAL(currentIndexChanged(QString)), SLOT(modifyHRC(QString)));
-		connect(&OKButton, SIGNAL(released()), &dialog, SLOT(accept()));
+		connect(&list, &QComboBox::currentTextChanged, this, &ModelManagerPC::modifyHRC);
+		connect(&OKButton, &QPushButton::released, &dialog, &QDialog::accept);
 
 		if (dialog.exec() == QDialog::Accepted) {
 			hrc = list.currentText().left(8).toUpper();
@@ -358,7 +358,7 @@ void ModelManagerPC::addAnim()
 		list.setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
 
 		QTimer t(this);
-		connect(&t, SIGNAL(timeout()), SLOT(processEvents()));
+		connect(&t, &QTimer::timeout, this, &ModelManagerPC::processEvents);
 		t.start(700);
 
 		int boneCount = modelPreview ? modelPreview->boneCount() : 0;
@@ -388,8 +388,8 @@ void ModelManagerPC::addAnim()
 		layout.addWidget(&list);
 		layout.addWidget(&OKButton);
 
-		connect(&list, SIGNAL(currentIndexChanged(QString)), SLOT(modifyAnimation(QString)));
-		connect(&OKButton, SIGNAL(released()), &dialog, SLOT(accept()));
+		connect(&list, &QComboBox::currentTextChanged, this, &ModelManagerPC::modifyAnimation);
+		connect(&OKButton, &QPushButton::released, &dialog, &QDialog::accept);
 		toolBar2->setEnabled(true);
 
 		if (dialog.exec() == QDialog::Accepted) {

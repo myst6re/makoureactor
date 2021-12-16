@@ -65,18 +65,18 @@ GrpScriptList::GrpScriptList(QWidget *parent) :
 	down_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	down_A->setEnabled(false);
 
-	connect(this, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), SLOT(rename(QTreeWidgetItem*,int)));
-	connect(this, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), SLOT(evidence(QTreeWidgetItem*,QTreeWidgetItem*)));
-	connect(this, SIGNAL(itemSelectionChanged()), SLOT(upDownEnabled()));
+	connect(this, &GrpScriptList::itemDoubleClicked, this, qOverload<QTreeWidgetItem *, int>(&GrpScriptList::rename));
+	connect(this, &GrpScriptList::currentItemChanged, this, &GrpScriptList::evidence);
+	connect(this, &GrpScriptList::itemSelectionChanged, this, &GrpScriptList::upDownEnabled);
 
-	connect(rename_A, SIGNAL(triggered()), SLOT(rename()));
-	connect(add_A, SIGNAL(triggered()), SLOT(add()));
-	connect(del_A, SIGNAL(triggered()), SLOT(del()));
-	connect(cut_A, SIGNAL(triggered()), SLOT(cut()));
-	connect(copy_A, SIGNAL(triggered()), SLOT(copy()));
-	connect(paste_A, SIGNAL(triggered()), SLOT(paste()));
-	connect(up_A, SIGNAL(triggered()), SLOT(up()));
-	connect(down_A, SIGNAL(triggered()), SLOT(down()));
+	connect(rename_A, &QAction::triggered, this, qOverload<>(&GrpScriptList::rename));
+	connect(add_A, &QAction::triggered, this, &GrpScriptList::add);
+	connect(del_A, &QAction::triggered, this, &GrpScriptList::del);
+	connect(cut_A, &QAction::triggered, this, &GrpScriptList::cut);
+	connect(copy_A, &QAction::triggered, this, &GrpScriptList::copy);
+	connect(paste_A, &QAction::triggered, this, &GrpScriptList::paste);
+	connect(up_A, &QAction::triggered, this, &GrpScriptList::up);
+	connect(down_A, &QAction::triggered, this, &GrpScriptList::down);
 
 	this->addAction(rename_A);
 	this->addAction(add_A);
@@ -273,7 +273,7 @@ void GrpScriptList::rename(QTreeWidgetItem *item, int column)
 	item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable);
 	editItem(item, 1);
 	item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-	connect(this, SIGNAL(itemChanged(QTreeWidgetItem*,int)), SLOT(renameOK(QTreeWidgetItem*,int)));
+	connect(this, &GrpScriptList::itemChanged, this, &GrpScriptList::renameOK);
 }
 
 void GrpScriptList::renameOK(QTreeWidgetItem *item, int column)
@@ -281,7 +281,7 @@ void GrpScriptList::renameOK(QTreeWidgetItem *item, int column)
 	if (column != 1) {
 		return;
 	}
-	disconnect(this, SIGNAL(itemChanged(QTreeWidgetItem *, int)), this, SLOT(renameOK(QTreeWidgetItem *, int)));
+	disconnect(this, &GrpScriptList::itemChanged, this, &GrpScriptList::renameOK);
 	QString newName = item->text(1).left(8);
 	item->setText(1, newName);
 	scripts->grpScript(selectedID()).setName(newName);

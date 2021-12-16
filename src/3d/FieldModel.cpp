@@ -19,11 +19,11 @@
 #include "core/field/FieldModelFilePS.h"
 
 FieldModel::FieldModel(QWidget *parent) :
-    QOpenGLWidget(parent), blockAll(false), distance(-0.25/*-35*/),
+	QOpenGLWidget(parent), blockAll(false), distance(-0.25/*-35*/),
     animationID(0), currentFrame(0), animated(true), data(nullptr),
 	xRot(270*16), yRot(90*16), zRot(0), gpuRenderer(nullptr)
 {
-	connect(&timer, SIGNAL(timeout()), SLOT(animate()));
+	connect(&timer, &QTimer::timeout, this, &FieldModel::animate);
 }
 
 FieldModel::~FieldModel()

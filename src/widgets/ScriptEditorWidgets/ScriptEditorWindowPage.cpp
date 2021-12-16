@@ -73,16 +73,16 @@ void ScriptEditorWindowPage::build()
 	layout->setColumnStretch(3, 1);
 	layout->setContentsMargins(QMargins());
 
-	connect(winID, SIGNAL(valueChanged(int)), SIGNAL(opcodeChanged()));
-	connect(x, SIGNAL(valueChanged(int)), SLOT(updatePreview()));
-	connect(y, SIGNAL(valueChanged(int)), SLOT(updatePreview()));
-	connect(w, SIGNAL(valueChanged(int)), SLOT(updatePreview()));
-	connect(h, SIGNAL(valueChanged(int)), SLOT(updatePreview()));
-	connect(textPreview, SIGNAL(positionChanged(QPoint)), SLOT(setPositionWindow(QPoint)));
-	connect(previewText, SIGNAL(currentIndexChanged(int)), SLOT(updateText(int)));
-	connect(hAlign, SIGNAL(clicked()), SLOT(alignHorizontally()));
-	connect(vAlign, SIGNAL(clicked()), SLOT(alignVertically()));
-	connect(autoSize, SIGNAL(clicked()), SLOT(resizeWindow()));
+	connect(winID, &QSpinBox::valueChanged, this, &ScriptEditorWindowPage::opcodeChanged);
+	connect(x, &QSpinBox::valueChanged, this, &ScriptEditorWindowPage::updatePreview);
+	connect(y, &QSpinBox::valueChanged, this, &ScriptEditorWindowPage::updatePreview);
+	connect(w, &QSpinBox::valueChanged, this, &ScriptEditorWindowPage::updatePreview);
+	connect(h, &QSpinBox::valueChanged, this, &ScriptEditorWindowPage::updatePreview);
+	connect(textPreview, &TextPreview::positionChanged, this, &ScriptEditorWindowPage::setPositionWindow);
+	connect(previewText, &QComboBox::currentIndexChanged, this, &ScriptEditorWindowPage::updateText);
+	connect(hAlign, &QPushButton::clicked, this, &ScriptEditorWindowPage::alignHorizontally);
+	connect(vAlign, &QPushButton::clicked, this, &ScriptEditorWindowPage::alignVertically);
+	connect(autoSize, &QPushButton::clicked, this, &ScriptEditorWindowPage::resizeWindow);
 }
 
 Opcode ScriptEditorWindowPage::buildOpcode()
@@ -288,9 +288,9 @@ void ScriptEditorWindowModePage::build()
 	layout->setColumnStretch(2, 1);
 	layout->setContentsMargins(QMargins());
 
-	connect(winID, SIGNAL(valueChanged(int)), SIGNAL(opcodeChanged()));
-	connect(winType, SIGNAL(currentIndexChanged(int)), SLOT(updatePreview()));
-	connect(winClose, SIGNAL(currentIndexChanged(int)), SIGNAL(opcodeChanged()));
+	connect(winID, &QSpinBox::valueChanged, this, &ScriptEditorWindowModePage::opcodeChanged);
+	connect(winType, &QComboBox::currentIndexChanged, this, &ScriptEditorWindowModePage::updatePreview);
+	connect(winClose, &QComboBox::currentIndexChanged, this, &ScriptEditorWindowModePage::opcodeChanged);
 }
 
 Opcode ScriptEditorWindowModePage::buildOpcode()
@@ -361,9 +361,9 @@ void ScriptEditorWindowMovePage::build()
 	layout->setColumnStretch(2, 1);
 	layout->setContentsMargins(QMargins());
 
-	connect(winID, SIGNAL(valueChanged(int)), SIGNAL(opcodeChanged()));
-	connect(x, SIGNAL(valueChanged(int)), SIGNAL(opcodeChanged()));
-	connect(y, SIGNAL(valueChanged(int)), SIGNAL(opcodeChanged()));
+	connect(winID, &QSpinBox::valueChanged, this, &ScriptEditorWindowMovePage::opcodeChanged);
+	connect(x, &QSpinBox::valueChanged, this, &ScriptEditorWindowMovePage::opcodeChanged);
+	connect(y, &QSpinBox::valueChanged, this, &ScriptEditorWindowMovePage::opcodeChanged);
 }
 
 Opcode ScriptEditorWindowMovePage::buildOpcode()
@@ -421,9 +421,9 @@ void ScriptEditorWindowVariablePage::build()
 	layout->setColumnStretch(2, 1);
 	layout->setContentsMargins(QMargins());
 
-	connect(winID, SIGNAL(valueChanged(int)), SIGNAL(opcodeChanged()));
-	connect(winVar, SIGNAL(valueChanged(int)), SIGNAL(opcodeChanged()));
-	connect(varOrValue, SIGNAL(changed()), SIGNAL(opcodeChanged()));
+	connect(winID, &QSpinBox::valueChanged, this, &ScriptEditorWindowVariablePage::opcodeChanged);
+	connect(winVar, &QSpinBox::valueChanged, this, &ScriptEditorWindowVariablePage::opcodeChanged);
+	connect(varOrValue, &VarOrValueWidget::changed, this, &ScriptEditorWindowVariablePage::opcodeChanged);
 }
 
 Opcode ScriptEditorWindowVariablePage::buildOpcode()

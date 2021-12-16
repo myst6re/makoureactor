@@ -30,7 +30,7 @@ void ScriptEditorWithPriorityPage::build()
 
 	helpWidget = new HelpWidget(16, tr("Lower priority number is higher priority in the game"));
 
-	connect(priority, SIGNAL(valueChanged(int)), SIGNAL(opcodeChanged()));
+	connect(priority, &QSpinBox::valueChanged, this, &ScriptEditorWithPriorityPage::opcodeChanged);
 }
 
 ScriptEditorReturnToPage::ScriptEditorReturnToPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent) :
@@ -56,7 +56,7 @@ void ScriptEditorReturnToPage::build()
 	layout->setRowStretch(3, 1);
 	layout->setContentsMargins(QMargins());
 
-	connect(scriptList, SIGNAL(currentIndexChanged(int)), SIGNAL(opcodeChanged()));
+	connect(scriptList, &QComboBox::currentIndexChanged, this, &ScriptEditorReturnToPage::opcodeChanged);
 }
 
 Opcode ScriptEditorReturnToPage::buildOpcode()
@@ -121,10 +121,10 @@ void ScriptEditorExecPage::build()
 	layout->setRowStretch(5, 1);
 	layout->setContentsMargins(QMargins());
 
-	connect(groupList, SIGNAL(currentIndexChanged(int)), SIGNAL(opcodeChanged()));
-	connect(scriptList, SIGNAL(currentIndexChanged(int)), SIGNAL(opcodeChanged()));
-	connect(groupList, SIGNAL(currentIndexChanged(int)), SLOT(updateScriptList(int)));
-	connect(execType, SIGNAL(currentIndexChanged(int)), SLOT(changeCurrentOpcode(int)));
+	connect(groupList, &QComboBox::currentIndexChanged, this, &ScriptEditorExecPage::opcodeChanged);
+	connect(scriptList, &QComboBox::currentIndexChanged, this, &ScriptEditorExecPage::opcodeChanged);
+	connect(groupList, &QComboBox::currentIndexChanged, this, &ScriptEditorExecPage::updateScriptList);
+	connect(execType, &QComboBox::currentIndexChanged, this, &ScriptEditorExecPage::changeCurrentOpcode);
 }
 
 Opcode ScriptEditorExecPage::buildOpcode()
@@ -255,9 +255,9 @@ void ScriptEditorExecCharPage::build()
 	layout->setRowStretch(5, 1);
 	layout->setContentsMargins(QMargins());
 
-	connect(partyID, SIGNAL(valueChanged(int)), SIGNAL(opcodeChanged()));
-	connect(scriptList, SIGNAL(currentIndexChanged(int)), SIGNAL(opcodeChanged()));
-	connect(execType, SIGNAL(currentIndexChanged(int)), SLOT(changeCurrentOpcode(int)));
+	connect(partyID, &QSpinBox::valueChanged, this, &ScriptEditorExecCharPage::opcodeChanged);
+	connect(scriptList, &QComboBox::currentIndexChanged, this, &ScriptEditorExecCharPage::opcodeChanged);
+	connect(execType, &QComboBox::currentIndexChanged, this, &ScriptEditorExecCharPage::changeCurrentOpcode);
 }
 
 Opcode ScriptEditorExecCharPage::buildOpcode()
@@ -339,7 +339,7 @@ void ScriptEditorLabelPage::build()
 	layout->setRowStretch(1, 1);
 	layout->setContentsMargins(QMargins());
 
-	connect(label, SIGNAL(valueChanged(double)), SIGNAL(opcodeChanged()));
+	connect(label, &QDoubleSpinBox::valueChanged, this, &ScriptEditorLabelPage::opcodeChanged);
 }
 
 Opcode ScriptEditorLabelPage::buildOpcode()
@@ -421,7 +421,7 @@ void ScriptEditorJumpPage::build()
 	layout->setRowStretch(1, 1);
 	layout->setContentsMargins(QMargins());
 
-	connect(label, SIGNAL(currentIndexChanged(int)), SIGNAL(opcodeChanged()));
+	connect(label, &QComboBox::currentIndexChanged, this, &ScriptEditorJumpPage::opcodeChanged);
 }
 
 void ScriptEditorJumpPage::clear()
@@ -480,7 +480,7 @@ void ScriptEditorJumpNanakiPage::build()
 	layout->setRowStretch(1, 1);
 	layout->setContentsMargins(QMargins());
 
-	connect(label, SIGNAL(currentIndexChanged(int)), SIGNAL(opcodeChanged()));
+	connect(label, &QComboBox::currentIndexChanged, this, &ScriptEditorJumpNanakiPage::opcodeChanged);
 }
 
 Opcode ScriptEditorJumpNanakiPage::buildOpcode()
@@ -544,11 +544,11 @@ void ScriptEditorIfPage::build()
 	layout->setRowStretch(3, 1);
 	layout->setContentsMargins(QMargins());
 
-	connect(varOrValue1, SIGNAL(changed()), SIGNAL(opcodeChanged()));
-	connect(varOrValue2, SIGNAL(changed()), SIGNAL(opcodeChanged()));
-	connect(operatorList, SIGNAL(currentIndexChanged(int)), SIGNAL(opcodeChanged()));
-	connect(label, SIGNAL(currentIndexChanged(int)), SIGNAL(opcodeChanged()));
-	connect(rangeTest, SIGNAL(currentIndexChanged(int)), SLOT(updateOpcode()));
+	connect(varOrValue1, &VarOrValueWidget::changed, this, &ScriptEditorIfPage::opcodeChanged);
+	connect(varOrValue2, &VarOrValueWidget::changed, this, &ScriptEditorIfPage::opcodeChanged);
+	connect(operatorList, &QComboBox::currentIndexChanged, this, &ScriptEditorIfPage::opcodeChanged);
+	connect(label, &QComboBox::currentIndexChanged, this, &ScriptEditorIfPage::opcodeChanged);
+	connect(rangeTest, &QComboBox::currentIndexChanged, this, &ScriptEditorIfPage::updateOpcode);
 }
 
 Opcode ScriptEditorIfPage::buildOpcode()
@@ -669,7 +669,7 @@ void ScriptEditorIfKeyPage::build()
 	for (const QString &keyName : qAsConst(Data::key_names)) {
 		QCheckBox *key = new QCheckBox(keyName, this);
 		keys.append(key);
-		connect(key, SIGNAL(toggled(bool)), SIGNAL(opcodeChanged()));
+		connect(key, &QCheckBox::toggled, this, &ScriptEditorIfKeyPage::opcodeChanged);
 		layout->addWidget(key, row, column);
 
 		if (column == 3) {
@@ -698,8 +698,8 @@ void ScriptEditorIfKeyPage::build()
 	layout->setRowStretch(row+2, 1);
 	layout->setContentsMargins(QMargins());
 
-	connect(label, SIGNAL(currentIndexChanged(int)), SIGNAL(opcodeChanged()));
-	connect(typeList, SIGNAL(currentIndexChanged(int)), SIGNAL(opcodeChanged()));
+	connect(label, &QComboBox::currentIndexChanged, this, &ScriptEditorIfKeyPage::opcodeChanged);
+	connect(typeList, &QComboBox::currentIndexChanged, this, &ScriptEditorIfKeyPage::opcodeChanged);
 }
 
 Opcode ScriptEditorIfKeyPage::buildOpcode()
@@ -793,8 +793,8 @@ void ScriptEditorIfQPage::build()
 	layout->setRowStretch(2, 1);
 	layout->setContentsMargins(QMargins());
 
-	connect(charList, SIGNAL(currentIndexChanged(int)), SIGNAL(opcodeChanged()));
-	connect(label, SIGNAL(currentIndexChanged(int)), SIGNAL(opcodeChanged()));
+	connect(charList, &QComboBox::currentIndexChanged, this, &ScriptEditorIfQPage::opcodeChanged);
+	connect(label, &QComboBox::currentIndexChanged, this, &ScriptEditorIfQPage::opcodeChanged);
 }
 
 Opcode ScriptEditorIfQPage::buildOpcode()
@@ -843,7 +843,7 @@ void ScriptEditorWaitPage::build()
 	layout->setRowStretch(1, 1);
 	layout->setContentsMargins(QMargins());
 
-	connect(frames, SIGNAL(valueChanged(int)), SIGNAL(opcodeChanged()));
+	connect(frames, &QSpinBox::valueChanged, this, &ScriptEditorWaitPage::opcodeChanged);
 }
 
 Opcode ScriptEditorWaitPage::buildOpcode()

@@ -26,14 +26,14 @@ ModelColorWidget::ModelColorWidget(QWidget *parent) :
 	for (quint8 i = 0; i < 3; ++i) {
 		_dirWidget[i] = new QSpinBox(parent);
 		_dirWidget[i]->setRange(-32768, 32767);
-		connect(_dirWidget[i], SIGNAL(editingFinished()), SLOT(relayEdition()));
+		connect(_dirWidget[i], &QSpinBox::editingFinished, this, &ModelColorWidget::relayEdition);
 	}
 
 	_dirWidget[0]->adjustSize();
 	_colorWidget->setMinimumWidth(_dirWidget[0]->height());
 	_colorWidget->setMinimumHeight(_dirWidget[0]->height());
 
-	connect(_colorWidget, SIGNAL(colorEdited(int,QRgb)), SLOT(relayEdition()));
+	connect(_colorWidget, &ColorDisplay::colorEdited, this, &ModelColorWidget::relayEdition);
 }
 
 void ModelColorWidget::relayEdition()
@@ -77,12 +77,9 @@ ModelColorsLayout::ModelColorsLayout(QWidget *parent) :
 		addWidget(modelColorWidget[i]->dirWidget(2), i + 1, 3);
 	}
 
-	connect(modelColorWidget[0], SIGNAL(colorDirEdited(FieldModelColorDir)),
-	        SLOT(relayColorDirEdited0(FieldModelColorDir)));
-	connect(modelColorWidget[1], SIGNAL(colorDirEdited(FieldModelColorDir)),
-	        SLOT(relayColorDirEdited1(FieldModelColorDir)));
-	connect(modelColorWidget[2], SIGNAL(colorDirEdited(FieldModelColorDir)),
-	        SLOT(relayColorDirEdited2(FieldModelColorDir)));
+	connect(modelColorWidget[0], &ModelColorWidget::colorDirEdited, this, &ModelColorsLayout::relayColorDirEdited0);
+	connect(modelColorWidget[1], &ModelColorWidget::colorDirEdited, this, &ModelColorsLayout::relayColorDirEdited1);
+	connect(modelColorWidget[2], &ModelColorWidget::colorDirEdited, this, &ModelColorsLayout::relayColorDirEdited2);
 }
 
 void ModelColorsLayout::setModelColorDirs(const QList<FieldModelColorDir> &dirs)

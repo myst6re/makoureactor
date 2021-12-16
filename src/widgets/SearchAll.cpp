@@ -40,12 +40,12 @@ SearchAll::SearchAll(Window *parent) :
 	layout->addWidget(_resultList, 0, 0);
 	layout->setContentsMargins(QMargins());
 
-	connect(_resultList, SIGNAL(itemActivated(QTreeWidgetItem*,int)), SLOT(gotoResult(QTreeWidgetItem*)));
+	connect(_resultList, &QTreeWidget::itemActivated, this, &SearchAll::gotoResult);
 
 	QAction *copy = new QAction(QIcon(":/images/copy.png"), tr("Copy"), this);
 	copy->setShortcut(QKeySequence("Ctrl+C"));
 	copy->setShortcutContext(Qt::WidgetWithChildrenShortcut);
-	connect(copy, SIGNAL(triggered()), SLOT(copySelected()));
+	connect(copy, &QAction::triggered, this, &SearchAll::copySelected);
 
 	_resultList->addAction(copy);
 

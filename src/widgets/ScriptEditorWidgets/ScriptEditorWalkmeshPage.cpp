@@ -38,8 +38,8 @@ void ScriptEditorWalkmeshPage::build()
 	layout->setRowStretch(2, 1);
 	layout->setContentsMargins(QMargins());
 
-	connect(_point1, SIGNAL(valuesChanged(Vertex_s)), SLOT(updatePreview()));
-	connect(_point2, SIGNAL(valuesChanged(Vertex_s)), SLOT(updatePreview()));
+	connect(_point1, &VertexWidget::valuesChanged, this, &ScriptEditorWalkmeshPage::updatePreview);
+	connect(_point2, &VertexWidget::valuesChanged, this, &ScriptEditorWalkmeshPage::updatePreview);
 }
 
 Opcode ScriptEditorWalkmeshPage::buildOpcode()

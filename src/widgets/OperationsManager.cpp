@@ -44,11 +44,11 @@ OperationsManager::OperationsManager(bool isPC, QWidget *parent) :
 	layout->addWidget(buttonBox);
 
 	for (QCheckBox *checkBox : qAsConst(_operations)) {
-		connect(checkBox, SIGNAL(toggled(bool)), SLOT(updateApplyButton()));
+		connect(checkBox, &QCheckBox::toggled, this, &OperationsManager::updateApplyButton);
 	}
 
-	connect(buttonBox, SIGNAL(accepted()), SLOT(accept()));
-	connect(buttonBox, SIGNAL(rejected()), SLOT(reject()));
+	connect(buttonBox, &QDialogButtonBox::accepted, this, &OperationsManager::accept);
+	connect(buttonBox, &QDialogButtonBox::rejected, this, &OperationsManager::reject);
 
 	updateApplyButton();
 }
