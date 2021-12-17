@@ -59,8 +59,8 @@ void ScriptEditorGenericList::build()
 	layout->setContentsMargins(QMargins());
 
 	connect(model, &QStandardItemModel::itemChanged, this, &ScriptEditorGenericList::opcodeChanged);
-	connect(addButton, &QPushButton::released, this, &ScriptEditorGenericList::addParam);
-	connect(delButton, &QPushButton::released, this, &ScriptEditorGenericList::delLastRow);
+	connect(addButton, &QPushButton::clicked, this, &ScriptEditorGenericList::addParam);
+	connect(delButton, &QPushButton::clicked, this, &ScriptEditorGenericList::delLastRow);
 }
 
 Opcode ScriptEditorGenericList::buildOpcode()

@@ -83,7 +83,7 @@ BGDialog::BGDialog(QWidget *parent) :
 	connect(layersWidget, &QListWidget::itemChanged, this, &BGDialog::enableLayer);
 	connect(sectionsWidget, &QListWidget::itemChanged, this, &BGDialog::enableSection);
 	connect(zWidget, &QSpinBox::valueChanged, this, &BGDialog::changeZ);
-	connect(buttonRepair, &QPushButton::released, this, &BGDialog::tryToRepairBG);
+	connect(buttonRepair, &QPushButton::clicked, this, &BGDialog::tryToRepairBG);
 	connect(tabBar, &QTabBar::currentChanged, this, &BGDialog::updateBG);
 	connect(tabBar, &QTabBar::currentChanged, this, &BGDialog::showLayersPage);
 }

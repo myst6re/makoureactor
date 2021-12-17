@@ -70,8 +70,8 @@ TutWidget::TutWidget(QWidget *parent) :
 
 	connect(list, &QListWidget::currentItemChanged, this, &TutWidget::showText);
 
-	connect(exportButton, &QPushButton::released, this, &TutWidget::exportation);
-	connect(importButton, &QPushButton::released, this, &TutWidget::importation);
+	connect(exportButton, &QPushButton::clicked, this, &TutWidget::exportation);
+	connect(importButton, &QPushButton::clicked, this, &TutWidget::importation);
 }
 
 void TutWidget::fill(Field *field, TutFilePC *tutPC, bool reload)
@@ -167,9 +167,9 @@ QWidget *TutWidget::buildBrokenPage()
 	layout->addStretch();
 	layout->setContentsMargins(QMargins());
 
-	connect(repairButton, &QPushButton::released, this, &TutWidget::repairBroken);
-	connect(createNewAkaoButton, &QPushButton::released, this, &TutWidget::replaceByEmptyAkao);
-	connect(createNewTutoButton, &QPushButton::released, this, &TutWidget::replaceByEmptyTuto);
+	connect(repairButton, &QPushButton::clicked, this, &TutWidget::repairBroken);
+	connect(createNewAkaoButton, &QPushButton::clicked, this, &TutWidget::replaceByEmptyAkao);
+	connect(createNewTutoButton, &QPushButton::clicked, this, &TutWidget::replaceByEmptyTuto);
 
 	return ret;
 }

@@ -265,10 +265,10 @@ TextManager::TextManager(QWidget *parent) :
 	connect(menuVars, &QMenu::triggered, this, &TextManager::insertTag);
 	connect(menuKeys, &QMenu::triggered, this, &TextManager::insertTag);
 	connect(textEdit, &QPlainTextEdit::textChanged, this, &TextManager::setTextChanged);
-	connect(prevPage, &QPushButton::released, this, &TextManager::prevTextPreviewPage);
-	connect(nextPage, &QPushButton::released, this, &TextManager::nextTextPreviewPage);
-	connect(prevWin, &QPushButton::released, this, &TextManager::prevTextPreviewWin);
-	connect(nextWin, &QPushButton::released, this, &TextManager::nextTextPreviewWin);
+	connect(prevPage, &QPushButton::clicked, this, &TextManager::prevTextPreviewPage);
+	connect(nextPage, &QPushButton::clicked, this, &TextManager::nextTextPreviewPage);
+	connect(prevWin, &QPushButton::clicked, this, &TextManager::prevTextPreviewWin);
+	connect(nextWin, &QPushButton::clicked, this, &TextManager::nextTextPreviewWin);
 	connect(textPreview, &TextPreview::positionChanged, this, &TextManager::changePosition);
 	connect(textPreview, &TextPreview::pageChanged, this, &TextManager::changeTextPreviewPage);
 	connect(xCoord, &QSpinBox::valueChanged, this, &TextManager::changeXCoord);

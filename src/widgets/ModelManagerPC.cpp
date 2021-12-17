@@ -161,7 +161,7 @@ void ModelManagerPC::addModel()
 		layout.addWidget(&OKButton);
 
 		connect(&list, &QComboBox::currentTextChanged, this, &ModelManagerPC::modifyHRC);
-		connect(&OKButton, &QPushButton::released, &dialog, &QDialog::accept);
+		connect(&OKButton, &QPushButton::clicked, &dialog, &QDialog::accept);
 
 		if (dialog.exec() == QDialog::Accepted) {
 			hrc = list.currentText().left(8).toUpper();
@@ -389,7 +389,7 @@ void ModelManagerPC::addAnim()
 		layout.addWidget(&OKButton);
 
 		connect(&list, &QComboBox::currentTextChanged, this, &ModelManagerPC::modifyAnimation);
-		connect(&OKButton, &QPushButton::released, &dialog, &QDialog::accept);
+		connect(&OKButton, &QPushButton::clicked, &dialog, &QDialog::accept);
 		toolBar2->setEnabled(true);
 
 		if (dialog.exec() == QDialog::Accepted) {

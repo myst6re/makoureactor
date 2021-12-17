@@ -716,12 +716,12 @@ LgpWidget::LgpWidget(Lgp *lgp, QWidget *parent) :
 	layout->addWidget(treeView, 1, 0);
 	layout->addWidget(preview, 1, 1);
 
-	connect(renameButton, &QPushButton::released, this, &LgpWidget::renameCurrent);
-	connect(replaceButton, &QPushButton::released, this, &LgpWidget::replaceCurrent);
-	connect(extractButton, &QPushButton::released, this, &LgpWidget::extractCurrent);
-	connect(extractAllButton, &QPushButton::released, this, &LgpWidget::extractAll);
-	connect(addButton, &QPushButton::released, this, &LgpWidget::add);
-	connect(removeButton, &QPushButton::released, this, &LgpWidget::removeCurrent);
+	connect(renameButton, &QPushButton::clicked, this, &LgpWidget::renameCurrent);
+	connect(replaceButton, &QPushButton::clicked, this, &LgpWidget::replaceCurrent);
+	connect(extractButton, &QPushButton::clicked, this, &LgpWidget::extractCurrent);
+	connect(extractAllButton, &QPushButton::clicked, this, &LgpWidget::extractAll);
+	connect(addButton, &QPushButton::clicked, this, &LgpWidget::add);
+	connect(removeButton, &QPushButton::clicked, this, &LgpWidget::removeCurrent);
 	connect(treeView->selectionModel(), &QItemSelectionModel::selectionChanged, this, &LgpWidget::setButtonsState);
 	connect(treeView->selectionModel(), &QItemSelectionModel::selectionChanged, this, &LgpWidget::changePreview);
 	connect(preview, &ArchivePreview::currentImageChanged, this, &LgpWidget::changeImageInPreview);

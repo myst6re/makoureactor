@@ -159,14 +159,14 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	layout->addWidget(buttonBox, 4, 0, 1, 2);
 
 	connect(listFF7, &QTreeWidget::itemSelectionChanged, this, &ConfigWindow::changeFF7ListButtonsState);
-	connect(ff7ButtonMod, &QPushButton::released, this, &ConfigWindow::modifyCustomFF7Path);
-	connect(ff7ButtonRem, &QPushButton::released, this, &ConfigWindow::removeCustomFF7Path);
+	connect(ff7ButtonMod, &QPushButton::clicked, this, &ConfigWindow::modifyCustomFF7Path);
+	connect(ff7ButtonRem, &QPushButton::clicked, this, &ConfigWindow::removeCustomFF7Path);
 	connect(kernelAuto, &QCheckBox::toggled, this, &ConfigWindow::kernelAutoChange);
 	connect(windowAuto, &QCheckBox::toggled, this, &ConfigWindow::windowAutoChange);
 	connect(charAuto, &QCheckBox::toggled, this, &ConfigWindow::charAutoChange);
-	connect(kernelButton, &QPushButton::released, this, &ConfigWindow::changeKernelPath);
-	connect(windowButton, &QPushButton::released, this, &ConfigWindow::changeWindowPath);
-	connect(charButton, &QPushButton::released, this, &ConfigWindow::changeCharPath);
+	connect(kernelButton, &QPushButton::clicked, this, &ConfigWindow::changeKernelPath);
+	connect(windowButton, &QPushButton::clicked, this, &ConfigWindow::changeWindowPath);
+	connect(charButton, &QPushButton::clicked, this, &ConfigWindow::changeCharPath);
 	connect(windowPreview, &DialogPreview::LL_ColorChanged, this, [&] (const QColor &color){
 		windowColorBottomLeft = color.rgb();
 	});
@@ -179,10 +179,10 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	connect(windowPreview, &DialogPreview::UR_ColorChanged, this, [&] (const QColor &color){
 		windowColorTopRight = color.rgb();
 	});
-	connect(windowColorReset, &QPushButton::released, this, &ConfigWindow::resetColor);
+	connect(windowColorReset, &QPushButton::clicked, this, &ConfigWindow::resetColor);
 	connect(listCharNames, &QComboBox::currentIndexChanged, this, &ConfigWindow::fillCharNameEdit);
 	connect(charNameEdit, &QLineEdit::textEdited, this, &ConfigWindow::setCharName);
-	connect(encodingEdit, &QPushButton::released, this, &ConfigWindow::editEncoding);
+	connect(encodingEdit, &QPushButton::clicked, this, &ConfigWindow::editEncoding);
 	connect(buttonBox, &QDialogButtonBox::accepted, this, &ConfigWindow::accept);
 	connect(buttonBox, &QDialogButtonBox::rejected, this, &ConfigWindow::reject);
 

@@ -81,9 +81,9 @@ Search::Search(Window *mainWindow) :
 
 	searchAllDialog = new SearchAll(mainWindow);
 
-	connect(buttonNext, &QPushButton::released, this, &Search::findNext);
-	connect(buttonPrev, &QPushButton::released, this, &Search::findPrev);
-	connect(buttonAll, &QPushButton::released, this, &Search::findAll);
+	connect(buttonNext, &QPushButton::clicked, this, &Search::findNext);
+	connect(buttonPrev, &QPushButton::clicked, this, &Search::findPrev);
+	connect(buttonAll, &QPushButton::clicked, this, &Search::findAll);
 
 	connect(champ->lineEdit(), &QLineEdit::textEdited, champ2->lineEdit(), &QLineEdit::setText);
 	connect(caseSens, &QCheckBox::clicked, this, &Search::updateCaseSensitivity);

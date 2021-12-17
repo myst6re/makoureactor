@@ -110,8 +110,8 @@ ScriptEditor::ScriptEditor(Field *field, const Section1File *scriptsAndTexts, co
 		changeCurrentOpcode(0);
 	}
 
-	connect(ok, &QPushButton::released, this, &ScriptEditor::accept);
-	connect(cancel, &QPushButton::released, this, &ScriptEditor::close);
+	connect(ok, &QPushButton::clicked, this, &ScriptEditor::accept);
+	connect(cancel, &QPushButton::clicked, this, &ScriptEditor::close);
 	connect(comboBox0, &QComboBox::currentIndexChanged, this, &ScriptEditor::buildList);
 	connect(comboBox, &QComboBox::currentIndexChanged, this, &ScriptEditor::changeCurrentOpcode);
 }

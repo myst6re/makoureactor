@@ -101,9 +101,9 @@ VarManager::VarManager(FieldArchive *fieldArchive, QWidget *parent)
 	connect(liste1, &QListWidget::currentRowChanged, this, &VarManager::changeBank);
 	connect(liste2, &QTreeWidget::itemSelectionChanged, this, &VarManager::fillForm);
 	connect(name, &QLineEdit::returnPressed, this, &VarManager::renameVar);
-	connect(rename, &QPushButton::released, this, &VarManager::renameVar);
-	connect(ok, &QPushButton::released, this, &VarManager::save);
-	connect(searchButton, &QPushButton::released, this, &VarManager::search);
+	connect(rename, &QPushButton::clicked, this, &VarManager::renameVar);
+	connect(ok, &QPushButton::clicked, this, &VarManager::save);
+	connect(searchButton, &QPushButton::clicked, this, &VarManager::search);
 
 	adjustSize();
 }
