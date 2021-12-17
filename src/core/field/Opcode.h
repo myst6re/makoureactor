@@ -388,7 +388,7 @@ PACK(struct OpcodeSPECIALARROW : public OpcodeSPECIAL {
 // FIXME: 4 parameters, not 1
 PACK(struct OpcodeSPECIALPNAME : public OpcodeSPECIAL {
 	quint8 banks; // bank 2
-	quint8 var; // bank 1 8-bit
+	quint8 varOrValue; // bank 1 8-bit
 	quint8 unused;
 	quint8 size;
 });

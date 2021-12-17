@@ -17,6 +17,72 @@
  ****************************************************************************/
 #include "ScriptEditorSpecialPage.h"
 
+ScriptEditorSpecialPName::ScriptEditorSpecialPName(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script,
+                                                   int opcodeID, QWidget *parent) :
+    ScriptEditorView(scriptsAndTexts, grpScript, script, opcodeID, parent)
+{
+}
+
+void ScriptEditorSpecialPName::build()
+{
+	_varOrValue = new VarOrValueWidget(this);
+	
+	_bank = new VarOrValueWidget(this);
+	_bank->setOnlyBank(true);
+	_bank->setShort();
+
+	_size = new QSpinBox(this);
+	_size->setRange(0, 255);
+
+	QGridLayout *layout = new QGridLayout(this);
+	layout->addWidget(new QLabel(tr("Var or value")), 0, 0);
+	layout->addWidget(_varOrValue, 0, 1);
+	layout->addWidget(new QLabel(tr("Bank")), 1, 0);
+	layout->addWidget(_bank, 1, 1);
+	layout->addWidget(new QLabel(tr("Size")), 2, 0);
+	layout->addWidget(_size, 2, 1);
+	layout->setRowStretch(3, 1);
+	layout->setColumnStretch(2, 1);
+	layout->setContentsMargins(QMargins());
+
+	connect(_varOrValue, SIGNAL(changed()), SIGNAL(opcodeChanged()));
+	connect(_bank, SIGNAL(changed()), SIGNAL(opcodeChanged()));
+	connect(_size, SIGNAL(editingFinished()), SIGNAL(opcodeChanged()));
+}
+
+Opcode ScriptEditorSpecialPName::buildOpcode()
+{
+	OpcodeSPECIALPNAME &opcodeSpecialPname = opcode().op().opcodeSPECIALPNAME;
+	
+	quint8 bank1 = 0;
+	int value;
+
+	if (_varOrValue->isValue()) {
+		value = _varOrValue->value();
+	} else {
+		quint8 address1;
+		_varOrValue->var(bank1, address1);
+		value = address1;
+	}
+
+	opcodeSpecialPname.banks = BANK(bank1, _bank->bank());
+	opcodeSpecialPname.var = quint8(value);
+	opcodeSpecialPname.size = quint8(_size->value());
+
+	return opcode();
+}
+
+void ScriptEditorSpecialPName::setOpcode(const Opcode &opcode)
+{
+	const OpcodeSPECIALPNAME &opcodeSpecialPname = opcode.op().opcodeSPECIALPNAME;
+
+	_varOrValue->setVarOrValue(B1(opcodeSpecialPname.banks), opcodeSpecialPname.var);
+	_bank->setBank(B2(opcodeSpecialPname.banks));
+	_size->setValue(opcodeSpecialPname.size);
+
+	ScriptEditorView::setOpcode(opcode);
+}
+
 ScriptEditorDLPBSavemap::ScriptEditorDLPBSavemap(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script,
                                                  int opcodeID, QWidget *parent) :
     ScriptEditorView(scriptsAndTexts, grpScript, script, opcodeID, parent)

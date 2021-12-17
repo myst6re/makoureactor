@@ -18,7 +18,8 @@
 #include "VarOrValueWidget.h"
 
 VarOrValueWidget::VarOrValueWidget(QWidget *parent) :
-	QWidget(parent), _size(Short | Long), _signedValueType(true), _onlyVar(false)
+    QWidget(parent), _size(Short | Long), _signedValueType(true),
+    _onlyVar(false), _onlyBank(false)
 {
 	_typeSelect = new QComboBox(this);
 	updateValueType();
@@ -35,13 +36,13 @@ VarOrValueWidget::VarOrValueWidget(QWidget *parent) :
 	_bank->addItem(QString(), Bank15And7);
 	updateBankList();
 
-	_adress = new QSpinBox(this);
-	_adress->setRange(0, 255);
+	_address = new QSpinBox(this);
+	_address->setRange(0, 255);
 
 	QWidget *bankAndAdress = new QWidget(this);
 	QHBoxLayout *bankAndAdressLayout = new QHBoxLayout(bankAndAdress);
 	bankAndAdressLayout->addWidget(_bank);
-	bankAndAdressLayout->addWidget(_adress);
+	bankAndAdressLayout->addWidget(_address);
 	bankAndAdressLayout->setContentsMargins(QMargins());
 
 	_varOrValuelayout = new QStackedLayout();
@@ -79,41 +80,63 @@ void VarOrValueWidget::setValue(int value)
 	}
 }
 
-bool VarOrValueWidget::var(quint8 &bank, quint8 &adress) const
+bool VarOrValueWidget::var(quint8 &bank, quint8 &address) const
+{
+	bank = this->bank();
+
+	if (bank == 0) {
+		return false;
+	}
+
+	address = quint8(_address->value());
+
+	return true;
+}
+
+void VarOrValueWidget::setVar(quint8 bank, quint8 address)
+{
+	setBank(bank);
+	_address->setValue(address);
+}
+
+void VarOrValueWidget::setVarOrValue(quint8 bank, int valueOrAdress)
+{
+	if (bank != 0) {
+		setVar(bank, valueOrAdress & 0xFF);
+		setIsValue(false);
+	} else {
+		setValue(valueOrAdress);
+		setIsValue(true);
+	}
+}
+
+quint8 VarOrValueWidget::bank() const
 {
 	if (isValue()) {
-		return false;
+		return 0;
 	}
 
 	const bool isShort = _typeSelect->currentData().toInt() == Var8;
 
 	switch (Bank(_bank->currentData().toInt())) {
 	case Bank1And2:
-		bank = isShort ? 1 : 2;
-		break;
+		return isShort ? 1 : 2;
 	case Bank3And4:
-		bank = isShort ? 3 : 4;
-		break;
+		return isShort ? 3 : 4;
 	case Bank5And6:
-		bank = isShort ? 5 : 6;
-		break;
+		return isShort ? 5 : 6;
 	case Bank11And12:
-		bank = isShort ? 11 : 12;
-		break;
+		return isShort ? 11 : 12;
 	case Bank13And14:
-		bank = isShort ? 13 : 14;
-		break;
+		return isShort ? 13 : 14;
 	case Bank15And7:
-		bank = isShort ? 15 : 7;
-		break;
+		return isShort ? 15 : 7;
 	}
 
-	adress = quint8(_adress->value());
-
-	return true;
+	return 0;
 }
 
-void VarOrValueWidget::setVar(quint8 bank, quint8 adress)
+void VarOrValueWidget::setBank(quint8 bank)
 {
 	Bank bankData = Bank1And2;
 
@@ -139,21 +162,9 @@ void VarOrValueWidget::setVar(quint8 bank, quint8 adress)
 	}
 
 	_bank->setCurrentIndex(_bank->findData(bankData));
-	_adress->setValue(adress);
 
 	if (!isOnlyVar()) {
 		setIsValue(false);
-	}
-}
-
-void VarOrValueWidget::setVarOrValue(quint8 bank, int valueOrAdress)
-{
-	if (bank != 0) {
-		setVar(bank, valueOrAdress & 0xFF);
-		setIsValue(false);
-	} else {
-		setValue(valueOrAdress);
-		setIsValue(true);
 	}
 }
 
@@ -287,4 +298,18 @@ void VarOrValueWidget::setOnlyVar(bool onlyVar)
 	_onlyVar = onlyVar;
 	updateValueType();
 	setIsValue(!onlyVar);
+}
+
+bool VarOrValueWidget::isOnlyBank() const
+{
+	return isOnlyVar() && _onlyBank;
+}
+
+void VarOrValueWidget::setOnlyBank(bool onlyBank)
+{
+	_onlyBank = onlyBank;
+	setOnlyVar(true);
+
+	_typeSelect->setVisible(!onlyBank);
+	_value->setVisible(!onlyBank);
 }

@@ -570,17 +570,17 @@ Opcode ScriptEditorIfPage::buildOpcode()
 		bank1 = 0;
 		value1 = varOrValue1->value();
 	} else {
-		quint8 adress1;
-		varOrValue1->var(bank1, adress1);
-		value1 = adress1;
+		quint8 address1;
+		varOrValue1->var(bank1, address1);
+		value1 = address1;
 	}
 	if (varOrValue2->isValue()) {
 		bank2 = 0;
 		value2 = varOrValue2->value();
 	} else {
-		quint8 adress2;
-		varOrValue2->var(bank2, adress2);
-		value2 = adress2;
+		quint8 address2;
+		varOrValue2->var(bank2, address2);
+		value2 = address2;
 	}
 
 	i.bank1 = bank1;

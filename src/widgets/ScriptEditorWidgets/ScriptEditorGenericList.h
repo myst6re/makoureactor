@@ -30,7 +30,7 @@ public:
 		/*10*/layer_id, parametre_id, state_id, window_id, text_id, /*15*/item_id, materia_id, animation_id, music_id, sound_id, /*20*/movie_id,
 		operateur, keys, color, coord_x, coord_y, coord_z, window_w, window_h, window_num, window_type, window_var, direction, vitesse, vitesse2,
 		priorite, menu, jump, jump_l, rotation, quantity,
-		bank, adress, byte, word, sword, bit, boolean, label, akao, dword, shakeType, xAmplitude, xFrames, yAmplitude, yFrames
+		bank, address, byte, word, sword, bit, boolean, label, akao, dword, shakeType, xAmplitude, xFrames, yAmplitude, yFrames
 	};
 
 	ScriptEditorGenericList(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
@@ -79,4 +79,18 @@ public:
 private:
 	void build() override;
 	QComboBox *_boolean;
+};
+
+class ScriptEditorOneVarOrValue : public ScriptEditorView
+{
+	Q_OBJECT
+public:
+	ScriptEditorOneVarOrValue(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script,
+	                          int opcodeID, QWidget *parent = nullptr);
+	Opcode buildOpcode() override;
+	void setOpcode(const Opcode &opcode) override;
+private:
+	void build() override;
+	QLabel *_label;
+	VarOrValueWidget *_varOrValue;
 };

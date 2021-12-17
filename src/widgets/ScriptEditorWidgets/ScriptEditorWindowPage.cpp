@@ -440,9 +440,9 @@ Opcode ScriptEditorWindowVariablePage::buildOpcode()
 			key = OpcodeKey::MPRA2;
 		}
 	} else {
-		quint8 adress;
-		varOrValue->var(bank, adress);
-		value = adress;
+		quint8 address;
+		varOrValue->var(bank, address);
+		value = address;
 
 		if (varOrValue->selectedSize() == VarOrValueWidget::Long) {
 			key = OpcodeKey::MPRA2;

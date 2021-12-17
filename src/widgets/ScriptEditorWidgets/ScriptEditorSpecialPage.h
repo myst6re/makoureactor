@@ -20,6 +20,21 @@
 #include <QtWidgets>
 #include "ScriptEditorView.h"
 
+class ScriptEditorSpecialPName : public ScriptEditorView
+{
+	Q_OBJECT
+public:
+	ScriptEditorSpecialPName(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script,
+	                         int opcodeID, QWidget *parent = nullptr);
+	Opcode buildOpcode() override;
+	void setOpcode(const Opcode &opcode) override;
+private:
+	void build() override;
+	VarOrValueWidget *_varOrValue;
+	VarOrValueWidget *_bank;
+	QSpinBox *_size;
+};
+
 class ScriptEditorDLPBSavemap : public ScriptEditorView
 {
 	Q_OBJECT

@@ -63,6 +63,7 @@ private:
 		Movie,
 		Walkmesh,
 		JumpNanaki,
+		SpecialPName,
 		DLPBSavemap,
 		DLPBWriteToMemory
 	};

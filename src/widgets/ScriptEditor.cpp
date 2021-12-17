@@ -169,6 +169,8 @@ ScriptEditorView *ScriptEditor::buildEditorPage(PageType id)
 		return new ScriptEditorWalkmeshPage(field, scriptsAndTexts, grpScript, script, opcodeID, this);
 	case JumpNanaki:
 		return new ScriptEditorJumpNanakiPage(scriptsAndTexts, grpScript, script, opcodeID, this);
+	case SpecialPName:
+		return new ScriptEditorSpecialPName(scriptsAndTexts, grpScript, script, opcodeID, this);
 	case DLPBSavemap:
 		return new ScriptEditorDLPBSavemap(scriptsAndTexts, grpScript, script, opcodeID, this);
 	case DLPBWriteToMemory:
@@ -232,6 +234,9 @@ void ScriptEditor::fillEditor()
 		case OpcodeSpecialKey::RSGLB:
 		case OpcodeSpecialKey::CLITM:
 			_currentPageType = NoParameters;
+			break;
+		case OpcodeSpecialKey::PNAME:
+			_currentPageType = SpecialPName;
 			break;
 		default:
 			_currentPageType = GenericList;
