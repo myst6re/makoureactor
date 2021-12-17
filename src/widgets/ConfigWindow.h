@@ -19,6 +19,8 @@
 
 #include <QtWidgets>
 
+class DialogPreview;
+
 class ConfigWindow : public QDialog
 {
 	Q_OBJECT
@@ -26,8 +28,6 @@ public:
 	explicit ConfigWindow(QWidget *parent = nullptr);
 private:
 	void fillConfig();
-	static void setWindowColorIcon(QAbstractButton *widget, QRgb color);
-	void setWindowColors();
 	void addDependency();
 	QTreeWidget *listFF7;
 	QComboBox *listCharNames;
@@ -37,8 +37,8 @@ private:
 	QLabel *kernelPath, *windowPath, *charPath;
 	QPushButton *ff7ButtonMod, *ff7ButtonRem, *kernelButton, *windowButton, *charButton;
 	QCheckBox *darkMode, *disableOGL;
-	QPushButton *windowColor1, *windowColor2, *windowColor3, *windowColor4, *windowColorReset;
-	QLabel *windowPreview;
+	QPushButton *windowColorReset;
+	DialogPreview *windowPreview;
 	QCheckBox *expandedByDefault;
 	QComboBox *encodings;
 	QRgb windowColorTopLeft, windowColorTopRight, windowColorBottomLeft, windowColorBottomRight;
@@ -54,7 +54,6 @@ private slots:
 	void changeKernelPath();
 	void changeWindowPath();
 	void changeCharPath();
-	void changeColor();
 	void resetColor();
 	void fillCharNameEdit();
 	void setCharName(const QString &charName);

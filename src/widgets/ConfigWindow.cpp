@@ -20,6 +20,7 @@
 #include "core/Config.h"
 #include "TextPreview.h"
 #include "widgets/FontManager.h"
+#include <DialogPreview.h>
 
 ConfigWindow::ConfigWindow(QWidget *parent)
 	: QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint)
@@ -83,11 +84,7 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 
 	QGroupBox *textEditor = new QGroupBox(tr("Text Editor"), this);
 
-	windowColor1 = new QPushButton(textEditor);
-	windowColor2 = new QPushButton(textEditor);
-	windowColor3 = new QPushButton(textEditor);
-	windowColor4 = new QPushButton(textEditor);
-	windowPreview = new QLabel(textEditor);
+	windowPreview = new DialogPreview(textEditor);
 	windowColorReset = new QPushButton(tr("Defaults"), textEditor);
 
 	//optiText = new QCheckBox(trUtf8("Optimiser automatiquement les duos de caract\xc3\xa8res \xc2\xab .  \xc2\xbb, \xc2\xab .\" \xc2\xbb et \xc2\xab \xe2\x80\xa6\" \xc2\xbb."));
@@ -117,21 +114,20 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	tabWidthEdit = new QSpinBox(textEditor);
 	tabWidthEdit->setRange(0, 320);
 
-	QGridLayout *windowPreviewLayout = new QGridLayout;
-	windowPreviewLayout->addWidget(windowColor1, 0, 0, Qt::AlignRight | Qt::AlignTop);
-	windowPreviewLayout->addWidget(windowColor3, 1, 0, Qt::AlignRight | Qt::AlignBottom);
-	windowPreviewLayout->addWidget(windowPreview, 0, 1, 2, 1, Qt::AlignCenter);
-	windowPreviewLayout->addWidget(windowColor2, 0, 2, Qt::AlignLeft | Qt::AlignTop);
-	windowPreviewLayout->addWidget(windowColor4, 1, 2, Qt::AlignLeft | Qt::AlignBottom);
-	windowPreviewLayout->addWidget(windowColorReset, 2, 0, 1, 3, Qt::AlignLeft);
-	windowPreviewLayout->setColumnStretch(3, 1);
+	QVBoxLayout *windowPreviewLayout = new QVBoxLayout;
+	windowPreviewLayout->addWidget(windowPreview);
+	windowPreviewLayout->addWidget(windowColorReset);
+
+	auto windowPreviewGroup = new QGroupBox(textEditor);
+	windowPreviewGroup->setTitle(tr("Dialog Background"));
+	windowPreviewGroup->setLayout(windowPreviewLayout);
 
 	QGridLayout *textEditorLayout = new QGridLayout(textEditor);
 	textEditorLayout->addWidget(new QLabel(tr("Encoding")), 0, 0, 1, 3);
 	textEditorLayout->addWidget(encodings, 0, 3, 1, 3);
 	//textEditorLayout->addWidget(encodingEdit, 0, 4, 1, 2);
 	// windowPreviewLayout->addWidget(optiText, 1, 0, 1, 2);
-	textEditorLayout->addLayout(windowPreviewLayout, 1, 0, 4, 6);
+	textEditorLayout->addWidget(windowPreviewGroup, 1, 0, 4, 6);
 	textEditorLayout->addWidget(listCharNames, 0, 6, 1, 3);
 	textEditorLayout->addWidget(charNameEdit, 0, 9, 1, 3);
 	textEditorLayout->addWidget(new QLabel(tr("Autosize: margin right")), 1, 6, 1, 3);
@@ -171,10 +167,18 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	connect(kernelButton, SIGNAL(released()), SLOT(changeKernelPath()));
 	connect(windowButton, SIGNAL(released()), SLOT(changeWindowPath()));
 	connect(charButton, SIGNAL(released()), SLOT(changeCharPath()));
-	connect(windowColor1, SIGNAL(released()), SLOT(changeColor()));
-	connect(windowColor2, SIGNAL(released()), SLOT(changeColor()));
-	connect(windowColor3, SIGNAL(released()), SLOT(changeColor()));
-	connect(windowColor4, SIGNAL(released()), SLOT(changeColor()));
+	connect(windowPreview, &DialogPreview::LL_ColorChanged, this, [&] (const QColor &color){
+		windowColorBottomLeft = color.rgb();
+	});
+	connect(windowPreview, &DialogPreview::UL_ColorChanged, this, [&] (const QColor &color){
+		windowColorTopLeft = color.rgb();
+	});
+	connect(windowPreview, &DialogPreview::LR_ColorChanged, this, [&] (const QColor &color){
+		windowColorBottomRight = color.rgb();
+	});
+	connect(windowPreview, &DialogPreview::UR_ColorChanged, this, [&] (const QColor &color){
+		windowColorTopRight = color.rgb();
+	});
 	connect(windowColorReset, SIGNAL(released()), SLOT(resetColor()));
 	connect(listCharNames, SIGNAL(currentIndexChanged(int)), SLOT(fillCharNameEdit()));
 	connect(charNameEdit, SIGNAL(textEdited(QString)), SLOT(setCharName(QString)));
@@ -252,7 +256,10 @@ void ConfigWindow::fillConfig()
 	encodings->setCurrentIndex(Config::value("jp_txt", false).toBool() ? 1 : 0);
 	expandedByDefault->setChecked(Config::value("scriptItemExpandedByDefault", false).toBool());
 
-	setWindowColors();
+	windowPreview->setULeft(windowColorTopLeft);
+	windowPreview->setURight(windowColorTopRight);
+	windowPreview->setLLeft(windowColorBottomLeft);
+	windowPreview->setLRight(windowColorBottomRight);
 
 	for (int charId=0; charId<9; ++charId) {
 		customNames << Config::value(QString("customCharName%1").arg(charId), Data::char_names.at(charId)).toString();
@@ -387,37 +394,16 @@ void ConfigWindow::changeCharPath()
 		charPath->setText(QDir::toNativeSeparators(path));
 }
 
-void ConfigWindow::changeColor()
-{
-	QColor coul;
-	QRgb color=0;
-	QObject *send = sender();
-
-	if (send == windowColor1)		color = windowColorTopLeft;
-	else if (send == windowColor2)	color = windowColorTopRight;
-	else if (send == windowColor3)	color = windowColorBottomLeft;
-	else if (send == windowColor4)	color = windowColorBottomRight;
-
-	coul = QColorDialog::getColor(color, this);
-	if (!coul.isValid())		return;
-
-	color = coul.rgb();
-
-	if (send == windowColor1)		windowColorTopLeft = color;
-	else if (send == windowColor2)	windowColorTopRight = color;
-	else if (send == windowColor3)	windowColorBottomLeft = color;
-	else if (send == windowColor4)	windowColorBottomRight = color;
-
-	setWindowColors();
-}
-
 void ConfigWindow::resetColor()
 {
 	windowColorTopLeft = qRgb(0,88,176);
 	windowColorTopRight = qRgb(0,0,80);
 	windowColorBottomLeft = qRgb(0,0,128);
 	windowColorBottomRight = qRgb(0,0,32);
-	setWindowColors();
+	windowPreview->setULeft(windowColorTopLeft);
+	windowPreview->setURight(windowColorTopRight);
+	windowPreview->setLLeft(windowColorBottomLeft);
+	windowPreview->setLRight(windowColorBottomRight);
 }
 
 void ConfigWindow::fillCharNameEdit()
@@ -438,31 +424,6 @@ void ConfigWindow::setCharName(const QString &charName)
 	}
 
 	customNames[charId] = charName;
-}
-
-void ConfigWindow::setWindowColorIcon(QAbstractButton *widget, QRgb color)
-{
-	QPixmap pix(widget->iconSize());
-	pix.fill(color);
-	widget->setIcon(pix);
-}
-
-void ConfigWindow::setWindowColors()
-{
-	setWindowColorIcon(windowColor1, windowColorTopLeft);
-	setWindowColorIcon(windowColor2, windowColorTopRight);
-	setWindowColorIcon(windowColor3, windowColorBottomLeft);
-	setWindowColorIcon(windowColor4, windowColorBottomRight);
-
-	int h = windowColor1->sizeHint().height()*2+10, w = 2*h;
-
-	QPixmap pix(w, h);
-	pix.fill(QColor(0, 0, 0, 0));
-	QPainter p(&pix);
-	TextPreview::drawWindow(&p, w, h, windowColorTopLeft, windowColorTopRight, windowColorBottomLeft, windowColorBottomRight);
-	p.end();
-
-	windowPreview->setPixmap(pix);
 }
 
 void ConfigWindow::editEncoding()

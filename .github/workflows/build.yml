@@ -118,12 +118,12 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ${{ env.ff7tk_installation_path }}
-        key: ${{ runner.os }}${{ matrix.win_arch }}-${{ matrix.qt }}-${{ matrix.qt_arch }}-ff7tk-utils-formats-${{ hashFiles('ff7tk-HEAD') }}
+        key: ${{ runner.os }}${{ matrix.win_arch }}-${{ matrix.qt }}-${{ matrix.qt_arch }}-ff7tk-${{ hashFiles('ff7tk-HEAD') }}
 
     - name: Build ff7tk
       if: steps.cache-ff7tk.outputs.cache-hit != 'true'
       run: |
-        cmake -B ${{ env.ff7tk_build_path }} -DCMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }} -DCMAKE_INSTALL_PREFIX=${{ env.ff7tk_installation_path }} -DQT_DEFAULT_MAJOR_VERSION=${{ env.QT_MAJOR_VERSION }} -DFORMATS=ON -DUTILS=ON -DWIDGETS=OFF ${{ matrix.cmake_extra_args }}
+        cmake -B ${{ env.ff7tk_build_path }} -DCMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }} -DCMAKE_INSTALL_PREFIX=${{ env.ff7tk_installation_path }} -DQT_DEFAULT_MAJOR_VERSION=${{ env.QT_MAJOR_VERSION }} ${{ matrix.cmake_extra_args }}
         cmake --build ${{ env.ff7tk_build_path }} --target install -j3
       working-directory: ${{ env.ff7tk_path }}
 
