@@ -26,8 +26,11 @@ jobs:
         include:
         - aqt_version: '==2.0.0'
           qt_tools: desktop,tools_ninja,qt.tools.ninja
+        - qt: 5.15.2
+          qt_String: "Qt5"
         - qt: 6.2.0
           qt_modules: qt5compat
+          qt_String: "Qt6"
         - os: ubuntu-latest
           package_extension: 'tar.xz'
           package_suffix: 'linux64'
@@ -152,15 +155,16 @@ jobs:
       run: |
         export VERSION=continuous
         export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${{ env.ff7tk_installation_path }}/lib
+        export PATH=$PATH:${{ env.qt_installation_path }}/Qt/${{ matrix.qt }}/gcc_64/libexec
         linuxdeploy --appdir="${{ env.makoureactor_appbundle_path }}" --plugin=qt --output appimage \
           -e "${{ env.makoureactor_installation_path }}"/bin/Makou_Reactor \
           -d "${{ env.makoureactor_installation_path }}"/share/applications/Makou_Reactor.desktop \
           -i "${{ env.makoureactor_installation_path }}"/share/icons/hicolor/256x256/apps/Makou_Reactor.png
-        mv *.AppImage makoureactor-continuous-${{ matrix.package_suffix }}.AppImage
+        mv *.AppImage makoureactor-continuous-${{ matrix.qt_String }}-${{ matrix.package_suffix }}.AppImage
 
     - name: Prepare Upload
       shell: bash
-      run: mv ../build-makoureactor/*.${{ matrix.package_extension }} makoureactor-continuous-${{ matrix.package_suffix }}.${{ matrix.package_extension }}
+      run: mv ../build-makoureactor/*.${{ matrix.package_extension }} makoureactor-continuous-${{ matrix.qt_String }}-${{ matrix.package_suffix }}.${{ matrix.package_extension }}
 
     - name: Upload
       uses: actions/upload-artifact@v2
