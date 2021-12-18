@@ -387,8 +387,9 @@ void LgpDirectoryItem::debug() const
 LgpItemModel::LgpItemModel(Lgp *lgp, QObject *parent) :
 	QAbstractItemModel(parent), _lgp(lgp)/*, iconThread(this)*/
 {
-	root = new LgpDirectoryItem("");
-	for (const QString &path : lgp->fileList()) {
+	root = new LgpDirectoryItem(QString());
+	auto const fileList = lgp->fileList();
+	for (const QString &path : fileList) {
 		root->addChild(path, lgp);
 //		iconThread.addFile(path);
 	}
@@ -965,7 +966,8 @@ void LgpWidget::extractAll()
 	setObserverMaximum(static_cast<unsigned int>(lgp->fileCount()));
 	int i = 0;
 
-	for (const QString &fileName : lgp->fileList()) {
+	const auto fileList = lgp->fileList();
+	for (const QString &fileName : fileList) {
 		if (observerWasCanceled()) {
 			break;
 		}

@@ -213,7 +213,8 @@ void WalkmeshWidget::paintGL()
 
 		if (infFile && infFile->isOpen()) {
 			int gateID = 0;
-			for (const Exit &gate : infFile->exitLines()) {
+			const auto exitLines = infFile->exitLines();
+			for (const Exit &gate : exitLines) {
 				if (gate.fieldID != 0x7FFF) {
 					// Vertex info
 					QVector3D positionA(gate.exit_line[0].x / 4096.0f, gate.exit_line[0].y / 4096.0f, gate.exit_line[0].z / 4096.0f),
@@ -226,8 +227,8 @@ void WalkmeshWidget::paintGL()
 				}
 				++gateID;
 			}
-
-			for (const Trigger &trigger : infFile->triggers()) {
+			const auto triggers = infFile->triggers();
+			for (const Trigger &trigger : triggers) {
 				if (trigger.background_parameter != 0xFF) {
 					// Vertex info
 					QVector3D positionA(trigger.trigger_line[0].x / 4096.0f, trigger.trigger_line[0].y / 4096.0f, trigger.trigger_line[0].z / 4096.0f),

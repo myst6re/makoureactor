@@ -1675,7 +1675,7 @@ void Window::miscOperations()
 		hideProgression();
 
 		if (fieldArchive->isModified()) {
-		setModified(true);
+			setModified(true);
 		}
 	}
 }
