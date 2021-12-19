@@ -38,7 +38,7 @@ Renderer::Renderer(QOpenGLWidget *_widget) :
 	mGL.initializeOpenGLFunctions();
 
 #ifdef QT_DEBUG
-	connect(&mLogger, SIGNAL(messageLogged(QOpenGLDebugMessage)), this, SLOT(messageLogged(QOpenGLDebugMessage)));
+	connect(&mLogger, &QOpenGLDebugLogger::messageLogged, this, &Renderer::messageLogged);
 
 	if (mLogger.initialize()) {
 		mLogger.startLogging();

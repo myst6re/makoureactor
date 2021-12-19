@@ -109,6 +109,8 @@ private:
 	quint8 bank;
 	bool cancel;
 	bool atTheEnd, atTheBeginning;
+	QShortcut *findNextShortcut = nullptr;
+	QShortcut *findPreviousShortcut = nullptr;
 
 signals:
 	void found(int fieldID, int grpScriptID, int scriptID, int opcodeID);

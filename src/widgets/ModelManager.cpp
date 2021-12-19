@@ -63,12 +63,12 @@ ModelManager::ModelManager(QWidget *parent) :
 		modelWidget = new QWidget(this);
 	}
 
-	connect(models, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), SLOT(showModelInfos(QTreeWidgetItem*,QTreeWidgetItem*)));
-	connect(modelAnims, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), SLOT(showModel(QTreeWidgetItem*)));
-	connect(modelUnknown, SIGNAL(valueChanged(int)), SLOT(setModelUnknown(int)));
-	connect(modelScaleWidget, SIGNAL(valueChanged(int)), SLOT(setModelScale(int)));
-	connect(modelGlobalColorWidget, SIGNAL(colorEdited(int,QRgb)), SLOT(setModelGlobalColor(int,QRgb)));
-	connect(modelColorsLayout, SIGNAL(colorDirEdited(int,FieldModelColorDir)), SLOT(setModelColor(int,FieldModelColorDir)));
+	connect(models, &QTreeWidget::currentItemChanged, this, qOverload<QTreeWidgetItem *, QTreeWidgetItem *>(&ModelManager::showModelInfos));
+	connect(modelAnims, &QTreeWidget::currentItemChanged, this, &ModelManager::showModel);
+	connect(modelUnknown, &QSpinBox::valueChanged, this, &ModelManager::setModelUnknown);
+	connect(modelScaleWidget, &QSpinBox::valueChanged, this, qOverload<int>(&ModelManager::setModelScale));
+	connect(modelGlobalColorWidget, &ColorDisplay::colorEdited, this, &ModelManager::setModelGlobalColor);
+	connect(modelColorsLayout, &ModelColorsLayout::colorDirEdited, this, &ModelManager::setModelColor);
 }
 
 void ModelManager::clear()

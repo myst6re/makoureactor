@@ -67,9 +67,9 @@ EncounterTableWidget::EncounterTableWidget(const QString &title, QWidget *parent
 		}
 	}
 
-	connect(mainRate, SIGNAL(valueChanged(int)), SLOT(changePercent()));
+	connect(mainRate, &QSlider::valueChanged, this, &EncounterTableWidget::changePercent);
 	for (QSpinBox *battleProba : qAsConst(battleProbas)) {
-		connect(battleProba, SIGNAL(valueChanged(int)), SLOT(changeProbaCount()));
+		connect(battleProba, &QSpinBox::valueChanged, this, &EncounterTableWidget::changeProbaCount);
 	}
 
 	changePercent();

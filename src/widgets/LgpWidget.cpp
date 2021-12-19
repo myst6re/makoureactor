@@ -387,14 +387,15 @@ void LgpDirectoryItem::debug() const
 LgpItemModel::LgpItemModel(Lgp *lgp, QObject *parent) :
 	QAbstractItemModel(parent), _lgp(lgp)/*, iconThread(this)*/
 {
-	root = new LgpDirectoryItem("");
-	for (const QString &path : lgp->fileList()) {
+	root = new LgpDirectoryItem(QString());
+	auto const fileList = lgp->fileList();
+	for (const QString &path : fileList) {
 		root->addChild(path, lgp);
 //		iconThread.addFile(path);
 	}
 //	root->debug();
 
-//	connect(&iconThread, SIGNAL(iconLoaded(QString,QIcon)), SLOT(setIcon(QString,QIcon)));
+//	connect(&iconThread, &IconThread::iconLoaded, this, &LgpItemModel::setIcon);
 
 	QFileIconProvider iconProvider;
 	fileIcon = iconProvider.icon(QFileIconProvider::File);
@@ -716,16 +717,16 @@ LgpWidget::LgpWidget(Lgp *lgp, QWidget *parent) :
 	layout->addWidget(treeView, 1, 0);
 	layout->addWidget(preview, 1, 1);
 
-	connect(renameButton, SIGNAL(released()), SLOT(renameCurrent()));
-	connect(replaceButton, SIGNAL(released()), SLOT(replaceCurrent()));
-	connect(extractButton, SIGNAL(released()), SLOT(extractCurrent()));
-	connect(extractAllButton, SIGNAL(released()), SLOT(extractAll()));
-	connect(addButton, SIGNAL(released()), SLOT(add()));
-	connect(removeButton, SIGNAL(released()), SLOT(removeCurrent()));
-	connect(treeView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(setButtonsState()));
-	connect(treeView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(changePreview()));
-	connect(preview, SIGNAL(currentImageChanged(int)), SLOT(changeImageInPreview(int)));
-	connect(preview, SIGNAL(currentPaletteChanged(int)), SLOT(changeImagePaletteInPreview(int)));
+	connect(renameButton, &QPushButton::clicked, this, &LgpWidget::renameCurrent);
+	connect(replaceButton, &QPushButton::clicked, this, &LgpWidget::replaceCurrent);
+	connect(extractButton, &QPushButton::clicked, this, &LgpWidget::extractCurrent);
+	connect(extractAllButton, &QPushButton::clicked, this, &LgpWidget::extractAll);
+	connect(addButton, &QPushButton::clicked, this, &LgpWidget::add);
+	connect(removeButton, &QPushButton::clicked, this, &LgpWidget::removeCurrent);
+	connect(treeView->selectionModel(), &QItemSelectionModel::selectionChanged, this, &LgpWidget::setButtonsState);
+	connect(treeView->selectionModel(), &QItemSelectionModel::selectionChanged, this, &LgpWidget::changePreview);
+	connect(preview, &ArchivePreview::currentImageChanged, this, &LgpWidget::changeImageInPreview);
+	connect(preview, &ArchivePreview::currentPaletteChanged, this, &LgpWidget::changeImagePaletteInPreview);
 
 	setButtonsState();
 }
@@ -965,7 +966,8 @@ void LgpWidget::extractAll()
 	setObserverMaximum(static_cast<unsigned int>(lgp->fileCount()));
 	int i = 0;
 
-	for (const QString &fileName : lgp->fileList()) {
+	const auto fileList = lgp->fileList();
+	for (const QString &fileName : fileList) {
 		if (observerWasCanceled()) {
 			break;
 		}

@@ -75,17 +75,17 @@ BGDialog::BGDialog(QWidget *parent) :
 	layout->setColumnStretch(0, 2);
 	layout->setColumnStretch(1, 1);
 
-	connect(image, SIGNAL(saveRequested()), SLOT(saveImage()));
-	connect(parametersWidget, SIGNAL(currentIndexChanged(int)), SLOT(parameterChanged(int)));
-	connect(layersWidget, SIGNAL(itemSelectionChanged()), SLOT(layerChanged()));
-	connect(sectionsWidget, SIGNAL(itemSelectionChanged()), SLOT(sectionChanged()));
-	connect(statesWidget, SIGNAL(itemChanged(QListWidgetItem*)), SLOT(enableState(QListWidgetItem*)));
-	connect(layersWidget, SIGNAL(itemChanged(QListWidgetItem*)), SLOT(enableLayer(QListWidgetItem*)));
-	connect(sectionsWidget, SIGNAL(itemChanged(QListWidgetItem*)), SLOT(enableSection(QListWidgetItem*)));
-	connect(zWidget, SIGNAL(valueChanged(int)), SLOT(changeZ(int)));
-	connect(buttonRepair, SIGNAL(released()), SLOT(tryToRepairBG()));
-	connect(tabBar, SIGNAL(currentChanged(int)), SLOT(updateBG()));
-	connect(tabBar, SIGNAL(currentChanged(int)), SLOT(showLayersPage(int)));
+	connect(image, &ApercuBGLabel::saveRequested, this, &BGDialog::saveImage);
+	connect(parametersWidget, &QComboBox::currentIndexChanged, this, &BGDialog::parameterChanged);
+	connect(layersWidget, &QListWidget::itemSelectionChanged, this, &BGDialog::layerChanged);
+	connect(sectionsWidget, &QListWidget::itemSelectionChanged, this, &BGDialog::sectionChanged);
+	connect(statesWidget, &QListWidget::itemChanged, this, &BGDialog::enableState);
+	connect(layersWidget, &QListWidget::itemChanged, this, &BGDialog::enableLayer);
+	connect(sectionsWidget, &QListWidget::itemChanged, this, &BGDialog::enableSection);
+	connect(zWidget, &QSpinBox::valueChanged, this, &BGDialog::changeZ);
+	connect(buttonRepair, &QPushButton::clicked, this, &BGDialog::tryToRepairBG);
+	connect(tabBar, &QTabBar::currentChanged, this, &BGDialog::updateBG);
+	connect(tabBar, &QTabBar::currentChanged, this, &BGDialog::showLayersPage);
 }
 
 void BGDialog::fill(Field *field, bool reload)

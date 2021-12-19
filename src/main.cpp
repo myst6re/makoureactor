@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
 	Config::set();
 	CLI::exec();
 
-	QTimer::singleShot(0, &app, SLOT(quit()));
+	QTimer::singleShot(0, &app, &QCoreApplication::quit);
 #else
 
 	QApplication app(argc, argv);

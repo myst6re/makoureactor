@@ -96,14 +96,14 @@ VarManager::VarManager(FieldArchive *fieldArchive, QWidget *parent)
 	changeBank(0);
 	fillForm();
 
-	connect(bank, SIGNAL(valueChanged(int)), SLOT(scrollToList1(int)));
-	connect(address, SIGNAL(valueChanged(int)), SLOT(scrollToList2(int)));
-	connect(liste1, SIGNAL(currentRowChanged(int)), SLOT(changeBank(int)));
-	connect(liste2, SIGNAL(itemSelectionChanged()), SLOT(fillForm()));
-	connect(name, SIGNAL(returnPressed()), SLOT(renameVar()));
-	connect(rename, SIGNAL(released()), SLOT(renameVar()));
-	connect(ok, SIGNAL(released()), SLOT(save()));
-	connect(searchButton, SIGNAL(released()), SLOT(search()));
+	connect(bank, &QSpinBox::valueChanged, this, &VarManager::scrollToList1);
+	connect(address, &QSpinBox::valueChanged, this, &VarManager::scrollToList2);
+	connect(liste1, &QListWidget::currentRowChanged, this, &VarManager::changeBank);
+	connect(liste2, &QTreeWidget::itemSelectionChanged, this, &VarManager::fillForm);
+	connect(name, &QLineEdit::returnPressed, this, &VarManager::renameVar);
+	connect(rename, &QPushButton::clicked, this, &VarManager::renameVar);
+	connect(ok, &QPushButton::clicked, this, &VarManager::save);
+	connect(searchButton, &QPushButton::clicked, this, &VarManager::search);
 
 	adjustSize();
 }
@@ -275,7 +275,7 @@ void VarManager::search()
 	mess.setStandardButtons(QMessageBox::NoButton);
 	mess.show();
 	QTimer t(this);
-	connect(&t, SIGNAL(timeout()), SLOT(processEvents()));
+	connect(&t, &QTimer::timeout, this, &VarManager::processEvents);
 	t.start(700);
 	allVars = fieldArchive->searchAllVars(_fieldNames);
 	quint8 b = quint8(bank->value());

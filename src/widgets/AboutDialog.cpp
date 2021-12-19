@@ -40,7 +40,7 @@ AboutDialog::AboutDialog(QWidget *parent)
 
 	QDialogButtonBox *buttonBox = new QDialogButtonBox(Qt::Horizontal, this);
 	buttonBox->addButton(QDialogButtonBox::Close);
-	connect(buttonBox, SIGNAL(rejected()), this, SLOT(close()));
+	connect(buttonBox, &QDialogButtonBox::rejected, this, &AboutDialog::close);
 
 	QLabel *desc3 = new QLabel(QString("Qt %1").arg(QT_VERSION_STR), this);
 	QPalette pal = desc3->palette();

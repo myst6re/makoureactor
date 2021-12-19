@@ -29,9 +29,9 @@ MassExportDialog::MassExportDialog(QWidget *parent) :
 	fieldList->setSelectionMode(QAbstractItemView::MultiSelection);
 
 	QToolBar *toolBar = new QToolBar(this);
-	toolBar->addAction(tr("Current"), this, SLOT(selectCurrentField()));
-	toolBar->addAction(tr("+"), fieldList, SLOT(selectAll()));
-	toolBar->addAction(tr("-"), fieldList, SLOT(clearSelection()));
+	toolBar->addAction(tr("Current"), this, &MassExportDialog::selectCurrentField);
+	toolBar->addAction(tr("+"), fieldList, &QListWidget::selectAll);
+	toolBar->addAction(tr("-"), fieldList, &QListWidget::clearSelection);
 
 	QVBoxLayout *listLayout = new QVBoxLayout;
 	listLayout->addWidget(toolBar);
@@ -87,9 +87,9 @@ MassExportDialog::MassExportDialog(QWidget *parent) :
 	layout->addWidget(buttonBox, row + 4, 0, 1, 3);
 	layout->setRowStretch(row + 3, 1);
 
-	connect(changeDir, SIGNAL(clicked()),  SLOT(chooseExportDirectory()));
-	connect(buttonBox, SIGNAL(accepted()), SLOT(accept()));
-	connect(buttonBox, SIGNAL(rejected()), SLOT(reject()));
+	connect(changeDir, &QPushButton::clicked, this, &MassExportDialog::chooseExportDirectory);
+	connect(buttonBox, &QDialogButtonBox::accepted, this, &MassExportDialog::accept);
+	connect(buttonBox, &QDialogButtonBox::rejected, this, &MassExportDialog::reject);
 
 	fieldList->setFocus();
 }

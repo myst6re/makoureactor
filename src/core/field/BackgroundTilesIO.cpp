@@ -760,7 +760,9 @@ bool BackgroundTilesIOPS::writeData(const BackgroundTiles &tiles) const
 			}
 
 			// Separation between Y (only when several lines)
-			if (tilesByDstY.keys().size() > 1) {
+			auto tileKeys = tilesByDstY.keys();
+			qsizetype tileSize = tileKeys.size();
+			if (tileSize > 1) {
 				quint16 flag = 0x7FFE;
 				device()->write((char *)&flag, 2);
 				device()->write((char *)&line, 2);

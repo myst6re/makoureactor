@@ -58,12 +58,12 @@ void ScriptEditorDLPBSavemap::build()
 	layout->setColumnStretch(2, 1);
 	layout->setContentsMargins(QMargins());
 
-	connect(_from, SIGNAL(editingFinished()), SIGNAL(opcodeChanged()));
-	connect(_to, SIGNAL(editingFinished()), SIGNAL(opcodeChanged()));
-	connect(_absValue, SIGNAL(editingFinished()), SIGNAL(opcodeChanged()));
-	connect(_flag, SIGNAL(currentIndexChanged(int)), SIGNAL(opcodeChanged()));
-	connect(_fromIsPointer, SIGNAL(toggled(bool)), SIGNAL(opcodeChanged()));
-	connect(_toIsPointer, SIGNAL(toggled(bool)), SIGNAL(opcodeChanged()));
+	connect(_from, &QSpinBox::editingFinished, this, &ScriptEditorDLPBSavemap::opcodeChanged);
+	connect(_to, &QSpinBox::editingFinished, this, &ScriptEditorDLPBSavemap::opcodeChanged);
+	connect(_absValue, &QDoubleSpinBox::editingFinished, this, &ScriptEditorDLPBSavemap::opcodeChanged);
+	connect(_flag, &QComboBox::currentIndexChanged, this, &ScriptEditorDLPBSavemap::opcodeChanged);
+	connect(_fromIsPointer, &QCheckBox::toggled, this, &ScriptEditorDLPBSavemap::opcodeChanged);
+	connect(_toIsPointer, &QCheckBox::toggled, this, &ScriptEditorDLPBSavemap::opcodeChanged);
 }
 
 Opcode ScriptEditorDLPBSavemap::buildOpcode()
@@ -115,8 +115,8 @@ void ScriptEditorDLPBWriteToMemory::build()
 	layout->setRowStretch(2, 1);
 	layout->setContentsMargins(QMargins());
 
-	connect(_address, SIGNAL(editingFinished()), SIGNAL(opcodeChanged()));
-	connect(_bytes, SIGNAL(editingFinished()), SIGNAL(opcodeChanged()));
+	connect(_address, &QDoubleSpinBox::editingFinished, this, &ScriptEditorDLPBWriteToMemory::opcodeChanged);
+	connect(_bytes, &QLineEdit::editingFinished, this, &ScriptEditorDLPBWriteToMemory::opcodeChanged);
 }
 
 Opcode ScriptEditorDLPBWriteToMemory::buildOpcode()

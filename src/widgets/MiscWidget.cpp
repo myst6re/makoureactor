@@ -37,8 +37,8 @@ MiscWidget::MiscWidget(InfFile *data, Field *field, QWidget *parent) :
 	layout->addWidget(mapAuthor, 1, 1);
 	layout->addWidget(buttonBox, 3, 0, 1, 2);
 
-	connect(buttonBox, SIGNAL(accepted()), SLOT(accept()));
-	connect(buttonBox, SIGNAL(rejected()), SLOT(reject()));
+	connect(buttonBox, &QDialogButtonBox::accepted, this, &MiscWidget::accept);
+	connect(buttonBox, &QDialogButtonBox::rejected, this, &MiscWidget::reject);
 
 	fill();
 }

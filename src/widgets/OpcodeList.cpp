@@ -92,22 +92,22 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	disableTree_A = new QAction(tr("Disable tree"), this);
 	search_A = new QAction(tr("Search opcode..."), this);
 
-	connect(edit_A, SIGNAL(triggered()), SLOT(scriptEditor()));
-	connect(add_A, SIGNAL(triggered()), SLOT(add()));
-	connect(del_A, SIGNAL(triggered()), SLOT(del()));
-	connect(cut_A, SIGNAL(triggered()), SLOT(cut()));
-	connect(copy_A, SIGNAL(triggered()), SLOT(copy()));
-	connect(copyText_A, SIGNAL(triggered()), SLOT(copyText()));
-	connect(paste_A, SIGNAL(triggered()), SLOT(paste()));
-	connect(up_A, SIGNAL(triggered()), SLOT(up()));
-	connect(down_A, SIGNAL(triggered()), SLOT(down()));
-	connect(expand_A, SIGNAL(triggered()), SLOT(expandAll()));
-	connect(text_A, SIGNAL(triggered()), SLOT(editText()));
-	connect(undo_A, SIGNAL(triggered()), SLOT(undo()));
-	connect(redo_A, SIGNAL(triggered()), SLOT(redo()));
-	connect(goto_A, SIGNAL(triggered()), SLOT(gotoLabel()));
-	connect(disableTree_A, SIGNAL(triggered()), SLOT(toggleTree()));
-	connect(search_A, SIGNAL(triggered()), SLOT(searchOpcode()));
+	connect(edit_A, &QAction::triggered, this, &OpcodeList::scriptEditor);
+	connect(add_A, &QAction::triggered, this, &OpcodeList::add);
+	connect(del_A, &QAction::triggered, this, &OpcodeList::del);
+	connect(cut_A, &QAction::triggered, this, &OpcodeList::cut);
+	connect(copy_A, &QAction::triggered, this, &OpcodeList::copy);
+	connect(copyText_A, &QAction::triggered, this, &OpcodeList::copyText);
+	connect(paste_A, &QAction::triggered, this, &OpcodeList::paste);
+	connect(up_A, &QAction::triggered, this, &OpcodeList::up);
+	connect(down_A, &QAction::triggered, this, &OpcodeList::down);
+	connect(expand_A, &QAction::triggered, this, &OpcodeList::expandAll);
+	connect(text_A, &QAction::triggered, this, qOverload<>(&OpcodeList::editText));
+	connect(undo_A, &QAction::triggered, this, &OpcodeList::undo);
+	connect(redo_A, &QAction::triggered, this, &OpcodeList::redo);
+	connect(goto_A, &QAction::triggered, this, [&] {gotoLabel(nullptr);} );
+	connect(disableTree_A, &QAction::triggered, this, &OpcodeList::toggleTree);
+	connect(search_A, &QAction::triggered, this, qOverload<>(&OpcodeList::searchOpcode));
 
 	addAction(edit_A);
 	addAction(add_A);
@@ -173,10 +173,10 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	setMinimumWidth(_toolBar->sizeHint().width());
 	setMinimumHeight(_toolBar->sizeHint().width());
 
-	connect(this, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), SLOT(scriptEditor()));
-	connect(this, SIGNAL(itemSelectionChanged()), SLOT(itemSelected()));
-	connect(this, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), SLOT(evidence(QTreeWidgetItem*,QTreeWidgetItem*)));
-	connect(QApplication::clipboard(), SIGNAL(changed(QClipboard::Mode)), SLOT(adjustPasteAction()));
+	connect(this, &OpcodeList::itemDoubleClicked, this, &OpcodeList::scriptEditor);
+	connect(this, &OpcodeList::itemSelectionChanged, this, &OpcodeList::itemSelected);
+	connect(this, &OpcodeList::currentItemChanged, this, &OpcodeList::evidence);
+	connect(QApplication::clipboard(), &QClipboard::changed, this, &OpcodeList::adjustPasteAction);
 }
 
 void OpcodeList::adjustPasteAction()

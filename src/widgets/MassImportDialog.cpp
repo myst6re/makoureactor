@@ -46,9 +46,9 @@ MassImportDialog::MassImportDialog(QWidget *parent) :
 	fieldList->setSelectionMode(QAbstractItemView::MultiSelection);
 
 	QToolBar *toolBar = new QToolBar(this);
-	toolBar->addAction(tr("Current"), this, SLOT(selectCurrentField()));
-	toolBar->addAction(tr("+"), fieldList, SLOT(selectAll()));
-	toolBar->addAction(tr("-"), fieldList, SLOT(clearSelection()));
+	toolBar->addAction(tr("Current"), this, &MassImportDialog::selectCurrentField);
+	toolBar->addAction(tr("+"), fieldList, &QListWidget::selectAll);
+	toolBar->addAction(tr("-"), fieldList, &QListWidget::clearSelection);
 
 	QVBoxLayout *listLayout = new QVBoxLayout;
 	listLayout->addWidget(toolBar);
@@ -70,9 +70,9 @@ MassImportDialog::MassImportDialog(QWidget *parent) :
 	layout->addWidget(buttonBox, row + 3, 0, 1, 3);
 	layout->setRowStretch(row + 2, 1);
 
-	connect(changeDir, SIGNAL(clicked()),  SLOT(chooseImportDirectory()));
-	connect(buttonBox, SIGNAL(accepted()), SLOT(accept()));
-	connect(buttonBox, SIGNAL(rejected()), SLOT(reject()));
+	connect(changeDir, &QPushButton::clicked, this, &MassImportDialog::chooseImportDirectory);
+	connect(buttonBox, &QDialogButtonBox::accepted, this, &MassImportDialog::accept);
+	connect(buttonBox, &QDialogButtonBox::rejected, this, &MassImportDialog::reject);
 
 	fieldList->setFocus();
 }

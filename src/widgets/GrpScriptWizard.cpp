@@ -78,8 +78,8 @@ GrpScriptWizardPageType::GrpScriptWizardPageType(QWidget *parent) :
 	layout->addWidget(_type, 0, 0);
 	layout->addWidget(_subType, 0, 1);
 
-	connect(_type, SIGNAL(currentRowChanged(int)), SLOT(fillSubTypeList(int)));
-	connect(_subType, SIGNAL(currentRowChanged(int)), SLOT(updateButtons()));
+	connect(_type, &QListWidget::currentRowChanged, this, &GrpScriptWizardPageType::fillSubTypeList);
+	connect(_subType, &QListWidget::currentRowChanged, this, &GrpScriptWizardPageType::updateButtons);
 
 	registerField(FIELD_TYPE"*", _type);
 	registerField(FIELD_SUB_TYPE"*", _subType);

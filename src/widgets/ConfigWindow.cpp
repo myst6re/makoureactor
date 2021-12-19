@@ -158,15 +158,15 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	layout->addWidget(scriptEditor, 3, 0, 1, 2);
 	layout->addWidget(buttonBox, 4, 0, 1, 2);
 
-	connect(listFF7, SIGNAL(itemSelectionChanged()), SLOT(changeFF7ListButtonsState()));
-	connect(ff7ButtonMod, SIGNAL(released()), SLOT(modifyCustomFF7Path()));
-	connect(ff7ButtonRem, SIGNAL(released()), SLOT(removeCustomFF7Path()));
-	connect(kernelAuto, SIGNAL(toggled(bool)), SLOT(kernelAutoChange(bool)));
-	connect(windowAuto, SIGNAL(toggled(bool)), SLOT(windowAutoChange(bool)));
-	connect(charAuto, SIGNAL(toggled(bool)), SLOT(charAutoChange(bool)));
-	connect(kernelButton, SIGNAL(released()), SLOT(changeKernelPath()));
-	connect(windowButton, SIGNAL(released()), SLOT(changeWindowPath()));
-	connect(charButton, SIGNAL(released()), SLOT(changeCharPath()));
+	connect(listFF7, &QTreeWidget::itemSelectionChanged, this, &ConfigWindow::changeFF7ListButtonsState);
+	connect(ff7ButtonMod, &QPushButton::clicked, this, &ConfigWindow::modifyCustomFF7Path);
+	connect(ff7ButtonRem, &QPushButton::clicked, this, &ConfigWindow::removeCustomFF7Path);
+	connect(kernelAuto, &QCheckBox::toggled, this, &ConfigWindow::kernelAutoChange);
+	connect(windowAuto, &QCheckBox::toggled, this, &ConfigWindow::windowAutoChange);
+	connect(charAuto, &QCheckBox::toggled, this, &ConfigWindow::charAutoChange);
+	connect(kernelButton, &QPushButton::clicked, this, &ConfigWindow::changeKernelPath);
+	connect(windowButton, &QPushButton::clicked, this, &ConfigWindow::changeWindowPath);
+	connect(charButton, &QPushButton::clicked, this, &ConfigWindow::changeCharPath);
 	connect(windowPreview, &DialogPreview::LL_ColorChanged, this, [&] (const QColor &color){
 		windowColorBottomLeft = color.rgb();
 	});
@@ -179,12 +179,12 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	connect(windowPreview, &DialogPreview::UR_ColorChanged, this, [&] (const QColor &color){
 		windowColorTopRight = color.rgb();
 	});
-	connect(windowColorReset, SIGNAL(released()), SLOT(resetColor()));
-	connect(listCharNames, SIGNAL(currentIndexChanged(int)), SLOT(fillCharNameEdit()));
-	connect(charNameEdit, SIGNAL(textEdited(QString)), SLOT(setCharName(QString)));
-	connect(encodingEdit, SIGNAL(released()), SLOT(editEncoding()));
-	connect(buttonBox, SIGNAL(accepted()), SLOT(accept()));
-	connect(buttonBox, SIGNAL(rejected()), SLOT(reject()));
+	connect(windowColorReset, &QPushButton::clicked, this, &ConfigWindow::resetColor);
+	connect(listCharNames, &QComboBox::currentIndexChanged, this, &ConfigWindow::fillCharNameEdit);
+	connect(charNameEdit, &QLineEdit::textEdited, this, &ConfigWindow::setCharName);
+	connect(encodingEdit, &QPushButton::clicked, this, &ConfigWindow::editEncoding);
+	connect(buttonBox, &QDialogButtonBox::accepted, this, &ConfigWindow::accept);
+	connect(buttonBox, &QDialogButtonBox::rejected, this, &ConfigWindow::reject);
 
 	fillConfig();
 	changeFF7ListButtonsState();
@@ -272,7 +272,7 @@ void ConfigWindow::fillConfig()
 	choiceWidthEdit->setValue(Config::value("choiceWidth", 10).toInt());
 	tabWidthEdit->setValue(Config::value("tabWidth", 4).toInt());
 
-	QTimer::singleShot(0, this, SLOT(showIcons()));
+	QTimer::singleShot(0, this, &ConfigWindow::showIcons);
 }
 
 void ConfigWindow::showIcons()

@@ -39,8 +39,8 @@ void ScriptEditorMoviePage::build()
 	layout->setRowStretch(2, 1);
 	layout->setContentsMargins(QMargins());
 
-	connect(discList, SIGNAL(currentIndexChanged(int)), SLOT(setMovieListItemTexts(int)));
-	connect(movieList, SIGNAL(currentIndexChanged(int)), SIGNAL(opcodeChanged()));
+	connect(discList, &QComboBox::currentIndexChanged, this, &ScriptEditorMoviePage::setMovieListItemTexts);
+	connect(movieList, &QComboBox::currentIndexChanged, this, &ScriptEditorMoviePage::opcodeChanged);
 }
 
 void ScriptEditorMoviePage::buildDiscList()

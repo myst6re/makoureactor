@@ -47,9 +47,9 @@ void VertexWidget::build(const QString &xLabel, const QString &yLabel, const QSt
 	layout->addWidget(new QLabel(zLabel.isEmpty() ? tr("Z") : zLabel));
 	layout->addWidget(z, 1);
 
-	connect(x, SIGNAL(valueChanged(int)), SLOT(emitValuesChanged()));
-	connect(y, SIGNAL(valueChanged(int)), SLOT(emitValuesChanged()));
-	connect(z, SIGNAL(valueChanged(int)), SLOT(emitValuesChanged()));
+	connect(x, &QSpinBox::valueChanged, this, &VertexWidget::emitValuesChanged);
+	connect(y, &QSpinBox::valueChanged, this, &VertexWidget::emitValuesChanged);
+	connect(z, &QSpinBox::valueChanged, this, &VertexWidget::emitValuesChanged);
 }
 
 Vertex_s VertexWidget::values() const

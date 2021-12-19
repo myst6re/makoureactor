@@ -46,10 +46,16 @@ Search::Search(Window *mainWindow) :
 	}
 
 	buttonNext->setDefault(true);
-
 	// Button Shortcuts
-	new QShortcut(QKeySequence::FindNext, this, SLOT(findNext()), nullptr, Qt::ApplicationShortcut);
-	new QShortcut(QKeySequence::FindPrevious, this, SLOT(findPrev()), nullptr, Qt::ApplicationShortcut);
+	findNextShortcut = new QShortcut(this);
+	findNextShortcut->setKey(QKeySequence::FindNext);
+	findNextShortcut->setContext(Qt::ApplicationShortcut);
+	connect(findNextShortcut, &QShortcut::activated, this, [&]{emit buttonNext->clicked();});
+
+	findPreviousShortcut = new QShortcut(this);
+	findPreviousShortcut->setKey(QKeySequence::FindPrevious);
+	findPreviousShortcut->setContext(Qt::ApplicationShortcut);
+	connect(findPreviousShortcut, &QShortcut::activated, this, [&]{emit buttonPrev->clicked();});
 
 	// buttonNext.width == buttonPrev.width
 	QPushButton *largerButton = buttonWidths.last();
@@ -75,19 +81,19 @@ Search::Search(Window *mainWindow) :
 
 	searchAllDialog = new SearchAll(mainWindow);
 
-	connect(buttonNext, SIGNAL(released()), SLOT(findNext()));
-	connect(buttonPrev, SIGNAL(released()), SLOT(findPrev()));
-	connect(buttonAll, SIGNAL(released()), SLOT(findAll()));
+	connect(buttonNext, &QPushButton::clicked, this, &Search::findNext);
+	connect(buttonPrev, &QPushButton::clicked, this, &Search::findPrev);
+	connect(buttonAll, &QPushButton::clicked, this, &Search::findAll);
 
-	connect(champ->lineEdit(), SIGNAL(textEdited(QString)), champ2->lineEdit(), SLOT(setText(QString)));
-	connect(caseSens, SIGNAL(clicked(bool)), SLOT(updateCaseSensitivity(bool)));
-	connect(useRegexp, SIGNAL(clicked(bool)), useRegexp2, SLOT(setChecked(bool)));
+	connect(champ->lineEdit(), &QLineEdit::textEdited, champ2->lineEdit(), &QLineEdit::setText);
+	connect(caseSens, &QCheckBox::clicked, this, &Search::updateCaseSensitivity);
+	connect(useRegexp, &QCheckBox::clicked, useRegexp2, &QCheckBox::setChecked);
 
-	connect(champ2->lineEdit(), SIGNAL(textEdited(QString)), champ->lineEdit(), SLOT(setText(QString)));
-	connect(caseSens2, SIGNAL(clicked(bool)), SLOT(updateCaseSensitivity(bool)));
-	connect(useRegexp2, SIGNAL(clicked(bool)), useRegexp, SLOT(setChecked(bool)));
+	connect(champ2->lineEdit(), &QLineEdit::textEdited, champ->lineEdit(), &QLineEdit::setText);
+	connect(caseSens2, &QCheckBox::clicked, this, &Search::updateCaseSensitivity);
+	connect(useRegexp2, &QCheckBox::clicked, useRegexp, &QCheckBox::setChecked);
 
-	connect(tabWidget, SIGNAL(currentChanged(int)), SLOT(saveCurrentTab(int)));
+	connect(tabWidget, &QTabWidget::currentChanged, this, &Search::saveCurrentTab);
 
 	setActionsEnabled(false);
 	updateCaseSensitivity(Config::value("findWithCaseSensitive").toBool());
@@ -267,13 +273,13 @@ QWidget *Search::scriptPageWidget()
 	topLayout->addWidget(contextGroupBox, 2, 0, 1, 2, Qt::AlignBottom);
 	topLayout->setRowStretch(1, 1);
 
-	connect(liste, SIGNAL(currentIndexChanged(int)), stack, SLOT(setCurrentIndex(int)));
-	connect(liste, SIGNAL(currentIndexChanged(int)), SLOT(saveCurrentScriptTab(int)));
-	connect(champBank, SIGNAL(valueChanged(int)), SLOT(updateComboVarName()));
-	connect(champAddress, SIGNAL(valueChanged(int)), comboVarName, SLOT(setCurrentIndex(int)));
-	connect(comboVarName, SIGNAL(currentIndexChanged(int)), SLOT(updateChampAdress()));
-	connect(champOp, SIGNAL(currentIndexChanged(int)), SLOT(updateSearchVarPlaceholder(int)));
-	connect(opcode, SIGNAL(currentIndexChanged(int)), SLOT(updateOpcode2(int)));
+	connect(liste, &QComboBox::currentIndexChanged, stack, &QStackedWidget::setCurrentIndex);
+	connect(liste, &QComboBox::currentIndexChanged, this, &Search::saveCurrentScriptTab);
+	connect(champBank, &QSpinBox::valueChanged, this, &Search::updateComboVarName);
+	connect(champAddress, &QSpinBox::valueChanged, comboVarName, &QComboBox::setCurrentIndex);
+	connect(comboVarName, &QComboBox::currentIndexChanged, this, &Search::updateChampAdress);
+	connect(champOp, &QComboBox::currentIndexChanged, this, &Search::updateSearchVarPlaceholder);
+	connect(opcode, &QComboBox::currentIndexChanged, this, &Search::updateOpcode2);
 
 	liste->setCurrentIndex(Config::value("searchDialogScriptCurrentModule").toInt());
 
@@ -336,8 +342,8 @@ QWidget *Search::textPageWidget()
 	textLayout->addWidget(contextGroupBox, 4, 0, 1, 6);
 	textLayout->setRowStretch(3, 1);
 
-	connect(replaceCurrentButton, SIGNAL(clicked()), SLOT(replaceCurrent()));
-	connect(replaceAllButton, SIGNAL(clicked()), SLOT(replaceAll()));
+	connect(replaceCurrentButton, &QPushButton::clicked, this, &Search::replaceCurrent);
+	connect(replaceAllButton, &QPushButton::clicked, this, &Search::replaceAll);
 
 	return ret;
 }
@@ -380,7 +386,8 @@ void Search::setFieldArchive(FieldArchive *fieldArchive)
 	setActionsEnabled(fieldArchive != nullptr);
 	if (mapJump->count() <= 0) {
 		int mapID=0;
-		for (const QString &fieldName : Data::maplist()) {
+		const auto mapList = Data::maplist();
+		for (const QString &fieldName : mapList) {
 			mapJump->addItem(QString("%1 - %2").arg(mapID++, 3, 10, QChar('0')).arg(fieldName));
 		}
 		// set config values
@@ -540,7 +547,7 @@ void Search::findNext()
 	returnToBegin->hide();
 
 	QTimer timer(this);
-	connect(&timer, SIGNAL(timeout()), SLOT(processEvents()));
+	connect(&timer, &QTimer::timeout, this, &Search::processEvents);
 	timer.start(700);
 
 	setSearchValues();
@@ -693,7 +700,7 @@ void Search::findPrev()
 	bool f = false;
 
 	QTimer timer(this);
-	connect(&timer, SIGNAL(timeout()), SLOT(processEvents()));
+	connect(&timer, &QTimer::timeout, this, &Search::processEvents);
 	timer.start(700);
 
 	if (tabWidget->currentIndex() == 0) { // scripts page
@@ -958,7 +965,7 @@ void Search::replaceAll()
 	}
 
 	QTimer timer(this);
-	connect(&timer, SIGNAL(timeout()), SLOT(processEvents()));
+	connect(&timer, &QTimer::timeout, this, &Search::processEvents);
 	timer.start(700);
 
 	int replacedCount = 0;

@@ -74,20 +74,20 @@ FontWidget::FontWidget(QWidget *parent) :
 	layout->setRowStretch(5, 1);
 	layout->setContentsMargins(QMargins());
 
-	connect(selectPal, SIGNAL(currentIndexChanged(int)), SLOT(setColor(int)));
-	connect(selectTable, SIGNAL(currentIndexChanged(int)), SLOT(setTable(int)));
-	connect(fontGrid, SIGNAL(letterClicked(int)), SLOT(setLetter(int)));
-	connect(fontLetter, SIGNAL(imageChanged(QRect)), fontGrid, SLOT(updateLetter(QRect)));
-	connect(fontLetter, SIGNAL(imageChanged(QRect)), SLOT(setModified()));
-//	connect(resetButton1, SIGNAL(clicked()), SLOT(reset()));
-	connect(exportButton, SIGNAL(clicked()), SLOT(exportFont()));
-	connect(importButton, SIGNAL(clicked()), SLOT(importFont()));
-	connect(resetButton2, SIGNAL(clicked()), SLOT(resetLetter()));
-	connect(fontPalette, SIGNAL(colorChanged(int)), fontLetter, SLOT(setPixelIndex(int)));
-	connect(textLetter, SIGNAL(textEdited(QString)), SLOT(editLetter(QString)));
-	connect(widthLetter, SIGNAL(valueChanged(int)), SLOT(editWidth(int)));
-	connect(fontLetter, SIGNAL(widthEdited(int)), widthLetter, SLOT(setValue(int)));
-	connect(leftPaddingLetter, SIGNAL(valueChanged(int)), SLOT(editLeftPadding(int)));
+	connect(selectPal, &QComboBox::currentIndexChanged, this, &FontWidget::setColor);
+	connect(selectTable, &QComboBox::currentIndexChanged, this, &FontWidget::setTable);
+	connect(fontGrid, &FontGrid::letterClicked, this, &FontWidget::setLetter);
+	connect(fontLetter, &FontLetter::imageChanged, fontGrid, &FontGrid::updateLetter);
+	connect(fontLetter, &FontLetter::imageChanged, this, &FontWidget::setModified);
+//	connect(resetButton1, &QPushButton::clicked, this, &FontWidget::reset);
+	connect(exportButton, &QPushButton::clicked, this, &FontWidget::exportFont);
+	connect(importButton, &QPushButton::clicked, this, &FontWidget::importFont);
+	connect(resetButton2, &QPushButton::clicked, this, &FontWidget::resetLetter);
+	connect(fontPalette, &FontPalette::colorChanged, fontLetter, &FontLetter::setPixelIndex);
+	connect(textLetter, &QLineEdit::textEdited, this, &FontWidget::editLetter);
+	connect(widthLetter, &QSpinBox::valueChanged, this, &FontWidget::editWidth);
+	connect(fontLetter, &FontLetter::widthEdited, widthLetter, &QSpinBox::setValue);
+	connect(leftPaddingLetter, &QSpinBox::valueChanged, this, &FontWidget::editLeftPadding);
 }
 
 void FontWidget::clear()

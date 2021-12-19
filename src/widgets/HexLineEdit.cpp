@@ -20,7 +20,7 @@
 HexLineEdit::HexLineEdit(QWidget *parent) :
 	QLineEdit(parent), _noEmit(false)
 {
-	connect(this, SIGNAL(textEdited(QString)), SLOT(emitDataEdited()));
+	connect(this, &HexLineEdit::textEdited, this, &HexLineEdit::emitDataEdited);
 }
 
 HexLineEdit::HexLineEdit(const QByteArray &contents, QWidget *parent) :

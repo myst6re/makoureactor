@@ -70,18 +70,18 @@ ScriptManager::ScriptManager(QWidget *parent) :
 	contentLayout->setColumnStretch(1, 1);
 	contentLayout->setColumnStretch(2, 9);
 
-	connect(_groupScriptList, SIGNAL(changed()), SIGNAL(changed()));
-	connect(_groupScriptList, SIGNAL(itemSelectionChanged()), SLOT(fillScripts()));
+	connect(_groupScriptList, &GrpScriptList::changed, this, &ScriptManager::changed);
+	connect(_groupScriptList, &GrpScriptList::itemSelectionChanged, this, &ScriptManager::fillScripts);
 
-	connect(_scriptList, SIGNAL(itemSelectionChanged()), SLOT(fillOpcodes()));
+	connect(_scriptList, &ScriptList::itemSelectionChanged, this, &ScriptManager::fillOpcodes);
 
-	connect(_opcodeList, SIGNAL(changed()), SIGNAL(changed()));
-	connect(_opcodeList, SIGNAL(changed()), SLOT(refresh()));
-	connect(_opcodeList, SIGNAL(editText(int)), SIGNAL(editText(int)));
-	connect(_opcodeList, SIGNAL(changed()), SLOT(compile()));
-	connect(_opcodeList, SIGNAL(gotoScript(int,int)), SLOT(gotoScript(int,int)));
-	connect(_opcodeList, SIGNAL(gotoField(int)), SIGNAL(gotoField(int)));
-	connect(_opcodeList, SIGNAL(searchOpcode(int)), SIGNAL(searchOpcode(int)));
+	connect(_opcodeList, &OpcodeList::changed, this, &ScriptManager::changed);
+	connect(_opcodeList, &OpcodeList::changed, this, &ScriptManager::refresh);
+	connect(_opcodeList, qOverload<int>(&OpcodeList::editText), this, &ScriptManager::editText);
+	connect(_opcodeList, &OpcodeList::changed, this, &ScriptManager::compile);
+	connect(_opcodeList, &OpcodeList::gotoScript, this, &ScriptManager::gotoScript);
+	connect(_opcodeList, &OpcodeList::gotoField, this, &ScriptManager::gotoField);
+	connect(_opcodeList, qOverload<int>(&OpcodeList::searchOpcode), this, &ScriptManager::searchOpcode);
 
 	_groupScriptList->toolBar()->setVisible(Config::value("grpToolbarVisible", true).toBool());
 	_opcodeList->toolBar()->setVisible(Config::value("scriptToolbarVisible", true).toBool());

@@ -110,10 +110,10 @@ ScriptEditor::ScriptEditor(Field *field, const Section1File *scriptsAndTexts, co
 		changeCurrentOpcode(0);
 	}
 
-	connect(ok, SIGNAL(released()), SLOT(accept()));
-	connect(cancel, SIGNAL(released()), SLOT(close()));
-	connect(comboBox0, SIGNAL(currentIndexChanged(int)), SLOT(buildList(int)));
-	connect(comboBox, SIGNAL(currentIndexChanged(int)), SLOT(changeCurrentOpcode(int)));
+	connect(ok, &QPushButton::clicked, this, &ScriptEditor::accept);
+	connect(cancel, &QPushButton::clicked, this, &ScriptEditor::close);
+	connect(comboBox0, &QComboBox::currentIndexChanged, this, &ScriptEditor::buildList);
+	connect(comboBox, &QComboBox::currentIndexChanged, this, &ScriptEditor::changeCurrentOpcode);
 }
 
 ScriptEditorView *ScriptEditor::buildEditorPage(PageType id)
@@ -352,7 +352,7 @@ void ScriptEditor::fillEditor()
 	
 	if (!_typeToIndex.contains(_currentPageType)) {
 		_currentPageWidget = buildEditorPage(_currentPageType);
-		connect(_currentPageWidget, SIGNAL(opcodeChanged()), SLOT(refreshTextEdit()));
+		connect(_currentPageWidget, &ScriptEditorView::opcodeChanged, this, &ScriptEditor::refreshTextEdit);
 		_typeToIndex.insert(_currentPageType, editorLayout->addWidget(_currentPageWidget));
 	} else {
 		_currentPageWidget = static_cast<ScriptEditorView *>(editorLayout->widget(_typeToIndex.value(_currentPageType)));

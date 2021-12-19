@@ -45,11 +45,11 @@ AnimEditorDialog::AnimEditorDialog(int animID, QWidget *parent) :
 	layout->addWidget(buttonBox, 1, 0, 1, 2);
 
 	if (Data::currentModelID != -1) {
-		connect(aList, SIGNAL(currentRowChanged(int)), SLOT(changeModelAnimation()));
+		connect(aList, &QListWidget::currentRowChanged, this, &AnimEditorDialog::changeModelAnimation);
 	}
 	aList->setCurrentRow(animID);
-	connect(buttonBox, SIGNAL(accepted()), SLOT(accept()));
-	connect(buttonBox, SIGNAL(rejected()), SLOT(reject()));
+	connect(buttonBox, &QDialogButtonBox::accepted, this, &AnimEditorDialog::accept);
+	connect(buttonBox, &QDialogButtonBox::rejected, this, &AnimEditorDialog::reject);
 }
 
 void AnimEditorDialog::changeModelAnimation()

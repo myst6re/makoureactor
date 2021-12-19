@@ -32,8 +32,8 @@ KeyEditorDialog::KeyEditorDialog(quint16 value, QWidget *parent)
 	}
 	layout->addWidget(buttonBox);
 	
-	connect(buttonBox, SIGNAL(accepted()), SLOT(accept()));
-	connect(buttonBox, SIGNAL(rejected()), SLOT(reject()));
+	connect(buttonBox, &QDialogButtonBox::accepted, this, &KeyEditorDialog::accept);
+	connect(buttonBox, &QDialogButtonBox::rejected, this, &KeyEditorDialog::reject);
 }
 
 int KeyEditorDialog::keys() const

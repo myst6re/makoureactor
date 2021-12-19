@@ -40,8 +40,8 @@ FieldList::FieldList(QWidget *parent) :
 	_lineSearch->setStatusTip(tr("Quick search"));
 	_lineSearch->setPlaceholderText(tr("Search..."));
 
-	connect(_lineSearch, SIGNAL(textEdited(QString)), SLOT(filterMap(QString)));
-	connect(_lineSearch, SIGNAL(returnPressed()), SLOT(filterMap()));
+	connect(_lineSearch, &QLineEdit::textEdited, this, &FieldList::filterMap);
+	connect(_lineSearch, &QLineEdit::returnPressed, this, [&] { filterMap(_lineSearch->text()); });
 
 	QAction *rename_A = new QAction(tr("Rename field"), this);
 	rename_A->setShortcut(QKeySequence("F2"));
@@ -53,12 +53,12 @@ FieldList::FieldList(QWidget *parent) :
 	del_A->setShortcut(QKeySequence(Qt::Key_Delete));
 	del_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 
-	connect(this, SIGNAL(itemDoubleClicked(QTreeWidgetItem *, int)), SLOT(rename(QTreeWidgetItem *, int)));
-	connect(this, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), SLOT(evidence(QTreeWidgetItem*,QTreeWidgetItem*)));
+	connect(this, &FieldList::itemDoubleClicked, this, qOverload<QTreeWidgetItem*,int>(&FieldList::rename));
+	connect(this, &QTreeWidget::currentItemChanged, this, &FieldList::evidence);
 
-	connect(rename_A, SIGNAL(triggered()), SLOT(rename()));
-	connect(add_A, SIGNAL(triggered()), SLOT(add()));
-	connect(del_A, SIGNAL(triggered()), SLOT(del()));
+	connect(rename_A, &QAction::triggered, this, qOverload<>(&FieldList::rename));
+	connect(add_A, &QAction::triggered, this, &FieldList::add);
+	connect(del_A, &QAction::triggered, this, &FieldList::del);
 
 	this->addAction(rename_A);
 	this->addAction(add_A);
@@ -195,7 +195,7 @@ void FieldList::rename(QTreeWidgetItem *item, int column)
 	item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable);
 	editItem(item, 0);
 	item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-	connect(this, SIGNAL(itemChanged(QTreeWidgetItem *, int)), SLOT(renameOK(QTreeWidgetItem *, int)));
+	connect(this, &FieldList::itemChanged, this, &FieldList::renameOK);
 }
 
 void FieldList::renameOK(QTreeWidgetItem *item, int column)
@@ -204,7 +204,7 @@ void FieldList::renameOK(QTreeWidgetItem *item, int column)
 		return;
 	}
 
-	disconnect(this, SIGNAL(itemChanged(QTreeWidgetItem *, int)), this, SLOT(renameOK(QTreeWidgetItem *, int)));
+	disconnect(this, &FieldList::itemChanged, this, &FieldList::renameOK);
 	QString newName = item->text(1).left(8);
 
 	if (newName.isEmpty()) {

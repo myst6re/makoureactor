@@ -41,7 +41,7 @@ FontManager::FontManager(QWidget *parent) :
 	//fillList1();
 	//setFont(list1->currentRow());
 
-	//connect(list1, SIGNAL(currentRowChanged(int)), SLOT(setFont(int)));
+	//connect(list1, &QListWidget::currentRowChanged, this &FontManager::setFont);
 }
 
 void FontManager::fillList1()
@@ -119,7 +119,7 @@ bool FontManager::newNameDialog(QString &name, QString &nameId)
 	layout->addLayout(formLayout, 1);
 	layout->addWidget(ok, 0, Qt::AlignCenter);
 
-	connect(ok, SIGNAL(clicked()), &dialog, SLOT(accept()));
+	connect(ok, &QPushButton::clicked, &dialog, &QDialog::accept);
 
 	if (dialog.exec() == QDialog::Accepted) {
 		QString name1 = nameEdit->text();

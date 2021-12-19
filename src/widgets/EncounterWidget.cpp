@@ -46,8 +46,8 @@ EncounterWidget::EncounterWidget(EncounterFile *data, QWidget *parent) :
 	fillGroup(group1, data->encounterTable(EncounterFile::Table1));
 	fillGroup(group2, data->encounterTable(EncounterFile::Table2));
 
-	connect(buttonBox, SIGNAL(accepted()), SLOT(accept()));
-	connect(buttonBox, SIGNAL(rejected()), SLOT(reject()));
+	connect(buttonBox, &QDialogButtonBox::accepted, this, &EncounterWidget::accept);
+	connect(buttonBox, &QDialogButtonBox::rejected, this, &EncounterWidget::reject);
 }
 
 void EncounterWidget::fillGroup(EncounterTableWidget *group, const EncounterTable &encounterTable)

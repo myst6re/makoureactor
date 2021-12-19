@@ -28,6 +28,6 @@ EmptyFieldWidget::EmptyFieldWidget(QWidget *parent) : QWidget(parent)
 	layout->addWidget(importMapButton);
 	layout->addStretch(1);
 
-	connect(createNewMapButton, SIGNAL(released()), SIGNAL(createMapClicked()));
-	connect(importMapButton, SIGNAL(released()), SIGNAL(importMapClicked()));
+	connect(createNewMapButton, &QPushButton::clicked, this, &EmptyFieldWidget::createMapClicked);
+	connect(importMapButton, &QPushButton::clicked, this, &EmptyFieldWidget::importMapClicked);
 }

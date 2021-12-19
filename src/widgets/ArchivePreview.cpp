@@ -55,8 +55,8 @@ QWidget *ArchivePreview::imageWidget()
 	layout->addWidget(palSelect, 0, Qt::AlignCenter);
 	layout->addWidget(scrollArea);
 
-	connect(imageSelect, SIGNAL(currentIndexChanged(int)), SIGNAL(currentImageChanged(int)));
-	connect(palSelect, SIGNAL(currentIndexChanged(int)), SIGNAL(currentPaletteChanged(int)));
+	connect(imageSelect, &QComboBox::currentIndexChanged, this, &ArchivePreview::currentImageChanged);
+	connect(palSelect, &QComboBox::currentIndexChanged, this, &ArchivePreview::currentPaletteChanged);
 
 	return ret;
 }
@@ -93,7 +93,7 @@ void ArchivePreview::imagePreview(const QPixmap &image, const QString &name,
 
 	this->_name = name;
 
-	connect(_lbl, SIGNAL(saveRequested()), SLOT(saveImage()));
+	connect(_lbl, &ApercuBGLabel::saveRequested, this, &ArchivePreview::saveImage);
 
 	imageSelect->blockSignals(true);
 	imageSelect->clear();
