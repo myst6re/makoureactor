@@ -39,8 +39,8 @@ TextManager::TextManager(QWidget *parent) :
 	dispUnusedText->setChecked(Config::value("dispUnusedText", true).toBool());
 
 	ListWidget *listWidget = new ListWidget(this);
-	listWidget->addAction(ListWidget::Add, tr("Add text"), this, SLOT(addText()));
-	listWidget->addAction(ListWidget::Rem, tr("Remove text"), this, SLOT(delText()));
+	listWidget->addAction(ListWidget::Add, tr("Add text"));
+	listWidget->addAction(ListWidget::Remove, tr("Remove text"));
 	liste1 = listWidget->listWidget();
 
 	QAction *action;
@@ -256,6 +256,8 @@ TextManager::TextManager(QWidget *parent) :
 	setLayout(layout);
 	adjustSize();
 
+	connect(listWidget, &ListWidget::addTriggered, this, &TextManager::addText);
+	connect(listWidget, &ListWidget::removeTriggered, this, &TextManager::delText);
 	connect(liste1, &QListWidget::currentItemChanged, this, &TextManager::selectText);
 	connect(dispUnusedText, &QCheckBox::toggled, this, &TextManager::showList);
 	connect(toolBar, &QToolBar::actionTriggered, this, &TextManager::insertTag);

@@ -28,12 +28,17 @@ TutWidget::TutWidget(QWidget *parent) :
 	setWindowTitle(tr("Tutorials/Sounds"));
 
 	ListWidget *_list = new ListWidget(this);
-	_list->addAction(ListWidget::Add, tr("Add"), this, SLOT(add()));
-	_list->addAction(ListWidget::Rem, tr("Remove"), this, SLOT(del()));
+	_list->addAction(ListWidget::Add);
+	_list->addAction(ListWidget::Remove);
+	connect(_list, &ListWidget::addTriggered, this, &TutWidget::add);
+	connect(_list, &ListWidget::removeTriggered, this, &TutWidget::del);
 //	_list->addSeparator(true);
-//	_list->addAction(ListWidget::Cut, tr("Cut"), this, SLOT(cutCurrent()), true);
-//	_list->addAction(ListWidget::Copy, tr("Copy"), this, SLOT(copyCurrent()), true);
-//	_list->addAction(ListWidget::Paste, tr("Paste"), this, SLOT(pasteOnCurrent()), true);
+//	_list->addAction(ListWidget::Cut);
+//	connect(_list, &ListWidget::cutTriggered, this, &TutWidget::cutCurrent);
+//	_list->addAction(ListWidget::Copy);
+//	connect(_list, &ListWidget::copyTriggered, this, &TutWidget::copyCurrent);
+//	_list->addAction(ListWidget::Paste);
+//	connect(_list, &ListWidget::pasteTriggered, this, &TutWidget::pasteonCurrent);
 	list = _list->listWidget();
 //	list->setSelectionMode(QAbstractItemView::ExtendedSelection);
 

@@ -21,18 +21,26 @@
 
 class ListWidget : public QWidget
 {
+	Q_OBJECT
 public:
 	enum ActionType {
-		Add, Rem, Up, Down, Cut, Copy, Paste
+		Add, Remove, Up, Down, Cut, Copy, Paste
 	};
 	
 	explicit ListWidget(QWidget *parent = nullptr);
 	void addSeparator(bool invisible = false);
-	QAction *addAction(ActionType type, const QString &text,
-	                   const QObject *receiver, const char *member, bool invisible = false);
+	QAction *addAction(ActionType type, const QString &overrideText = QString(), bool visible = true);
 	
 	QToolBar *toolBar() const;
 	QListWidget *listWidget() const;
+signals:
+	void addTriggered();
+	void removeTriggered();
+	void cutTriggered();
+	void copyTriggered();
+	void pasteTriggered();
+	void upTriggered();
+	void downTriggered();
 private:
 	QToolBar *_toolBar;
 	QListWidget *_listWidget;

@@ -1200,6 +1200,37 @@ Some scripts can refer to it!</source>
     </message>
 </context>
 <context>
+    <name>ListWidget</name>
+    <message>
+        <source>Add</source>
+        <translation type="unfinished">追加</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation type="unfinished">削除</translation>
+    </message>
+    <message>
+        <source>Up</source>
+        <translation type="unfinished">上に</translation>
+    </message>
+    <message>
+        <source>Down</source>
+        <translation type="unfinished">下に</translation>
+    </message>
+    <message>
+        <source>Cut</source>
+        <translation type="unfinished">切り取り</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation type="unfinished">コピー</translation>
+    </message>
+    <message>
+        <source>Paste</source>
+        <translation type="unfinished">貼り付け</translation>
+    </message>
+</context>
+<context>
     <name>MassExportDialog</name>
     <message>
         <source>Mass Export</source>
@@ -6313,11 +6344,11 @@ Are you sure you want to continue?</source>
     </message>
     <message>
         <source>Add</source>
-        <translation type="unfinished">追加</translation>
+        <translation type="obsolete">追加</translation>
     </message>
     <message>
         <source>Remove</source>
-        <translation type="unfinished">削除</translation>
+        <translation type="obsolete">削除</translation>
     </message>
     <message>
         <source>Export...</source>
