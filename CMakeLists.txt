@@ -31,7 +31,7 @@ project("Makou Reactor" VERSION 1.8.5 LANGUAGES CXX
     HOMEPAGE_URL "https://github.com/myst6re/makoureactor"
 )
 
-# Try to autodetect Qt path if not found
+# Try to autodetect Qt path if not specified
 include(qt.cmake)
 
 # specify the C++ standard

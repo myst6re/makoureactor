@@ -27,7 +27,7 @@ set(LANGS
 CACHE INTERNAL "")
 list(TRANSFORM LANGS REPLACE ".+" "${RELEASE_NAME}_\\0.ts" OUTPUT_VARIABLE TS_FILES)
 
-qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES} OPTIONS -locations none)
+qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR}/src ${TS_FILES} OPTIONS -locations none)
 
 add_custom_target(translations ALL DEPENDS ${QM_FILES})
 
