@@ -101,8 +101,10 @@ QWidget *WalkmeshManager::buildCameraPage()
 	QWidget *ret = new QWidget(this);
 
 	ListWidget *listWidget = new ListWidget(ret);
-	listWidget->addAction(ListWidget::Add, tr("Add camera"), this, SLOT(addCamera));
-	listWidget->addAction(ListWidget::Rem, tr("Remove camera"), this, SLOT(removeCamera));
+	listWidget->addAction(ListWidget::Add, tr("Add camera"));
+	connect(listWidget, &ListWidget::addTriggered, this, &WalkmeshManager::addCamera);
+	listWidget->addAction(ListWidget::Remove, tr("Remove camera"));
+	connect(listWidget, &ListWidget::removeTriggered, this, &WalkmeshManager::removeCamera);
 
 	caToolbar = listWidget->toolBar();
 	camList = listWidget->listWidget();
@@ -166,8 +168,10 @@ QWidget *WalkmeshManager::buildWalkmeshPage()
 	QWidget *ret = new QWidget(this);
 
 	ListWidget *listWidget = new ListWidget(ret);
-	listWidget->addAction(ListWidget::Add, tr("Add triangle"), this, SLOT(addTriangle));
-	listWidget->addAction(ListWidget::Rem, tr("Remove triangle"), this, SLOT(removeTriangle));
+	listWidget->addAction(ListWidget::Add, tr("Add triangle"));
+	connect(listWidget, &ListWidget::addTriggered, this, &WalkmeshManager::addTriangle);
+	listWidget->addAction(ListWidget::Remove, tr("Remove triangle"));
+	connect(listWidget, &ListWidget::removeTriggered, this, &WalkmeshManager::removeTriangle);
 
 	idToolbar = listWidget->toolBar();
 	idList = listWidget->listWidget();

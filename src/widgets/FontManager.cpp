@@ -26,8 +26,10 @@ FontManager::FontManager(QWidget *parent) :
 	setSizeGripEnabled(true);
 
 	/* ListWidget *listWidget = new ListWidget(this);
-	plusAction = listWidget->addAction(ListWidget::Add, tr("Add"), this, SLOT(addFont()));
-	minusAction = listWidget->addAction(ListWidget::Rem, tr("Remove"), this, SLOT(removeFont()));
+	plusAction = listWidget->addAction(ListWidget::Add);
+	connect(listWidget, &ListWidget::addTriggered, this, &FontManager::addFont);
+	minusAction = listWidget->addAction(ListWidget::Remove);
+	connect(listWidget, &ListWidget::removeTriggered, this, &FontManager::removeFont);
 	toolbar1 = listWidget->toolBar();
 	list1 = listWidget->listWidget(); */
 

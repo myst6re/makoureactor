@@ -51,52 +51,67 @@ void ListWidget::addSeparator(bool invisible)
 	insertAction(nullptr, action);
 }
 
-QAction *ListWidget::addAction(ActionType type, const QString &text,
-							   const QObject *receiver, const char *member, bool invisible)
+QAction *ListWidget::addAction(ActionType type, const QString &overrideText, bool visible)
 {
-	QIcon icon;
-	QKeySequence shortcut;
-	QAction *action;
+	QAction *action = new QAction(this);
+	QString text;
 
 	switch (type) {
 	case Add:
-		icon = QIcon(":images/plus.png");
-		shortcut = QKeySequence("Ctrl++");
+		action->setIcon(QIcon(QStringLiteral(":images/plus.png")));
+		action->setShortcut(QKeySequence("Ctrl++"));
+		text = tr("Add");
+		connect(action, &QAction::triggered, this, &ListWidget::addTriggered);
 		break;
-	case Rem:
-		icon = QIcon(":images/minus.png");
-		shortcut = QKeySequence::Delete;
+	case Remove:
+		action->setIcon(QIcon(QStringLiteral(":images/minus.png")));
+		action->setShortcut(QKeySequence::Delete);
+		text = tr("Remove");
+		connect(action, &QAction::triggered, this, &ListWidget::removeTriggered);
 		break;
 	case Up:
-		icon = QIcon(":images/up.png");
-		shortcut = QKeySequence("Shift+Up");
+		action->setIcon(QIcon(QStringLiteral(":images/up.png")));
+		action->setShortcut(QKeySequence("Shift+Up"));
+		text = tr("Up");
+		connect(action, &QAction::triggered, this, &ListWidget::upTriggered);
 		break;
 	case Down:
-		icon = QIcon(":images/down.png");
-		shortcut = QKeySequence("Shift+Down");
+		action->setIcon(QIcon(QStringLiteral(":images/down.png")));
+		action->setShortcut(QKeySequence("Shift+Down"));
+		text = tr("Down");
+		connect(action, &QAction::triggered, this, &ListWidget::downTriggered);
 		break;
 	case Cut:
-		icon = QIcon(":images/cut.png");
-		shortcut = QKeySequence::Cut;
+		action->setIcon(QIcon(QStringLiteral(":images/cut.png")));
+		action->setShortcut(QKeySequence::Cut);
+		text = tr("Cut");
+		connect(action, &QAction::triggered, this, &ListWidget::cutTriggered);
 		break;
 	case Copy:
-		icon = QIcon(":images/copy.png");
-		shortcut = QKeySequence::Copy;
+		action->setIcon(QIcon(QStringLiteral(":images/copy.png")));
+		action->setShortcut(QKeySequence::Copy);
+		text = tr("Copy");
+		connect(action, &QAction::triggered, this, &ListWidget::copyTriggered);
 		break;
 	case Paste:
-		icon = QIcon(":images/paste.png");
-		shortcut = QKeySequence::Paste;
+		action->setIcon(QIcon(QStringLiteral(":images/paste.png")));
+		action->setShortcut(QKeySequence::Paste);
+		text = tr("Paste");
+		connect(action, &QAction::triggered, this, &ListWidget::pasteTriggered);
 		break;
 	}
 
-	if (invisible) {
-		action = new QAction(icon, text, this);
-		connect(action, SIGNAL(triggered()), receiver, member);
-	} else {
-		action = _toolBar->addAction(icon, text, receiver, member);
+	if(!overrideText.isEmpty()) {
+		text = overrideText;
 	}
-	action->setShortcut(shortcut);
+
+	action->setText(text);
 	action->setStatusTip(text);
+
+	if (visible) {
+		_toolBar->addAction(action);
+	}
+
 	insertAction(nullptr, action);
 
 	return action;

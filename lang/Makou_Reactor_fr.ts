@@ -1312,6 +1312,37 @@ Certains scripts peuvent y faire référence !</translation>
     </message>
 </context>
 <context>
+    <name>ListWidget</name>
+    <message>
+        <source>Add</source>
+        <translation type="unfinished">Ajouter</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation type="unfinished">Supprimer</translation>
+    </message>
+    <message>
+        <source>Up</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Down</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cut</source>
+        <translation type="unfinished">Couper</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation type="unfinished">Copier</translation>
+    </message>
+    <message>
+        <source>Paste</source>
+        <translation type="unfinished">Coller</translation>
+    </message>
+</context>
+<context>
     <name>MassExportDialog</name>
     <message>
         <source>Mass Export</source>
@@ -6856,11 +6887,11 @@ Le supprimer remplacera les appels à ce texte par des appels au texte qui suit.
     </message>
     <message>
         <source>Add</source>
-        <translation>Ajouter</translation>
+        <translation type="vanished">Ajouter</translation>
     </message>
     <message>
         <source>Remove</source>
-        <translation>Supprimer</translation>
+        <translation type="vanished">Supprimer</translation>
     </message>
     <message>
         <source>Export...</source>
