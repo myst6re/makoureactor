@@ -443,11 +443,11 @@ void GrpScript::listWindows(int groupID, QMultiMap<quint64, FF7Window> &windows,
 	}
 }
 
-void GrpScript::listWindows(int groupID, int textID, QList<FF7Window> &windows) const
+void GrpScript::listWindows(int groupID, int textID, QList<FF7Window> &windows, int winID) const
 {
 	int scriptID = 0;
 	for (const Script &script : _scripts) {
-		script.listWindows(groupID, scriptID++, textID, windows);
+		script.listWindows(groupID, scriptID++, textID, windows, winID);
 	}
 }
 

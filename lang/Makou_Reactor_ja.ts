@@ -1846,10 +1846,6 @@ Some scripts can refer to it!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>%1 = Game Speed</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Set field message speed: %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2550,7 +2546,7 @@ Some scripts can refer to it!</source>
     </message>
     <message>
         <source>Numeric (000000)</source>
-        <translation>数値 (000000)</translation>
+        <translation type="vanished">数値 (000000)</translation>
     </message>
     <message>
         <source>%2 in the window #%1 (left=%3, top=%4)</source>
@@ -2811,7 +2807,7 @@ Some scripts can refer to it!</source>
     </message>
     <message>
         <source>Perform no operation...</source>
-        <translation>何もしない...</translation>
+        <translation type="vanished">何もしない...</translation>
     </message>
     <message>
         <source>Jump to map %1 (X=%2, Y=%3, triangle ID=%4, direction=%5)</source>
@@ -3312,6 +3308,18 @@ Some scripts can refer to it!</source>
         <source>Game Over</source>
         <translation>ゲーム・オーバー</translation>
     </message>
+    <message>
+        <source>%1 = Field message speed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Numeric (00)</source>
+        <translation type="unfinished">数値 (000000) {00)?}</translation>
+    </message>
+    <message>
+        <source>Perform no operation</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OpcodeList</name>
@@ -3443,6 +3451,14 @@ Some scripts can refer to it!</source>
     <message>
         <source>the selected commands</source>
         <translation type="unfinished">選択したコマンド</translation>
+    </message>
+    <message>
+        <source>option + Click to go to the label</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>option + Click to go to the script</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -5623,6 +5639,21 @@ Make sure it is valid or delete it.</source>
     </message>
 </context>
 <context>
+    <name>ScriptEditorSpecialPName</name>
+    <message>
+        <source>Var or value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bank</source>
+        <translation type="unfinished">バンク</translation>
+    </message>
+    <message>
+        <source>Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ScriptEditorUnaryOpPage</name>
     <message>
         <source>Increment (wrapped)</source>
@@ -5712,6 +5743,49 @@ Make sure it is valid or delete it.</source>
     <message>
         <source>Relative Y</source>
         <oldsource>Y relatif</oldsource>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ScriptEditorWindowNumDisplayPage</name>
+    <message>
+        <source>None</source>
+        <translation type="unfinished">なし</translation>
+    </message>
+    <message>
+        <source>Numerical (00)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clock (00:00)</source>
+        <translation type="unfinished">クロック (00:00)</translation>
+    </message>
+    <message>
+        <source>Window ID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Display Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Margin left</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Margin top</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Window in preview:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Window %1 (x: %2, y: %3, w: %4, h: %5)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Text in preview:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -165,6 +165,8 @@ ScriptEditorView *ScriptEditor::buildEditorPage(PageType id)
 		return new ScriptEditorWindowMovePage(scriptsAndTexts, grpScript, script, opcodeID, this);
 	case WindowVar:
 		return new ScriptEditorWindowVariablePage(scriptsAndTexts, grpScript, script, opcodeID, this);
+	case WindowNumDisplay:
+		return new ScriptEditorWindowNumDisplayPage(scriptsAndTexts, grpScript, script, opcodeID, this);
 	case Movie:
 		return new ScriptEditorMoviePage(scriptsAndTexts, grpScript, script, opcodeID, this);
 	case Walkmesh:
@@ -310,6 +312,9 @@ void ScriptEditor::fillEditor()
 	case OpcodeKey::MVIEF:
 	case OpcodeKey::CHMST: */
 		_currentPageType = Variable;
+		break;
+	case OpcodeKey::WSPCL:
+		_currentPageType = WindowNumDisplay;
 		break;
 	case OpcodeKey::WINDOW:case OpcodeKey::WSIZW:
 	case OpcodeKey::WROW:

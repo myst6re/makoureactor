@@ -830,11 +830,11 @@ void Section1File::listWindows(QMultiMap<quint64, FF7Window> &windows, QMultiMap
 	}
 }
 
-void Section1File::listWindows(int textID, QList<FF7Window> &windows) const
+void Section1File::listWindows(int textID, QList<FF7Window> &windows, int winID) const
 {
 	int groupID = 0;
 	for (const GrpScript &group : _grpScripts) {
-		group.listWindows(groupID++, textID, windows);
+		group.listWindows(groupID++, textID, windows, winID);
 	}
 }
 

@@ -89,3 +89,22 @@ private:
 	QSpinBox *winID, *winVar;
 	VarOrValueWidget *varOrValue;
 };
+
+class ScriptEditorWindowNumDisplayPage : public ScriptEditorView
+{
+	Q_OBJECT
+public:
+	explicit ScriptEditorWindowNumDisplayPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
+	Opcode buildOpcode() override;
+	void setOpcode(const Opcode &opcode) override;
+private slots:
+	void updatePreview();
+	void updatePreviewTextList();
+	void updatePreviewWindowList();
+private:
+	void build() override;
+	TextPreview *textPreview;
+	QSpinBox *winID, *relativeX, *relativeY;
+	QComboBox *displayMode;
+	QComboBox *previewText, *previewWindow;
+};

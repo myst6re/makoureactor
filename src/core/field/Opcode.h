@@ -73,6 +73,10 @@ struct FF7Window {
 	}
 };
 
+inline bool operator==(const FF7Window &w1, const FF7Window &w2) {
+	return w1.x == w2.x && w1.y == w2.y && w1.w == w2.w && w1.h == w2.h;
+}
+
 struct FF7Position {
 	qint16 x, y, z;
 	quint16 id;

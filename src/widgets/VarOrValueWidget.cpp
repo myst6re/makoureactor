@@ -63,7 +63,7 @@ VarOrValueWidget::VarOrValueWidget(QWidget *parent) :
 	connect(_typeSelect, &QComboBox::currentIndexChanged, this, &VarOrValueWidget::changed);
 	connect(_bank, &QComboBox::currentIndexChanged, this, &VarOrValueWidget::changed);
 	connect(_value, &QSpinBox::valueChanged, this, &VarOrValueWidget::changed);
-	connect(_adress, &QSpinBox::valueChanged, this, &VarOrValueWidget::changed);
+	connect(_address, &QSpinBox::valueChanged, this, &VarOrValueWidget::changed);
 }
 
 int VarOrValueWidget::value() const

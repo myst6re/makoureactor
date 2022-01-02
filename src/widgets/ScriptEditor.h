@@ -61,6 +61,7 @@ private:
 		WindowMode,
 		WindowMove,
 		WindowVar,
+		WindowNumDisplay,
 		Movie,
 		Walkmesh,
 		JumpNanaki,

@@ -284,7 +284,6 @@ void ScriptEditorWindowModePage::build()
 	layout->addWidget(new QLabel(tr("Closing")), 2, 1);
 	layout->addWidget(winClose, 2, 2);
 	layout->setRowStretch(3, 1);
-	layout->setRowStretch(4, 1);
 	layout->setColumnStretch(2, 1);
 	layout->setContentsMargins(QMargins());
 
@@ -491,4 +490,171 @@ void ScriptEditorWindowVariablePage::setOpcode(const Opcode &opcode)
 	for (QObject *o : children()) {
 		o->blockSignals(false);
 	}
+}
+
+ScriptEditorWindowNumDisplayPage::ScriptEditorWindowNumDisplayPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent) :
+	ScriptEditorView(scriptsAndTexts, grpScript, script, opcodeID, parent)
+{
+}
+
+void ScriptEditorWindowNumDisplayPage::build()
+{
+	textPreview = new TextPreview(this);
+
+	displayMode = new QComboBox(this);
+	displayMode->addItem(tr("None"));
+	displayMode->addItem(tr("Clock (00:00)"));
+	displayMode->addItem(tr("Numerical (00)"));
+
+	winID = new QSpinBox(this);
+	winID->setRange(0, 255);
+	relativeX = new QSpinBox(this);
+	relativeX->setRange(0, 255);
+	relativeY = new QSpinBox(this);
+	relativeY->setRange(0, 255);
+
+	previewText = new QComboBox(this);
+	previewText->setMaximumWidth(textPreview->width() / 2);
+
+	previewWindow = new QComboBox(this);
+	previewWindow->setMaximumWidth(textPreview->width() / 2);
+
+	QGridLayout *layout = new QGridLayout(this);
+	layout->addWidget(textPreview, 0, 0, 5, 2);
+	layout->addWidget(new QLabel(tr("Text in preview:")), 6, 0);
+	layout->addWidget(previewText, 6, 1);
+	layout->addWidget(new QLabel(tr("Window in preview:")), 7, 0);
+	layout->addWidget(previewWindow, 7, 1);
+	layout->addWidget(new QLabel(tr("Window ID")), 0, 2);
+	layout->addWidget(winID, 0, 3);
+	layout->addWidget(new QLabel(tr("Display Mode")), 1, 2);
+	layout->addWidget(displayMode, 1, 3);
+	layout->addWidget(new QLabel(tr("Margin left")), 2, 2);
+	layout->addWidget(relativeX, 2, 3);
+	layout->addWidget(new QLabel(tr("Margin top")), 3, 2);
+	layout->addWidget(relativeY, 3, 3);
+	layout->setRowStretch(4, 1);
+	layout->setColumnStretch(3, 1);
+	layout->setContentsMargins(QMargins());
+
+	connect(winID, &QSpinBox::valueChanged, this, &ScriptEditorWindowNumDisplayPage::opcodeChanged);
+	connect(winID, &QSpinBox::valueChanged, this, &ScriptEditorWindowNumDisplayPage::updatePreviewTextList);
+	connect(winID, &QSpinBox::valueChanged, this, &ScriptEditorWindowNumDisplayPage::updatePreviewWindowList);
+	connect(displayMode, &QComboBox::currentIndexChanged, this, &ScriptEditorWindowNumDisplayPage::opcodeChanged);
+	connect(relativeX, &QSpinBox::valueChanged, this, &ScriptEditorWindowNumDisplayPage::opcodeChanged);
+	connect(relativeY, &QSpinBox::valueChanged, this, &ScriptEditorWindowNumDisplayPage::opcodeChanged);
+	connect(displayMode, &QComboBox::currentIndexChanged, this, &ScriptEditorWindowNumDisplayPage::updatePreview);
+	connect(relativeX, &QSpinBox::valueChanged, this, &ScriptEditorWindowNumDisplayPage::updatePreview);
+	connect(relativeY, &QSpinBox::valueChanged, this, &ScriptEditorWindowNumDisplayPage::updatePreview);
+	connect(previewText, &QComboBox::currentIndexChanged, this, &ScriptEditorWindowNumDisplayPage::updatePreviewWindowList);
+	connect(previewText, &QComboBox::currentIndexChanged, this, &ScriptEditorWindowNumDisplayPage::updatePreview);
+	connect(previewWindow, &QComboBox::currentIndexChanged, this, &ScriptEditorWindowNumDisplayPage::updatePreview);
+}
+
+Opcode ScriptEditorWindowNumDisplayPage::buildOpcode()
+{
+	OpcodeWSPCL &opcodeWSPCL = opcode().op().opcodeWSPCL;
+
+	opcodeWSPCL.windowID = quint8(winID->value());
+	opcodeWSPCL.displayType = quint8(displayMode->currentIndex());
+	opcodeWSPCL.marginLeft = quint8(relativeX->value());
+	opcodeWSPCL.marginTop = quint8(relativeY->value());
+
+	return opcode();
+}
+
+void ScriptEditorWindowNumDisplayPage::setOpcode(const Opcode &opcode)
+{
+	ScriptEditorView::setOpcode(opcode);
+	
+	const OpcodeWSPCL &opcodeWSPCL = opcode.op().opcodeWSPCL; 
+
+	for (QObject *o : children()) {
+		o->blockSignals(true);
+	}
+
+	winID->setValue(opcodeWSPCL.windowID);
+	displayMode->setCurrentIndex(opcodeWSPCL.displayType);
+	relativeX->setValue(opcodeWSPCL.marginLeft);
+	relativeY->setValue(opcodeWSPCL.marginTop);
+
+	textPreview->setReadOnly(false);
+	updatePreviewTextList();
+	updatePreviewWindowList();
+	updatePreview();
+
+	for (QObject *o : children()) {
+		o->blockSignals(false);
+	}
+}
+
+void ScriptEditorWindowNumDisplayPage::updatePreview()
+{
+	FF7Window ff7Win = FF7Window();
+
+	int textID = previewText->currentData().toInt();
+
+	if (textID >= 0) {
+		QList<FF7Window> windows;
+		scriptsAndTexts()->listWindows(textID, windows, winID->value());
+
+		if (previewWindow->currentIndex() >= 0 && previewWindow->currentIndex() < windows.size()) {
+			ff7Win = windows.at(previewWindow->currentIndex());
+		} else {
+			ff7Win.mode = 0x01;
+		}
+		textPreview->setText(scriptsAndTexts()->text(textID).data());
+	} else {
+		ff7Win.mode = 0x01;
+	}
+
+	ff7Win.displayType = quint8(displayMode->currentIndex());
+	ff7Win.displayX = quint8(relativeX->value());
+	ff7Win.displayY = quint8(relativeY->value());
+	textPreview->setWins(QList<FF7Window>() << ff7Win);
+}
+
+void ScriptEditorWindowNumDisplayPage::updatePreviewTextList()
+{
+	previewText->clear();
+
+	QMultiMap<quint64, FF7Window> windows;
+	QMultiMap<quint8, quint64> text2win;
+	
+	script().listWindows(0, 0, windows, text2win);
+
+	bool jp = Config::value("jp_txt", false).toBool();
+	quint8 textID = 0, windowID = quint8(winID->value());
+	for (const FF7Text &t : scriptsAndTexts()->texts()) {
+		if (text2win.contains(textID) && (text2win.value(textID) & 0xFF) == windowID) {
+			previewText->addItem(previewText->fontMetrics().elidedText(t.text(jp, true).simplified(), Qt::ElideRight, 640), textID);
+		}
+		textID += 1;
+	}
+
+	previewText->setEnabled(previewText->count() > 0);
+}
+
+void ScriptEditorWindowNumDisplayPage::updatePreviewWindowList()
+{
+	previewWindow->clear();
+
+	int textID = previewText->currentData().toInt();
+	qDebug() << "updatePreviewWindowList" << textID;
+
+	if (textID >= 0) {
+		QList<FF7Window> windows;
+		script().listWindows(0, 0, textID, windows, winID->value());
+
+		for (const FF7Window &win: windows) {
+			previewWindow->addItem(tr("Window %1 (x: %2, y: %3, w: %4, h: %5)")
+			                       .arg(winID->value())
+			                       .arg(win.x)
+			                       .arg(win.y)
+			                       .arg(win.w)
+			                       .arg(win.h));
+		}
+	}
+
+	previewWindow->setEnabled(previewWindow->count() > 0);
 }

@@ -397,6 +397,8 @@ set(PROJECT_CLI_SOURCES
     "src/core/IsoArchiveFF7.h"
     "src/core/PsfFile.cpp"
     "src/core/PsfFile.h"
+    "src/core/SystemColor.cpp"
+    "src/core/SystemColor.h"
     "src/core/TexFile.cpp"
     "src/core/TexFile.h"
     "src/core/TextureFile.cpp"
@@ -523,6 +525,12 @@ set(PROJECT_CLI_SOURCES
     "src/qt/compat.h"
     "src/txt.cpp"
 )
+
+if(APPLE)
+    list(APPEND PROJECT_CLI_SOURCES
+        "src/core/SystemColor.mm"
+    )
+endif()
 
 set(RESOURCES "src/qt/${RELEASE_NAME}.qrc")
 
