@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2021 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2022 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -43,6 +43,7 @@ struct FF7Window {
 	quint16 w, h;
 	quint16 ask_first, ask_last;
 	quint8 type, mode, displayType;
+	quint8 displayX, displayY;
 	quint16 groupID, scriptID, opcodeID;
 
 	QPoint realPos() {

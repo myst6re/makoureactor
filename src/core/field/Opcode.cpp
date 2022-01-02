@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2021 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2022 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -2855,7 +2855,7 @@ QString Opcode::toStringWSPCL(const Section1File *scriptsAndTexts, const OpcodeW
 		windowNum = Opcode::tr("Clock (00:00)");
 		break;
 	case 0x02:
-		windowNum = Opcode::tr("Numeric (000000)");
+		windowNum = Opcode::tr("Numeric (00)");
 		break;
 	default:
 		windowNum = QString("%1?")

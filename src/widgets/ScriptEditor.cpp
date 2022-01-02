@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2021 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2022 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -125,6 +125,8 @@ ScriptEditorView *ScriptEditor::buildEditorPage(PageType id)
 		return new ScriptEditorNoParameterPage(scriptsAndTexts, grpScript, script, opcodeID, this);
 	case Boolean:
 		return new ScriptEditorBooleanPage(scriptsAndTexts, grpScript, script, opcodeID, this);
+	case OneVarOrValue:
+		return new ScriptEditorOneVarOrValue(scriptsAndTexts, grpScript, script, opcodeID, this);
 	case ReturnTo:
 		return new ScriptEditorReturnToPage(scriptsAndTexts, grpScript, script, opcodeID, this);
 	case Exec:
@@ -237,6 +239,10 @@ void ScriptEditor::fillEditor()
 			break;
 		case OpcodeSpecialKey::PNAME:
 			_currentPageType = SpecialPName;
+			break;
+		case OpcodeSpecialKey::GMSPD:
+		case OpcodeSpecialKey::SMSPD:
+			_currentPageType = OneVarOrValue;
 			break;
 		default:
 			_currentPageType = GenericList;

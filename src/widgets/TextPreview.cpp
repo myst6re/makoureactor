@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2021 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2022 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@
 #include "core/FF7Font.h"
 
 QTimer TextPreview::timer;
+int TextPreview::curFrame10 = 0;
 bool TextPreview::curFrame = true;
 int TextPreview::startMulticolor = DARKGREY;
 int TextPreview::multicolor = -1;
@@ -60,7 +61,7 @@ void TextPreview::fillNames()
 //	bool jp = Config::value("jp_txt", false).toBool();
 //	Config::setValue("jp_txt", false);
 
-	for (int i=0; i<12; ++i) {
+	for (int i = 0; i < 12; ++i) {
 		names.append(FF7Text(dataNames.at(i), false).data());
 	}
 //	Config::setValue("jp_txt", jp);
@@ -81,7 +82,7 @@ void TextPreview::clear()
 {
 	ff7Text.clear();
 //	ff7Windows.clear();
-	maxW=maxH=0;
+	maxW = maxH = 0;
 	update();
 }
 
@@ -94,8 +95,9 @@ void TextPreview::setWins(const QList<FF7Window> &windows, bool update)
 {
 //	qDebug() << "TextPreview::setWins()";
 	ff7Windows = windows;
-	if (update)
+	if (update) {
 		this->update();
+	}
 	//qDebug() << "type" << window.type << "x" << window.x << "y" << window.y << "u1" << window.u1;
 }
 
@@ -132,14 +134,14 @@ bool TextPreview::setWindow(const FF7Window &win)
 	return false;
 }
 
-int TextPreview::winCount() const
+qsizetype TextPreview::winCount() const
 {
 	return ff7Windows.size();
 }
 
 void TextPreview::nextWin()
 {
-	if (_currentWin+1 < ff7Windows.size()) {
+	if (_currentWin + 1 < ff7Windows.size()) {
 //		qDebug() << "TextPreview::nextWin()";
 		++_currentWin;
 		update();
@@ -164,8 +166,9 @@ void TextPreview::setText(const QByteArray &textData, bool reset)
 {
 //	qDebug() << "TextPreview::setText()";
 	ff7Text = textData;
-	if (reset)
+	if (reset) {
 		_currentPage = 0;
+	}
 	calcSize();
 }
 
@@ -174,14 +177,14 @@ int TextPreview::currentPage() const
 	return pagesPos.isEmpty() ? 0 : _currentPage+1;
 }
 
-int TextPreview::pageCount() const
+qsizetype TextPreview::pageCount() const
 {
 	return pagesPos.size();
 }
 
 void TextPreview::nextPage()
 {
-	if (_currentPage+1 < pagesPos.size()) {
+	if (_currentPage + 1 < pagesPos.size()) {
 //		qDebug() << "TextPreview::nextPage()";
 		++_currentPage;
 		update();
@@ -218,8 +221,11 @@ void TextPreview::animate()
 //	qDebug() << "TextPreview::animate()";
 
 	curFrame = !curFrame;
+	curFrame10 = (curFrame10 + 1) % 10;
 	--startMulticolor;
-	if (startMulticolor < 0)		startMulticolor = 7;
+	if (startMulticolor < 0) {
+		startMulticolor = 7;
+	}
 	repaint();
 }
 
@@ -345,20 +351,20 @@ bool TextPreview::drawTextArea(QPainter *painter)
 		maxW = ff7Window.w;
 		maxH = ff7Window.h;
 		mode = WindowType(ff7Window.mode);
+	} else if (WindowType(ff7Window.mode) == WithoutFrameAndBg) {
+		mode = WindowType(ff7Window.mode);
 	}
 
 	drawWindow(painter, mode);
 
 	/* Text */
-
-	if (ff7Text.isEmpty())	return false;
-
 	setFontColor(WHITE);
 
 	int line = 0, x = 8, y = 6;
-	int start = pagesPos.value(_currentPage, 0), size = ff7Text.size();
+	int start = pagesPos.value(_currentPage, 0);
+	qsizetype size = ff7Text.size();
 
-	for (int i=start; i<size; ++i) {
+	for (int i = start; i < size; ++i) {
 		quint8 charId = quint8(ff7Text.at(i));
 
 		if (charId==0xff || charId==0xe8 || charId==0xe9) { //end | NewPage | NewPage2
@@ -450,6 +456,22 @@ bool TextPreview::drawTextArea(QPainter *painter)
 			painter->drawPixmap(10, 6 + 16 * i, cursor);
 		}
 	}
+	
+	if (ff7Window.displayType == 0x01 || ff7Window.displayType == 0x02) {
+		const quint8 dispX = ff7Window.displayX, dispY = ff7Window.displayY;
+		QPixmap clock(":/images/texture-purple.png");
+		// 00
+		painter->drawPixmap(dispX + 0, dispY, clock, 16, 0, 16, clock.height()); // 0
+		painter->drawPixmap(dispX + 16, dispY, clock, 16, 0, 16, clock.height()); // 0
+		if (ff7Window.displayType == 0x01) {
+			// :00
+			painter->drawPixmap(dispX + 32, dispY, clock, curFrame10 < 5 ? 0 : 8, 0, 8, clock.height()); // :
+			painter->drawPixmap(dispX + 40, dispY, clock, 16, 0, 16, clock.height()); // 0
+			painter->drawPixmap(dispX + 56, dispY, clock, 16, 0, 16, clock.height()); // 0
+		}
+
+		useTimer = true;
+	}
 
 	return useTimer;
 }
@@ -484,10 +506,12 @@ void TextPreview::paintEvent(QPaintEvent *event)
 	painter2.end();
 
 	if (!timer.isActive()) {
-		if (useTimer)	timer.start(100);
+		if (useTimer) {
+			timer.start(100);
+		}
 	}
-	else {
-		if (!useTimer)	timer.stop();
+	else if (!useTimer) {
+		timer.stop();
 	}
 }
 

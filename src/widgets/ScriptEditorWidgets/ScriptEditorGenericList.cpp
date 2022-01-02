@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2021 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2022 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -908,7 +908,38 @@ Opcode ScriptEditorOneVarOrValue::buildOpcode()
 
 void ScriptEditorOneVarOrValue::setOpcode(const Opcode &opcode)
 {
-	// TODO
+	VarOrValueWidget::Size size = VarOrValueWidget::Long;
+	bool onlyVar = false;
+	qint8 bank = opcode.bank2();
+	int valueOrAddress = 0;
+
+	switch (opcode.id()) {
+	case OpcodeKey::SPECIAL:
+		switch (OpcodeSpecialKey(opcode.subKey())) {
+		case OpcodeSpecialKey::GMSPD:
+			size = VarOrValueWidget::Short;
+			valueOrAddress = opcode.op().opcodeSPECIALGMSPD.varSpeed;
+			break;
+		case OpcodeSpecialKey::SMSPD:
+			size = VarOrValueWidget::Short;
+			valueOrAddress = opcode.op().opcodeSPECIALSMSPD.speed;
+			break;
+		default:
+			break;
+		}
+
+		break;
+	default:
+		break;
+	}
+
+	if (size == VarOrValueWidget::Short) {
+		_varOrValue->setShort();
+	} else {
+		_varOrValue->setLong();
+	}
+	_varOrValue->setOnlyVar(onlyVar);
+	_varOrValue->setVarOrValue(quint8(bank), valueOrAddress);
 
 	ScriptEditorView::setOpcode(opcode);
 }

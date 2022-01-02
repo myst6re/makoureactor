@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2021 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2022 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -1529,10 +1529,10 @@ void Window::encounterManager()
 		EncounterFile *encounter = field->encounter();
 		if (encounter->isOpen()) {
 			EncounterWidget dialog(encounter, this);
-			if (dialog.exec()==QDialog::Accepted)
-			{
-				if (encounter->isModified())
-				setModified(true);
+			if (dialog.exec()==QDialog::Accepted) {
+				if (encounter->isModified()) {
+					setModified(true);
+				}
 			}
 		} else {
 			QMessageBox::warning(this, tr("Opening error"), tr("Can not open encounters!"));

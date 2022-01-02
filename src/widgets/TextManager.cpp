@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2021 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2022 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -363,10 +363,12 @@ void TextManager::selectText(QListWidgetItem *item, QListWidgetItem *)
 
 void TextManager::showList()
 {
-	if (!scriptsAndTexts)	return;
+	if (!scriptsAndTexts) {
+		return;
+	}
 	bool show = dispUnusedText->isChecked();
 	liste1->blockSignals(true);
-	int nbTexts = scriptsAndTexts->textCount();
+	qsizetype nbTexts = scriptsAndTexts->textCount();
 	liste1->clear();
 
 	Config::setValue("dispUnusedText", show);
@@ -471,9 +473,11 @@ int TextManager::currentAnchorPosition() const
 
 void TextManager::addText()
 {
-	if (!scriptsAndTexts || scriptsAndTexts->textCount() >= scriptsAndTexts->maxTextCount())	return;
+	if (!scriptsAndTexts || scriptsAndTexts->textCount() >= scriptsAndTexts->maxTextCount()) {
+		return;
+	}
 	QListWidgetItem *item = liste1->currentItem();
-	int row = !item ? scriptsAndTexts->textCount() : item->data(Qt::UserRole).toInt() + 1;
+	int row = !item ? int(scriptsAndTexts->textCount()) : item->data(Qt::UserRole).toInt() + 1;
 	liste1->blockSignals(true);
 	scriptsAndTexts->insertText(row, FF7Text());
 	usedTexts = scriptsAndTexts->listUsedTexts();
@@ -524,7 +528,8 @@ void TextManager::nextTextPreviewPage()
 
 void TextManager::changeTextPreviewPage()
 {
-	int currentPage = textPreview->currentPage(), nbPage = textPreview->pageCount();
+	int currentPage = textPreview->currentPage();
+	qsizetype nbPage = textPreview->pageCount();
 
 	textPage->setText(tr("Page %1/%2").arg(currentPage).arg(nbPage));
 	prevPage->setEnabled(currentPage > 1);
@@ -546,23 +551,25 @@ void TextManager::nextTextPreviewWin()
 
 void TextManager::changeTextPreviewWin()
 {
-	int currentWin = textPreview->currentWin(), nbWin = textPreview->winCount();
+	int currentWin = textPreview->currentWin();
+	qsizetype nbWin = textPreview->winCount();
+	bool currentWinIsValid = nbWin > 0 && textPreview->getWindow().type != NOWIN;
 
 	textWin->setText(tr("Window %1/%2").arg(currentWin).arg(nbWin));
 	prevWin->setEnabled(currentWin > 1);
 	nextWin->setEnabled(currentWin < nbWin);
 	textWin->setEnabled(nbWin > 0);
-	xCoord->setEnabled(nbWin > 0);
-	xLabel->setEnabled(nbWin > 0);
-	yCoord->setEnabled(nbWin > 0);
-	yLabel->setEnabled(nbWin > 0);
-	wSize->setEnabled(nbWin > 0);
-	wLabel->setEnabled(nbWin > 0);
-	hSize->setEnabled(nbWin > 0);
-	hLabel->setEnabled(nbWin > 0);
-	hAlign->setEnabled(nbWin > 0);
-	vAlign->setEnabled(nbWin > 0);
-	autoSize->setEnabled(nbWin > 0);
+	xCoord->setEnabled(currentWinIsValid);
+	xLabel->setEnabled(currentWinIsValid);
+	yCoord->setEnabled(currentWinIsValid);
+	yLabel->setEnabled(currentWinIsValid);
+	wSize->setEnabled(currentWinIsValid);
+	wLabel->setEnabled(currentWinIsValid);
+	hSize->setEnabled(currentWinIsValid);
+	hLabel->setEnabled(currentWinIsValid);
+	hAlign->setEnabled(currentWinIsValid);
+	vAlign->setEnabled(currentWinIsValid);
+	autoSize->setEnabled(currentWinIsValid);
 
 	updateWindowCoord();
 }

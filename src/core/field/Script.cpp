@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2021 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2022 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -606,12 +606,14 @@ void Script::listWindows(int groupID, int scriptID, int textID, QList<FF7Window>
 				if (lastWinPerWindowID.contains(opcode.windowID())) {
 					win.mode = lastWinPerWindowID.value(opcode.windowID()).mode;
 					win.displayType = lastWinPerWindowID.value(opcode.windowID()).displayType;
+					win.displayX = lastWinPerWindowID.value(opcode.windowID()).displayX;
+					win.displayY = lastWinPerWindowID.value(opcode.windowID()).displayY;
 				}
 				lastWinPerWindowID.insert(opcode.windowID(), win);
 			} else if (opcode.textID() == textID
 			           && lastWinPerWindowID.contains(opcode.windowID())) {
 				win = lastWinPerWindowID.value(opcode.windowID());
-				if (win.type != 255) {
+				if (win.type != 255 || win.mode == 0x01) {
 					if (opcode.id() == OpcodeKey::ASK) {
 						const OpcodeASK &opcodeAsk = opcode.op().opcodeASK;
 						win.ask_first = opcodeAsk.firstLine;
@@ -635,6 +637,8 @@ void Script::listWindows(int groupID, int scriptID, int textID, QList<FF7Window>
 					win.type = 255;
 				}
 				win.displayType = opcode.op().opcodeWSPCL.displayType;
+				win.displayX = opcode.op().opcodeWSPCL.marginLeft;
+				win.displayY = opcode.op().opcodeWSPCL.marginTop;
 				lastWinPerWindowID.insert(opcode.windowID(), win);
 			}
 		}

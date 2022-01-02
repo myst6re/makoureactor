@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2021 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2022 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -280,10 +280,18 @@ void OpcodeList::itemSelected()
 	bool visible = true;
 	if (opcode.isJump()) {
 		goto_A->setText(tr("Goto label"));
+#ifndef Q_OS_MAC
 		_help->setText(tr("Alt + Click to go to the label"));
+#else
+		_help->setText(tr("option + Click to go to the label"));
+#endif
 	} else if (opcode.isExec()) {
 		goto_A->setText(tr("Goto script"));
+#ifndef Q_OS_MAC
 		_help->setText(tr("Alt + Click to go to the script"));
+#else
+		_help->setText(tr("option + Click to go to the script"));
+#endif
 	} else {
 		visible = false;
 	}

@@ -1,5 +1,5 @@
 ###############################################################################
-## Copyright (C) 2009-2021 Arzel Jérôme <myst6re@gmail.com>
+## Copyright (C) 2009-2022 Arzel Jérôme <myst6re@gmail.com>
 ## Copyright (C) 2020 Julian Xhokaxhiu <https://julianxhokaxhiu.com>
 ##
 ## This program is free software: you can redistribute it and/or modify
@@ -49,6 +49,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+option(CLI "Build the cli executable" ON)
 
 add_compile_definitions(
     QT_DISABLE_DEPRECATED_BEFORE=0x050F00
@@ -106,6 +108,8 @@ set(PROJECT_SOURCES
     "src/core/IsoArchiveFF7.h"
     "src/core/PsfFile.cpp"
     "src/core/PsfFile.h"
+    "src/core/SystemColor.cpp"
+    "src/core/SystemColor.h"
     "src/core/TexFile.cpp"
     "src/core/TexFile.h"
     "src/core/TextureFile.cpp"
@@ -359,7 +363,9 @@ set(PROJECT_SOURCES
 
 if(APPLE)
     list(APPEND PROJECT_SOURCES
-        "src/widgets/QTaskBarButton.mm")
+        "src/core/SystemColor.mm"
+        "src/widgets/QTaskBarButton.mm"
+    )
 endif()
 
 set(PROJECT_CLI_SOURCES
@@ -568,20 +574,22 @@ set_target_properties(${GUI_TARGET} PROPERTIES
 )
 
 # CLI
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(${CLI_TARGET} MANUAL_FINALIZATION ${PROJECT_CLI_SOURCES} ${QM_FILES} ${RESOURCES} ${EXTRA_RESOURCES})
-else()
-    add_executable(${CLI_TARGET} ${PROJECT_CLI_SOURCES} ${QM_FILES} ${RESOURCES} ${EXTRA_RESOURCES})
+if(CLI)
+    if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+        qt_add_executable(${CLI_TARGET} MANUAL_FINALIZATION ${PROJECT_CLI_SOURCES} ${QM_FILES} ${RESOURCES} ${EXTRA_RESOURCES})
+    else()
+        add_executable(${CLI_TARGET} ${PROJECT_CLI_SOURCES} ${QM_FILES} ${RESOURCES} ${EXTRA_RESOURCES})
+    endif()
+    target_include_directories(${CLI_TARGET} PRIVATE "${CMAKE_SOURCE_DIR}/src")
+    target_link_libraries(${CLI_TARGET} PRIVATE
+        ZLIB::ZLIB
+        ff7tk::ff7tkFormats
+        ff7tk::ff7tkUtils
+    )
+    target_compile_definitions(${CLI_TARGET}
+        PRIVATE MR_CONSOLE=1
+    )
 endif()
-target_include_directories(${CLI_TARGET} PRIVATE "${CMAKE_SOURCE_DIR}/src")
-target_link_libraries(${CLI_TARGET} PRIVATE
-    ZLIB::ZLIB
-    ff7tk::ff7tkFormats
-    ff7tk::ff7tkUtils
-)
-target_compile_definitions(${CLI_TARGET}
-    PRIVATE MR_CONSOLE=1
-)
 
 include(GNUInstallDirs)
 
@@ -604,7 +612,10 @@ elseif(WIN32)
     if(NOT QT_DEPLOY_TMP_DIR)
         set(QT_DEPLOY_TMP_DIR "${CMAKE_BINARY_DIR}/win32-deploy" CACHE PATH "Directory to run deployqt scripts")
     endif()
-    install(TARGETS ${GUI_TARGET} ${CLI_TARGET} RUNTIME DESTINATION "${QT_DEPLOY_TMP_DIR}")
+    install(TARGETS ${GUI_TARGET} RUNTIME DESTINATION "${QT_DEPLOY_TMP_DIR}")
+    if(CLI)
+        install(TARGETS ${CLI_TARGET} RUNTIME DESTINATION "${QT_DEPLOY_TMP_DIR}")
+    endif()
 endif()
 
 add_subdirectory(lang)
@@ -612,19 +623,26 @@ add_subdirectory(deploy)
 
 if(APPLE)
     install(TARGETS ${GUI_TARGET} BUNDLE DESTINATION ".")
-    install(TARGETS ${CLI_TARGET} RUNTIME EXCLUDE_FROM_ALL)
+    if(CLI)
+        install(TARGETS ${CLI_TARGET} RUNTIME EXCLUDE_FROM_ALL)
+    endif()
 elseif(WIN32)
     install(DIRECTORY "${QT_DEPLOY_TMP_DIR}/" DESTINATION ".")
     install(CODE "file(REMOVE_RECURSE \"${QT_DEPLOY_TMP_DIR}\")")
 else()
     install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/qt/images/logo-shinra.png DESTINATION share/icons/hicolor/256x256/apps RENAME Makou_Reactor.png)
     install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/deploy/linux/Makou_Reactor.desktop DESTINATION share/applications)
-    install(TARGETS ${GUI_TARGET} ${CLI_TARGET} RUNTIME)
+    install(TARGETS ${GUI_TARGET} RUNTIME)
+    if(CLI)
+        install(TARGETS ${CLI_TARGET} RUNTIME)
+    endif()
 endif()
 
 if(QT_VERSION_MAJOR GREATER_EQUAL 6)
     qt_finalize_executable(${GUI_TARGET})
-    qt_finalize_executable(${CLI_TARGET})
+    if(CLI)
+        qt_finalize_executable(${CLI_TARGET})
+    endif()
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
