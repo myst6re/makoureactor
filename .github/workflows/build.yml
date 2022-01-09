@@ -34,9 +34,15 @@ jobs:
         - os: ubuntu-latest
           package_extension: 'tar.xz'
           package_suffix: 'linux64'
+          ff7tk_pack_suffix: "Linux_x86_64.tar.gz"
+          ff7tk_install_command_extract: "tar -xf"
+          ff7tk_install_command_dest: "--one-top-level="
         - os: macos-latest
           package_extension: 'dmg'
           package_suffix: 'macos64'
+          ff7tk_pack_suffix: "macos_x86_64.zip"
+          ff7tk_install_command_extract: "unzip "
+          ff7tk_install_command_dest: "-d "
         - os: windows-latest
           package_extension: 'zip'
           package_suffix: 'win64'
@@ -44,19 +50,23 @@ jobs:
           qt_arch: win64_msvc2019_64
           cmake_extra_args: '-DZLIB_ROOT=C:/zlib'
           qt_tools: desktop,tools_ninja,qt.tools.ninja desktop,tools_cmake,qt.tools.cmake.win64
+          ff7tk_pack_suffix: "win64.7z"
+          ff7tk_install_command_extract: "7z x"
+          ff7tk_install_command_dest: "-o"
+
     env:
       qt_installation_path: ${{ github.workspace }}
       zlib_path: ${{ github.workspace }}/../zlib-git
       zlib_build_path: ${{ github.workspace }}/../build-zlib-git
       zlib_installation_path: C:/zlib
-      ff7tk_path: ${{ github.workspace }}/../ff7tk-git
-      ff7tk_build_path: ${{ github.workspace }}/../build-ff7tk-git
       ff7tk_installation_path: ${{ github.workspace }}/ff7tk
       makoureactor_build_path: ${{ github.workspace }}/../build-makoureactor
       makoureactor_installation_path: ${{ github.workspace }}/../installation-makoureactor
       makoureactor_appbundle_path: ${{ github.workspace }}/../appbundle-makoureactor
       CMAKE_GENERATOR: Ninja
       CMAKE_BUILD_TYPE: ${{ matrix.build_type }}
+      ff7tkPackage: ff7tk-continuous-${{matrix.qt_String}}-${{matrix.ff7tk_pack_suffix}}
+
     steps:
     - uses: actions/checkout@v2
 
@@ -109,26 +119,19 @@ jobs:
         cmake -S${{ env.zlib_path }} -B${{ env.zlib_build_path }} -DCMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }} -DCMAKE_INSTALL_PREFIX=${{ env.zlib_installation_path }}
         cmake --build ${{ env.zlib_build_path }} --target install -j3
 
-    - name: Clone ff7tk repo
-      run: git clone -q --depth 1 --single-branch --branch master https://github.com/myst6re/ff7tk.git ${{ env.ff7tk_path }}
-
-    - name: Get ff7tk HEAD
-      run: git rev-parse HEAD > ${{ github.workspace }}/ff7tk-HEAD
-      working-directory: ${{ env.ff7tk_path }}
+    - name: Get ff7tk redist
+      run: curl -LJO https://github.com/sithlord48/ff7tk/releases/download/continuous/${{ env.ff7tkPackage }}
 
     - name: Cache ff7tk
       id: cache-ff7tk
       uses: actions/cache@v2
       with:
         path: ${{ env.ff7tk_installation_path }}
-        key: ${{ runner.os }}${{ matrix.win_arch }}-${{ matrix.qt }}-${{ matrix.qt_arch }}-ff7tk-${{ hashFiles('ff7tk-HEAD') }}
+        key: ${{ runner.os }}${{ matrix.config.WIN_ARCH }}-${{matrix.qt_String}}-ff7tk-${{ hashFiles( 'ff7tk-continuous*') }}
 
-    - name: Build ff7tk
-      if: steps.cache-ff7tk.outputs.cache-hit != 'true'
-      run: |
-        cmake -B ${{ env.ff7tk_build_path }} -DCMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }} -DCMAKE_INSTALL_PREFIX=${{ env.ff7tk_installation_path }} -DQT_DEFAULT_MAJOR_VERSION=${{ env.QT_MAJOR_VERSION }} ${{ matrix.cmake_extra_args }}
-        cmake --build ${{ env.ff7tk_build_path }} --target install -j3
-      working-directory: ${{ env.ff7tk_path }}
+    - name: Install ff7tk
+      if: (steps.cache-ff7tk.outputs.cache-hit != 'true')
+      run: ${{matrix.ff7tk_install_command_extract}} ${{env.ff7tkPackage}} ${{matrix.ff7tk_install_command_dest}}${{env.ff7tk_installation_path}}
 
     - name: Download linuxdeployqt
       if: runner.os == 'Linux'
