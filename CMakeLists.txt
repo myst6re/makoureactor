@@ -65,12 +65,14 @@ add_compile_definitions(
 
 find_package(QT NAMES Qt5 Qt6 COMPONENTS Widgets OpenGL REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets OpenGL REQUIRED)
+if(APPLE)
+    find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Svg REQUIRED)
+endif()
 find_package(ff7tk COMPONENTS ff7tkWidgets ff7tkFormats ff7tkUtils REQUIRED)
 find_package(ZLIB REQUIRED)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    find_package(QT NAMES Qt6 COMPONENTS OpenGLWidgets REQUIRED)
-    find_package(Qt${QT_VERSION_MAJOR} COMPONENTS OpenGLWidgets REQUIRED)
+    find_package(Qt6 COMPONENTS OpenGLWidgets Core5Compat REQUIRED)
 endif()
 
 set(PROJECT_SOURCES
@@ -544,9 +546,12 @@ target_link_libraries(${GUI_TARGET} PRIVATE
     ff7tk::ff7tkFormats
     ff7tk::ff7tkUtils
 )
+if(APPLE)
+    target_link_libraries(${GUI_TARGET} PRIVATE Qt::Svg)
+endif()
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    target_link_libraries(${GUI_TARGET} PRIVATE Qt::OpenGLWidgets)
+    target_link_libraries(${GUI_TARGET} PRIVATE Qt::OpenGLWidgets Qt::Core5Compat)
     
     target_compile_definitions(${GUI_TARGET}
         PRIVATE TASKBAR_BUTTON=1
@@ -571,7 +576,6 @@ endif()
 target_include_directories(${CLI_TARGET} PRIVATE "${CMAKE_SOURCE_DIR}/src")
 target_link_libraries(${CLI_TARGET} PRIVATE
     ZLIB::ZLIB
-    ff7tk::ff7tk
     ff7tk::ff7tkFormats
     ff7tk::ff7tkUtils
 )
