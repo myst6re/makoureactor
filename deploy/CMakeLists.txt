@@ -8,6 +8,7 @@ endif()
 
 if(WIN32)
     set(FF7TK_DEPENDS
+        ff7tk
         ff7tkWidgets
         ff7tkFormats
         ff7tkUtils
