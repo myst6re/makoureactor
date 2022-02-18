@@ -18,7 +18,6 @@
 #pragma once
 
 #include <QtWidgets>
-#include "qt/compat.h"
 
 #define COLOR_DISPLAY_MIN_CELL_SIZE   9
 #define COLOR_DISPLAY_BORDER_WIDTH    1

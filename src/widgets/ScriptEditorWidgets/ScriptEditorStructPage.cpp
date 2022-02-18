@@ -43,7 +43,7 @@ void ScriptEditorReturnToPage::build()
 	ScriptEditorWithPriorityPage::build();
 
 	scriptList = new QComboBox(this);
-	for (int i=0; i<32; ++i) {
+	for (quint8 i = 0; i < 32; ++i) {
 		scriptList->addItem(tr("Script %1").arg(i));
 	}
 
@@ -233,7 +233,7 @@ void ScriptEditorExecCharPage::build()
 	partyID = new QSpinBox(this);
 	partyID->setRange(0, 255);
 	scriptList = new QComboBox(this);
-	for (int i=0; i<32; ++i) {
+	for (quint8 i = 0; i < 32; ++i) {
 		scriptList->addItem(tr("Script %1").arg(i));
 	}
 
@@ -521,7 +521,7 @@ void ScriptEditorIfPage::build()
 	varOrValue2 = new VarOrValueWidget(this);
 
 	operatorList = new QComboBox(this);
-	for (int i = 0; i < OPERATORS_SIZE; ++i) {
+	for (quint8 i = 0; i < OPERATORS_SIZE; ++i) {
 		operatorList->addItem(QString::fromUtf8(Opcode::operators[i]));
 	}
 
@@ -553,7 +553,7 @@ void ScriptEditorIfPage::build()
 
 Opcode ScriptEditorIfPage::buildOpcode()
 {
-	FF7If i;
+	FF7If i = FF7If();
 
 	if (rangeTest->currentIndex() == 0) { // byte test
 		i.size = FF7Var::Byte;
@@ -601,7 +601,7 @@ void ScriptEditorIfPage::setOpcode(const Opcode &opcode)
 
 	addJump = false;
 	
-	FF7If i;
+	FF7If i = FF7If();
 	Q_ASSERT(opcode.ifStruct(i));
 	bool isLongValue = i.size != FF7Var::Byte,
 	        isSignedValue = i.size == FF7Var::SignedWord;
@@ -714,7 +714,7 @@ Opcode ScriptEditorIfKeyPage::buildOpcode()
 
 	quint16 result = 0;
 
-	for (int i=0; i<keys.size(); ++i) {
+	for (int i = 0; i < keys.size(); ++i) {
 		if (keys.at(i)->isChecked()) {
 			result |= 1 << i;
 		}
@@ -775,10 +775,12 @@ void ScriptEditorIfQPage::build()
 	charList = new QComboBox(this);
 	charList->addItems(Data::char_names);
 	int nbItems = charList->count();
-	for (int i=nbItems; i<100; i++)
+	for (int i = nbItems; i < 100; i++) {
 		charList->addItem(QString("%1").arg(i));
-	for (int i=100; i<254; i++)
+	}
+	for (quint8 i = 100; i < 254; i++) {
 		charList->addItem(Data::char_names.last());
+	}
 
 	charList->addItem(tr("(Empty)"));
 	charList->addItem(tr("(Empty)"));

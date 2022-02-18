@@ -90,7 +90,7 @@ Opcode ScriptEditorBinaryOpPage::buildOpcode()
 		value = address2;
 	}
 
-	FF7BinaryOperation opcodeBinaryOperation;
+	FF7BinaryOperation opcodeBinaryOperation = FF7BinaryOperation();
 	opcodeBinaryOperation.bank1 = bank1;
 	opcodeBinaryOperation.bank2 = bank2;
 	opcodeBinaryOperation.var = address1;
@@ -163,7 +163,7 @@ void ScriptEditorBinaryOpPage::setOpcode(const Opcode &opcode)
 		break;
 	}
 
-	FF7BinaryOperation opcodeBinaryOperation;
+	FF7BinaryOperation opcodeBinaryOperation = FF7BinaryOperation();
 	Q_ASSERT(opcode.binaryOperation(opcodeBinaryOperation));
 
 	var->setVar(opcodeBinaryOperation.bank1, opcodeBinaryOperation.var);
@@ -422,7 +422,7 @@ Opcode ScriptEditorUnaryOpPage::buildOpcode()
 
 	var->var(bank2, address);
 
-	FF7UnaryOperation opcodeUnaryOperation;
+	FF7UnaryOperation opcodeUnaryOperation = FF7UnaryOperation();
 	opcodeUnaryOperation.bank2 = bank2;
 	opcodeUnaryOperation.var = address;
 
@@ -464,7 +464,7 @@ void ScriptEditorUnaryOpPage::setOpcode(const Opcode &opcode)
 		break;
 	}
 
-	FF7UnaryOperation opcodeUnaryOperation;
+	FF7UnaryOperation opcodeUnaryOperation = FF7UnaryOperation();
 	Q_ASSERT(opcode.unaryOperation(opcodeUnaryOperation));
 
 	var->setVar(opcodeUnaryOperation.bank2, opcodeUnaryOperation.var);
@@ -574,7 +574,7 @@ void ScriptEditorUnaryOpPage::changeCurrentOpcode(int index)
 
 		emit opcodeChanged();
 
-		FF7UnaryOperation opcodeUnaryOperation;
+		FF7UnaryOperation opcodeUnaryOperation = FF7UnaryOperation();
 		Q_ASSERT(opcode().unaryOperation(opcodeUnaryOperation));
 
 		type1->blockSignals(true);
@@ -638,7 +638,7 @@ Opcode ScriptEditorBitOpPage::buildOpcode()
 		value = address2;
 	}
 
-	FF7BitOperation opcodeBitOperation;
+	FF7BitOperation opcodeBitOperation = FF7BitOperation();
 	opcodeBitOperation.bank1 = bank1;
 	opcodeBitOperation.bank2 = bank2;
 	opcodeBitOperation.var = address1;
@@ -671,7 +671,7 @@ void ScriptEditorBitOpPage::setOpcode(const Opcode &opcode)
 		break;
 	}
 
-	FF7BitOperation opcodeBitOperation;
+	FF7BitOperation opcodeBitOperation = FF7BitOperation();
 	Q_ASSERT(opcode.bitOperation(opcodeBitOperation));
 
 	var->setVar(opcodeBitOperation.bank1, opcodeBitOperation.var);

@@ -17,7 +17,6 @@
  ****************************************************************************/
 #include "WalkmeshWidget.h"
 #include "FieldModel.h"
-#include "qt/compat.h"
 
 WalkmeshWidget::WalkmeshWidget(QWidget *parent)
     : QOpenGLWidget(parent), distance(0.0),

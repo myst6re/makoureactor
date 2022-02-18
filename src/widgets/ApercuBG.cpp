@@ -114,8 +114,6 @@ void ApercuBG::mouseReleaseEvent(QMouseEvent *e)
 
 void ApercuBG::resizeEvent(QResizeEvent *e)
 {
-	Q_UNUSED(e)
-
 	if (!_background.isNull() &&
 	        (pixmap().isNull() || contentsRect().size() != pixmap().size())) {
 		setUpdatesEnabled(false);

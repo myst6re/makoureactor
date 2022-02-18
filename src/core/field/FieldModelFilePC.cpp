@@ -22,7 +22,6 @@
 #include "PFile.h"
 #include "AFile.h"
 #include "../TexFile.h"
-#include "qt/compat.h"
 
 FieldModelFilePC::FieldModelFilePC() :
     FieldModelFile(), _charLgp(nullptr)

@@ -18,7 +18,6 @@
 #pragma once
 
 #include <QtWidgets>
-#include "qt/compat.h"
 
 class ApercuBGLabel : public QLabel
 {

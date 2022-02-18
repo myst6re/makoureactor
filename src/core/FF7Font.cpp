@@ -144,13 +144,7 @@ void FF7Font::openTxt(const QString &data)
 	}
 
 	if (!table.isEmpty()) {
-#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
-		for (int i = table.size(); i < 224; ++i) {
-			table.append(QString());
-		}
-#else
 		table.resize(224);
-#endif
 
 		_tables.append(table);
 	}

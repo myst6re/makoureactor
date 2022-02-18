@@ -22,14 +22,8 @@
 ModelManagerPC::ModelManagerPC(QWidget *parent) :
     ModelManager(parent), copied(false)
 {
-#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
-	qreal scale = qApp->desktop()->physicalDpiX() / qApp->desktop()->logicalDpiX();
-#else
-	qreal scale = 1.0;
-#endif
-	
 	QToolBar *toolBar1 = new QToolBar();
-	toolBar1->setIconSize(QSize(int(scale * 14), int(scale * 14)));
+	toolBar1->setIconSize(QSize(14, 14));
 	toolBar1->addAction(QIcon(":/images/plus.png"), QString(), this, &ModelManagerPC::addModel);
 	toolBar1->addAction(QIcon(":/images/minus.png"), QString(), this, &ModelManagerPC::delModel);
 	toolBar1->addAction(QIcon(":/images/up.png"), QString(), this, &ModelManagerPC::upModel);
@@ -51,7 +45,7 @@ ModelManagerPC::ModelManagerPC(QWidget *parent) :
 	modelName->setMaxLength(256);
 
 	toolBar2 = new QToolBar();
-	toolBar2->setIconSize(QSize(int(scale * 14), int(scale * 14)));
+	toolBar2->setIconSize(QSize(14, 14));
 	toolBar2->addAction(QIcon(":/images/plus.png"), QString(), this, &ModelManagerPC::addAnim);
 	toolBar2->addAction(QIcon(":/images/minus.png"), QString(), this, &ModelManagerPC::delAnim);
 	toolBar2->addAction(QIcon(":/images/up.png"), QString(), this, &ModelManagerPC::upAnim);

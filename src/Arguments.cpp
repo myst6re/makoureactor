@@ -51,7 +51,7 @@ QString CommonArguments::inputFormat() const
 {
 	QString inputFormat = _parser.value("input-format");
 	if(inputFormat.isEmpty() && !_path.isEmpty()) {
-		int index = _path.lastIndexOf('.');
+		qsizetype index = _path.lastIndexOf('.');
 		if(index > -1) {
 			return _path.mid(index + 1);
 		}
@@ -72,7 +72,7 @@ QStringList CommonArguments::excludes() const
 
 QStringList CommonArguments::searchFiles(const QString &path)
 {
-	int index = path.lastIndexOf('/');
+	qsizetype index = path.lastIndexOf('/');
 	QString dirname, filename;
 
 	if (index > 0) {

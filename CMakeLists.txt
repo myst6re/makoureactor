@@ -50,7 +50,8 @@ set(CMAKE_AUTOUIC ON)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-option(CLI "Build the cli executable" ON)
+option(GUI "Build the gui executable" ON)
+option(CLI "Build the cli executable" OFF)
 
 add_compile_definitions(
     QT_DISABLE_DEPRECATED_BEFORE=0x050F00
@@ -65,16 +66,18 @@ add_compile_definitions(
     MAKOU_REACTOR_VERSION_TWEAK=0
 )
 
-find_package(QT NAMES Qt5 Qt6 COMPONENTS Widgets OpenGL REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets OpenGL REQUIRED)
+find_package(QT NAMES Qt6 COMPONENTS Widgets OpenGLWidgets OpenGL REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets OpenGLWidgets OpenGL REQUIRED)
 if(APPLE)
+    find_package(QT NAMES Qt6 COMPONENTS Svg REQUIRED)
     find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Svg REQUIRED)
 endif()
 find_package(ff7tk COMPONENTS ff7tkWidgets ff7tkFormats ff7tkUtils REQUIRED)
 find_package(ZLIB REQUIRED)
 
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    find_package(Qt6 COMPONENTS OpenGLWidgets Core5Compat REQUIRED)
+if(${QT_VERSION_MAJOR} EQUAL 6)
+    find_package(QT NAMES Qt6 COMPONENTS Core5Compat REQUIRED)
+    find_package(Qt6 COMPONENTS Core5Compat REQUIRED)
 endif()
 
 set(PROJECT_SOURCES
@@ -233,7 +236,6 @@ set(PROJECT_SOURCES
     "src/core/world/TblFile.cpp"
     "src/core/world/TblFile.h"
     "src/main.cpp"
-    "src/qt/compat.h"
     "src/txt.cpp"
     "src/widgets/AboutDialog.cpp"
     "src/widgets/AboutDialog.h"
@@ -522,7 +524,6 @@ set(PROJECT_CLI_SOURCES
     "src/core/world/TblFile.cpp"
     "src/core/world/TblFile.h"
     "src/main.cpp"
-    "src/qt/compat.h"
     "src/txt.cpp"
 )
 
@@ -536,58 +537,59 @@ set(RESOURCES "src/qt/${RELEASE_NAME}.qrc")
 
 if(APPLE)
     set(ICON_FILE "deploy/macosx/${RELEASE_NAME}.icns")
-    set(EXTRA_RESOURCES ${ICON_FILE})
+    set(EXTRA_RESOURCES_GUI ${ICON_FILE})
+    set(EXTRA_RESOURCES_CLI "")
 
     set_source_files_properties(${ICON_FILE} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 elseif (WIN32)
     set(ICON_FILE "src/qt/images/logo-shinra.ico")
-    set(EXTRA_RESOURCES "src/qt/${RELEASE_NAME}.rc")
+    set(EXTRA_RESOURCES_GUI "src/qt/${RELEASE_NAME}.rc")
+    set(EXTRA_RESOURCES_CLI "${EXTRA_RESOURCES_GUI}")
 endif()
 
 # GUI
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(${GUI_TARGET} MANUAL_FINALIZATION MACOSX_BUNDLE WIN32 ${PROJECT_SOURCES} ${QM_FILES} ${RESOURCES} ${EXTRA_RESOURCES})
-else()
-    add_executable(${GUI_TARGET} MACOSX_BUNDLE WIN32 ${PROJECT_SOURCES} ${QM_FILES} ${RESOURCES} ${EXTRA_RESOURCES})
-endif()
-target_include_directories(${GUI_TARGET} PRIVATE "${CMAKE_SOURCE_DIR}/src")
-target_link_libraries(${GUI_TARGET} PRIVATE
-    Qt::OpenGL
-    Qt::Widgets
-    ZLIB::ZLIB
-    ff7tk::ff7tk
-    ff7tk::ff7tkWidgets
-    ff7tk::ff7tkFormats
-    ff7tk::ff7tkUtils
-)
-if(APPLE)
-    target_link_libraries(${GUI_TARGET} PRIVATE Qt::Svg)
-endif()
-
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    target_link_libraries(${GUI_TARGET} PRIVATE Qt::OpenGLWidgets Qt::Core5Compat)
-    
-    target_compile_definitions(${GUI_TARGET}
-        PRIVATE TASKBAR_BUTTON=1
+if(GUI)
+    qt_add_executable(${GUI_TARGET} MANUAL_FINALIZATION MACOSX_BUNDLE WIN32 ${PROJECT_SOURCES} ${QM_FILES} ${RESOURCES} ${EXTRA_RESOURCES_GUI})
+    target_include_directories(${GUI_TARGET} PRIVATE "${CMAKE_SOURCE_DIR}/src")
+    target_link_libraries(${GUI_TARGET} PRIVATE
+        Qt::OpenGL
+        Qt::Widgets
+        Qt::OpenGLWidgets
+        ZLIB::ZLIB
+        ff7tk::ff7tk
+        ff7tk::ff7tkWidgets
+        ff7tk::ff7tkFormats
+        ff7tk::ff7tkUtils
     )
-endif()
+    if(APPLE)
+        target_link_libraries(${GUI_TARGET} PRIVATE Qt::Svg)
+    endif()
+    
+    if(${QT_VERSION_MAJOR} EQUAL 6)
+        target_link_libraries(${GUI_TARGET} PRIVATE Qt::Core5Compat)
+        
+        target_compile_definitions(${GUI_TARGET}
+            PRIVATE TASKBAR_BUTTON=1
+        )
+    endif()
+    
+    set_target_properties(${GUI_TARGET} PROPERTIES
+        MACOSX_BUNDLE_BUNDLE_NAME "Makou Reactor"
+        MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+        MACOSX_BUNDLE_LONG_VERSION_STRING ${PROJECT_VERSION}
+        MACOSX_BUNDLE_SHORT_VERSION_STRING "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}"
+        MACOSX_BUNDLE_GUI_IDENTIFIER org.myst6re.makoureactor
+        MACOSX_BUNDLE_ICON_FILE ${RELEASE_NAME}.icns
+    )
 
-set_target_properties(${GUI_TARGET} PROPERTIES
-    MACOSX_BUNDLE_BUNDLE_NAME "Makou Reactor"
-    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-    MACOSX_BUNDLE_LONG_VERSION_STRING ${PROJECT_VERSION}
-    MACOSX_BUNDLE_SHORT_VERSION_STRING "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}"
-    MACOSX_BUNDLE_GUI_IDENTIFIER org.myst6re.makoureactor
-    MACOSX_BUNDLE_ICON_FILE ${RELEASE_NAME}.icns
-)
+    if(APPLE OR WIN32)
+        set_target_properties(${GUI_TARGET} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}")
+    endif()
+endif()
 
 # CLI
 if(CLI)
-    if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-        qt_add_executable(${CLI_TARGET} MANUAL_FINALIZATION ${PROJECT_CLI_SOURCES} ${QM_FILES} ${RESOURCES} ${EXTRA_RESOURCES})
-    else()
-        add_executable(${CLI_TARGET} ${PROJECT_CLI_SOURCES} ${QM_FILES} ${RESOURCES} ${EXTRA_RESOURCES})
-    endif()
+    qt_add_executable(${CLI_TARGET} MANUAL_FINALIZATION ${PROJECT_CLI_SOURCES} ${QM_FILES} ${RESOURCES} ${EXTRA_RESOURCES_CLI})
     target_include_directories(${CLI_TARGET} PRIVATE "${CMAKE_SOURCE_DIR}/src")
     target_link_libraries(${CLI_TARGET} PRIVATE
         ZLIB::ZLIB
@@ -600,10 +602,6 @@ if(CLI)
 endif()
 
 include(GNUInstallDirs)
-
-if(APPLE OR WIN32)
-    set_target_properties(${GUI_TARGET} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}")
-endif()
 
 if(APPLE)
     if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
@@ -620,7 +618,9 @@ elseif(WIN32)
     if(NOT QT_DEPLOY_TMP_DIR)
         set(QT_DEPLOY_TMP_DIR "${CMAKE_BINARY_DIR}/win32-deploy" CACHE PATH "Directory to run deployqt scripts")
     endif()
-    install(TARGETS ${GUI_TARGET} RUNTIME DESTINATION "${QT_DEPLOY_TMP_DIR}")
+    if(GUI)
+        install(TARGETS ${GUI_TARGET} RUNTIME DESTINATION "${QT_DEPLOY_TMP_DIR}")
+    endif()
     if(CLI)
         install(TARGETS ${CLI_TARGET} RUNTIME DESTINATION "${QT_DEPLOY_TMP_DIR}")
     endif()
@@ -630,7 +630,9 @@ add_subdirectory(lang)
 add_subdirectory(deploy)
 
 if(APPLE)
-    install(TARGETS ${GUI_TARGET} BUNDLE DESTINATION ".")
+    if(GUI)
+        install(TARGETS ${GUI_TARGET} BUNDLE DESTINATION ".")
+    endif()
     if(CLI)
         install(TARGETS ${CLI_TARGET} RUNTIME EXCLUDE_FROM_ALL)
     endif()
@@ -640,17 +642,19 @@ elseif(WIN32)
 else()
     install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/qt/images/logo-shinra.png DESTINATION share/icons/hicolor/256x256/apps RENAME Makou_Reactor.png)
     install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/deploy/linux/Makou_Reactor.desktop DESTINATION share/applications)
-    install(TARGETS ${GUI_TARGET} RUNTIME)
+    if(GUI)
+        install(TARGETS ${GUI_TARGET} RUNTIME)
+    endif()
     if(CLI)
         install(TARGETS ${CLI_TARGET} RUNTIME)
     endif()
 endif()
 
-if(QT_VERSION_MAJOR GREATER_EQUAL 6)
+if(GUI)
     qt_finalize_executable(${GUI_TARGET})
-    if(CLI)
-        qt_finalize_executable(${CLI_TARGET})
-    endif()
+endif()
+if(CLI)
+    qt_finalize_executable(${CLI_TARGET})
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Darwin")

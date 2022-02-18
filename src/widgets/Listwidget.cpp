@@ -23,14 +23,8 @@ ListWidget::ListWidget(QWidget *parent) :
 	setContextMenuPolicy(Qt::ActionsContextMenu);
 	setFixedWidth(120);
 
-#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
-	qreal scale = qApp->desktop()->physicalDpiX() / qApp->desktop()->logicalDpiX();
-#else
-	qreal scale = 1.0;
-#endif
-
 	_toolBar = new QToolBar(this);
-	_toolBar->setIconSize(QSize(int(scale * 16), int(scale * 16)));
+	_toolBar->setIconSize(QSize(16, 16));
 
 	_listWidget = new QListWidget(this);
 	_listWidget->setUniformItemSizes(true);

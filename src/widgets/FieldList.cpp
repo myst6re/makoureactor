@@ -64,14 +64,8 @@ FieldList::FieldList(QWidget *parent) :
 	this->addAction(add_A);
 	this->addAction(del_A);
 
-#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
-	qreal scale = qApp->desktop()->physicalDpiX() / qApp->desktop()->logicalDpiX();
-#else
-	qreal scale = 1.0;
-#endif
-
 	_toolBar = new QToolBar(tr("&Field List Toolbar"));
-	_toolBar->setIconSize(QSize(int(scale * 14), int(scale * 14)));
+	_toolBar->setIconSize(QSize(14, 14));
 	_toolBar->addAction(add_A);
 	add_A->setStatusTip(tr("Add a field"));
 	_toolBar->addAction(del_A);

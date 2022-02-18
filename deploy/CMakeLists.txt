@@ -27,13 +27,12 @@ list(TRANSFORM LANGS REPLACE ".+" "${_ff7tk_ROOT}/share/ff7tk/lang/ff7tk_\\0.qm"
 install(FILES ${FF7TK_QM_FILES} DESTINATION "${TRANSLATIONS_PATH}")
 
 # Deploy Qt using macdeployqt and windeployqt scripts
-if(APPLE OR WIN32)
+if((APPLE AND GUI) OR WIN32)
     install(CODE "set(_target_file_dir \"${QT_DEPLOY_TMP_DIR}\")")
     install(CODE "set(_target_bundle_name \"${PROJECT_NAME}.app\")")
     install(CODE "set(_qt_translations_dir \"${_qt_translations_dir}\")")
     install(CODE "set(_qt_bin_dir \"${_qt_bin_dir}\")")
     install(CODE "set(LANGS \"${LANGS}\")")
-    install(CODE "set(QT_VERSION_MAJOR \"${QT_VERSION_MAJOR}\")")
     install(SCRIPT deployqt.cmake)
 endif()
 
