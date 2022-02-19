@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2021 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2022 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -46,13 +46,13 @@ public:
 	int currentWin() const;
 	FF7Window getWindow() const;
 	bool setWindow(const FF7Window &win);
-	int winCount() const;
+	qsizetype winCount() const;
 	void nextWin();
 	void prevWin();
 	void clearWin();
 	void setText(const QByteArray &textData, bool reset = true);
 	int currentPage() const;
-	int pageCount() const;
+	qsizetype pageCount() const;
 	void nextPage();
 	void prevPage();
 	void calcSize();
@@ -70,12 +70,14 @@ private:
 	static void fillNames();
 	bool drawTextArea(QPainter *painter);
 	QList<FF7Window> ff7Windows;
+	QList<FF7Window> invisibleFf7Windows;
 	QByteArray ff7Text;
 	int _currentPage;
 	int _currentWin;
 	QList<int> pagesPos;
 	int maxW, maxH;
 	QPoint moveStartPosition;
+	static int curFrame10;
 	static bool curFrame;
 	bool acceptMove;
 	bool spaced_characters;

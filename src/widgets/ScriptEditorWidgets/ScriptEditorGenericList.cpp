@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2021 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2022 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -335,7 +335,7 @@ QList<int> ScriptEditorGenericList::paramTypes(int id)
 	case OpcodeKey::GOLDu:case OpcodeKey::GOLDd:
 		paramTypes<<bank<<bank<<word<<word;break;
 	case OpcodeKey::CHGLD:
-		paramTypes<<bank<<bank<<adress<<adress;break;
+		paramTypes<<bank<<bank<<address<<address;break;
 	//case OpcodeKey::HMPMAX1:case OpcodeKey::HMPMAX2:case OpcodeKey::MHMMX:case OpcodeKey::HMPMAX3:break;
 	case OpcodeKey::MESSAGE:
 		paramTypes<<window_id<<text_id;break;
@@ -349,7 +349,7 @@ QList<int> ScriptEditorGenericList::paramTypes(int id)
 	case OpcodeKey::MPu:case OpcodeKey::MPd:
 		paramTypes<<bank<<bank<<party_id<<word;break;
 	case OpcodeKey::ASK:
-		paramTypes<<bank<<bank<<window_id<<text_id<<byte<<byte<<adress;break;
+		paramTypes<<bank<<bank<<window_id<<text_id<<byte<<byte<<address;break;
 	case OpcodeKey::MENU:
 		paramTypes<<bank<<bank<<menu<<byte;break;
 	case OpcodeKey::MENU2:
@@ -370,19 +370,19 @@ QList<int> ScriptEditorGenericList::paramTypes(int id)
 	case OpcodeKey::WROW:
 		paramTypes<<window_id<<byte;break;
 	case OpcodeKey::GWCOL:
-		paramTypes<<bank<<bank<<bank<<bank<<adress<<adress<<adress<<adress;break;
+		paramTypes<<bank<<bank<<bank<<bank<<address<<address<<address<<address;break;
 	case OpcodeKey::SWCOL:
 		paramTypes<<bank<<bank<<bank<<bank<<byte<<color;break;
 	case OpcodeKey::STITM:case OpcodeKey::DLITM:
 		paramTypes<<bank<<bank<<item_id<<quantity;break;
 	case OpcodeKey::CKITM:
-		paramTypes<<bank<<bank<<item_id<<adress;break;
+		paramTypes<<bank<<bank<<item_id<<address;break;
 	case OpcodeKey::SMTRA:
 		paramTypes<<bank<<bank<<bank<<bank<<materia_id<<byte<<byte<<byte;break;
 	case OpcodeKey::DMTRA:
 		paramTypes<<bank<<bank<<bank<<bank<<materia_id<<byte<<byte<<byte<<quantity;break;
 	case OpcodeKey::CMTRA:
-		paramTypes<<bank<<bank<<bank<<bank<<bank<<bank<<byte<<byte<<byte<<byte<<materia_id<<adress;break;
+		paramTypes<<bank<<bank<<bank<<bank<<bank<<bank<<byte<<byte<<byte<<byte<<materia_id<<address;break;
 	case OpcodeKey::SHAKE:
 		paramTypes<<bank<<bank<<bank<<bank<<shakeType<<xAmplitude<<xFrames<<yAmplitude<<yFrames;break;
 	//case OpcodeKey::NOP:break;
@@ -408,7 +408,7 @@ QList<int> ScriptEditorGenericList::paramTypes(int id)
 	case OpcodeKey::IDLCK:
 		paramTypes<<polygone_id<<boolean;break;
 	case OpcodeKey::LSTMP:
-		paramTypes<<bank<<bank<<adress;break;
+		paramTypes<<bank<<bank<<address;break;
 	case OpcodeKey::SCRLP:
 		paramTypes<<bank<<bank<<vitesse2<<party_id<<byte;break;
 	case OpcodeKey::BATTLE:
@@ -418,21 +418,21 @@ QList<int> ScriptEditorGenericList::paramTypes(int id)
 	case OpcodeKey::BTLMD:
 		paramTypes<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit;break;
 	case OpcodeKey::PGTDR:case OpcodeKey::GETPC:
-		paramTypes<<bank<<bank<<party_id<<adress;break;
+		paramTypes<<bank<<bank<<party_id<<address;break;
 	case OpcodeKey::PXYZI:
-		paramTypes<<bank<<bank<<bank<<bank<<party_id<<adress<<adress<<adress<<adress;break;
+		paramTypes<<bank<<bank<<bank<<bank<<party_id<<address<<address<<address<<address;break;
 	case 0x76:case 0x78:case 0x80:case 0x82:case 0x83:case 0x84:case 0x85:case 0x87:case 0x89:case 0x8B:case 0x8D:case 0x8F:case 0x91:case 0x93:case 0x9A:
-		paramTypes<<bank<<bank<<adress<<byte;break;
+		paramTypes<<bank<<bank<<address<<byte;break;
 	case 0x77:case 0x79:case 0x81:case 0x86:case 0x88:case 0x8A:case 0x8C:case 0x8E:case 0x90:case 0x92:case 0x94:case 0x9B:
-		paramTypes<<bank<<bank<<adress<<word;break;
+		paramTypes<<bank<<bank<<address<<word;break;
 	case 0x7A:case 0x7B:case 0x7C:case 0x7D:case 0x95:case 0x96:case 0x97:case 0x98:case 0x99:
-		paramTypes<<bank<<bank<<adress;break;
+		paramTypes<<bank<<bank<<address;break;
 	case 0x7E:
 		paramTypes<<boolean;break;
 	case 0x7F:
 		paramTypes<<bank<<bank<<byte;break;
 	case 0x9C:
-		paramTypes<<bank<<bank<<bank<<bank<<adress<<byte<<byte;break;
+		paramTypes<<bank<<bank<<bank<<bank<<address<<byte<<byte;break;
 	//case 0x9D:case 0x9E:case 0x9F://TODO
 	case OpcodeKey::PC:
 		paramTypes<<personnage_id;break;
@@ -466,9 +466,9 @@ QList<int> ScriptEditorGenericList::paramTypes(int id)
 	case 0xB6:
 		paramTypes<<group_id;break;
 	case 0xB7:case 0xB9:
-		paramTypes<<bank<<bank<<group_id<<adress;break;
+		paramTypes<<bank<<bank<<group_id<<address;break;
 	case 0xB8:
-		paramTypes<<bank<<bank<<group_id<<adress<<adress;break;
+		paramTypes<<bank<<bank<<group_id<<address<<address;break;
 	case 0xBA:
 		paramTypes<<animation_id<<vitesse;break;
 	//case 0xBE:break;
@@ -477,7 +477,7 @@ QList<int> ScriptEditorGenericList::paramTypes(int id)
 	case 0xC0:
 		paramTypes<<bank<<bank<<bank<<bank<<coord_x<<coord_y<<polygone_id<<word;break;
 	case 0xC1:
-		paramTypes<<bank<<bank<<bank<<bank<<group_id<<adress<<adress<<adress<<adress;break;
+		paramTypes<<bank<<bank<<bank<<bank<<group_id<<address<<address<<address<<address;break;
 	case 0xC2:
 		paramTypes<<bank<<bank<<bank<<bank<<coord_x<<coord_y<<coord_z<<polygone_id<<byte<<animation_id<<direction<<vitesse;break;
 	case 0xC3:
@@ -545,14 +545,14 @@ QList<int> ScriptEditorGenericList::paramTypes(int id)
 		paramTypes<<movie_id;break;
 	//case 0xF9:break;
 	case 0xFA:
-		paramTypes<<bank<<bank<<adress;break;
+		paramTypes<<bank<<bank<<address;break;
 	case 0xFB:
 		paramTypes<<boolean;break;
 	//case 0xFC://TODO
 	case 0xFD:
 		paramTypes<<music_id<<inconnu<<inconnu<<inconnu<<inconnu<<inconnu<<inconnu;break;
 	case 0xFE:
-		paramTypes<<bank<<bank<<adress;break;
+		paramTypes<<bank<<bank<<address;break;
 	//case 0xFF:break;
 	case OpcodeKey::LABEL:
 		paramTypes<<label;break;
@@ -631,7 +631,7 @@ QString ScriptEditorGenericList::paramName(int type)
 	case script_id:			return tr("Script");
 	case party_id:			return tr("Team member");
 	case bank:				return tr("Bank");
-	case adress:			return tr("Address");
+	case address:			return tr("Address");
 	case priorite:			return tr("Priority");
 	case bit:				return tr("Flag");
 	case jump:				return tr("Jump (short)");
@@ -847,4 +847,99 @@ void ScriptEditorBooleanPage::setText(const QString &choice1, const QString &cho
 {
 	_boolean->setItemText(0, choice1);
 	_boolean->setItemText(1, choice2);
+}
+
+ScriptEditorOneVarOrValue::ScriptEditorOneVarOrValue(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script,
+                                                                 int opcodeID, QWidget *parent) :
+    ScriptEditorView(scriptsAndTexts, grpScript, script, opcodeID, parent)
+{
+}
+
+void ScriptEditorOneVarOrValue::build()
+{
+	_label = new QLabel(this);
+	_varOrValue = new VarOrValueWidget(this);
+
+	QGridLayout *layout = new QGridLayout(this);
+	layout->addWidget(_label, 0, 0);
+	layout->addWidget(_varOrValue, 0, 1);
+	layout->setRowStretch(1, 1);
+	layout->setColumnStretch(2, 1);
+	layout->setContentsMargins(QMargins());
+
+	connect(_varOrValue, SIGNAL(changed()), SIGNAL(opcodeChanged()));
+}
+
+Opcode ScriptEditorOneVarOrValue::buildOpcode()
+{
+	quint8 bank = 0;
+	int value;
+	
+	if (_varOrValue->isValue()) {
+		value = _varOrValue->value();
+	} else {
+		quint8 address;
+		_varOrValue->var(bank, address);
+		value = address;
+	}
+
+	switch (opcode().id()) {
+	case OpcodeKey::SPECIAL:
+		switch (OpcodeSpecialKey(opcode().subKey())) {
+		case OpcodeSpecialKey::GMSPD:
+			opcode().op().opcodeSPECIALGMSPD.banks = BANK(0, bank);
+			opcode().op().opcodeSPECIALGMSPD.varSpeed = quint8(value);
+			break;
+		case OpcodeSpecialKey::SMSPD:
+			opcode().op().opcodeSPECIALSMSPD.banks = BANK(0, bank);
+			opcode().op().opcodeSPECIALSMSPD.speed = quint8(value);
+			break;
+		default:
+			break;
+		}
+
+		break;
+	default:
+		break;
+	}
+
+	return opcode();
+}
+
+void ScriptEditorOneVarOrValue::setOpcode(const Opcode &opcode)
+{
+	VarOrValueWidget::Size size = VarOrValueWidget::Long;
+	bool onlyVar = false;
+	qint8 bank = opcode.bank2();
+	int valueOrAddress = 0;
+
+	switch (opcode.id()) {
+	case OpcodeKey::SPECIAL:
+		switch (OpcodeSpecialKey(opcode.subKey())) {
+		case OpcodeSpecialKey::GMSPD:
+			size = VarOrValueWidget::Short;
+			valueOrAddress = opcode.op().opcodeSPECIALGMSPD.varSpeed;
+			break;
+		case OpcodeSpecialKey::SMSPD:
+			size = VarOrValueWidget::Short;
+			valueOrAddress = opcode.op().opcodeSPECIALSMSPD.speed;
+			break;
+		default:
+			break;
+		}
+
+		break;
+	default:
+		break;
+	}
+
+	if (size == VarOrValueWidget::Short) {
+		_varOrValue->setShort();
+	} else {
+		_varOrValue->setLong();
+	}
+	_varOrValue->setOnlyVar(onlyVar);
+	_varOrValue->setVarOrValue(quint8(bank), valueOrAddress);
+
+	ScriptEditorView::setOpcode(opcode);
 }

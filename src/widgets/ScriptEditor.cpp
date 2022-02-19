@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2021 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2022 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -125,6 +125,8 @@ ScriptEditorView *ScriptEditor::buildEditorPage(PageType id)
 		return new ScriptEditorNoParameterPage(scriptsAndTexts, grpScript, script, opcodeID, this);
 	case Boolean:
 		return new ScriptEditorBooleanPage(scriptsAndTexts, grpScript, script, opcodeID, this);
+	case OneVarOrValue:
+		return new ScriptEditorOneVarOrValue(scriptsAndTexts, grpScript, script, opcodeID, this);
 	case ReturnTo:
 		return new ScriptEditorReturnToPage(scriptsAndTexts, grpScript, script, opcodeID, this);
 	case Exec:
@@ -163,12 +165,16 @@ ScriptEditorView *ScriptEditor::buildEditorPage(PageType id)
 		return new ScriptEditorWindowMovePage(scriptsAndTexts, grpScript, script, opcodeID, this);
 	case WindowVar:
 		return new ScriptEditorWindowVariablePage(scriptsAndTexts, grpScript, script, opcodeID, this);
+	case WindowNumDisplay:
+		return new ScriptEditorWindowNumDisplayPage(scriptsAndTexts, grpScript, script, opcodeID, this);
 	case Movie:
 		return new ScriptEditorMoviePage(scriptsAndTexts, grpScript, script, opcodeID, this);
 	case Walkmesh:
 		return new ScriptEditorWalkmeshPage(field, scriptsAndTexts, grpScript, script, opcodeID, this);
 	case JumpNanaki:
 		return new ScriptEditorJumpNanakiPage(scriptsAndTexts, grpScript, script, opcodeID, this);
+	case SpecialPName:
+		return new ScriptEditorSpecialPName(scriptsAndTexts, grpScript, script, opcodeID, this);
 	case DLPBSavemap:
 		return new ScriptEditorDLPBSavemap(scriptsAndTexts, grpScript, script, opcodeID, this);
 	case DLPBWriteToMemory:
@@ -232,6 +238,13 @@ void ScriptEditor::fillEditor()
 		case OpcodeSpecialKey::RSGLB:
 		case OpcodeSpecialKey::CLITM:
 			_currentPageType = NoParameters;
+			break;
+		case OpcodeSpecialKey::PNAME:
+			_currentPageType = SpecialPName;
+			break;
+		case OpcodeSpecialKey::GMSPD:
+		case OpcodeSpecialKey::SMSPD:
+			_currentPageType = OneVarOrValue;
 			break;
 		default:
 			_currentPageType = GenericList;
@@ -299,6 +312,9 @@ void ScriptEditor::fillEditor()
 	case OpcodeKey::MVIEF:
 	case OpcodeKey::CHMST: */
 		_currentPageType = Variable;
+		break;
+	case OpcodeKey::WSPCL:
+		_currentPageType = WindowNumDisplay;
 		break;
 	case OpcodeKey::WINDOW:case OpcodeKey::WSIZW:
 	case OpcodeKey::WROW:

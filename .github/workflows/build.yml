@@ -9,28 +9,28 @@ on:
 
 jobs:
   main_build:
-    name: ${{ matrix.package_suffix }} Qt ${{ matrix.qt }}
+    name: ${{ matrix.package_suffix }} ${{ matrix.interface }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         qt:
           - 6.2.0
-          - 5.15.2
         os:
           - ubuntu-latest
           - macos-latest
           - windows-latest
+        interface:
+          - cli
+          - gui
         build_type:
           - Release
         include:
         - aqt_version: '==2.0.0'
           qt_tools: desktop,tools_ninja,qt.tools.ninja
-        - qt: 5.15.2
-          qt_String: "Qt5"
-        - qt: 6.2.0
           qt_modules: qt5compat
-          qt_String: "Qt6"
+          qt_major: '6'
+          cmake_cli_arg: 'OFF'
         - os: ubuntu-latest
           package_extension: 'tar.xz'
           package_suffix: 'linux64'
@@ -53,6 +53,12 @@ jobs:
           ff7tk_pack_suffix: "win64.7z"
           ff7tk_install_command_extract: "7z x"
           ff7tk_install_command_dest: "-o"
+        - interface: gui
+          cmake_cli_arg: 'OFF'
+          cmake_gui_arg: 'ON'
+        - interface: cli
+          cmake_cli_arg: 'ON'
+          cmake_gui_arg: 'OFF'
 
     env:
       qt_installation_path: ${{ github.workspace }}
@@ -65,7 +71,7 @@ jobs:
       makoureactor_appbundle_path: ${{ github.workspace }}/../appbundle-makoureactor
       CMAKE_GENERATOR: Ninja
       CMAKE_BUILD_TYPE: ${{ matrix.build_type }}
-      ff7tkPackage: ff7tk-continuous-${{matrix.qt_String}}-${{matrix.ff7tk_pack_suffix}}
+      ff7tk_package: ff7tk-continuous-Qt${{matrix.qt_major}}-${{matrix.ff7tk_pack_suffix}}
 
     steps:
     - uses: actions/checkout@v2
@@ -120,18 +126,10 @@ jobs:
         cmake --build ${{ env.zlib_build_path }} --target install -j3
 
     - name: Get ff7tk redist
-      run: curl -LJO https://github.com/sithlord48/ff7tk/releases/download/continuous/${{ env.ff7tkPackage }}
-
-    - name: Cache ff7tk
-      id: cache-ff7tk
-      uses: actions/cache@v2
-      with:
-        path: ${{ env.ff7tk_installation_path }}
-        key: ${{ runner.os }}${{ matrix.config.WIN_ARCH }}-${{matrix.qt_String}}-ff7tk-${{ hashFiles( 'ff7tk-continuous*') }}
+      run: curl -LJO https://github.com/sithlord48/ff7tk/releases/download/continuous/${{ env.ff7tk_package }}
 
     - name: Install ff7tk
-      if: (steps.cache-ff7tk.outputs.cache-hit != 'true')
-      run: ${{matrix.ff7tk_install_command_extract}} ${{env.ff7tkPackage}} ${{matrix.ff7tk_install_command_dest}}${{env.ff7tk_installation_path}}
+      run: ${{matrix.ff7tk_install_command_extract}} ${{env.ff7tk_package}} ${{matrix.ff7tk_install_command_dest}}${{env.ff7tk_installation_path}}
 
     - name: Download linuxdeployqt
       if: runner.os == 'Linux'
@@ -146,16 +144,13 @@ jobs:
     - name: Build Makou Reactor
       id: main_build
       run: |
-        cmake -B ${{ env.makoureactor_build_path }} -DCMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }} -DCMAKE_INSTALL_PREFIX=${{ env.makoureactor_installation_path }} -Dff7tk_DIR=${{ env.ff7tk_installation_path }}/lib/cmake/ff7tk ${{ matrix.cmake_extra_args }}
-        cmake --build ${{ env.makoureactor_build_path }} --target install -j3
-
-    - name: CPack
-      run: cpack
-      working-directory: ${{ env.makoureactor_build_path }}
+        cmake -B ${{ env.makoureactor_build_path }} -DCMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }} -DCMAKE_INSTALL_PREFIX=${{ env.makoureactor_installation_path }} -Dff7tk_DIR=${{ env.ff7tk_installation_path }}/lib/cmake/ff7tk -DCLI:BOOL=${{ matrix.cmake_cli_arg }} -DGUI:BOOL=${{ matrix.cmake_gui_arg }} ${{ matrix.cmake_extra_args }}
+        cmake --build ${{ env.makoureactor_build_path }} --target package -j3
 
     - name: Build AppImage (Linux)
-      if: runner.os == 'Linux'
+      if: runner.os == 'Linux' && matrix.interface == 'gui'
       run: |
+        cmake --build ${{ env.makoureactor_build_path }} --target install -j3
         export VERSION=continuous
         export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${{ env.ff7tk_installation_path }}/lib
         export PATH=$PATH:${{ env.qt_installation_path }}/Qt/${{ matrix.qt }}/gcc_64/libexec
@@ -163,11 +158,11 @@ jobs:
           -e "${{ env.makoureactor_installation_path }}"/bin/Makou_Reactor \
           -d "${{ env.makoureactor_installation_path }}"/share/applications/Makou_Reactor.desktop \
           -i "${{ env.makoureactor_installation_path }}"/share/icons/hicolor/256x256/apps/Makou_Reactor.png
-        mv *.AppImage makoureactor-continuous-${{ matrix.qt_String }}-${{ matrix.package_suffix }}.AppImage
+        mv *.AppImage makoureactor-continuous-${{ matrix.interface }}-${{ matrix.package_suffix }}.AppImage
 
     - name: Prepare Upload
       shell: bash
-      run: mv ../build-makoureactor/*.${{ matrix.package_extension }} makoureactor-continuous-${{ matrix.qt_String }}-${{ matrix.package_suffix }}.${{ matrix.package_extension }}
+      run: mv ../build-makoureactor/*.${{ matrix.package_extension }} makoureactor-continuous-${{ matrix.interface }}-${{ matrix.package_suffix }}.${{ matrix.package_extension }}
 
     - name: Upload
       uses: actions/upload-artifact@v2

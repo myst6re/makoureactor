@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2021 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2022 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -144,13 +144,7 @@ void FF7Font::openTxt(const QString &data)
 	}
 
 	if (!table.isEmpty()) {
-#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
-		for (int i = table.size(); i < 224; ++i) {
-			table.append(QString());
-		}
-#else
 		table.resize(224);
-#endif
 
 		_tables.append(table);
 	}

@@ -49,5 +49,6 @@
         <file>images/cursor.png</file>
         <file>shaders/main.vert</file>
         <file>shaders/main.frag</file>
+        <file>images/texture-purple.png</file>
     </qresource>
 </RCC>

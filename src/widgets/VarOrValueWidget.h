@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2021 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2022 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -32,9 +32,11 @@ public:
 	explicit VarOrValueWidget(QWidget *parent = nullptr);
 	int value() const;
 	void setValue(int value);
-	bool var(quint8 &bank, quint8 &adress) const;
-	void setVar(quint8 bank, quint8 adress);
+	bool var(quint8 &bank, quint8 &address) const;
+	void setVar(quint8 bank, quint8 address);
 	void setVarOrValue(quint8 bank, int valueOrAdress);
+	quint8 bank() const;
+	void setBank(quint8 bank);
 	bool isValue() const;
 	void setIsValue(bool isValue);
 	Sizes size() const;
@@ -50,6 +52,8 @@ public:
 	void setSignedValueType(bool signedValueType);
 	bool isOnlyVar() const;
 	void setOnlyVar(bool onlyVar);
+	bool isOnlyBank() const;
+	void setOnlyBank(bool onlyBank);
 signals:
 	void changed();
 private slots:
@@ -75,9 +79,9 @@ private:
 	void updateValueTypeAddOrSetItem(int index, const QString &text, const QVariant &data);
 	QStackedLayout *_varOrValuelayout;
 	QComboBox *_typeSelect, *_bank;
-	QSpinBox *_value, *_adress;
+	QSpinBox *_value, *_address;
 	Sizes _size;
-	bool _signedValueType, _onlyVar;
+	bool _signedValueType, _onlyVar, _onlyBank;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(VarOrValueWidget::Sizes)

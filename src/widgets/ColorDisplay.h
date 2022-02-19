@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2021 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2022 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -18,7 +18,6 @@
 #pragma once
 
 #include <QtWidgets>
-#include "qt/compat.h"
 
 #define COLOR_DISPLAY_MIN_CELL_SIZE   9
 #define COLOR_DISPLAY_BORDER_WIDTH    1

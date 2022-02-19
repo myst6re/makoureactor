@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2021 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2022 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -43,6 +43,7 @@ struct FF7Window {
 	quint16 w, h;
 	quint16 ask_first, ask_last;
 	quint8 type, mode, displayType;
+	quint8 displayX, displayY;
 	quint16 groupID, scriptID, opcodeID;
 
 	QPoint realPos() {
@@ -71,6 +72,10 @@ struct FF7Window {
 		return QPoint(windowX, windowY);
 	}
 };
+
+inline bool operator==(const FF7Window &w1, const FF7Window &w2) {
+	return w1.x == w2.x && w1.y == w2.y && w1.w == w2.w && w1.h == w2.h;
+}
 
 struct FF7Position {
 	qint16 x, y, z;
@@ -388,7 +393,7 @@ PACK(struct OpcodeSPECIALARROW : public OpcodeSPECIAL {
 // FIXME: 4 parameters, not 1
 PACK(struct OpcodeSPECIALPNAME : public OpcodeSPECIAL {
 	quint8 banks; // bank 2
-	quint8 var; // bank 1 8-bit
+	quint8 varOrValue; // bank 1 8-bit
 	quint8 unused;
 	quint8 size;
 });

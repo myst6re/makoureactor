@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2021 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2022 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -93,14 +93,8 @@ GrpScriptList::GrpScriptList(QWidget *parent) :
 	this->addAction(up_A);
 	this->addAction(down_A);
 
-#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
-	qreal scale = qApp->desktop()->physicalDpiX() / qApp->desktop()->logicalDpiX();
-#else
-	qreal scale = 1.0;
-#endif
-
 	_toolBar = new QToolBar(tr("&Group Editor"));
-	_toolBar->setIconSize(QSize(int(scale * 14), int(scale * 14)));
+	_toolBar->setIconSize(QSize(14, 14));
 	_toolBar->addAction(add_A);
 	add_A->setStatusTip(tr("Add a group"));
 	_toolBar->addAction(del_A);

@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2021 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2022 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -17,7 +17,6 @@
  ****************************************************************************/
 #include "WalkmeshWidget.h"
 #include "FieldModel.h"
-#include "qt/compat.h"
 
 WalkmeshWidget::WalkmeshWidget(QWidget *parent)
     : QOpenGLWidget(parent), distance(0.0),

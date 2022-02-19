@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2021 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2022 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -19,6 +19,21 @@
 
 #include <QtWidgets>
 #include "ScriptEditorView.h"
+
+class ScriptEditorSpecialPName : public ScriptEditorView
+{
+	Q_OBJECT
+public:
+	ScriptEditorSpecialPName(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script,
+	                         int opcodeID, QWidget *parent = nullptr);
+	Opcode buildOpcode() override;
+	void setOpcode(const Opcode &opcode) override;
+private:
+	void build() override;
+	VarOrValueWidget *_varOrValue;
+	VarOrValueWidget *_bank;
+	QSpinBox *_size;
+};
 
 class ScriptEditorDLPBSavemap : public ScriptEditorView
 {

@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2021 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2022 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -443,11 +443,11 @@ void GrpScript::listWindows(int groupID, QMultiMap<quint64, FF7Window> &windows,
 	}
 }
 
-void GrpScript::listWindows(int groupID, int textID, QList<FF7Window> &windows) const
+void GrpScript::listWindows(int groupID, int textID, QList<FF7Window> &windows, int winID) const
 {
 	int scriptID = 0;
 	for (const Script &script : _scripts) {
-		script.listWindows(groupID, scriptID++, textID, windows);
+		script.listWindows(groupID, scriptID++, textID, windows, winID);
 	}
 }
 

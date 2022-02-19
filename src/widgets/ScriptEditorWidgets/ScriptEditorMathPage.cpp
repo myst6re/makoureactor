@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2021 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2022 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -76,24 +76,24 @@ void ScriptEditorBinaryOpPage::build()
 
 Opcode ScriptEditorBinaryOpPage::buildOpcode()
 {
-	quint8 bank1, bank2, adress1;
+	quint8 bank1, bank2, address1;
 	int value;
 
-	var->var(bank1, adress1);
+	var->var(bank1, address1);
 
 	if (varOrValue->isValue()) {
 		bank2 = 0;
 		value = varOrValue->value();
 	} else {
-		quint8 adress2;
-		varOrValue->var(bank2, adress2);
-		value = adress2;
+		quint8 address2;
+		varOrValue->var(bank2, address2);
+		value = address2;
 	}
 
-	FF7BinaryOperation opcodeBinaryOperation;
+	FF7BinaryOperation opcodeBinaryOperation = FF7BinaryOperation();
 	opcodeBinaryOperation.bank1 = bank1;
 	opcodeBinaryOperation.bank2 = bank2;
-	opcodeBinaryOperation.var = adress1;
+	opcodeBinaryOperation.var = address1;
 	opcodeBinaryOperation.value = quint16(value);
 
 	opcode().setBinaryOperation(opcodeBinaryOperation);
@@ -163,7 +163,7 @@ void ScriptEditorBinaryOpPage::setOpcode(const Opcode &opcode)
 		break;
 	}
 
-	FF7BinaryOperation opcodeBinaryOperation;
+	FF7BinaryOperation opcodeBinaryOperation = FF7BinaryOperation();
 	Q_ASSERT(opcode.binaryOperation(opcodeBinaryOperation));
 
 	var->setVar(opcodeBinaryOperation.bank1, opcodeBinaryOperation.var);
@@ -418,13 +418,13 @@ void ScriptEditorUnaryOpPage::build()
 
 Opcode ScriptEditorUnaryOpPage::buildOpcode()
 {
-	quint8 bank2, adress;
+	quint8 bank2, address;
 
-	var->var(bank2, adress);
+	var->var(bank2, address);
 
-	FF7UnaryOperation opcodeUnaryOperation;
+	FF7UnaryOperation opcodeUnaryOperation = FF7UnaryOperation();
 	opcodeUnaryOperation.bank2 = bank2;
-	opcodeUnaryOperation.var = adress;
+	opcodeUnaryOperation.var = address;
 
 	opcode().setUnaryOperation(opcodeUnaryOperation);
 
@@ -464,7 +464,7 @@ void ScriptEditorUnaryOpPage::setOpcode(const Opcode &opcode)
 		break;
 	}
 
-	FF7UnaryOperation opcodeUnaryOperation;
+	FF7UnaryOperation opcodeUnaryOperation = FF7UnaryOperation();
 	Q_ASSERT(opcode.unaryOperation(opcodeUnaryOperation));
 
 	var->setVar(opcodeUnaryOperation.bank2, opcodeUnaryOperation.var);
@@ -574,7 +574,7 @@ void ScriptEditorUnaryOpPage::changeCurrentOpcode(int index)
 
 		emit opcodeChanged();
 
-		FF7UnaryOperation opcodeUnaryOperation;
+		FF7UnaryOperation opcodeUnaryOperation = FF7UnaryOperation();
 		Q_ASSERT(opcode().unaryOperation(opcodeUnaryOperation));
 
 		type1->blockSignals(true);
@@ -624,24 +624,24 @@ void ScriptEditorBitOpPage::build()
 
 Opcode ScriptEditorBitOpPage::buildOpcode()
 {
-	quint8 bank1, bank2, adress1;
+	quint8 bank1, bank2, address1;
 	int value;
 
-	var->var(bank1, adress1);
+	var->var(bank1, address1);
 
 	if (position->isValue()) {
 		bank2 = 0;
 		value = position->value();
 	} else {
-		quint8 adress2;
-		position->var(bank2, adress2);
-		value = adress2;
+		quint8 address2;
+		position->var(bank2, address2);
+		value = address2;
 	}
 
-	FF7BitOperation opcodeBitOperation;
+	FF7BitOperation opcodeBitOperation = FF7BitOperation();
 	opcodeBitOperation.bank1 = bank1;
 	opcodeBitOperation.bank2 = bank2;
-	opcodeBitOperation.var = adress1;
+	opcodeBitOperation.var = address1;
 	opcodeBitOperation.position = quint8(value);
 
 	opcode().setBitOperation(opcodeBitOperation);
@@ -671,7 +671,7 @@ void ScriptEditorBitOpPage::setOpcode(const Opcode &opcode)
 		break;
 	}
 
-	FF7BitOperation opcodeBitOperation;
+	FF7BitOperation opcodeBitOperation = FF7BitOperation();
 	Q_ASSERT(opcode.bitOperation(opcodeBitOperation));
 
 	var->setVar(opcodeBitOperation.bank1, opcodeBitOperation.var);
@@ -738,9 +738,9 @@ Opcode ScriptEditorVariablePage::buildOpcode()
 		bank2 = 0;
 		value = quint8(varOrValue->value());
 	} else {
-		quint8 adress2;
-		varOrValue->var(bank2, adress2);
-		value = adress2;
+		quint8 address2;
+		varOrValue->var(bank2, address2);
+		value = address2;
 	}
 
 	opcodeRDMSD.banks = bank2;
@@ -790,27 +790,27 @@ void ScriptEditor2BytePage::build()
 
 Opcode ScriptEditor2BytePage::buildOpcode()
 {
-	quint8 bank1, bank2, bank4, adress1;
+	quint8 bank1, bank2, bank4, address1;
 	int value1, value2;
 
-	var->var(bank1, adress1);
+	var->var(bank1, address1);
 
 	if (varOrValue1->isValue()) {
 		bank2 = 0;
 		value1 = varOrValue1->value();
 	} else {
-		quint8 adress2;
-		varOrValue1->var(bank2, adress2);
-		value1 = adress2;
+		quint8 address2;
+		varOrValue1->var(bank2, address2);
+		value1 = address2;
 	}
 	
 	if (varOrValue2->isValue()) {
 		bank4 = 0;
 		value2 = varOrValue2->value();
 	} else {
-		quint8 adress4;
-		varOrValue2->var(bank4, adress4);
-		value2 = adress4;
+		quint8 address4;
+		varOrValue2->var(bank4, address4);
+		value2 = address4;
 	}
 
 	OpcodeTOBYTE &toByte = opcode().op().opcodeTOBYTE;
@@ -818,7 +818,7 @@ Opcode ScriptEditor2BytePage::buildOpcode()
 	toByte.banks[1] = BANK(0, bank4);
 	toByte.value1 = quint8(value1);
 	toByte.value2 = quint8(value2);
-	toByte.var = adress1;
+	toByte.var = address1;
 
 	return opcode();
 }
@@ -888,36 +888,36 @@ void ScriptEditorSinCosPage::build()
 
 Opcode ScriptEditorSinCosPage::buildOpcode()
 {
-	quint8 bank1, bank2, bank3, bank4, adress4;
+	quint8 bank1, bank2, bank3, bank4, address4;
 	int value1, value2, value3;
 
-	var->var(bank4, adress4);
+	var->var(bank4, address4);
 
 	if (varOrValue1->isValue()) {
 		bank1 = 0;
 		value1 = varOrValue1->value();
 	} else {
-		quint8 adress1;
-		varOrValue1->var(bank1, adress1);
-		value1 = adress1;
+		quint8 address1;
+		varOrValue1->var(bank1, address1);
+		value1 = address1;
 	}
 
 	if (varOrValue2->isValue()) {
 		bank2 = 0;
 		value2 = varOrValue2->value();
 	} else {
-		quint8 adress2;
-		varOrValue2->var(bank2, adress2);
-		value2 = adress2;
+		quint8 address2;
+		varOrValue2->var(bank2, address2);
+		value2 = address2;
 	}
 
 	if (varOrValue3->isValue()) {
 		bank3 = 0;
 		value3 = varOrValue3->value();
 	} else {
-		quint8 adress3;
-		varOrValue3->var(bank3, adress3);
-		value3 = adress3;
+		quint8 address3;
+		varOrValue3->var(bank3, address3);
+		value3 = address3;
 	}
 
 	OpcodeSIN &sin = opcode().op().opcodeSIN;
@@ -926,7 +926,7 @@ Opcode ScriptEditorSinCosPage::buildOpcode()
 	sin.value1 = qint16(value1);
 	sin.value2 = qint16(value2);
 	sin.value3 = qint16(value3);
-	sin.var = adress4;
+	sin.var = address4;
 
 	return opcode();
 }

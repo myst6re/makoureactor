@@ -1,5 +1,5 @@
 ###############################################################################
-## Copyright (C) 2009-2021 Arzel Jérôme <myst6re@gmail.com>
+## Copyright (C) 2009-2022 Arzel Jérôme <myst6re@gmail.com>
 ## Copyright (C) 2020 Julian Xhokaxhiu <https://julianxhokaxhiu.com>
 ##
 ## This program is free software: you can redistribute it and/or modify
@@ -17,10 +17,10 @@
 ###############################################################################
 
 if(NOT DEFINED QT_VERSION_TO_FIND)
-    SET(QT_VERSION_TO_FIND 5)
+    SET(QT_VERSION_TO_FIND 6)
 endif()
 
-find_package(QT NAMES Qt5 Qt6 QUIET)
+find_package(QT NAMES Qt6 QUIET)
 
 # Auto-Detect Qt installation
 if(NOT QT_FOUND)

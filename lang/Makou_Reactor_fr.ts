@@ -1993,7 +1993,7 @@ Certains scripts peuvent y faire référence !</translation>
     </message>
     <message>
         <source>Perform no operation...</source>
-        <translation>Ne rien faire...</translation>
+        <translation type="vanished">Ne rien faire...</translation>
     </message>
     <message>
         <source>Scroll to playable character</source>
@@ -2205,10 +2205,6 @@ Certains scripts peuvent y faire référence !</translation>
     </message>
     <message>
         <source>PNAME - Disable right menu (%1, bank=%2, size=%3)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%1 = Game Speed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2926,7 +2922,7 @@ Certains scripts peuvent y faire référence !</translation>
     <message>
         <source>Numeric (000000)</source>
         <oldsource>Affichage numérique</oldsource>
-        <translation>Affichage numérique</translation>
+        <translation type="vanished">Affichage numérique</translation>
     </message>
     <message>
         <source>%2 in the window #%1 (left=%3, top=%4)</source>
@@ -3728,6 +3724,18 @@ Certains scripts peuvent y faire référence !</translation>
         <source>Game Over</source>
         <translation>Fin de partie</translation>
     </message>
+    <message>
+        <source>%1 = Field message speed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Numeric (00)</source>
+        <translation type="unfinished">Affichage numérique {00)?}</translation>
+    </message>
+    <message>
+        <source>Perform no operation</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OpcodeList</name>
@@ -3859,6 +3867,14 @@ Certains scripts peuvent y faire référence !</translation>
     <message>
         <source>the selected commands</source>
         <translation>les commandes sélectionnées</translation>
+    </message>
+    <message>
+        <source>option + Click to go to the label</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>option + Click to go to the script</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -6136,6 +6152,21 @@ id=%2
     </message>
 </context>
 <context>
+    <name>ScriptEditorSpecialPName</name>
+    <message>
+        <source>Var or value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bank</source>
+        <translation type="unfinished">Bank</translation>
+    </message>
+    <message>
+        <source>Size</source>
+        <translation type="unfinished">Taille</translation>
+    </message>
+</context>
+<context>
     <name>ScriptEditorUnaryOpPage</name>
     <message>
         <source>Increment (wrapped)</source>
@@ -6226,6 +6257,53 @@ id=%2
         <source>Relative Y</source>
         <oldsource>Y relatif</oldsource>
         <translation>Y relatif</translation>
+    </message>
+</context>
+<context>
+    <name>ScriptEditorWindowNumDisplayPage</name>
+    <message>
+        <source>None</source>
+        <translation type="unfinished">Aucun</translation>
+    </message>
+    <message>
+        <source>Numerical (00)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clock (00:00)</source>
+        <translation type="unfinished">Horloge</translation>
+    </message>
+    <message>
+        <source>Window ID</source>
+        <translation type="unfinished">Fenêtre ID</translation>
+    </message>
+    <message>
+        <source>Display Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Margin left</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Margin top</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Window in preview:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Window %1 (x: %2, y: %3, w: %4, h: %5)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>[Keep empty window]</source>
+        <translation type="obsolete">[Laisser la fenêtre vide]</translation>
+    </message>
+    <message>
+        <source>Text in preview:</source>
+        <translation type="unfinished">Texte en aperçu :</translation>
     </message>
 </context>
 <context>

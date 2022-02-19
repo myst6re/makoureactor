@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2021 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2022 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -23,14 +23,8 @@ ListWidget::ListWidget(QWidget *parent) :
 	setContextMenuPolicy(Qt::ActionsContextMenu);
 	setFixedWidth(120);
 
-#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
-	qreal scale = qApp->desktop()->physicalDpiX() / qApp->desktop()->logicalDpiX();
-#else
-	qreal scale = 1.0;
-#endif
-
 	_toolBar = new QToolBar(this);
-	_toolBar->setIconSize(QSize(int(scale * 16), int(scale * 16)));
+	_toolBar->setIconSize(QSize(16, 16));
 
 	_listWidget = new QListWidget(this);
 	_listWidget->setUniformItemSizes(true);

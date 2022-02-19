@@ -15,10 +15,48 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#include "FieldModelAnimation.h"
+#include "SystemColor.h"
 
-FieldModelAnimation::FieldModelAnimation()
+#if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5
+#import <AppKit/NSColor.h>
+
+#define nsToQColor(name) \
+	NSColor *color = [NSColor name]; \
+	NSColor *tmpColor = [color colorUsingColorSpaceName:NSCalibratedRGBColorSpace]; \
+	QColor ret; \
+	CGFloat red = 0, green = 0, blue = 0, alpha = 0; \
+	[tmpColor getRed:&red green:&green blue:&blue alpha:&alpha]; \
+	ret.setRgbF(float(red), float(green), float(blue), float(alpha)); \
+	return ret;
+
+QColor SystemColor::red()
 {
-	
+	nsToQColor(systemRedColor)
 }
 
+QColor SystemColor::blue()
+{
+	nsToQColor(systemBlueColor)
+}
+
+QColor SystemColor::green()
+{
+	nsToQColor(systemGreenColor)
+}
+
+QColor SystemColor::orange()
+{
+	nsToQColor(systemOrangeColor)
+}
+
+QColor SystemColor::purple()
+{
+	nsToQColor(systemPurpleColor)
+}
+
+QColor SystemColor::grey()
+{
+	nsToQColor(systemGrayColor)
+}
+
+#endif

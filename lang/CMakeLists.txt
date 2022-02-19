@@ -1,5 +1,5 @@
 ###############################################################################
-## Copyright (C) 2009-2021 Arzel Jérôme <myst6re@gmail.com>
+## Copyright (C) 2009-2022 Arzel Jérôme <myst6re@gmail.com>
 ## Copyright (C) 2020 Julian Xhokaxhiu <https://julianxhokaxhiu.com>
 ##
 ## This program is free software: you can redistribute it and/or modify
@@ -18,7 +18,7 @@
 
 set_directory_properties(PROPERTIES CLEAN_NO_CUSTOM 1)
 
-find_package(QT NAMES Qt5 Qt6 COMPONENTS LinguistTools)
+find_package(QT NAMES Qt6 COMPONENTS LinguistTools)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS LinguistTools)
 
 set(LANGS

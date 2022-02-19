@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2021 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2022 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -67,7 +67,7 @@ public:
 	bool searchTextP(const QRegularExpression &text, int &textID, qsizetype &from, qsizetype &index, qsizetype &size) const;
 	void setWindow(const FF7Window &win);
 	void listWindows(QMultiMap<quint64, FF7Window> &windows, QMultiMap<quint8, quint64> &text2win) const;
-	void listWindows(int textID, QList<FF7Window> &windows) const;
+	void listWindows(int textID, QList<FF7Window> &windows, int winID = -1) const;
 	void listModelPositions(QMultiMap<int, FF7Position> &positions) const;
 	int modelCount() const;
 	void linePosition(QMap<int, std::pair<FF7Position, FF7Position>> &positions) const;

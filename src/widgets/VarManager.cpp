@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2021 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2022 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -172,8 +172,8 @@ void VarManager::fillList1()
 
 void VarManager::fillList2()
 {
-	for (quint16 adressID=0; adressID<256; ++adressID) {
-		new QTreeWidgetItem(liste2, QStringList() << QString("%1").arg(adressID, 3));
+	for (quint16 addressID=0; addressID<256; ++addressID) {
+		new QTreeWidgetItem(liste2, QStringList() << QString("%1").arg(addressID, 3));
 	}
 
 	liste2->resizeColumnToContents(0);
@@ -226,18 +226,18 @@ void VarManager::scrollToList1(int bankID)
 	liste1->scrollToItem(liste1->item(row));
 }
 
-void VarManager::scrollToList2(int adressID)
+void VarManager::scrollToList2(int addressID)
 {
-	QTreeWidgetItem *item = findList2Item(adressID);
+	QTreeWidgetItem *item = findList2Item(addressID);
 	if (item) {
 		liste2->setCurrentItem(item);
 		liste2->scrollToItem(item);
 	}
 }
 
-QTreeWidgetItem *VarManager::findList2Item(int adressID)
+QTreeWidgetItem *VarManager::findList2Item(int addressID)
 {
-	QList<QTreeWidgetItem *> items = liste2->findItems(QString("%1").arg(adressID, 3), Qt::MatchExactly);
+	QList<QTreeWidgetItem *> items = liste2->findItems(QString("%1").arg(addressID, 3), Qt::MatchExactly);
 	if (items.isEmpty())	return nullptr;
 	return items.first();
 }

@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2021 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2022 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@
 #include "Data.h"
 #include "core/Config.h"
 #include "core/FF7Text.h"
+#include "core/SystemColor.h"
 
 QStringList Data::char_names;
 QStringList Data::item_names;
@@ -869,17 +870,17 @@ QColor Data::color(Color color)
 	case ColorEvidence:
 		return darkTheme ? qRgb(67, 67, 211) : qRgb(196, 196, 255);
 	case ColorRedForeground:
-		return darkTheme ? qRgb(0xF0, 0x90, 0x90) : qRgb(0xb0, 0x18, 0x18);
+		return SystemColor::red();
 	case ColorGreenForeground:
-		return darkTheme ? qRgb(0x00, 0xc6, 0x00) : qRgb(0x00, 0x68, 0x00);
+		return SystemColor::green();
 	case ColorBlueForeground:
-		return darkTheme ? qRgb(0x5E, 0xAF, 0xFF) : qRgb(0x00, 0x57, 0xAF);
+		return SystemColor::blue();
 	case ColorPurpleForeground:
-		return darkTheme ? qRgb(0xC9, 0x92, 0xFF) : qRgb(0x66, 0x00, 0xCC);
+		return SystemColor::purple();
 	case ColorOrangeForeground:
-		return darkTheme ? qRgb(0xFF, 0x8D, 0x1A) : qRgb(0x8C, 0x46, 0x00);
+		return SystemColor::orange();
 	case ColorGreyForeground:
-		return darkTheme ? qRgb(0xCC, 0xCC, 0xCC) : qRgb(0x59, 0x59, 0x59);
+		return SystemColor::grey();
 	case ColorDisabledForeground:
 		return darkTheme ? qRgb(0xAA, 0xAA, 0xAA) : qRgb(0xCC, 0xCC, 0xCC);
 	case ColorRedBackground:

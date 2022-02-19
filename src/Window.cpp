@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2021 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2022 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -129,17 +129,11 @@ Window::Window() :
 	connect(menuLang, &QMenu::triggered, this, &Window::changeLanguage);
 
 	menu->addAction(tr("&Configuration..."), this, &Window::config)->setMenuRole(QAction::PreferencesRole);
-	
-#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
-	qreal scale = qApp->desktop()->physicalDpiX() / qApp->desktop()->logicalDpiX();
-#else
-	qreal scale = 1.0;
-#endif
 
 	/* Toolbar */
 	toolBar = new QToolBar(tr("Main &toolbar"));
 	toolBar->setObjectName("toolbar");
-	toolBar->setIconSize(QSize(int(scale * 16), int(scale * 16)));
+	toolBar->setIconSize(QSize(16, 16));
 	addToolBar(toolBar);
 	toolBar->addAction(actionOpen);
 	actionOpen->setStatusTip(tr("Open a file"));
@@ -1529,10 +1523,10 @@ void Window::encounterManager()
 		EncounterFile *encounter = field->encounter();
 		if (encounter->isOpen()) {
 			EncounterWidget dialog(encounter, this);
-			if (dialog.exec()==QDialog::Accepted)
-			{
-				if (encounter->isModified())
-				setModified(true);
+			if (dialog.exec()==QDialog::Accepted) {
+				if (encounter->isModified()) {
+					setModified(true);
+				}
 			}
 		} else {
 			QMessageBox::warning(this, tr("Opening error"), tr("Can not open encounters!"));

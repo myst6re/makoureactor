@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2021 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2022 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -17,10 +17,16 @@
  ****************************************************************************/
 #pragma once
 
-#include <QtGlobal>
+#include <QtGui>
 
-#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
-#define QMultiHashIterator QHashIterator
-#define QMultiMapIterator QMapIterator
-#define QEnterEvent QEvent
-#endif
+class SystemColor
+{
+public:
+	static QColor red();
+	static QColor blue();
+	static QColor green();
+	static QColor orange();
+	static QColor purple();
+	static QColor grey();
+};
+

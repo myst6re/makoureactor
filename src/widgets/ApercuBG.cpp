@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2021 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2022 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -114,8 +114,6 @@ void ApercuBG::mouseReleaseEvent(QMouseEvent *e)
 
 void ApercuBG::resizeEvent(QResizeEvent *e)
 {
-	Q_UNUSED(e)
-
 	if (!_background.isNull() &&
 	        (pixmap().isNull() || contentsRect().size() != pixmap().size())) {
 		setUpdatesEnabled(false);

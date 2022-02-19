@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2021 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2022 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -25,16 +25,10 @@ OpcodeList::OpcodeList(QWidget *parent) :
     QTreeWidget(parent), _field(nullptr), _grpScript(nullptr), _script(nullptr), errorLine(-1),
     isInit(false), _treeEnabled(true)
 {
-#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
-	qreal scale = qApp->desktop()->physicalDpiX() / qApp->desktop()->logicalDpiX();
-#else
-	qreal scale = 1.0;
-#endif
-	
 	setColumnCount(1);
 	setHeaderLabels(QStringList(tr("Action")));
 	setAutoScroll(false);
-	setIconSize(QSize(int(scale * 32), int(scale * 11)));
+	setIconSize(QSize(32, 11));
 	setAlternatingRowColors(true);
 	setExpandsOnDoubleClick(false);
 	setContextMenuPolicy(Qt::CustomContextMenu);
@@ -143,7 +137,7 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	helpLayout->setContentsMargins(QMargins());
 	
 	_toolBar = new QToolBar(tr("&Script editor"));
-	_toolBar->setIconSize(QSize(int(scale * 14), int(scale * 14)));
+	_toolBar->setIconSize(QSize(14, 14));
 	_toolBar->setFloatable(false);
 	_toolBar->setAllowedAreas(Qt::NoToolBarArea);
 	_toolBar->setMovable(false);
@@ -280,10 +274,18 @@ void OpcodeList::itemSelected()
 	bool visible = true;
 	if (opcode.isJump()) {
 		goto_A->setText(tr("Goto label"));
+#ifndef Q_OS_MAC
 		_help->setText(tr("Alt + Click to go to the label"));
+#else
+		_help->setText(tr("option + Click to go to the label"));
+#endif
 	} else if (opcode.isExec()) {
 		goto_A->setText(tr("Goto script"));
+#ifndef Q_OS_MAC
 		_help->setText(tr("Alt + Click to go to the script"));
+#else
+		_help->setText(tr("option + Click to go to the script"));
+#endif
 	} else {
 		visible = false;
 	}

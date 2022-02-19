@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2021 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2022 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -1751,7 +1751,7 @@ bool Opcode::variables(QList<FF7Var> &vars) const
 		                  varCharID3, Byte | IsWritable, 3);
 	case OpcodeKey::SPECIAL:
 		switch (_opcode.opcodeSPECIAL.subKey) {
-		CaseOpcodeAddVarSpecial1(PNAME, var, Byte, 2);
+		CaseOpcodeAddVarSpecial1(PNAME, varOrValue, Byte, 2);
 		CaseOpcodeAddVarSpecial1(GMSPD, varSpeed, Byte | IsWritable, 2);
 		CaseOpcodeAddVarSpecial1(SMSPD, speed, Byte, 2);
 		}
@@ -2175,7 +2175,7 @@ QString Opcode::toStringSPECIALPNAME(const Section1File *scriptsAndTexts, const 
 {
 	Q_UNUSED(scriptsAndTexts)
 	return Opcode::tr("PNAME - Disable right menu (%1, bank=%2, size=%3)")
-	        .arg(_var(opcode.var, B1(opcode.banks)))
+	        .arg(_var(opcode.varOrValue, B1(opcode.banks)))
 	        .arg(B2(opcode.banks))
 	        .arg(opcode.size);
 }
@@ -2183,7 +2183,7 @@ QString Opcode::toStringSPECIALPNAME(const Section1File *scriptsAndTexts, const 
 QString Opcode::toStringSPECIALGMSPD(const Section1File *scriptsAndTexts, const OpcodeSPECIALGMSPD &opcode) const
 {
 	Q_UNUSED(scriptsAndTexts)
-	return Opcode::tr("%1 = Game Speed")
+	return Opcode::tr("%1 = Field message speed")
 	        .arg(_var(opcode.varSpeed, B2(opcode.banks)));
 }
 
@@ -2855,7 +2855,7 @@ QString Opcode::toStringWSPCL(const Section1File *scriptsAndTexts, const OpcodeW
 		windowNum = Opcode::tr("Clock (00:00)");
 		break;
 	case 0x02:
-		windowNum = Opcode::tr("Numeric (000000)");
+		windowNum = Opcode::tr("Numeric (00)");
 		break;
 	default:
 		windowNum = QString("%1?")
@@ -3355,7 +3355,7 @@ QString Opcode::toStringNOP(const Section1File *scriptsAndTexts, const OpcodeNOP
 {
 	Q_UNUSED(scriptsAndTexts)
 	Q_UNUSED(opcode)
-	return Opcode::tr("Perform no operation...");
+	return Opcode::tr("Perform no operation");
 }
 
 QString Opcode::toStringMAPJUMP(const Section1File *scriptsAndTexts, const OpcodeMAPJUMP &opcode) const
