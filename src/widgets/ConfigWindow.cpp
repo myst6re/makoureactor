@@ -167,17 +167,13 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	connect(kernelButton, &QPushButton::clicked, this, &ConfigWindow::changeKernelPath);
 	connect(windowButton, &QPushButton::clicked, this, &ConfigWindow::changeWindowPath);
 	connect(charButton, &QPushButton::clicked, this, &ConfigWindow::changeCharPath);
-	connect(windowPreview, &DialogPreview::LL_ColorChanged, this, [&] (const QColor &color){
-		windowColorBottomLeft = color.rgb();
-	});
-	connect(windowPreview, &DialogPreview::UL_ColorChanged, this, [&] (const QColor &color){
-		windowColorTopLeft = color.rgb();
-	});
-	connect(windowPreview, &DialogPreview::LR_ColorChanged, this, [&] (const QColor &color){
-		windowColorBottomRight = color.rgb();
-	});
-	connect(windowPreview, &DialogPreview::UR_ColorChanged, this, [&] (const QColor &color){
-		windowColorTopRight = color.rgb();
+	connect(windowPreview, &DialogPreview::colorChanged, this, [&] (DialogPreview::CORNER corner, const QColor &color) {
+		switch(corner) {
+			case DialogPreview::TOPLEFT: windowColorTopLeft = color.rgb(); break;
+			case DialogPreview::BOTTOMLEFT: windowColorBottomLeft = color.rgb(); break;
+			case DialogPreview::TOPRIGHT: windowColorTopRight = color.rgb(); break;
+			case DialogPreview::BOTTOMRIGHT: windowColorBottomRight = color.rgb(); break;
+		};
 	});
 	connect(windowColorReset, &QPushButton::clicked, this, &ConfigWindow::resetColor);
 	connect(listCharNames, &QComboBox::currentIndexChanged, this, &ConfigWindow::fillCharNameEdit);
@@ -256,10 +252,11 @@ void ConfigWindow::fillConfig()
 	encodings->setCurrentIndex(Config::value("jp_txt", false).toBool() ? 1 : 0);
 	expandedByDefault->setChecked(Config::value("scriptItemExpandedByDefault", false).toBool());
 
-	windowPreview->setULeft(windowColorTopLeft);
-	windowPreview->setURight(windowColorTopRight);
-	windowPreview->setLLeft(windowColorBottomLeft);
-	windowPreview->setLRight(windowColorBottomRight);
+
+	windowPreview->setColor(DialogPreview::TOPLEFT, windowColorTopLeft);
+	windowPreview->setColor(DialogPreview::TOPRIGHT, windowColorTopRight);
+	windowPreview->setColor(DialogPreview::BOTTOMLEFT, windowColorBottomLeft);
+	windowPreview->setColor(DialogPreview::BOTTOMRIGHT, windowColorBottomRight);
 
 	for (int charId=0; charId<9; ++charId) {
 		customNames << Config::value(QString("customCharName%1").arg(charId), Data::char_names.at(charId)).toString();
@@ -400,10 +397,10 @@ void ConfigWindow::resetColor()
 	windowColorTopRight = qRgb(0,0,80);
 	windowColorBottomLeft = qRgb(0,0,128);
 	windowColorBottomRight = qRgb(0,0,32);
-	windowPreview->setULeft(windowColorTopLeft);
-	windowPreview->setURight(windowColorTopRight);
-	windowPreview->setLLeft(windowColorBottomLeft);
-	windowPreview->setLRight(windowColorBottomRight);
+	windowPreview->setColor(DialogPreview::TOPLEFT, windowColorTopLeft);
+	windowPreview->setColor(DialogPreview::TOPRIGHT, windowColorTopRight);
+	windowPreview->setColor(DialogPreview::BOTTOMLEFT, windowColorBottomLeft);
+	windowPreview->setColor(DialogPreview::BOTTOMRIGHT, windowColorBottomRight);
 }
 
 void ConfigWindow::fillCharNameEdit()
