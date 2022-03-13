@@ -29,13 +29,13 @@ public:
 	inline void clear() override {
 		tutos.clear();
 	}
-	inline int size() const {
+	inline qsizetype size() const {
 		return tutos.size();
 	}
 	virtual int maxTutCount() const=0;
 	void removeTut(int tutID);
 	bool insertTut(int tutID);
-	inline const QByteArray &data(int tutID) const {
+	inline const QByteArray &data(qsizetype tutID) const {
 		return tutos.at(tutID);
 	}
 	void setData(int tutID, const QByteArray &data);
@@ -44,7 +44,7 @@ public:
 	inline const QList<QByteArray> &dataList() const {
 		return tutos;
 	}
-	virtual inline bool isTut(int tutID) const {
+	virtual inline bool isTut(qsizetype tutID) const {
 		Q_UNUSED(tutID)
 		return true;
 	}

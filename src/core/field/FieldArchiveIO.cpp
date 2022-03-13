@@ -22,7 +22,7 @@
 #include "Field.h"
 
 QByteArray FieldArchiveIO::fieldDataCache;
-Field *FieldArchiveIO::fieldCache=0;
+Field *FieldArchiveIO::fieldCache = nullptr;
 QString FieldArchiveIO::fieldExtensionCache;
 
 FieldArchiveIO::FieldArchiveIO(FieldArchive *fieldArchive) :
@@ -92,18 +92,20 @@ QByteArray FieldArchiveIO::fileData(const QString &fileName, bool unlzs)
 	QByteArray data = fileData2(fileName);
 
 	if (unlzs) {
-		if (data.size() < 4)		return QByteArray();
+		if (data.size() < 4) {
+			return QByteArray();
+		}
 
 		const char *lzsDataConst = data.constData();
 		quint32 lzsSize;
 		memcpy(&lzsSize, lzsDataConst, 4);
 
-		if ((quint32)data.size() != lzsSize + 4 && lzsSize == 0x90000) { // Maybe it is not compressed
+		if (quint32(data.size()) != lzsSize + 4 && lzsSize == 0x90000) { // Maybe it is not compressed
 			unlzs = false;
 		}
 
 		return unlzs
-			? LZS::decompressAll(lzsDataConst + 4, qMin(lzsSize, quint32(data.size() - 4)))
+			? LZS::decompressAll(lzsDataConst + 4, int(qMin(qsizetype(lzsSize), data.size() - 4)))
 			: data;
 	}
 	return data;
@@ -135,7 +137,7 @@ bool FieldArchiveIO::fieldDataIsCached(Field *field, const QString &fileType)
 void FieldArchiveIO::clearCachedData()
 {
 //	qDebug() << "FieldArchive::clearCachedData()";
-	fieldCache = 0;
+	fieldCache = nullptr;
 	fieldDataCache.clear();
 }
 
@@ -163,7 +165,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIO::save(const QString &path, ArchiveObser
 FieldArchiveIO::ErrorCode FieldArchiveIO::addField(const QString &fileName,
                                                    const QString &name)
 {
-	Q_UNUSED(fileName);
-	Q_UNUSED(name);
+	Q_UNUSED(fileName)
+	Q_UNUSED(name)
 	return NotImplemented;
 }

@@ -25,7 +25,7 @@ TutFile::TutFile(Field *field) :
 }
 
 TutFile::TutFile(const QList<QByteArray> &tutos) :
-	FieldPart(0), tutos(tutos)
+	FieldPart(nullptr), tutos(tutos)
 {
 	setOpen(true);
 }
@@ -33,7 +33,7 @@ TutFile::TutFile(const QList<QByteArray> &tutos) :
 bool TutFile::open(const QByteArray &data)
 {
 	QList<quint32> positions;
-	quint32 dataSize = data.size();
+	qsizetype dataSize = data.size();
 
 	positions = openPositions(data);
 	if (positions.isEmpty()) {
@@ -108,7 +108,7 @@ QString TutFile::parseScripts(int tutID, bool *warnings) const
 	}
 
 	while (i < size) {
-		quint8 key = tuto.at(i++);
+		quint8 key = quint8(tuto.at(i++));
 		switch (key) {
 		case 0x00:
 			if (i + 2 > size) {
@@ -294,7 +294,7 @@ bool TutFile::parseText(int tutID, const QString &tuto)
 				if (value > 255) {
 					value = 255;
 				}
-				ret.append((char)value);
+				ret.append(char(value));
 			}
 		} else { // Compatibility Makou Reactor <= v1.6
 			ret.append('\x10');

@@ -40,10 +40,10 @@ public:
 		_framesRot.clear();
 		_framesTrans.clear();
 	}
-	inline int frameCount() const {
+	inline qsizetype frameCount() const {
 		return _framesRot.size();
 	}
-	inline int boneCount() const {
+	inline qsizetype boneCount() const {
 		return isEmpty() ? 0 : rotations(0).size();
 	}
 	inline bool isEmpty() const {

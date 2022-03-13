@@ -76,7 +76,7 @@ bool Field::open(bool dontOptimize)
 			quint32 lzsSize;
 			memcpy(&lzsSize, lzsDataConst, 4);
 
-			if ((quint32)lzsData.size() != lzsSize + 4 && lzsSize == 0x90000) { // Maybe it is not compressed
+			if (quint32(lzsData.size()) != lzsSize + 4 && lzsSize == 0x90000) { // Maybe it is not compressed
 				fileData = lzsData;
 			} else {
 				fileData = LZS::decompress(lzsDataConst + 4, qMin(lzsSize, quint32(lzsData.size() - 4)), headerSize());//partial decompression
@@ -155,7 +155,7 @@ QByteArray Field::sectionData(FieldSection part, bool dontOptimize)
 		quint32 lzsSize;
 		memcpy(&lzsSize, lzsDataConst, 4);
 
-		if ((quint32)lzsData.size() != lzsSize + 4 && lzsSize == 0x90000) { // Maybe it is not compressed
+		if (quint32(lzsData.size()) != lzsSize + 4 && lzsSize == 0x90000) { // Maybe it is not compressed
 			data = lzsData;
 		} else {
 			data = LZS::decompress(lzsDataConst + 4, qMin(lzsSize, quint32(lzsData.size() - 4)), sectionPosition(idPart+1));
@@ -182,7 +182,7 @@ FieldPart *Field::createPart(FieldSection section)
 	case Encounter:		return new EncounterFile(this);
 	case Inf:			return new InfFile(this);
 	case Tiles:			return new BackgroundTilesFile(this);
-	default:			return 0;
+	default:			return nullptr;
 	}
 }
 
@@ -374,7 +374,7 @@ bool Field::save(QByteArray &newData, bool compress)
 
 	if (compress) {
 		const QByteArray &compresse = LZS::compress(newData);
-		quint32 lzsSize = compresse.size();
+		quint32 lzsSize = quint32(compresse.size());
 		newData = QByteArray((char *)&lzsSize, 4).append(compresse);
 	}
 
@@ -435,9 +435,9 @@ bool Field::importer(const QString &path, bool isDat, bool compressed, FieldSect
 
 bool Field::importModelLoader(const QByteArray &sectionData, bool isPSField, QIODevice *bsxDevice)
 {
-	Q_UNUSED(sectionData);
-	Q_UNUSED(isPSField);
-	Q_UNUSED(bsxDevice);
+	Q_UNUSED(sectionData)
+	Q_UNUSED(isPSField)
+	Q_UNUSED(bsxDevice)
 	return false;
 }
 

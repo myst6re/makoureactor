@@ -328,7 +328,7 @@ bool IsoArchiveFF7::updateBin(IsoFile *isoBin, const QList<IsoFile *> &filesRefB
 	QMapIterator<QByteArray, QByteArray> i(changesFieldBin);
 	while (i.hasNext()) {
 		i.next();
-		int count = copy.count(i.key());
+		qsizetype count = copy.count(i.key());
 		if (count == 0) {
 			qWarning() << "IsoArchiveFF7::updateBin" << isoBin->name() << "Error not found!" << i.key().toHex();
 #ifdef ISOARCHIVE_DEBUG

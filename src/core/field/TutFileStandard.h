@@ -33,8 +33,8 @@ public:
 	QByteArray save() const override;
 	inline int maxTutCount() const override { return 255; }
 	bool hasTut() const;
-	bool isTut(int tutID) const override;
-	bool isAkao(int tutID) const;
+	bool isTut(qsizetype tutID) const override;
+	bool isAkao(qsizetype tutID) const;
 	bool isBroken(int tutID) const override;
 	bool canBeRepaired(int tutID) const override;
 	bool repair(int tutID) override;

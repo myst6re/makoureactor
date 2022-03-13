@@ -38,7 +38,7 @@ bool PsfTags::open(const QString &config)
 
 	QStringList entries = config.mid(5).split('\n', Qt::SkipEmptyParts);
 	for (const QString &entry : qAsConst(entries)) {
-		int index = entry.indexOf('=');
+		qsizetype index = entry.indexOf('=');
 
 		if (index >= 0) {
 			QString name = entry.left(index),
@@ -136,7 +136,7 @@ bool PsfFile::open(const QByteArray &data)
 	memcpy(sizes, data.constData() + 4, 3 * sizeof(quint32));
 
 	_special = data.mid(16, sizes[0]);
-	_data = GZIP::decompressNoHeader(data.constData() + 16 + sizes[0], sizes[1]);
+	_data = GZIP::decompressNoHeader(data.constData() + 16 + sizes[0], int(sizes[1]));
 
 	return _tags.open(QString::fromLatin1(data.constData() + 16 + sizes[0] + sizes[1]));
 }
@@ -147,13 +147,13 @@ QByteArray PsfFile::save() const
 	quint8 version = 1;
 	data.append("PSF").append(char(version));
 
-	QByteArray compressedData = GZIP::compressNoHeader(_data.constData(), _data.size());
+	QByteArray compressedData = GZIP::compressNoHeader(_data.constData(), int(_data.size()));
 
-	quint32 specialSize = _special.size();
+	quint32 specialSize = quint32(_special.size());
 	data.append((char *)&specialSize, 4);
-	quint32 dataSize = compressedData.size();
+	quint32 dataSize = quint32(compressedData.size());
 	data.append((char *)&dataSize, 4);
-	quint32 crc = GZIP::crc(compressedData.constData(), compressedData.size());
+	quint32 crc = GZIP::crc(compressedData.constData(), int(compressedData.size()));
 	data.append((char *)&crc, 4);
 
 	data.append(_special);
@@ -165,7 +165,7 @@ QByteArray PsfFile::save() const
 
 QByteArray PsfFile::akao() const
 {
-	int index = _data.indexOf("AKAO");
+	qsizetype index = _data.indexOf("AKAO");
 	if (index >= 0) {
 		return _data.mid(index);
 	}

@@ -32,8 +32,8 @@ public:
 
 	void clear() override;
 
-	const FieldPC *field(quint32 id) const;
-	FieldPC *field(quint32 id, bool open=true, bool dontOptimize=false);
+	const FieldPC *field(int id) const;
+	FieldPC *field(int id, bool open=true, bool dontOptimize=false);
 
 	TutFilePC *tut(const QString &name);
 	const QMap<QString, TutFilePC *> &tuts() const;

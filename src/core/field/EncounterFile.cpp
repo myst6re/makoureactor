@@ -55,7 +55,7 @@ bool EncounterFile::open(const QByteArray &data)
 
 QByteArray EncounterFile::save() const
 {
-	return QByteArray((char *)&tables, sizeof(EncounterTable) * 2);
+	return QByteArray((const char *)&tables, sizeof(EncounterTable) * 2);
 }
 
 void EncounterFile::clear()
@@ -65,24 +65,24 @@ void EncounterFile::clear()
 
 const EncounterTable &EncounterFile::encounterTable(Table tableID) const
 {
-	return tables[(int)tableID];
+	return tables[int(tableID)];
 }
 
 void EncounterFile::setEncounterTable(Table tableID, const EncounterTable &table)
 {
-	tables[(int)tableID] = table;
+	tables[int(tableID)] = table;
 	setModified(true);
 }
 
 bool EncounterFile::isBattleEnabled(Table tableID) const
 {
-	return tables[(int)tableID].enabled;
+	return tables[int(tableID)].enabled;
 }
 
 void EncounterFile::setBattleEnabled(Table tableID, bool enabled)
 {
-	if (tables[(int)tableID].enabled != quint8(enabled)) {
-		tables[(int)tableID].enabled = enabled;
+	if (tables[int(tableID)].enabled != quint8(enabled)) {
+		tables[int(tableID)].enabled = enabled;
 		setModified(true);
 	}
 }

@@ -943,7 +943,7 @@ Some scripts can refer to it!</source>
         <source>Sounds/Tutorials</source>
         <oldsource>Musiques/Tutoriels</oldsource>
         <translatorcomment>Sounds/Tutorials</translatorcomment>
-        <translation type="unfinished">サウンド/解説</translation>
+        <translation type="obsolete">サウンド/解説</translation>
     </message>
     <message>
         <source>Camera</source>
@@ -1015,6 +1015,10 @@ Some scripts can refer to it!</source>
     <message>
         <source>Select the associated MIM file</source>
         <oldsource>Sélectionner le fichier MIM associé</oldsource>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Musics/Tutorials</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1356,11 +1360,6 @@ Some scripts can refer to it!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Import sounds</source>
-        <oldsource>Importer les sons</oldsource>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>AKAO sound</source>
         <oldsource>Son AKAO</oldsource>
         <translation type="unfinished"></translation>
@@ -1423,6 +1422,10 @@ Some scripts can refer to it!</source>
     </message>
     <message>
         <source>PS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import musics</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -6408,7 +6411,7 @@ Are you sure you want to continue?</source>
         <source>Tutorials/Sounds</source>
         <oldsource>Tutoriels/Musiques</oldsource>
         <translatorcomment>Tutorials/Sounds</translatorcomment>
-        <translation type="unfinished">解説/サウンド</translation>
+        <translation type="obsolete">解説/サウンド</translation>
     </message>
     <message>
         <source>Import...</source>
@@ -6555,6 +6558,10 @@ Are you sure you want to continue?</source>
     </message>
     <message>
         <source>Tuto Final Fantasy VII PS (*.tutps)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tutorials/Musics</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -7072,7 +7079,7 @@ Are you sure you want to continue?</source>
     </message>
     <message>
         <source>Tutorials/&amp;Sounds...</source>
-        <translation type="unfinished">解説/サウンド(&amp;S)...</translation>
+        <translation type="obsolete">解説/サウンド(&amp;S)...</translation>
     </message>
     <message>
         <source>&amp;Walkmesh...</source>
@@ -7249,10 +7256,6 @@ Edited files:</source>
         <translation type="unfinished">エラー</translation>
     </message>
     <message>
-        <source>&amp;Export the current map...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>&amp;Import to current map...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7427,6 +7430,14 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
     <message>
         <source>Close</source>
         <translation type="obsolete">閉じる</translation>
+    </message>
+    <message>
+        <source>Tutorials/Mu&amp;sics...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Save the current map...</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

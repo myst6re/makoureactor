@@ -51,7 +51,7 @@ bool InfFile::open()
 
 bool InfFile::open(const QByteArray &data)
 {
-	quint32 size = data.size();
+	qsizetype size = data.size();
 
 	if (sizeof(InfData) != 740) {
 		qWarning() << "Error InfData" << sizeof(InfData) << "must be 740";
@@ -68,7 +68,7 @@ bool InfFile::open(const QByteArray &data)
 	}
 
 	this->data = InfData();
-	memcpy(&this->data, data.constData(), size);
+	memcpy(&this->data, data.constData(), size_t(size));
 	this->data.name[8] = '\x00';
 
 	setOpen(true);

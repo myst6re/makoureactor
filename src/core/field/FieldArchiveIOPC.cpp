@@ -57,7 +57,7 @@ Archive *FieldArchiveIOPCLgp::device()
 
 QByteArray FieldArchiveIOPCLgp::fieldData2(Field *field, const QString &extension, bool unlzs)
 {
-	Q_UNUSED(extension);
+	Q_UNUSED(extension)
 	return fileData(field->name(), unlzs);
 }
 

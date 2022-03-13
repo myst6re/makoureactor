@@ -41,7 +41,7 @@ CharArchive::~CharArchive()
 	}
 }
 
-CharArchive *CharArchive::_instance = 0;
+CharArchive *CharArchive::_instance = nullptr;
 
 CharArchive *CharArchive::instance()
 {
@@ -120,7 +120,7 @@ bool CharArchive::openAnimBoneCount()
 					continue;
 				}
 
-				_animBoneCount.insert(header.boneCount, fileName.left(fileName.size()-2).toUpper());
+				_animBoneCount.insert(int(header.boneCount), fileName.left(fileName.size()-2).toUpper());
 			} else {
 				return false;
 			}

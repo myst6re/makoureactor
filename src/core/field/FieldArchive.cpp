@@ -470,7 +470,7 @@ void FieldArchive::printAkaos(const QString &filename)
 
 		TutFileStandard *tutosAndSounds = f->tutosAndSounds();
 		if (!tutosAndSounds->isOpen()) {
-			qWarning() << "FieldArchive::printAkaos: cannot open tutos and sounds" << name;
+			qWarning() << "FieldArchive::printAkaos: cannot open tutos and musics" << name;
 		}
 
 		for (int akaoID=0; akaoID < tutosAndSounds->size(); ++akaoID) {
@@ -510,7 +510,7 @@ void FieldArchive::printModelLoaders(const QString &filename, bool generic)
 
 		FieldModelLoader *modelLoader = f->fieldModelLoader();
 		if (!modelLoader->isOpen()) {
-			qWarning() << "FieldArchive::printModelLoaders: cannot open tutos and sounds" << name;
+			qWarning() << "FieldArchive::printModelLoaders: cannot open tutos and musics" << name;
 			continue;
 		}
 
@@ -1827,7 +1827,7 @@ bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &
 			if (toExport.contains(Akaos)) {
 				TutFileStandard *akaoList = f->tutosAndSounds();
 				if (akaoList->isOpen()) {
-					int akaoCount = akaoList->size();
+					int akaoCount = int(akaoList->size());
 					for (int i=0; i<akaoCount; ++i) {
 						if (!akaoList->isTut(i)) {
 							extension = toExport.value(Akaos);

@@ -28,7 +28,7 @@ MassImportDialog::MassImportDialog(QWidget *parent) :
 				   new FormatSelectionWidget(tr("Import fields"),
 											 QStringList(), this));
 	imports.insert(Akaos,
-				   new FormatSelectionWidget(tr("Import sounds"),
+				   new FormatSelectionWidget(tr("Import musics"),
 											 QStringList() <<
 											 tr("AKAO sound") + ";;akao", this));
 	imports.insert(Texts,

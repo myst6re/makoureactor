@@ -232,7 +232,7 @@ bool FF7Font::listFonts()
 	fonts.insert("01", jpFont);
 
 	for (const QString &str : qAsConst(stringList)) {
-		int index = str.lastIndexOf('.');
+		qsizetype index = str.lastIndexOf('.');
 		fonts.insert(str.left(index), nullptr);
 	}
 
@@ -434,7 +434,8 @@ QSize FF7Font::calcSize(const QByteArray &ff7Text, QList<int> &pagesPos)
 	}
 
 	const int baseWidth = 8 + Config::value("autoSizeMarginRight", 14).toInt();
-	int line=0, width=baseWidth - 3, height=25, size=ff7Text.size(), maxW=0, maxH=0;
+	int line=0, width=baseWidth - 3, height=25, maxW=0, maxH=0;
+	qsizetype size=ff7Text.size();
 	pagesPos.clear();
 	pagesPos.append(0);
 	bool jp = Config::value("jp_txt", false).toBool(), spaced_characters=false;
@@ -443,7 +444,7 @@ QSize FF7Font::calcSize(const QByteArray &ff7Text, QList<int> &pagesPos)
 	    tabW = Config::value("tabWidth", 4).toInt();
 
 	for (int i=0; i<size; ++i) {
-		quint8 caract = (quint8)ff7Text.at(i);
+		quint8 caract = quint8(ff7Text.at(i));
 		if (caract==0xff) break;
 		switch (caract) {
 		case 0xe8: // New Page
@@ -465,7 +466,7 @@ QSize FF7Font::calcSize(const QByteArray &ff7Text, QList<int> &pagesPos)
 			break;
 		case 0xfa: // Jap 1
 			++i;
-			caract = (quint8)ff7Text.at(i);
+			caract = quint8(ff7Text.at(i));
 			if (jp) {
 				width += spaced_characters ? spacedCharsW : charFullWidth(2, caract);
 			} else if (caract < 0xd2) {
@@ -475,28 +476,28 @@ QSize FF7Font::calcSize(const QByteArray &ff7Text, QList<int> &pagesPos)
 		case 0xfb: // Jap 2
 			++i;
 			if (jp) {
-				caract = (quint8)ff7Text.at(i);
+				caract = quint8(ff7Text.at(i));
 				width += spaced_characters ? spacedCharsW : charFullWidth(3, caract);
 			}
 			break;
 		case 0xfc: // Jap 3
 			++i;
 			if (jp) {
-				caract = (quint8)ff7Text.at(i);
+				caract = quint8(ff7Text.at(i));
 				width += spaced_characters ? spacedCharsW : charFullWidth(4, caract);
 			}
 			break;
 		case 0xfd: // Jap 4
 			++i;
 			if (jp) {
-				caract = (quint8)ff7Text.at(i);
+				caract = quint8(ff7Text.at(i));
 				width += spaced_characters ? spacedCharsW : charFullWidth(5, caract);
 			}
 			break;
 		case 0xfe: // Jap 5 + add
 			++i;
 			if (i >= size)		break;
-			caract = (quint8)ff7Text.at(i);
+			caract = quint8(ff7Text.at(i));
 			if (caract == 0xdd)
 				++i;
 			else if (caract == 0xde || caract == 0xdf || caract == 0xe1) { // {VARHEX}, {VARDEC}, {VARDECR}
@@ -519,8 +520,8 @@ QSize FF7Font::calcSize(const QByteArray &ff7Text, QList<int> &pagesPos)
 				width += spaced_characters ? spacedCharsW * tabW : 3 * tabW;
 			} else if (!jp && caract>=0xe2 && caract<=0xe4) {// duo
 				const char *duo = optimisedDuo[caract-0xe2];
-				width += spaced_characters ? spacedCharsW : charFullWidth(1, (quint8)duo[0]);
-				width += spaced_characters ? spacedCharsW : charFullWidth(1, (quint8)duo[1]);
+				width += spaced_characters ? spacedCharsW : charFullWidth(1, quint8(duo[0]));
+				width += spaced_characters ? spacedCharsW : charFullWidth(1, quint8(duo[1]));
 			} else if (caract>=0xea && caract<=0xf5) {// Character names
 				width += (spaced_characters ? spacedCharsW : biggestCharWidth) * 9;
 			} else if (caract>=0xf6 && caract<=0xf9) {// Keys
@@ -548,7 +549,7 @@ quint8 FF7Font::charW(int tableId, int charId)
 {
 	return Data::windowBin.isValid() &&
 	               (tableId != 0 || !Data::windowBin.isJp())
-	           ? Data::windowBin.charWidth(tableId == 0 ? 0 : tableId - 1, charId)
+	           ? Data::windowBin.charWidth(tableId == 0 ? 0 : quint8(tableId) - 1, quint8(charId))
 	           : CHARACTER_WIDTH(charWidth[tableId][charId]);
 }
 
@@ -556,7 +557,7 @@ quint8 FF7Font::leftPadding(int tableId, int charId)
 {
 	return Data::windowBin.isValid() &&
 	               (tableId != 0 || !Data::windowBin.isJp())
-	           ? Data::windowBin.charLeftPadding(tableId == 0 ? 0 : tableId - 1, charId)
+	           ? Data::windowBin.charLeftPadding(tableId == 0 ? 0 : quint8(tableId) - 1, quint8(charId))
 	           : LEFT_PADD(charWidth[tableId][charId]);
 }
 

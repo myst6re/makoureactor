@@ -24,8 +24,8 @@
 
 QByteArray FieldArchiveIOPS::mimDataCache;
 QByteArray FieldArchiveIOPS::modelDataCache;
-Field *FieldArchiveIOPS::mimCache=0;
-Field *FieldArchiveIOPS::modelCache=0;
+Field *FieldArchiveIOPS::mimCache = nullptr;
+Field *FieldArchiveIOPS::modelCache = nullptr;
 
 FieldArchiveIOPS::FieldArchiveIOPS(FieldArchivePS *fieldArchive) :
 	FieldArchiveIO(fieldArchive)
@@ -78,8 +78,8 @@ bool FieldArchiveIOPS::modelDataIsCached(Field *field)
 
 void FieldArchiveIOPS::clearCachedData()
 {
-	mimCache = 0;
-	modelCache = 0;
+	mimCache = nullptr;
+	modelCache = nullptr;
 	mimDataCache.clear();
 	modelDataCache.clear();
 	FieldArchiveIO::clearCachedData();
@@ -223,7 +223,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSFile::save2(const QString &path0, Arch
 }
 
 FieldArchiveIOPSIso::FieldArchiveIOPSIso(const QString &path, FieldArchivePS *fieldArchive) :
-	FieldArchiveIOPS(fieldArchive), iso(path), isoFieldDirectory(0)
+	FieldArchiveIOPS(fieldArchive), iso(path), isoFieldDirectory(nullptr)
 {
 }
 

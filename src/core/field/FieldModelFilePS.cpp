@@ -25,7 +25,7 @@
 
 FieldModelFilePS::FieldModelFilePS() :
 	FieldModelFile(),
-    _currentField(0), _currentModelID(-1),
+    _currentField(nullptr), _currentModelID(-1),
     _scale(0), _isModified(false)
 {
 }

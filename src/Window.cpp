@@ -68,7 +68,7 @@ Window::Window() :
 	fileMenu->addMenu(_recentMenu);
 	actionSave = fileMenu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton), tr("&Save"), this, &Window::save, QKeySequence("Ctrl+S"));
 	actionSaveAs = fileMenu->addAction(tr("Save &As..."), this, &Window::saveAs, QKeySequence("Shift+Ctrl+S"));
-	actionExport = fileMenu->addAction(tr("&Export the current map..."), this, &Window::exportCurrentMap, QKeySequence("Ctrl+E"));
+	actionExport = fileMenu->addAction(tr("&Save the current map..."), this, &Window::exportCurrentMap, QKeySequence("Ctrl+E"));
 	actionMassExport = fileMenu->addAction(tr("&Mass Export..."), this, &Window::massExport, QKeySequence("Shift+Ctrl+E"));
 	actionImport = fileMenu->addAction(tr("&Import to current map..."), this, &Window::importToCurrentMap, QKeySequence("Ctrl+I"));
 //	actionMassImport = fileMenu->addAction(tr("Mass &import..."), this, &Window::massImport, QKeySequence("Shift+Ctrl+I"));
@@ -87,7 +87,7 @@ Window::Window() :
 	QAction *actionText = menu->addAction(QIcon(":/images/text-editor.png"), tr("&Texts..."), this, [&] {textManager(-1, 0, 0, true);}, QKeySequence("Ctrl+T"));
 	actionModels = menu->addAction(QIcon(":/images/model.png"), tr("Map &Models..."), this, &Window::modelManager, QKeySequence("Ctrl+M"));
 	actionEncounter = menu->addAction(tr("Encounte&rs..."), this, &Window::encounterManager, QKeySequence("Ctrl+N"));
-	menu->addAction(tr("Tutorials/&Sounds..."), this, &Window::tutManager, QKeySequence("Ctrl+K"));
+	menu->addAction(tr("Tutorials/Mu&sics..."), this, &Window::tutManager, QKeySequence("Ctrl+K"));
 	QAction *actionWalkmesh = menu->addAction(QIcon(":/images/location.png"), tr("&Walkmesh..."), this, &Window::walkmeshManager, QKeySequence("Ctrl+W"));
 	menu->addAction(QIcon(":/images/background.png"), tr("&Background..."), this, &Window::backgroundManager, QKeySequence("Ctrl+B"));
 	actionMisc = menu->addAction(tr("M&iscellaneous..."), this, &Window::miscManager);

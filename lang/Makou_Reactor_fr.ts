@@ -968,7 +968,7 @@ Certains scripts peuvent y faire référence !</translation>
     <message>
         <source>Sounds/Tutorials</source>
         <oldsource>Musiques/Tutoriels</oldsource>
-        <translation>Musiques/Tutoriels</translation>
+        <translation type="vanished">Musiques/Tutoriels</translation>
     </message>
     <message>
         <source>Camera</source>
@@ -1039,6 +1039,10 @@ Certains scripts peuvent y faire référence !</translation>
         <source>MIM File (*.MIM);;All Files (*)</source>
         <oldsource>MIM File (*.MIM);;All Files(*)</oldsource>
         <translation>Fichier MIM (*.MIM);;Tous les fichiers (*)</translation>
+    </message>
+    <message>
+        <source>Musics/Tutorials</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1497,7 +1501,7 @@ Certains scripts peuvent y faire référence !</translation>
     <message>
         <source>Import sounds</source>
         <oldsource>Importer les sons</oldsource>
-        <translation>Importer les sons</translation>
+        <translation type="vanished">Importer les sons</translation>
     </message>
     <message>
         <source>AKAO sound</source>
@@ -1568,6 +1572,10 @@ Certains scripts peuvent y faire référence !</translation>
         <source>Choose a directory</source>
         <oldsource>Choisir un dossier</oldsource>
         <translation>Choisir un dossier</translation>
+    </message>
+    <message>
+        <source>Import musics</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -6961,7 +6969,7 @@ Le supprimer remplacera les appels à ce texte par des appels au texte qui suit.
     <message>
         <source>Tutorials/Sounds</source>
         <oldsource>Tutoriels/Musiques</oldsource>
-        <translation>Tutoriels/Musiques</translation>
+        <translation type="vanished">Tutoriels/Musiques</translation>
     </message>
     <message>
         <source>Add</source>
@@ -7114,6 +7122,10 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
         <source>Export</source>
         <oldsource>Exporter</oldsource>
         <translation>Exporter</translation>
+    </message>
+    <message>
+        <source>Tutorials/Musics</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -7617,7 +7629,7 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
     <message>
         <source>Tutorials/&amp;Sounds...</source>
         <oldsource>T&amp;utoriels/Musiques...</oldsource>
-        <translation>T&amp;utoriels/Musiques...</translation>
+        <translation type="vanished">T&amp;utoriels/Musiques...</translation>
     </message>
     <message>
         <source>&amp;Background...</source>
@@ -7675,7 +7687,7 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
     </message>
     <message>
         <source>&amp;Export the current map...</source>
-        <translation>&amp;Exporter l&apos;écran courant...</translation>
+        <translation type="vanished">&amp;Exporter l&apos;écran courant...</translation>
     </message>
     <message>
         <source>&amp;Import to current map...</source>
@@ -8102,6 +8114,14 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
         <source>Import a file</source>
         <oldsource>Importer un fichier</oldsource>
         <translation>Importer un fichier</translation>
+    </message>
+    <message>
+        <source>Tutorials/Mu&amp;sics...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Save the current map...</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

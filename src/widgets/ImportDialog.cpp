@@ -24,7 +24,7 @@ ImportDialog::ImportDialog(bool sourceSameTypeAsTarget, bool isDat, const QStrin
 
 	QGroupBox *group = new QGroupBox(tr("Import"));
 	scripts = new QCheckBox(tr("Scripts/Texts"));
-	akaos = new QCheckBox(tr("Sounds/Tutorials"));
+	akaos = new QCheckBox(tr("Musics/Tutorials"));
 	ca = new QCheckBox(tr("Camera"));
 	id = new QCheckBox(tr("Walkmesh"));
 	encounter = new QCheckBox(tr("Encounters"));

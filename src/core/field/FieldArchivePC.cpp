@@ -63,12 +63,12 @@ void FieldArchivePC::clear()
 	FieldArchive::clear();
 }
 
-const FieldPC *FieldArchivePC::field(quint32 id) const
+const FieldPC *FieldArchivePC::field(int id) const
 {
 	return static_cast<const FieldPC *>(FieldArchive::field(id));
 }
 
-FieldPC *FieldArchivePC::field(quint32 id, bool open, bool dontOptimize)
+FieldPC *FieldArchivePC::field(int id, bool open, bool dontOptimize)
 {
 	return static_cast<FieldPC *>(FieldArchive::field(id, open, dontOptimize));
 }

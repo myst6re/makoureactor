@@ -37,7 +37,7 @@ QList<quint32> TutFileStandard::openPositions(const QByteArray &data) const
 {
 	const char *constData = data.constData();
 	QList<quint32> positions;
-	quint32 dataSize = data.size(), posAKAO, posAKAOList;
+	quint32 dataSize = quint32(data.size()), posAKAO, posAKAOList;
 	quint16 version, nbAKAO;
 	quint8 nbEntity;
 	bool isDemo;
@@ -50,7 +50,7 @@ QList<quint32> TutFileStandard::openPositions(const QByteArray &data) const
 
 	isDemo = version == 0x0301; // Check version format
 
-	nbEntity = constData[2];
+	nbEntity = quint8(constData[2]);
 	memcpy(&nbAKAO, constData + 6, 2);
 
 	posAKAOList = (isDemo ? 24 : 32) + nbEntity*8;
@@ -77,7 +77,7 @@ QByteArray TutFileStandard::save(QByteArray &toc, quint32 firstPos) const
 	toc.clear();
 
 	for (const QByteArray &tuto : dataList()) {
-		pos = firstPos + ret.size();
+		pos = firstPos + quint32(ret.size());
 		toc.append((char *)&pos, 4);
 		ret.append(tuto);
 		// 4 bytes aligned (not for tutos, only for AKAO)
@@ -97,19 +97,21 @@ QByteArray TutFileStandard::save() const
 
 bool TutFileStandard::hasTut() const
 {
-	int size = this->size();
-	for (int i=0; i<size; ++i) {
-		if (isTut(i))	return true;
+	qsizetype size = this->size();
+	for (qsizetype i = 0; i < size; ++i) {
+		if (isTut(i)) {
+			return true;
+		}
 	}
 	return false;
 }
 
-bool TutFileStandard::isTut(int tutID) const
+bool TutFileStandard::isTut(qsizetype tutID) const
 {
 	return !isAkao(tutID);
 }
 
-bool TutFileStandard::isAkao(int tutID) const
+bool TutFileStandard::isAkao(qsizetype tutID) const
 {
 	return data(tutID).startsWith("AKAO")/* || !field()->scriptsAndTexts()->listUsedTuts().contains(tutID) */;
 }
@@ -121,7 +123,7 @@ bool TutFileStandard::isBroken(int tutID) const
 	}
 	const QByteArray &d = data(tutID);
 	if (!d.isEmpty()) {
-		quint8 firstChar = d.at(0);
+		quint8 firstChar = quint8(d.at(0));
 		return firstChar > 0x12 && firstChar < 0xFF;
 	}
 	return false;

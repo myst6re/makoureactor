@@ -185,7 +185,7 @@ jobs:
        repo_token: "${{ secrets.GITHUB_TOKEN }}"
        automatic_release_tag: "continuous"
        prerelease: true
-       title: "Continuous Build"
+       title: "Unstable Build"
        files: artifact/*
 
   release_assets:
@@ -197,6 +197,10 @@ jobs:
     steps:
     - name: Download Files
       uses: actions/download-artifact@v2
+
+    - name: Prepare Upload
+      shell: bash
+      run: find . -type f -name 'makoureactor-continuous-*' -exec bash -c 'mv "{}" $(echo {} | sed 's/continuous-//')' ';'
 
     - name: Deploy Package
       uses: "marvinpinto/action-automatic-releases@latest"

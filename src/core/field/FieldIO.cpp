@@ -48,7 +48,7 @@ qint64 FieldSaveIO::readData(char *data, qint64 maxSize)
 		const char *constData = _cache.constData();
 		qint64 r = qMin(maxSize, _cache.size() - pos());
 		if (r > 0) {
-			memcpy(data, constData + pos(), r);
+			memcpy(data, constData + pos(), size_t(r));
 			return r;
 		} else if (r == 0) {
 			return 0;

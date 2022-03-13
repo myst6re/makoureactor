@@ -63,7 +63,7 @@ bool PaletteIO::write(const Palettes &palettes) const
 		return false;
 	}
 
-	const quint16 palW = 256, palH = palettes.size();
+	const quint16 palW = 256, palH = quint16(palettes.size());
 	const quint32 size = 12 + 512 * palH;
 	const quint16 palX = 0, palY = 480;
 

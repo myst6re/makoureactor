@@ -332,6 +332,28 @@ void FF7Text::setText(const QString &string, bool jp)
 
 			continue;
 		}
+		else if (!jp)
+		{
+			QStringView rest = stringView.mid(c);
+			if (rest.startsWith(QStringLiteral(", "))) {
+				_data.append(char(0xe2));
+				c += 1;
+				
+				continue;
+			}
+			else if (rest.startsWith(QStringLiteral(".\""))) {
+				_data.append(char(0xe3));
+				c += 1;
+				
+				continue;
+			}
+			else if (rest.startsWith(QStringLiteral("…\""))) {
+				_data.append(char(0xe4));
+				c += 1;
+				
+				continue;
+			}
+		}
 
 		for (i = 0x00; i <= 0xfe; ++i) {
 			if (QString::compare(comp, getCaract(i, jp ? 2 : 0)) == 0) {

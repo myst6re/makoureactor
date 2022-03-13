@@ -49,7 +49,7 @@ bool TimFile::open(const QByteArray &data)
 	quint16 w, h;
 	const char *constData = data.constData();
 	bool hasPal;
-	int dataSize = data.size();
+	qsizetype dataSize = data.size();
 
 	if (!data.startsWith(QByteArray("\x10\x00\x00\x00", 4)) || dataSize < 8) {
 		return false;
@@ -57,8 +57,8 @@ bool TimFile::open(const QByteArray &data)
 
 //	quint8 tag = (quint8)data.at(0);
 //	quint8 version = (quint8)data.at(1);
-	bpp = (quint8)data.at(4) & 3;
-	hasPal = ((quint8)data.at(4) >> 3) & 1;
+	bpp = quint8(data.at(4)) & 3;
+	hasPal = (quint8(data.at(4)) >> 3) & 1;
 
 //	qDebug() << QString("=== Apercu TIM ===");
 //	qDebug() << QString("Tag = %1, version = %2, reste = %3").arg(tag).arg(version).arg(QString(data.mid(2,2).toHex()));
@@ -79,7 +79,7 @@ bool TimFile::open(const QByteArray &data)
 		memcpy(&palY, &constData[14], 2);
 		memcpy(&palW, &constData[16], 2);
 		memcpy(&palH, &constData[18], 2);
-		if ((quint32)dataSize < 8+palSize/* || palSize != (quint32)palW*palH*2+12*/)
+		if (quint32(dataSize) < 8+palSize/* || palSize != (quint32)palW*palH*2+12*/)
 			return false;
 
 		quint16 onePalSize = (bpp==0 ? 16 : 256);
@@ -125,7 +125,7 @@ bool TimFile::open(const QByteArray &data)
 //		qDebug() << QString("NbPal = %1 (valid : %2)").arg(nbPal).arg((palSize-12)%(onePalSize*2));
 	}
 
-	if ((quint32)dataSize < 20+palSize)
+	if (quint32(dataSize) < 20+palSize)
 		return false;
 
 	memcpy(&sizeImgSection, &constData[8+palSize], 4);
@@ -151,19 +151,19 @@ bool TimFile::open(const QByteArray &data)
 	quint32 x=0, y=0;
 
 	if (bpp!=0) {
-		size = qMin((quint32)(12 + w*h*bpp), dataSize - 8 - palSize);
+		size = qMin(12 + w*h*bpp, int(dataSize - 8 - palSize));
 	} else {
-		size = qMin((quint32)(12 + w/2*h), dataSize - 8 - palSize);
+		size = qMin(12 + w/2*h, int(dataSize - 8 - palSize));
 	}
 
-	if (8 + palSize + size > (quint32)dataSize)
+	if (8 + palSize + size > quint32(dataSize))
 		return false;
 
 	if (bpp==0)//mag176, icon
 	{
 		while (i<size && y<h)
 		{
-			_image.setPixel(x, y, (quint8)data.at(20+palSize+i) & 0xF);
+			_image.setPixel(x, y, quint8(data.at(20+palSize+i)) & 0xF);
 			++x;
 			if (x==w)
 			{
@@ -171,7 +171,7 @@ bool TimFile::open(const QByteArray &data)
 				++y;
 			}
 
-			_image.setPixel(x, y, (quint8)data.at(20+palSize+i) >> 4);
+			_image.setPixel(x, y, quint8(data.at(20+palSize+i) >> 4));
 			++x;
 			if (x==w)
 			{
@@ -185,7 +185,7 @@ bool TimFile::open(const QByteArray &data)
 	{
 		while (i<size && y<h)
 		{
-			_image.setPixel(x, y, (quint8)data.at(20+palSize+i));
+			_image.setPixel(x, y, quint8(data.at(20+palSize+i)));
 
 			++x;
 			if (x==w)
@@ -243,7 +243,7 @@ bool TimFile::save(QByteArray &data) const
 	Q_ASSERT(_colorTables.size() == _alphaBits.size());
 
 	bool hasPal = bpp <= 1;
-	quint32 flag = (hasPal << 3) | (bpp & 3);
+	quint32 flag = (quint32(hasPal) << 3) | (bpp & 3);
 
 	// Header
 	data.append("\x10\x00\x00\x00", 4);
@@ -251,7 +251,7 @@ bool TimFile::save(QByteArray &data) const
 
 	if (hasPal) {
 		quint16 colorPerPal = bpp == 0 ? 16 : 256;
-		quint32 sizePalSection = 12 + _colorTables.size() * colorPerPal * 2;
+		quint32 sizePalSection = 12 + quint32(_colorTables.size()) * colorPerPal * 2;
 
 		data.append((char *)&sizePalSection, 4);
 		data.append((char *)&palX, 2);
@@ -279,7 +279,7 @@ bool TimFile::save(QByteArray &data) const
 			++colorTableId;
 		}
 
-		quint16 width = _image.width(), height = _image.height();
+		quint16 width = quint16(_image.width()), height = quint16(_image.height());
 		if (bpp==0) {
 			width/=4;
 		}
@@ -299,14 +299,14 @@ bool TimFile::save(QByteArray &data) const
 			for (int x=0; x<width; ++x) {
 				if (bpp == 0) {
 					quint8 index = (_image.pixelIndex(x*2, y) & 0xF) | ((_image.pixelIndex(x*2+1, y) & 0xF) << 4);
-					data.append((char)index);
+					data.append(char(index));
 				} else {
-					data.append((char)_image.pixelIndex(x, y));
+					data.append(char(_image.pixelIndex(x, y)));
 				}
 			}
 		}
 	} else {
-		quint16 width = _image.width(), height = _image.height();
+		quint16 width = quint16(_image.width()), height = quint16(_image.height());
 		const QBitArray &alphaBit = _alphaBits.first();
 
 		data.append((char *)&sizeImgSection, 4);
@@ -323,7 +323,7 @@ bool TimFile::save(QByteArray &data) const
 					data.append((char *)&color, 2);
 				} else {
 					QRgb c = _image.pixel(x, y);
-					quint32 color = ((qRed(c) & 0xFF) << 16) | ((qGreen(c) & 0xFF) << 8) | (qBlue(c) & 0xFF);
+					qint32 color = ((qRed(c) & 0xFF) << 16) | ((qGreen(c) & 0xFF) << 8) | (qBlue(c) & 0xFF);
 					data.append((char *)&color, 3);
 				}
 			}

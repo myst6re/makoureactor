@@ -92,9 +92,7 @@ void TextHighlighter::highlightBlock(const QString &text)
 		QRegularExpressionMatchIterator it = rule.pattern.globalMatch(text);
 		while (it.hasNext()) {
 			QRegularExpressionMatch match = it.next();
-			for (int i = 1; i <= match.lastCapturedIndex(); ++i) {
-				setFormat(int(match.capturedStart(i)), int(match.capturedLength(i)), rule.color);
-			}
+			setFormat(int(match.capturedStart()), int(match.capturedLength()), rule.color);
 		}
 	}
 }

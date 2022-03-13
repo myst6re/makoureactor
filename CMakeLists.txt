@@ -25,8 +25,11 @@ cmake_policy(SET CMP0091 NEW)
 set(RELEASE_NAME "Makou_Reactor")
 set(GUI_TARGET "${RELEASE_NAME}")
 set(CLI_TARGET "makoureactor")
+if(NOT PRERELEASE_STRING)
+    set(PRERELEASE_STRING "")
+endif()
 
-project("Makou Reactor" VERSION 1.8.5 LANGUAGES CXX
+project("Makou Reactor" VERSION 2.0.0 LANGUAGES CXX
     DESCRIPTION "Final Fantasy VII field archive editor"
     HOMEPAGE_URL "https://github.com/myst6re/makoureactor"
 )
@@ -59,7 +62,7 @@ add_compile_definitions(
     MAKOU_REACTOR_NAME="${PROJECT_NAME}"
     MAKOU_REACTOR_DESCRIPTION="${PROJECT_DESCRIPTION}"
     MAKOU_REACTOR_COMPANY="myst6re"
-    MAKOU_REACTOR_VERSION="${PROJECT_VERSION}"
+    MAKOU_REACTOR_VERSION="${PROJECT_VERSION}${PRERELEASE_STRING}"
     MAKOU_REACTOR_VERSION_MAJOR=${PROJECT_VERSION_MAJOR}
     MAKOU_REACTOR_VERSION_MINOR=${PROJECT_VERSION_MINOR}
     MAKOU_REACTOR_VERSION_PATCH=${PROJECT_VERSION_PATCH}
@@ -209,8 +212,6 @@ set(PROJECT_SOURCES
     "src/core/field/IdFile.h"
     "src/core/field/InfFile.cpp"
     "src/core/field/InfFile.h"
-    "src/core/field/MaplistFile.cpp"
-    "src/core/field/MaplistFile.h"
     "src/core/field/Opcode.cpp"
     "src/core/field/Opcode.h"
     "src/core/field/PFile.cpp"
@@ -497,8 +498,6 @@ set(PROJECT_CLI_SOURCES
     "src/core/field/IdFile.h"
     "src/core/field/InfFile.cpp"
     "src/core/field/InfFile.h"
-    "src/core/field/MaplistFile.cpp"
-    "src/core/field/MaplistFile.h"
     "src/core/field/Opcode.cpp"
     "src/core/field/Opcode.h"
     "src/core/field/PFile.cpp"

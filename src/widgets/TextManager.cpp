@@ -69,7 +69,7 @@ TextManager::TextManager(QWidget *parent) :
 	action = toolBar->addAction(tr("New Page"));
 	action->setData("\n{NEW PAGE}\n");
 	action = toolBar->addAction(tr("Choice"));
-	action->setData("\n{CHOICE}\n");
+	action->setData("{CHOICE}");
 
 	toolBar2 = new QToolBar(this);
 	toolBar2->setIconSize(QSize(16, 16));
@@ -204,11 +204,10 @@ TextManager::TextManager(QWidget *parent) :
 	vAlign = new QPushButton(tr("Align vertically"), groupTextPreview);
 	autoSize = new QPushButton(tr("Autosize"), groupTextPreview);
 
-	QVBoxLayout *buttonLayout = new QVBoxLayout;
-	buttonLayout->addStretch(1);
-	buttonLayout->addWidget(hAlign);
-	buttonLayout->addWidget(vAlign);
-	buttonLayout->addWidget(autoSize);
+	QGridLayout *buttonLayout = new QGridLayout;
+	buttonLayout->addWidget(hAlign, 0, 1);
+	buttonLayout->addWidget(vAlign, 1, 1);
+	buttonLayout->addWidget(autoSize, 1, 0);
 	buttonLayout->setContentsMargins(QMargins());
 
 	xLabel = new QLabel(tr("X"));
@@ -216,26 +215,30 @@ TextManager::TextManager(QWidget *parent) :
 	wLabel = new QLabel(tr("W"));
 	hLabel = new QLabel(tr("H"));
 
+	QGridLayout *layoutTextRect = new QGridLayout;
+	layoutTextRect->addWidget(xLabel, 0, 0);
+	layoutTextRect->addWidget(xCoord, 0, 1);
+	layoutTextRect->addWidget(yLabel, 0, 2);
+	layoutTextRect->addWidget(yCoord, 0, 3);
+	layoutTextRect->addWidget(wLabel, 1, 0);
+	layoutTextRect->addWidget(wSize, 1, 1);
+	layoutTextRect->addWidget(hLabel, 1, 2);
+	layoutTextRect->addWidget(hSize, 1, 3);
+	layoutTextRect->setColumnStretch(1, 1);
+	layoutTextRect->setColumnStretch(3, 1);
+	layoutTextRect->setContentsMargins(QMargins());
+
 	QGridLayout *layoutTextPreview = new QGridLayout(groupTextPreview);
-	layoutTextPreview->addWidget(textPreview, 0, 0, 8, 1, Qt::AlignLeft | Qt::AlignTop);
+	layoutTextPreview->addWidget(textPreview, 0, 0, 5, 1, Qt::AlignLeft | Qt::AlignTop);
 	layoutTextPreview->addWidget(prevPage, 0, 1, 1, 2, Qt::AlignLeft | Qt::AlignTop);
 	layoutTextPreview->addWidget(textPage, 1, 1, 1, 2, Qt::AlignLeft | Qt::AlignTop);
 	layoutTextPreview->addWidget(nextPage, 2, 1, 1, 2, Qt::AlignLeft | Qt::AlignTop);
-	layoutTextPreview->addWidget(xLabel, 3, 1, Qt::AlignLeft | Qt::AlignHCenter);
-	layoutTextPreview->addWidget(xCoord, 3, 2, Qt::AlignLeft | Qt::AlignHCenter);
-	layoutTextPreview->addWidget(yLabel, 4, 1, Qt::AlignLeft | Qt::AlignHCenter);
-	layoutTextPreview->addWidget(yCoord, 4, 2, Qt::AlignLeft | Qt::AlignHCenter);
-	layoutTextPreview->addWidget(wLabel, 3, 3, Qt::AlignLeft | Qt::AlignHCenter);
-	layoutTextPreview->addWidget(wSize, 3, 4, Qt::AlignLeft | Qt::AlignHCenter);
-	layoutTextPreview->addWidget(hLabel, 4, 3, Qt::AlignLeft | Qt::AlignHCenter);
-	layoutTextPreview->addWidget(hSize, 4, 4, Qt::AlignLeft | Qt::AlignHCenter);
-	layoutTextPreview->addWidget(prevWin, 5, 1, 1, 2, Qt::AlignLeft | Qt::AlignBottom);
-	layoutTextPreview->addWidget(textWin, 6, 1, 1, 2, Qt::AlignLeft | Qt::AlignBottom);
-	layoutTextPreview->addWidget(nextWin, 7, 1, 1, 2, Qt::AlignLeft | Qt::AlignBottom);
-	layoutTextPreview->addLayout(buttonLayout, 5, 3, 3, 2, Qt::AlignLeft | Qt::AlignBottom);
-	layoutTextPreview->setColumnStretch(2, 1);
+	layoutTextPreview->addWidget(prevWin, 0, 3, 1, 2, Qt::AlignLeft | Qt::AlignTop);
+	layoutTextPreview->addWidget(textWin, 1, 3, 1, 2, Qt::AlignLeft | Qt::AlignTop);
+	layoutTextPreview->addWidget(nextWin, 2, 3, 1, 2, Qt::AlignLeft | Qt::AlignTop);
+	layoutTextPreview->addLayout(layoutTextRect, 3, 1, 1, 4);
+	layoutTextPreview->addLayout(buttonLayout, 4, 1, 1, 4, Qt::AlignRight | Qt::AlignBottom);
 	layoutTextPreview->setRowStretch(2, 1);
-	layoutTextPreview->setRowStretch(5, 1);
 	layoutTextPreview->setContentsMargins(QMargins());
 
 	groupTextPreview->setFixedHeight(224);
