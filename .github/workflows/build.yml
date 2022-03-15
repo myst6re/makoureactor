@@ -71,7 +71,7 @@ jobs:
       makoureactor_appbundle_path: ${{ github.workspace }}/../appbundle-makoureactor
       CMAKE_GENERATOR: Ninja
       CMAKE_BUILD_TYPE: ${{ matrix.build_type }}
-      ff7tk_package: ff7tk-continuous-Qt${{matrix.qt_major}}-${{matrix.ff7tk_pack_suffix}}
+      ff7tk_package: ff7tk-0.81.00-Qt${{matrix.qt_major}}-${{matrix.ff7tk_pack_suffix}}
 
     steps:
     - uses: actions/checkout@v2
@@ -126,7 +126,7 @@ jobs:
         cmake --build ${{ env.zlib_build_path }} --target install -j3
 
     - name: Get ff7tk redist
-      run: curl -LJO https://github.com/sithlord48/ff7tk/releases/download/continuous/${{ env.ff7tk_package }}
+      run: curl -LJO https://github.com/sithlord48/ff7tk/releases/download/v0.81.0/${{ env.ff7tk_package }}
 
     - name: Install ff7tk
       run: ${{matrix.ff7tk_install_command_extract}} ${{env.ff7tk_package}} ${{matrix.ff7tk_install_command_dest}}${{env.ff7tk_installation_path}}
