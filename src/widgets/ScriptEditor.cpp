@@ -600,7 +600,7 @@ void ScriptEditor::buildList(int id)
 		comboBox->addItem(tr("Get Group Direction (Dir)"), QList<QVariant>() << 0xB7);
 		comboBox->addItem(tr("Get Party Member Direction (Dir)"), QList<QVariant>() << 0x73);
 		comboBox->addItem(tr("Get Group Triangle ID (I)"), QList<QVariant>() << 0xB9);
-		comboBox->addItem(tr("Get Party Member Triangle ID (I)"), QList<QVariant>() << 0x74);
+		comboBox->addItem(tr("Get Party Member Character ID (I)"), QList<QVariant>() << 0x74);
 		comboBox->addItem(tr("Get Group coordinates (X,Y)"), QList<QVariant>() << 0xB8);
 		comboBox->addItem(tr("Get Group coordinates (X,Y,Z,I)"), QList<QVariant>() << 0xC1);
 		comboBox->addItem(tr("Get Party coordinates (X,Y,Z,I)"), QList<QVariant>() << 0x75);

@@ -3566,7 +3566,7 @@ QString Opcode::toStringPGTDR(const Section1File *scriptsAndTexts, const OpcodeP
 QString Opcode::toStringGETPC(const Section1File *scriptsAndTexts, const OpcodeGETPC &opcode) const
 {
 	Q_UNUSED(scriptsAndTexts)
-	return Opcode::tr("Get group ID of the party member #%1 to %2")
+	return Opcode::tr("Get character ID of the party member #%1 to %2")
 	        .arg(opcode.partyID)
 	        .arg(_bank(opcode.varPC, B2(opcode.banks)));
 }
