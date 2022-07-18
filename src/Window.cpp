@@ -72,7 +72,7 @@ Window::Window() :
 	actionMassExport = fileMenu->addAction(tr("&Mass Export..."), this, &Window::massExport, QKeySequence("Shift+Ctrl+E"));
 	actionImport = fileMenu->addAction(tr("&Import to current map..."), this, &Window::importToCurrentMap, QKeySequence("Ctrl+I"));
 //	actionMassImport = fileMenu->addAction(tr("Mass &import..."), this, &Window::massImport, QKeySequence("Shift+Ctrl+I"));
-	actionArchive = fileMenu->addAction(tr("Archive Mana&ger..."), this, &Window::archiveManager, QKeySequence("Ctrl+K"));
+	actionArchive = fileMenu->addAction(tr("Archive Mana&ger..."), this, &Window::archiveManager, QKeySequence("Shift+Ctrl+K"));
 	fileMenu->addSeparator();
 	actionRun = fileMenu->addAction(QIcon(":/images/ff7.png"), tr("R&un FF7"), this, &Window::runFF7);
 	actionRun->setShortcut(Qt::Key_F8);
