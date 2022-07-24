@@ -75,7 +75,7 @@ if(APPLE)
     find_package(QT NAMES Qt6 COMPONENTS Svg REQUIRED)
     find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Svg REQUIRED)
 endif()
-find_package(ff7tk 0.81.00 REQUIRED COMPONENTS ff7tkWidgets ff7tkFormats ff7tkUtils)
+find_package(ff7tk 0.82 REQUIRED COMPONENTS ff7tkWidgets ff7tkFormats ff7tkUtils)
 find_package(ZLIB REQUIRED)
 
 if(${QT_VERSION_MAJOR} EQUAL 6)
