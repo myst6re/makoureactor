@@ -19,7 +19,7 @@
 
 #include <QtCore>
 #include <PsColor.h>
-#include "../TimFile.h"
+#include <TimFile.h>
 #include "BackgroundTiles.h"
 #include "Palette.h"
 

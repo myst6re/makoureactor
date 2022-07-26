@@ -19,7 +19,7 @@
 
 #include <QtCore>
 #include <Lgp.h>
-#include "core/WindowBinFile.h"
+#include <WindowBinFile.h>
 #include "core/field/CharArchive.h"
 
 #define FF7_WIN_REGISTER_PATH "Square Soft, Inc./Final Fantasy VII"

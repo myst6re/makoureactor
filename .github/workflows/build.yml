@@ -34,13 +34,13 @@ jobs:
         - os: ubuntu-latest
           package_extension: 'tar.xz'
           package_suffix: 'linux64'
-          ff7tk_pack_suffix: "Linux_x86_64.tar.gz"
+          ff7tk_pack_suffix: "linux_x86_64.tar.gz"
           ff7tk_install_command_extract: "tar -xf"
           ff7tk_install_command_dest: "--one-top-level="
         - os: macos-latest
           package_extension: 'dmg'
-          package_suffix: 'macos64'
-          ff7tk_pack_suffix: "macos_x86_64.zip"
+          package_suffix: 'macos'
+          ff7tk_pack_suffix: "macos.zip"
           ff7tk_install_command_extract: "unzip "
           ff7tk_install_command_dest: "-d "
         - os: windows-latest

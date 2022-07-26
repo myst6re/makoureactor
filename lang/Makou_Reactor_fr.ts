@@ -242,13 +242,6 @@ List of available commands:
     </message>
 </context>
 <context>
-    <name>ColorDisplay</name>
-    <message>
-        <source>Choose a new color</source>
-        <translation>Choisir une nouvelle couleur</translation>
-    </message>
-</context>
-<context>
     <name>ConfigWindow</name>
     <message>
         <source>Configuration</source>
@@ -2045,7 +2038,7 @@ Certains scripts peuvent y faire référence !</translation>
     </message>
     <message>
         <source>Get group ID of the party member #%1 to %2</source>
-        <translation>Obtenir l&apos;id du personnage n°%1 de l&apos;équipe actuelle et le stocker dans %2</translation>
+        <translation type="vanished">Obtenir l&apos;id du personnage n°%1 de l&apos;équipe actuelle et le stocker dans %2</translation>
     </message>
     <message>
         <source>%1 talk script for the current field model</source>
@@ -3744,6 +3737,10 @@ Certains scripts peuvent y faire référence !</translation>
         <source>Perform no operation</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Get character ID of the party member #%1 to %2</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OpcodeList</name>
@@ -4258,10 +4255,6 @@ id=%2
 </translation>
     </message>
     <message>
-        <source>Cannot update game binaries.</source>
-        <translation>Impossible de mettre à jour les binaires du jeu.</translation>
-    </message>
-    <message>
         <source>Map name</source>
         <translation>Nom de l&apos;écran</translation>
     </message>
@@ -4494,7 +4487,7 @@ id=%2
     <message>
         <source>Get Party Member Triangle ID (I)</source>
         <oldsource>Obtenir le triangle id d&apos;un équipier (I)</oldsource>
-        <translation>Obtenir le triangle id d&apos;un équipier (I)</translation>
+        <translation type="vanished">Obtenir le triangle id d&apos;un équipier (I)</translation>
     </message>
     <message>
         <source>Get Group coordinates (X,Y)</source>
@@ -5428,6 +5421,10 @@ id=%2
     <message>
         <source>SEARCHX</source>
         <translation>SEARCHX</translation>
+    </message>
+    <message>
+        <source>Get Party Member Character ID (I)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
