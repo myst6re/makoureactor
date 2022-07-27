@@ -32,7 +32,7 @@ qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR}/src ${TS_FILES} OPTIONS -loca
 add_custom_target(translations ALL DEPENDS ${QM_FILES})
 
 if(APPLE)
-    set(TRANSLATIONS_PATH ${PROJECT_NAME}.app/Contents/Resources CACHE INTERNAL "")
+    set(TRANSLATIONS_PATH ${PROJECT_NAME}.app/Contents/MacOS/translations CACHE INTERNAL "")
 elseif(WIN32)
     set(TRANSLATIONS_PATH translations CACHE INTERNAL "")
 else()

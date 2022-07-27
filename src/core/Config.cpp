@@ -25,8 +25,8 @@ QString Config::programResourceDir()
 	return qApp->applicationDirPath().append("/../Resources");
 #elif defined(Q_OS_UNIX)
 	return qApp->applicationDirPath().startsWith("/usr/bin")
-	       ? "/usr/share/makoureactor"
-	       : qApp->applicationDirPath();
+		? "/usr/share/makoureactor"
+		: qApp->applicationDirPath();
 #else
 	return qApp->applicationDirPath();
 #endif
@@ -34,11 +34,21 @@ QString Config::programResourceDir()
 
 QString Config::programLanguagesDir()
 {
-#if defined(Q_OS_MAC) or defined(Q_OS_UNIX)
-	return Config::programResourceDir();
-#else
-	return qApp->applicationDirPath() + "/languages";
-#endif
+	QDir translationDir(QStringLiteral("%1/%2").arg(QCoreApplication::applicationDirPath(), QStringLiteral("translations")));
+	QStringList nameFilter{QStringLiteral("Makou_Reactor_*.qm")};
+	if (translationDir.entryList(nameFilter, QDir::Files, QDir::Name).isEmpty()) {
+		translationDir.setPath(QStringLiteral("%1/../share/makoureactor/translations").arg(QCoreApplication::applicationDirPath()));
+		if (translationDir.entryList(nameFilter, QDir::Files, QDir::Name).isEmpty()) {
+			translationDir.setPath(QStringLiteral("%1/%2").arg(QDir::homePath(), QStringLiteral(".local/share/makoureactor/lang")));
+			if (translationDir.entryList(nameFilter, QDir::Files, QDir::Name).isEmpty()) {
+				translationDir.setPath(QStringLiteral("/usr/local/share/makourector/lang"));
+				if (translationDir.entryList(nameFilter, QDir::Files, QDir::Name).isEmpty()) {
+					translationDir.setPath(QStringLiteral("/usr/share/makoureactor/lang"));
+				}
+			}
+		}
+	}
+	return translationDir.absolutePath();
 }
 
 void Config::set() {

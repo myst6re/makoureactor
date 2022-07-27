@@ -602,7 +602,7 @@ elseif(WIN32)
     endif()
 endif()
 
-add_subdirectory(lang)
+add_subdirectory(translations)
 add_subdirectory(deploy)
 
 if(APPLE)
