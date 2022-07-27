@@ -43,6 +43,7 @@ jobs:
           ff7tk_pack_suffix: "macos.zip"
           ff7tk_install_command_extract: "unzip "
           ff7tk_install_command_dest: "-d "
+          cmake_extra_args: "-DCMAKE_OSX_ARCHITECTURES=\"arm64;x86_64\""
         - os: windows-latest
           package_extension: 'zip'
           package_suffix: 'win64'
