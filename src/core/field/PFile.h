@@ -18,7 +18,7 @@
 #pragma once
 
 #include <QtCore>
-#include "../IO.h"
+#include <IO.h>
 #include "FieldModelPart.h"
 #include "IdFile.h"
 
