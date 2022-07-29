@@ -34,15 +34,16 @@ jobs:
         - os: ubuntu-latest
           package_extension: 'tar.xz'
           package_suffix: 'linux64'
-          ff7tk_pack_suffix: "Linux_x86_64.tar.gz"
+          ff7tk_pack_suffix: "linux_x86_64.tar.gz"
           ff7tk_install_command_extract: "tar -xf"
           ff7tk_install_command_dest: "--one-top-level="
         - os: macos-latest
           package_extension: 'dmg'
-          package_suffix: 'macos64'
-          ff7tk_pack_suffix: "macos_x86_64.zip"
+          package_suffix: 'macos'
+          ff7tk_pack_suffix: "macos.zip"
           ff7tk_install_command_extract: "unzip "
           ff7tk_install_command_dest: "-d "
+          cmake_extra_args: "-DCMAKE_OSX_ARCHITECTURES=\"arm64;x86_64\""
         - os: windows-latest
           package_extension: 'zip'
           package_suffix: 'win64'
@@ -152,6 +153,8 @@ jobs:
       if: runner.os == 'Linux' && matrix.interface == 'gui'
       run: |
         cmake --build ${{ env.makoureactor_build_path }} --target install -j3
+        mkdir -p ${{env.makoureactor_appbundle_path}}/usr/share/makoureactor/translations
+        cp ${{env.makoureactor_installation_path}}/share/makoureactor/translations/*.qm ${{env.makoureactor_appbundle_path}}/usr/share/makoureactor/translations/
         export VERSION=continuous
         export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${{ env.ff7tk_installation_path }}/lib
         export PATH=$PATH:${{ env.qt_installation_path }}/Qt/${{ matrix.qt }}/gcc_64/libexec

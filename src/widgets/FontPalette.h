@@ -18,7 +18,7 @@
 #pragma once
 
 #include <QtWidgets>
-#include "core/WindowBinFile.h"
+#include <WindowBinFile.h>
 
 #define CELL_SIZE		16
 #define BORDER_SIZE		1

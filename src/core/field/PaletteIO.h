@@ -18,7 +18,7 @@
 #pragma once
 
 #include <QtCore>
-#include "../IO.h"
+#include <IO.h>
 #include "Palette.h"
 
 class PaletteIO : public IO

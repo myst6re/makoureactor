@@ -21,7 +21,7 @@
 #include "RsdFile.h"
 #include "PFile.h"
 #include "AFile.h"
-#include "../TexFile.h"
+#include <TexFile.h>
 
 FieldModelFilePC::FieldModelFilePC() :
     FieldModelFile(), _charLgp(nullptr)

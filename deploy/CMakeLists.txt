@@ -7,12 +7,20 @@ else()
 endif()
 
 if(WIN32)
+  if(GUI)
     set(FF7TK_DEPENDS
         ff7tk
-        ff7tkWidgets
+        ff7tkQtWidgets
         ff7tkFormats
         ff7tkUtils
     )
+  else()
+    set(FF7TK_DEPENDS
+      ff7tk
+      ff7tkFormats
+      ff7tkUtils
+    )
+  endif()
     if(MINGW)
         # libff7tkXxx.dll
         list(TRANSFORM FF7TK_DEPENDS REPLACE ".+" "${_ff7tk_ROOT}/bin/lib\\0.dll")

@@ -19,7 +19,7 @@
 
 #include <QtWidgets>
 #include "core/field/FieldPC.h"
-#include "ColorDisplay.h"
+#include <ColorDisplay.h>
 #include "ModelManager.h"
 
 class ModelManagerPC : public ModelManager

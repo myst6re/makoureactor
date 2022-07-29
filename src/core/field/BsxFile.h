@@ -18,7 +18,7 @@
 #pragma once
 
 #include <QtCore>
-#include "../IO.h"
+#include <IO.h>
 #include "FieldModelFilePS.h"
 #include "FieldModelTextureRefPS.h"
 #include "CaFile.h"

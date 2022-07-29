@@ -75,7 +75,9 @@ if(APPLE)
     find_package(QT NAMES Qt6 COMPONENTS Svg REQUIRED)
     find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Svg REQUIRED)
 endif()
-find_package(ff7tk 0.82 REQUIRED COMPONENTS ff7tkWidgets ff7tkFormats ff7tkUtils)
+
+find_package(ff7tk 0.82 REQUIRED COMPONENTS ff7tk ff7tkQtWidgets ff7tkFormats ff7tkUtils)
+
 find_package(ZLIB REQUIRED)
 
 if(${QT_VERSION_MAJOR} EQUAL 6)
@@ -96,10 +98,6 @@ set(PROJECT_SOURCES
     "src/FieldModelThread.h"
     "src/Window.cpp"
     "src/Window.h"
-    "src/core/Akao.cpp"
-    "src/core/Akao.h"
-    "src/core/AkaoIO.cpp"
-    "src/core/AkaoIO.h"
     "src/core/Clipboard.cpp"
     "src/core/Clipboard.h"
     "src/core/Config.cpp"
@@ -108,24 +106,12 @@ set(PROJECT_SOURCES
     "src/core/FF7Font.h"
     "src/core/FF7Text.cpp"
     "src/core/FF7Text.h"
-    "src/core/IO.cpp"
-    "src/core/IO.h"
-    "src/core/IsoArchiveFF7.cpp"
-    "src/core/IsoArchiveFF7.h"
     "src/core/PsfFile.cpp"
     "src/core/PsfFile.h"
     "src/core/SystemColor.cpp"
     "src/core/SystemColor.h"
-    "src/core/TexFile.cpp"
-    "src/core/TexFile.h"
-    "src/core/TextureFile.cpp"
-    "src/core/TextureFile.h"
-    "src/core/TimFile.cpp"
-    "src/core/TimFile.h"
     "src/core/Var.cpp"
     "src/core/Var.h"
-    "src/core/WindowBinFile.cpp"
-    "src/core/WindowBinFile.h"
     "src/core/field/AFile.cpp"
     "src/core/field/AFile.h"
     "src/core/field/BackgroundFile.cpp"
@@ -234,8 +220,6 @@ set(PROJECT_SOURCES
     "src/core/field/TutFilePC.h"
     "src/core/field/TutFileStandard.cpp"
     "src/core/field/TutFileStandard.h"
-    "src/core/world/TblFile.cpp"
-    "src/core/world/TblFile.h"
     "src/main.cpp"
     "src/txt.cpp"
     "src/widgets/AboutDialog.cpp"
@@ -250,8 +234,6 @@ set(PROJECT_SOURCES
     "src/widgets/ArchivePreview.h"
     "src/widgets/BGDialog.cpp"
     "src/widgets/BGDialog.h"
-    "src/widgets/ColorDisplay.cpp"
-    "src/widgets/ColorDisplay.h"
     "src/widgets/ConfigWindow.cpp"
     "src/widgets/ConfigWindow.h"
     "src/widgets/EmptyFieldWidget.cpp"
@@ -282,8 +264,6 @@ set(PROJECT_SOURCES
     "src/widgets/GrpScriptWizard.h"
     "src/widgets/HelpWidget.cpp"
     "src/widgets/HelpWidget.h"
-    "src/widgets/HexLineEdit.cpp"
-    "src/widgets/HexLineEdit.h"
     "src/widgets/ImportDialog.cpp"
     "src/widgets/ImportDialog.h"
     "src/widgets/KeyEditorDialog.cpp"
@@ -314,8 +294,6 @@ set(PROJECT_SOURCES
     "src/widgets/OrientationWidget.h"
     "src/widgets/PsfDialog.cpp"
     "src/widgets/PsfDialog.h"
-    "src/widgets/QTaskBarButton.cpp"
-    "src/widgets/QTaskBarButton.h"
     "src/widgets/ScriptEditor.cpp"
     "src/widgets/ScriptEditor.h"
     "src/widgets/ScriptEditorWidgets/Delegate.cpp"
@@ -367,7 +345,6 @@ set(PROJECT_SOURCES
 if(APPLE)
     list(APPEND PROJECT_SOURCES
         "src/core/SystemColor.mm"
-        "src/widgets/QTaskBarButton.mm"
     )
 endif()
 
@@ -384,34 +361,18 @@ set(PROJECT_CLI_SOURCES
     "src/Data.h"
     "src/FieldModelThread.cpp"
     "src/FieldModelThread.h"
-    "src/core/Akao.cpp"
-    "src/core/Akao.h"
-    "src/core/AkaoIO.cpp"
-    "src/core/AkaoIO.h"
     "src/core/Config.cpp"
     "src/core/Config.h"
     "src/core/FF7Font.cpp"
     "src/core/FF7Font.h"
     "src/core/FF7Text.cpp"
     "src/core/FF7Text.h"
-    "src/core/IO.cpp"
-    "src/core/IO.h"
-    "src/core/IsoArchiveFF7.cpp"
-    "src/core/IsoArchiveFF7.h"
     "src/core/PsfFile.cpp"
     "src/core/PsfFile.h"
     "src/core/SystemColor.cpp"
     "src/core/SystemColor.h"
-    "src/core/TexFile.cpp"
-    "src/core/TexFile.h"
-    "src/core/TextureFile.cpp"
-    "src/core/TextureFile.h"
-    "src/core/TimFile.cpp"
-    "src/core/TimFile.h"
     "src/core/Var.cpp"
     "src/core/Var.h"
-    "src/core/WindowBinFile.cpp"
-    "src/core/WindowBinFile.h"
     "src/core/field/AFile.cpp"
     "src/core/field/AFile.h"
     "src/core/field/BackgroundFile.cpp"
@@ -520,8 +481,6 @@ set(PROJECT_CLI_SOURCES
     "src/core/field/TutFilePC.h"
     "src/core/field/TutFileStandard.cpp"
     "src/core/field/TutFileStandard.h"
-    "src/core/world/TblFile.cpp"
-    "src/core/world/TblFile.h"
     "src/main.cpp"
     "src/txt.cpp"
 )
@@ -556,7 +515,7 @@ if(GUI)
         Qt::OpenGLWidgets
         ZLIB::ZLIB
         ff7tk::ff7tk
-        ff7tk::ff7tkWidgets
+        ff7tk::ff7tkQtWidgets
         ff7tk::ff7tkFormats
         ff7tk::ff7tkUtils
     )
@@ -625,7 +584,7 @@ elseif(WIN32)
     endif()
 endif()
 
-add_subdirectory(lang)
+add_subdirectory(translations)
 add_subdirectory(deploy)
 
 if(APPLE)

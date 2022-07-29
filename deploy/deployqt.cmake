@@ -24,7 +24,7 @@ endif()
 if(APPLE)
     # Translations are not installed by macdeployqt script
     list(TRANSFORM LANGS REPLACE ".+" "${_qt_translations_dir}/qt_\\0.qm" OUTPUT_VARIABLE QT_QM_FILES)
-    file(COPY ${QT_QM_FILES} DESTINATION "${_target_file_dir}/Contents/Resources")
+    file(COPY ${QT_QM_FILES} DESTINATION "${_target_file_dir}/Contents/MacOS/translations")
 elseif(WIN32)
     file(COPY ${_qt_bin_dir}/Qt6Core5Compat.dll DESTINATION "${_target_file_dir}")
 endif()

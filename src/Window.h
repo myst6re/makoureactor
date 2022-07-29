@@ -18,6 +18,7 @@
 #pragma once
 
 #include <QtWidgets>
+#include <QTaskBarButton.h>
 #include "core/field/FieldArchive.h"
 #include "widgets/FieldList.h"
 #include "widgets/ScriptManager.h"
@@ -31,7 +32,6 @@
 #include "widgets/ModelManagerPS.h"
 #include "widgets/TutWidget.h"
 #include "widgets/WalkmeshManager.h"
-#include "widgets/QTaskBarButton.h"
 #include "widgets/LgpWidget.h"
 #include "widgets/Splitter.h"
 //#include "FieldModelThread.h"

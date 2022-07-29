@@ -19,7 +19,7 @@
 
 #include <QLockedFile.h>
 #include "FieldArchiveIO.h"
-#include "../IsoArchiveFF7.h"
+#include <IsoArchiveFF7.h>
 
 class FieldArchivePS;
 

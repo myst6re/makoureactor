@@ -239,18 +239,6 @@ List of available commands:
     </message>
 </context>
 <context>
-    <name>ColorDisplay</name>
-    <message>
-        <source>Choisir une nouvelle couleur</source>
-        <translatorcomment>Choose a new color</translatorcomment>
-        <translation type="obsolete">変更する色の選択</translation>
-    </message>
-    <message>
-        <source>Choose a new color</source>
-        <translation>変更する色の選択</translation>
-    </message>
-</context>
-<context>
     <name>ConfigWindow</name>
     <message>
         <source>Configuration</source>
@@ -2874,7 +2862,7 @@ Some scripts can refer to it!</source>
     </message>
     <message>
         <source>Get group ID of the party member #%1 to %2</source>
-        <translation>パーティ メンバー #%1 のグループID を取得して %2 へ保存</translation>
+        <translation type="vanished">パーティ メンバー #%1 のグループID を取得して %2 へ保存</translation>
     </message>
     <message>
         <source>Get coordinates of the party member #%1 (store : X in %2, Y in %3, Z in %4 and triangle ID in %5)</source>
@@ -3321,6 +3309,10 @@ Some scripts can refer to it!</source>
     </message>
     <message>
         <source>Perform no operation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Get character ID of the party member #%1 to %2</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3827,10 +3819,6 @@ id=%2
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Cannot update game binaries.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>The file &apos;var.cfg&apos; could not be loaded.
 Make sure it is valid or delete it.</source>
         <translation type="vanished">ファイル &apos;var.cfg&apos; が読み込めません。
@@ -4315,7 +4303,7 @@ Make sure it is valid or delete it.</source>
     </message>
     <message>
         <source>Get Party Member Triangle ID (I)</source>
-        <translation>パーティ メンバーのポリゴンID を取得 (I)</translation>
+        <translation type="vanished">パーティ メンバーのポリゴンID を取得 (I)</translation>
     </message>
     <message>
         <source>Get Group coordinates (X,Y)</source>
@@ -4944,6 +4932,10 @@ Make sure it is valid or delete it.</source>
     <message>
         <source>SEARCHX</source>
         <translation></translation>
+    </message>
+    <message>
+        <source>Get Party Member Character ID (I)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

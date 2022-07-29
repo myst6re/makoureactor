@@ -67,6 +67,10 @@ int main(int argc, char *argv[])
 	} else {
 		Config::setValue("lang", QVariant());
 	}
+	QTranslator translator3;
+	if (translator3.load("ff7tk_" % lang, Config::programLanguagesDir()) || translator3.load("ff7tk_" % lang)) {
+		app.installTranslator(&translator3);
+	}
 
 	if (Config::value("dark_theme", false).toBool()) {
 #ifndef Q_OS_DARWIN

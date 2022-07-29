@@ -17,7 +17,7 @@
  ****************************************************************************/
 #pragma once
 
-#include "../IO.h"
+#include <IO.h>
 #include "PFile.h"
 #include "FieldModelAnimation.h"
 

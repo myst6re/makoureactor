@@ -18,10 +18,10 @@
 #pragma once
 
 #include <QtWidgets>
+#include <HexLineEdit.h>
 #include "core/field/Field.h"
 #include "3d/WalkmeshWidget.h"
 #include "VertexWidget.h"
-#include "HexLineEdit.h"
 #include "OrientationWidget.h"
 #include "Listwidget.h"
 
