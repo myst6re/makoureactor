@@ -7,6 +7,9 @@ on:
     branches: [ master, develop ]
   create: null
 
+env:
+  debianRequirments: "build-essential git zlib1g-dev cmake qt6-tools-dev qt6-tools-dev-tools qt6-l10n-tools qt6-declarative-dev qt6-base-dev libqt6svg6-dev qt6-base-dev-tools qt6-translations-l10n libqt6core5compat6-dev libqt6opengl6-dev libgl1-mesa-dev wget curl devscripts"
+
 jobs:
   main_build:
     name: ${{ matrix.package_suffix }} ${{ matrix.interface }}
@@ -173,9 +176,43 @@ jobs:
       with:
         path: ${{ github.workspace }}/makoureactor-continuous-*.*
 
+  deb_builder:
+    name: debianBuilder-${{matrix.config.name}}
+    runs-on: ${{matrix.config.os}}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - {
+             name: jammy , os: ubuntu-22.04
+             , debArch: amd64
+          }
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - run: git fetch --tags --force
+    - name: Install Dependencies
+      run: |
+        sudo apt-get update -y > /dev/null
+        sudo apt-get install -qqq ${{env.debianRequirments}} > /dev/null
+        curl -s https://api.github.com/repos/sithlord48/ff7tk/releases/latest | awk -F\" '/browser_download_url.*${{matrix.config.debArch}}*[.deb]/{print $(NF-1)}' | wget -i -
+        sudo apt -y -qqq install ./libff7tk*.deb
+        rm libff7tk*.deb
+    - name: Build
+      run: |
+        cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DQT_DEFAULT_MAJOR_VERSION=6 -DCPACK_DEBIAN_PACKAGE_RELEASE=${{github.run_attempt}}~${{matrix.config.name}} -DBUNDLE_FF7TK_QM=OFF
+        cmake --build build
+        cpack -G DEB -C Release --config build/CPackConfig.cmake
+    - name: Upload
+      uses: actions/upload-artifact@v3
+      with:
+        name: debian-artifacts
+        path: makoureactor*.deb
+
   pre_release_assets:
     name: Pre-Release
-    needs: main_Build
+    needs: [main_Build, deb_builder]
     if: github.ref == 'refs/heads/develop'
     concurrency: pre-release-${{ github.ref }}
     runs-on: ubuntu-latest
@@ -190,11 +227,13 @@ jobs:
        automatic_release_tag: "continuous"
        prerelease: true
        title: "Unstable Build"
-       files: artifact/*
+       files: | 
+         artifact/*
+         debian-artifacts/*
 
   release_assets:
     name: Release
-    needs: main_Build
+    needs: [main_Build, deb_builder]
     if: github.event.ref_type == 'tag'
     concurrency: release-${{ github.ref }}
     runs-on: ubuntu-latest
@@ -212,4 +251,7 @@ jobs:
        repo_token: "${{ secrets.GITHUB_TOKEN }}"
        prerelease: false
        title: ${{ github.event.ref }}
-       files: artifact/*
+       files: |
+         artifact/*
+         debian-artifacts/*
+

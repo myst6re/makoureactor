@@ -55,6 +55,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 option(GUI "Build the gui executable" ON)
 option(CLI "Build the cli executable" OFF)
+option(BUNDLE_FF7TK_QM "Include FF7tk QM Files in bundle" ON)
 
 add_compile_definitions(
     QT_DISABLE_DEPRECATED_BEFORE=0x050F00
@@ -76,7 +77,8 @@ if(APPLE)
     find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Svg REQUIRED)
 endif()
 
-find_package(ff7tk 0.82 REQUIRED COMPONENTS ff7tk ff7tkQtWidgets ff7tkFormats ff7tkUtils)
+set(REQUIRED_FF7TK_VERSION 0.82.0)
+find_package(ff7tk ${REQUIRED_FF7TK_VERSION} REQUIRED COMPONENTS ff7tk ff7tkQtWidgets ff7tkFormats ff7tkUtils)
 
 find_package(ZLIB REQUIRED)
 
@@ -623,6 +625,12 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
 else()
     set(CPACK_GENERATOR "TXZ")
 endif()
+
+set(CPACK_DEBIAN_PACKAGE_NAME "makoureactor")
+set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "myst6re@gmail.com")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libff7tk (>= ${REQUIRED_FF7TK_VERSION}) | libff7tk-all (>=${REQUIRED_FF7TK_VERSION}), qt6-qpa-plugins")
+set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 
 set(CPACK_PACKAGE_NAME makoureactor)
 set(CPACK_SOURCE_IGNORE_FILES ".git/*;*.user;*.yml;*.github/*")
