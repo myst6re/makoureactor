@@ -32,8 +32,9 @@ if(WIN32)
 endif()
 
 list(TRANSFORM LANGS REPLACE ".+" "${_ff7tk_ROOT}/share/ff7tk/lang/ff7tk_\\0.qm" OUTPUT_VARIABLE FF7TK_QM_FILES)
-install(FILES ${FF7TK_QM_FILES} DESTINATION "${TRANSLATIONS_PATH}")
-
+if(BUNDLE_FF7TK_QM)
+    install(FILES ${FF7TK_QM_FILES} DESTINATION "${TRANSLATIONS_PATH}")
+endif()
 # Deploy Qt using macdeployqt and windeployqt scripts
 if((APPLE AND GUI) OR WIN32)
     install(CODE "set(_target_file_dir \"${QT_DEPLOY_TMP_DIR}\")")
