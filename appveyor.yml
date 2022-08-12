@@ -21,7 +21,7 @@ before_build:
   - qmake -config release Makou_Reactor.pro
 
 build_script:
-  - if "%USE_MSVC%"=="1" make
+  - if "%USE_MSVC%"=="1" nmake
   - if "%USE_MINGW%"=="1" mingw32-make
 
 after_build:
