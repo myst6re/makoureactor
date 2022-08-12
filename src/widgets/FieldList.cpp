@@ -187,45 +187,45 @@ void FieldList::rename(QTreeWidgetItem *item, int column)
 	}
 
 	item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable);
-	editItem(item, 0);
+	editItem(item, column);
 	item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 	connect(this, &FieldList::itemChanged, this, &FieldList::renameOK);
 }
 
 void FieldList::renameOK(QTreeWidgetItem *item, int column)
 {
-	if (column != 1) {
+	if (column != 0) {
 		return;
 	}
 
 	disconnect(this, &FieldList::itemChanged, this, &FieldList::renameOK);
-	QString newName = item->text(1).left(8);
+	QString newName = item->text(column).left(8);
+
+	Field *f = _fieldArchive->field(item->data(0, Qt::UserRole).toInt(), true, true);
+	if (f == nullptr || f->name() == newName) {
+		return;
+	}
 
 	if (newName.isEmpty()) {
 		QMessageBox::warning(this, tr("Name not filled"),
 		                     tr("Please set a new field name."));
+		item->setText(column, f->name());
 		return;
 	} else if (Data::maplist().contains(newName)) {
 		QMessageBox::warning(this,
 		                     tr("Name already present in archive"),
 		                     tr("Please choose another name."));
+		item->setText(column, f->name());
 		return;
 	}
 
-	item->setText(1, newName);
-
-	int fieldID = currentMapId();
-
-	if (fieldID >= 0) {
-		Field *f = _fieldArchive->field(fieldID);
-		if (f != nullptr) {
-			f->setName(newName);
-			InfFile *inf = f->inf();
-			if (inf != nullptr) {
-				inf->setMapName(newName);
-			}
-		}
+	f->setName(newName);
+	InfFile *inf = f->inf();
+	if (inf != nullptr) {
+		inf->setMapName(newName);
 	}
+
+	item->setText(column, f->name());
 
 	emit changed();
 }

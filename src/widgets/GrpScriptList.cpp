@@ -264,8 +264,9 @@ void GrpScriptList::rename(QTreeWidgetItem *item, int column)
 	if (item==nullptr || column != 1) {
 		return;
 	}
+
 	item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable);
-	editItem(item, 1);
+	editItem(item, column);
 	item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 	connect(this, &GrpScriptList::itemChanged, this, &GrpScriptList::renameOK);
 }
@@ -276,10 +277,16 @@ void GrpScriptList::renameOK(QTreeWidgetItem *item, int column)
 		return;
 	}
 	disconnect(this, &GrpScriptList::itemChanged, this, &GrpScriptList::renameOK);
-	QString newName = item->text(1).left(8);
-	item->setText(1, newName);
-	scripts->grpScript(selectedID()).setName(newName);
-	emit changed();
+	QString newName = item->text(column).left(8);
+	if (newName != item->text(column)) {
+		item->setText(column, newName);
+	}
+
+	int groupID = item->text(0).toInt();
+	if (groupID >= 0 && scripts->grpScript(groupID)->name() != newName) {
+		scripts->grpScript(groupID)->setName(newName);
+		emit changed();
+	}
 }
 
 void GrpScriptList::add()
