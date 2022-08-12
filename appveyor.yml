@@ -3,11 +3,11 @@ image: Visual Studio 2019
 environment:
   matrix:
     - USE_MSVC: 1
-      QTDIR: C:\Qt\5.14\msvc2017
+      QTDIR: C:\Qt\5.15\msvc2019
       QTTOOLS: C:\Qt\Tools\QtCreator
     - USE_MINGW: 1
-      QTDIR: C:\Qt\5.14\mingw73_32
-      QTTOOLS: C:\Qt\Tools\mingw730_32
+      QTDIR: C:\Qt\5.15\mingw81_32
+      QTTOOLS: C:\Qt\Tools\mingw810_32
 
 install:
   - DIR C:\Qt
