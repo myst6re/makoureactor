@@ -292,6 +292,7 @@ void Field::setName(const QString &name)
 {
 	_name = name;
 	_isModified = true;
+	qDebug() << "setName" << _name;
 }
 
 void Field::setSaved()
@@ -311,6 +312,8 @@ bool Field::save(QByteArray &newData, bool compress)
 	if (!isOpen()) {
 		return false;
 	}
+
+	qDebug() << "save" << _name;
 
 	QByteArray toc;
 
