@@ -283,8 +283,8 @@ void GrpScriptList::renameOK(QTreeWidgetItem *item, int column)
 	}
 
 	int groupID = item->text(0).toInt();
-	if (groupID >= 0 && scripts->grpScript(groupID)->name() != newName) {
-		scripts->grpScript(groupID)->setName(newName);
+	if (groupID >= 0 && scripts->grpScript(groupID).name() != newName) {
+		scripts->grpScript(groupID).setName(newName);
 		emit changed();
 	}
 }
