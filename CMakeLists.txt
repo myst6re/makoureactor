@@ -553,6 +553,7 @@ if(CLI)
     target_include_directories(${CLI_TARGET} PRIVATE "${CMAKE_SOURCE_DIR}/src")
     target_link_libraries(${CLI_TARGET} PRIVATE
         ZLIB::ZLIB
+        ff7tk::ff7tk
         ff7tk::ff7tkFormats
         ff7tk::ff7tkUtils
     )

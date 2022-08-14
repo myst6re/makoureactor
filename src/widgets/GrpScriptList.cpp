@@ -18,6 +18,7 @@
 #include "GrpScriptList.h"
 #include "Data.h"
 #include "GrpScriptWizard.h"
+#include <FF7Char.h>
 
 GrpScriptList::GrpScriptList(QWidget *parent) :
     QTreeWidget(parent)
@@ -184,7 +185,7 @@ void GrpScriptList::fill(Section1File *scripts)
 		QIcon icon;
 
 		if (grpScript.character() >= 0 && grpScript.character() < 9) {
-			icon = QIcon(QString(":/images/icon-char-%1.png").arg(grpScript.character()));
+			icon = FF7Char::icon(grpScript.character());
 		} else {
 			switch (grpScript.type()) {
 			case GrpScript::Director:

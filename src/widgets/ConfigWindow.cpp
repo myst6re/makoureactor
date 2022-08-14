@@ -21,6 +21,7 @@
 #include "TextPreview.h"
 #include "widgets/FontManager.h"
 #include <DialogPreview.h>
+#include <FF7Char.h>
 
 ConfigWindow::ConfigWindow(QWidget *parent)
 	: QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint)
@@ -96,7 +97,7 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 
 	listCharNames = new QComboBox(textEditor);
 	for (int i=0; i<9; ++i) {
-		listCharNames->addItem(QIcon(QString(":/images/icon-char-%1.png").arg(i)), Data::char_names.at(i));
+		listCharNames->addItem(FF7Char::icon(i), Data::char_names.at(i));
 	}
 
 	charNameEdit = new QLineEdit(textEditor);

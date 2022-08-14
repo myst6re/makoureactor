@@ -20,6 +20,7 @@
 #include "TextHighlighter.h"
 #include "core/Config.h"
 #include "Data.h"
+#include <FF7Char.h>
 
 QIcon TextManager::winIcon;
 QIcon TextManager::noWinIcon;
@@ -40,23 +41,23 @@ TextManager::TextManager(QWidget *parent) :
 	QAction *action;
 	toolBar = new QToolBar(this);
 	toolBar->setIconSize(QSize(16, 16));
-	action = toolBar->addAction(QIcon(":/images/icon-char-0.png"), Data::char_names.at(0));
+	action = toolBar->addAction(FF7Char::icon(0), Data::char_names.at(0));
 	action->setData("{CLOUD}");
-	action = toolBar->addAction(QIcon(":/images/icon-char-1.png"), Data::char_names.at(1));
+	action = toolBar->addAction(FF7Char::icon(1), Data::char_names.at(1));
 	action->setData("{BARRET}");
-	action = toolBar->addAction(QIcon(":/images/icon-char-2.png"), Data::char_names.at(2));
+	action = toolBar->addAction(FF7Char::icon(2), Data::char_names.at(2));
 	action->setData("{TIFA}");
-	action = toolBar->addAction(QIcon(":/images/icon-char-3.png"), Data::char_names.at(3));
+	action = toolBar->addAction(FF7Char::icon(3), Data::char_names.at(3));
 	action->setData("{AERITH}");
-	action = toolBar->addAction(QIcon(":/images/icon-char-4.png"), Data::char_names.at(4));
+	action = toolBar->addAction(FF7Char::icon(4), Data::char_names.at(4));
 	action->setData("{RED XIII}");
-	action = toolBar->addAction(QIcon(":/images/icon-char-5.png"), Data::char_names.at(5));
+	action = toolBar->addAction(FF7Char::icon(5), Data::char_names.at(5));
 	action->setData("{YUFFIE}");
-	action = toolBar->addAction(QIcon(":/images/icon-char-6.png"), Data::char_names.at(6));
+	action = toolBar->addAction(FF7Char::icon(6), Data::char_names.at(6));
 	action->setData("{CAIT SITH}");
-	action = toolBar->addAction(QIcon(":/images/icon-char-7.png"), Data::char_names.at(7));
+	action = toolBar->addAction(FF7Char::icon(7), Data::char_names.at(7));
 	action->setData("{VINCENT}");
-	action = toolBar->addAction(QIcon(":/images/icon-char-8.png"), Data::char_names.at(8));
+	action = toolBar->addAction(FF7Char::icon(8), Data::char_names.at(8));
 	action->setData("{CID}");
 	toolBar->addSeparator();
 	action = toolBar->addAction(QIcon(":/images/icon-member_1.png"), tr("Member 1"));
