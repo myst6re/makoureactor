@@ -3985,60 +3985,6 @@ Certains scripts peuvent y faire référence !</translation>
 <context>
     <name>QObject</name>
     <message>
-        <source>Cloud</source>
-        <oldsource>Clad</oldsource>
-        <translation>Clad</translation>
-    </message>
-    <message>
-        <source>Barret</source>
-        <translation>Barret</translation>
-    </message>
-    <message>
-        <source>Tifa</source>
-        <translation>Tifa</translation>
-    </message>
-    <message>
-        <source>Aeris</source>
-        <translation type="vanished">Aeris</translation>
-    </message>
-    <message>
-        <source>Red XIII</source>
-        <translation>Red XIII</translation>
-    </message>
-    <message>
-        <source>Yuffie</source>
-        <translation>Youfie</translation>
-    </message>
-    <message>
-        <source>Aerith</source>
-        <translation>Aerith</translation>
-    </message>
-    <message>
-        <source>Cait Sith</source>
-        <translation>Cait Sith</translation>
-    </message>
-    <message>
-        <source>Vincent</source>
-        <translation>Vincent</translation>
-    </message>
-    <message>
-        <source>Cid</source>
-        <translation>Cid</translation>
-    </message>
-    <message>
-        <source>Yound Cloud</source>
-        <oldsource>Jeune Clad</oldsource>
-        <translation>Jeune Clad</translation>
-    </message>
-    <message>
-        <source>Sephiroth</source>
-        <translation>Sephiroth</translation>
-    </message>
-    <message>
-        <source>Chocobo</source>
-        <translation>Chocobo</translation>
-    </message>
-    <message>
         <source>[CAMERA|L2]</source>
         <translation></translation>
     </message>

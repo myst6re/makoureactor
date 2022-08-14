@@ -3641,63 +3641,6 @@ Some scripts can refer to it!</source>
         <translation type="unfinished">スクリプト %1 :</translation>
     </message>
     <message>
-        <source>Cloud</source>
-        <oldsource>Clad</oldsource>
-        <translatorcomment>Cloud</translatorcomment>
-        <translation type="unfinished">クラウド</translation>
-    </message>
-    <message>
-        <source>Barret</source>
-        <translation>バレット</translation>
-    </message>
-    <message>
-        <source>Tifa</source>
-        <translation>ティファ</translation>
-    </message>
-    <message>
-        <source>Aeris</source>
-        <translatorcomment>Aeris</translatorcomment>
-        <translation type="vanished">エアリス</translation>
-    </message>
-    <message>
-        <source>Red XIII</source>
-        <translation>レッドXIII</translation>
-    </message>
-    <message>
-        <source>Yuffie</source>
-        <translation>ユフィ</translation>
-    </message>
-    <message>
-        <source>Aerith</source>
-        <translation>エアリス</translation>
-    </message>
-    <message>
-        <source>Cait Sith</source>
-        <translation>ケット・シー</translation>
-    </message>
-    <message>
-        <source>Vincent</source>
-        <translation>ヴィンセント</translation>
-    </message>
-    <message>
-        <source>Cid</source>
-        <translation>シド</translation>
-    </message>
-    <message>
-        <source>Yound Cloud</source>
-        <oldsource>Jeune Clad</oldsource>
-        <translatorcomment>Young Cloud</translatorcomment>
-        <translation type="unfinished">昔のクラウド</translation>
-    </message>
-    <message>
-        <source>Sephiroth</source>
-        <translation>セフィロス</translation>
-    </message>
-    <message>
-        <source>Chocobo</source>
-        <translation>チョコボ</translation>
-    </message>
-    <message>
         <source>[CAMERA|L2]</source>
         <translation>[視点|L2]ボタン</translation>
     </message>
