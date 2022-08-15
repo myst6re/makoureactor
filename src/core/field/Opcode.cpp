@@ -154,7 +154,7 @@ QByteArray Opcode::toByteArray() const
 	quint8 s = size();
 	QByteArray ret;
 	ret.reserve(s);
-	ret[0] = char(id());
+	ret.append(char(id()));
 	ret.append(params());
 
 	return ret;
