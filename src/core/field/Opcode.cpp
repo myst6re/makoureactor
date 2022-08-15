@@ -77,7 +77,7 @@ void Opcode::setParams(const char *params, qsizetype maxSize)
 		memset(reinterpret_cast<char *>(&_opcode) + sizeof(_opcode.id) + fixedParamsSize, 0, size_t(maxStructSize - fixedParamsSize));
 	}
 
-	if (id() == OpcodeKey::SPECIAL || id() == OpcodeKey::Unused1C || id() == OpcodeKey::KAWAI) {
+	if (id() == OpcodeKey::Unused1C || id() == OpcodeKey::KAWAI) {
 		quint8 dynamicParamsSize = size() - fixedParamsSize - 1;
 		
 		if (dynamicParamsSize > maxSize - fixedParamsSize) {
@@ -85,13 +85,7 @@ void Opcode::setParams(const char *params, qsizetype maxSize)
 			dynamicParamsSize = quint8(maxSize - fixedParamsSize);
 		}
 
-		if (id() == OpcodeKey::SPECIAL) {
-			if (dynamicParamsSize > 0) {
-				memcpy(reinterpret_cast<char *>(&_opcode) + sizeof(_opcode.id) + fixedParamsSize, params + fixedParamsSize, size_t(dynamicParamsSize));
-			}
-		} else {
-			setResizableData(QByteArray(params + fixedParamsSize, dynamicParamsSize));
-		}
+		setResizableData(QByteArray(params + fixedParamsSize, dynamicParamsSize));
 	}
 }
 
@@ -99,7 +93,6 @@ QByteArray Opcode::params() const
 {
 	quint8 fixedParamsSize = fixedSize() - 1;
 	QByteArray ret;
-	ret.reserve(size() - 1);
 
 	return ret
 	        .append(reinterpret_cast<const char *>(&_opcode) + sizeof(_opcode.id), fixedParamsSize)
@@ -119,12 +112,7 @@ int Opcode::subParam(qsizetype cur, qsizetype sizeInBits) const
 
 quint8 Opcode::fixedSize() const
 {
-	return id() < 257 ? length[id()] : 1;
-}
-
-quint8 Opcode::size() const
-{
-	quint8 size = fixedSize();
+	quint8 size = id() < 257 ? length[id()] : 1;
 
 	if (id() == OpcodeKey::SPECIAL) {
 		switch (_opcode.opcodeSPECIAL.subKey) {
@@ -140,7 +128,16 @@ quint8 Opcode::size() const
 			size += 2;
 			break;
 		}
-	} else if (id() == OpcodeKey::Unused1C) {
+	}
+
+	return size;
+}
+
+quint8 Opcode::size() const
+{
+	quint8 size = fixedSize();
+
+	if (id() == OpcodeKey::Unused1C) {
 		size += std::min(_opcode.opcodeUnused1C.subSize, quint8(128));
 	} else if (id() == OpcodeKey::KAWAI) {
 		size = _opcode.opcodeKAWAI.opcodeSize;
@@ -153,9 +150,12 @@ QByteArray Opcode::toByteArray() const
 {
 	quint8 s = size();
 	QByteArray ret;
-	ret.reserve(s);
-	ret.append(char(id()));
-	ret.append(params());
+
+	if (s > 0) {
+		ret.reserve(s);
+		ret.append(char(id()));
+		ret.append(params());
+	}
 
 	return ret;
 }

@@ -172,42 +172,59 @@ bool Script::compile(int &opcodeID, QString &errorStr)
 		} else {
 			pos += opcode.size();
 		}
+
 		++opcodeID;
 	}
+
+	qDebug() << "compile" << labelPositions;
 
 	// Convert jump opcodes
 	bool wasSizeModified = false;
 	do {
 		wasSizeModified = false;
 		pos = 0;
-		for (int i = 0; i < _opcodes.size(); ++i) {
-			Opcode &opcode = _opcodes[i];
+		opcodeID = 0;
+		for (Opcode &opcode : _opcodes) {
 			if (opcode.id() == OpcodeKey::LABEL) {
+				if (labelPositions.value(opcode.op().opcodeLABEL._label) != pos) {
+					qDebug() << "compile update position label" << opcode.op().opcodeLABEL._label << pos;
+				}
 				// Update position, in case we converted an opcode to long
 				labelPositions.insert(opcode.op().opcodeLABEL._label, pos);
-			}
-			if (opcode.isJump()) {
-				quint16 label = quint16(opcode.label());
-				if (labelPositions.contains(label)) {
-					qint32 jump = labelPositions.value(label) - pos;
-					quint8 oldSize = opcode.size();
-					if (opcode.setJump(jump)) { // Can convert to long jump, which change the size
-						// size of opcode modified!
-						wasSizeModified = oldSize != opcode.size();
+			} else {
+				if (opcode.isJump()) {
+					quint16 label = quint16(opcode.label());
+					if (labelPositions.contains(label)) {
+						qint32 jump = labelPositions.value(label) - pos;
+						quint8 oldSize = opcode.size();
+						qDebug() << "compile set jump" << "label" << label << "old jump" << opcode.jump() << "new jump" << jump << "old size" << oldSize << "pos" << pos;
+
+						if (jump != opcode.jump() && opcode.setJump(jump)) { // Can convert to long jump, which change the size
+							// size of opcode modified!
+							wasSizeModified = oldSize != opcode.size();
+							qDebug() << "wasSizeModified" << wasSizeModified << "new size" << opcode.size();
+						}
+					} else {
+						errorStr = QObject::tr("Label %1 not found.")
+								   .arg(label);
+						return false;
 					}
-				} else {
-					errorStr = QObject::tr("Label %1 not found.")
-					           .arg(label);
-					return false;
+					
 				}
-				
+
+				pos += opcode.size();
 			}
-			pos += opcode.size();
+
+			++opcodeID;
+		}
+		if (wasSizeModified) {
+			qDebug() << "here we go again";
 		}
 	} while (wasSizeModified); // Retry to check if jump are well dimensioned until no changes happen
 
 	// Look for jump errors
-	opcodeID = pos = 0;
+	pos = 0;
+	opcodeID = 0;
 	for (Opcode &opcode : _opcodes) {
 		if (opcode.isJump()) {
 			switch (opcode.badJump()) {
