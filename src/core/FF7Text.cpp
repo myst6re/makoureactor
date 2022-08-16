@@ -21,7 +21,7 @@
 FF7Text::FF7Text(const QByteArray &data)
 {
 	qsizetype index = data.indexOf('\xFF');
-	_data = index != -1 ? data.left(index) : data;
+	_data = index != -1 ? data.first(index) : data;
 }
 
 FF7Text::FF7Text(const QString &text, bool jp)

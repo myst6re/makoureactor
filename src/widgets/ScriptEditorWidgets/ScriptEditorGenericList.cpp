@@ -117,7 +117,7 @@ QByteArray ScriptEditorGenericList::parseModel(bool *isLabel)
 		}
 		start = 2;
 	} else if (byte == 0x28) { // KAWAI
-		quint8 byte3 = quint8(opcode().op().opcodeSPECIAL.subKey);
+		quint8 byte3 = quint8(opcode().op().opcodeKAWAI.subKey);
 		length = quint8(model->rowCount() + 3);
 		newOpcode.append(char(length));
 		newOpcode.append(char(byte3));

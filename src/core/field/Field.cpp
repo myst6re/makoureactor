@@ -20,7 +20,6 @@
 #include "FieldArchiveIO.h"
 #include "FieldPC.h"
 #include "FieldPS.h"
-#include "../Config.h"
 #include "BackgroundFilePC.h"
 
 Field::Field(const QString &name, FieldArchiveIO *io) :
@@ -79,7 +78,7 @@ bool Field::open(bool dontOptimize)
 			if (quint32(lzsData.size()) != lzsSize + 4 && lzsSize == 0x90000) { // Maybe it is not compressed
 				fileData = lzsData;
 			} else {
-				fileData = LZS::decompress(lzsDataConst + 4, qMin(lzsSize, quint32(lzsData.size() - 4)), headerSize());//partial decompression
+				fileData = LZS::decompress(lzsDataConst + 4, int(qMin(qsizetype(lzsSize), lzsData.size() - 4)), headerSize());//partial decompression
 			}
 		} else {
 			fileData = _io->fieldData(this, fileType);
@@ -117,7 +116,7 @@ int Field::sectionSize(FieldSection part) const
 	int idPart = sectionId(part);
 
 	if (idPart < sectionCount() - 1) {
-		return sectionPosition(idPart+1) - paddingBetweenSections() - sectionPosition(idPart);
+		return int(sectionPosition(idPart + 1)) - paddingBetweenSections() - int(sectionPosition(idPart));
 	}
 	return -1;
 }
@@ -164,7 +163,7 @@ QByteArray Field::sectionData(FieldSection part, bool dontOptimize)
 
 	if (size < 0) {
 		QByteArray footer = saveFooter();
-		if (!footer.isEmpty() && data.right(footer.size()) == footer) {
+		if (!footer.isEmpty() && data.endsWith(footer)) {
 			return data.mid(position, data.size() - position - footer.size());
 		}
 	}
