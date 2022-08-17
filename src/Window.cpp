@@ -37,6 +37,14 @@ Window::Window() :
     _textDialog(nullptr), _modelManager(nullptr), _tutManager(nullptr), _walkmeshManager(nullptr),
     _backgroundManager(nullptr), _lgpWidget(nullptr), _progressDialog(nullptr), timer(this)
 {
+	QString colorMode = palette().text().color().value() >= QColor(Qt::lightGray).value() ? QStringLiteral("dark") : QStringLiteral("light");
+	QIcon::setFallbackSearchPaths(QIcon::fallbackSearchPaths() << ":/icons/common");
+	QIcon::setFallbackSearchPaths(QIcon::fallbackSearchPaths() << QStringLiteral(":/icons/%1").arg(colorMode));
+	if (QIcon::themeName().isEmpty()) {
+		QIcon::setThemeName(QStringLiteral("mr-%1").arg(colorMode));
+	} else {
+		QIcon::setFallbackThemeName(QStringLiteral("mr-%1").arg(colorMode));
+	}
 	setWindowTitle();
 	setWindowState(Qt::WindowMaximized);
 
@@ -60,40 +68,41 @@ Window::Window() :
 	/* "File" Menu */
 	QMenu *fileMenu = menuBar->addMenu(tr("&File"));
 
-	actionOpen = fileMenu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogOpenButton), tr("&Open..."), this, [&] { openFile(QString());}, QKeySequence("Ctrl+O"));
-	fileMenu->addAction(tr("Open &Directory..."), this, &Window::openDir, QKeySequence("Shift+Ctrl+O"));
+	actionOpen = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-open")), tr("&Open..."), this, [&] { openFile(QString());}, QKeySequence("Ctrl+O"));
+	fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-open-folder")), tr("Open &Directory..."), this, &Window::openDir, QKeySequence("Shift+Ctrl+O"));
 	_recentMenu = new QMenu(tr("&Recent files"), this);
+	_recentMenu->setIcon(QIcon::fromTheme(QStringLiteral("document-open-recent")));
 	fillRecentMenu();
 	connect(_recentMenu, &QMenu::triggered, this, &Window::openRecentFile);
 	fileMenu->addMenu(_recentMenu);
-	actionSave = fileMenu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton), tr("&Save"), this, &Window::save, QKeySequence("Ctrl+S"));
-	actionSaveAs = fileMenu->addAction(tr("Save &As..."), this, &Window::saveAs, QKeySequence("Shift+Ctrl+S"));
-	actionExport = fileMenu->addAction(tr("&Save the current map..."), this, &Window::exportCurrentMap, QKeySequence("Ctrl+E"));
-	actionMassExport = fileMenu->addAction(tr("&Mass Export..."), this, &Window::massExport, QKeySequence("Shift+Ctrl+E"));
-	actionImport = fileMenu->addAction(tr("&Import to current map..."), this, &Window::importToCurrentMap, QKeySequence("Ctrl+I"));
-//	actionMassImport = fileMenu->addAction(tr("Mass &import..."), this, &Window::massImport, QKeySequence("Shift+Ctrl+I"));
-	actionArchive = fileMenu->addAction(tr("Archive Mana&ger..."), this, &Window::archiveManager, QKeySequence("Shift+Ctrl+K"));
+	actionSave = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-save")), tr("&Save"), this, &Window::save, QKeySequence("Ctrl+S"));
+	actionSaveAs = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-save-as")), tr("Save &As..."), this, &Window::saveAs, QKeySequence("Shift+Ctrl+S"));
+	actionExport = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-export")), tr("&Save the current map..."), this, &Window::exportCurrentMap, QKeySequence("Ctrl+E"));
+	actionMassExport = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-export")), tr("&Mass Export..."), this, &Window::massExport, QKeySequence("Shift+Ctrl+E"));
+	actionImport = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-import")),tr("&Import to current map..."), this, &Window::importToCurrentMap, QKeySequence("Ctrl+I"));
+//	actionMassImport = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-import")), tr("Mass &import..."), this, &Window::massImport, QKeySequence("Shift+Ctrl+I"));
+	actionArchive = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("archive-generic")), tr("Archive Mana&ger..."), this, &Window::archiveManager, QKeySequence("Shift+Ctrl+K"));
 	fileMenu->addSeparator();
-	actionRun = fileMenu->addAction(QIcon(":/images/ff7.png"), tr("R&un FF7"), this, &Window::runFF7);
+	actionRun = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("ff7")), tr("R&un FF7"), this, &Window::runFF7);
 	actionRun->setShortcut(Qt::Key_F8);
 	actionRun->setShortcutContext(Qt::ApplicationShortcut);
 	actionRun->setEnabled(!Data::ff7AppPath().isEmpty());
 	fileMenu->addSeparator();
-	actionClose = fileMenu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogCloseButton), tr("C&lose"), this, &Window::closeFile);
-	fileMenu->addAction(tr("E&xit"), this, &Window::close, QKeySequence::Quit)->setMenuRole(QAction::QuitRole);
+	actionClose = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-close")), tr("C&lose"), this, &Window::closeFile);
+	fileMenu->addAction(QIcon::fromTheme(QStringLiteral("application-exit")), tr("E&xit"), this, &Window::close, QKeySequence::Quit)->setMenuRole(QAction::QuitRole);
 
 	/* "Tools" Menu */
 	menu = menuBar->addMenu(tr("T&ools"));
 	QAction *actionText = menu->addAction(QIcon(":/images/text-editor.png"), tr("&Texts..."), this, [&] {textManager(-1, 0, 0, true);}, QKeySequence("Ctrl+T"));
 	actionModels = menu->addAction(QIcon(":/images/model.png"), tr("Map &Models..."), this, &Window::modelManager, QKeySequence("Ctrl+M"));
 	actionEncounter = menu->addAction(tr("Encounte&rs..."), this, &Window::encounterManager, QKeySequence("Ctrl+N"));
-	menu->addAction(tr("Tutorials/Mu&sics..."), this, &Window::tutManager, QKeySequence("Ctrl+K"));
-	QAction *actionWalkmesh = menu->addAction(QIcon(":/images/location.png"), tr("&Walkmesh..."), this, &Window::walkmeshManager, QKeySequence("Ctrl+W"));
-	menu->addAction(QIcon(":/images/background.png"), tr("&Background..."), this, &Window::backgroundManager, QKeySequence("Ctrl+B"));
+	menu->addAction(QIcon::fromTheme(QStringLiteral("new-audio-alarm")), tr("Tutorials/Mu&sics..."), this, &Window::tutManager, QKeySequence("Ctrl+K"));
+	QAction *actionWalkmesh = menu->addAction(QIcon::fromTheme(QStringLiteral("kstars_grid")), tr("&Walkmesh..."), this, &Window::walkmeshManager, QKeySequence("Ctrl+W"));
+	menu->addAction(QIcon::fromTheme(QStringLiteral("view-preview")), tr("&Background..."), this, &Window::backgroundManager, QKeySequence("Ctrl+B"));
 	actionMisc = menu->addAction(tr("M&iscellaneous..."), this, &Window::miscManager);
 	menu->addSeparator();
 	menu->addAction(tr("Variable Mana&ger..."), this, &Window::varManager, QKeySequence("Ctrl+G"));
-	actionFind = menu->addAction(QIcon(":/images/find.png"), tr("&Find..."), this, &Window::searchManager, QKeySequence::Find);
+	actionFind = menu->addAction(QIcon::fromTheme(QStringLiteral("edit-find")), tr("&Find..."), this, &Window::searchManager, QKeySequence::Find);
 	actionMiscOperations = menu->addAction(tr("B&atch processing..."), this, &Window::miscOperations);
 
 	/* "Settings" Menu */
@@ -128,7 +137,7 @@ Window::Window() :
 	}
 	connect(menuLang, &QMenu::triggered, this, &Window::changeLanguage);
 
-	menu->addAction(tr("&Configuration..."), this, &Window::config)->setMenuRole(QAction::PreferencesRole);
+	menu->addAction(QIcon::fromTheme(QStringLiteral("configure")), tr("&Configuration..."), this, &Window::config)->setMenuRole(QAction::PreferencesRole);
 
 	/* Toolbar */
 	toolBar = new QToolBar(tr("Main &toolbar"));
@@ -1616,9 +1625,11 @@ void Window::archiveManager()
 {
 	if (_lgpWidget != nullptr && _mainStackedWidget->currentWidget() == _lgpWidget) {
 		actionArchive->setText(tr("Archive Mana&ger..."));
+		actionArchive->setIcon(QIcon::fromTheme(QStringLiteral("archive-generic")));
 		_mainStackedWidget->setCurrentIndex(0); // Back to standard view
 	} else if (fieldArchive && fieldArchive->io()->type() == FieldArchiveIO::Lgp) {
 		actionArchive->setText(tr("Go back to field map editor..."));
+		actionArchive->setIcon(QIcon());
 		if (_lgpWidget == nullptr) {
 			_lgpWidget = new LgpWidget(static_cast<Lgp *>(fieldArchive->io()->device()), this);
 			connect(_lgpWidget, &LgpWidget::modified, this, [&] {setModified(true);});

@@ -179,9 +179,10 @@ private slots:
 	void setIcon(const QString &path, const QIcon &icon);
 private:
 //	IconThread iconThread;
-	QIcon fileIcon, directoryIcon;
+	QIcon fileIcon, directoryIcon, textureIcon;
 	LgpDirectoryItem *root;
 	Lgp *_lgp;
+	QStringList _textureTypes { ".tex", ".png", ".tim", ".jpg", ".jpeg" };
 };
 
 class LgpWidget : public QWidget, ArchiveObserver

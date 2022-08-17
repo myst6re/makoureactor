@@ -70,12 +70,8 @@ add_compile_definitions(
     MAKOU_REACTOR_VERSION_TWEAK=0
 )
 
-find_package(QT NAMES Qt6 COMPONENTS Widgets OpenGLWidgets OpenGL REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets OpenGLWidgets OpenGL REQUIRED)
-if(APPLE)
-    find_package(QT NAMES Qt6 COMPONENTS Svg REQUIRED)
-    find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Svg REQUIRED)
-endif()
+find_package(QT NAMES Qt6 COMPONENTS Widgets OpenGLWidgets OpenGL Svg REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets OpenGLWidgets Svg OpenGL REQUIRED)
 
 set(REQUIRED_FF7TK_VERSION 0.82.0)
 find_package(ff7tk ${REQUIRED_FF7TK_VERSION} REQUIRED COMPONENTS ff7tk ff7tkQtWidgets ff7tkFormats ff7tkUtils)
@@ -509,22 +505,20 @@ endif()
 
 # GUI
 if(GUI)
-    qt_add_executable(${GUI_TARGET} MANUAL_FINALIZATION MACOSX_BUNDLE WIN32 ${PROJECT_SOURCES} ${QM_FILES} ${RESOURCES} ${EXTRA_RESOURCES_GUI})
+    qt_add_executable(${GUI_TARGET} MANUAL_FINALIZATION MACOSX_BUNDLE WIN32 ${PROJECT_SOURCES} ${QM_FILES} ${RESOURCES} ${EXTRA_RESOURCES_GUI} icons/icons.qrc)
     target_include_directories(${GUI_TARGET} PRIVATE "${CMAKE_SOURCE_DIR}/src")
     target_link_libraries(${GUI_TARGET} PRIVATE
         Qt::OpenGL
         Qt::Widgets
         Qt::OpenGLWidgets
+        Qt::Svg
         ZLIB::ZLIB
         ff7tk::ff7tk
         ff7tk::ff7tkQtWidgets
         ff7tk::ff7tkFormats
         ff7tk::ff7tkUtils
     )
-    if(APPLE)
-        target_link_libraries(${GUI_TARGET} PRIVATE Qt::Svg)
-    endif()
-    
+
     if(${QT_VERSION_MAJOR} EQUAL 6)
         target_link_libraries(${GUI_TARGET} PRIVATE Qt::Core5Compat)
         

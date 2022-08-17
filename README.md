@@ -14,7 +14,7 @@ when available:
 
 - **Windows**: Download the last release on [GitHub](https://github.com/myst6re/makoureactor/releases).
 - **MacOSX**: Download the latest release on [GitHub](https://github.com/myst6re/makoureactor/releases)
-- **Debian/Ubuntu**: Add sithlord48's [Stable Release](https://launchpad.net/~sithlord48/+archive/ubuntu/ff7) or [Daily Builds](https://launchpad.net/~sithlord48/+archive/ubuntu/ff7-daily) ppa to install the makoureactor package
+- **Debian/Ubuntu**: [GitHub](https://github.com/myst6re/makoureactor/releases)
 - **ArchLinux**: Use packages from the [AUR](https://aur.archlinux.org/packages/?O=0&SeB=nd&K=makoureactor&outdated=&SB=n&SO=a&PP=50&do_Search=Go).
 - **Other Linux**: Download the latest release on [GitHub](https://github.com/myst6re/makoureactor/releases)
 
@@ -32,17 +32,17 @@ instructions below.
 
 ### Requirements
 
-- ff7tk
+- [ff7tk](https://www.github.com/sithlord48/ff7tk)
 - CMake
-- Qt 5.15+
+- Qt 6.2+
 
 ### Windows
 
 #### Qt + Qt Creator
 
 0. Download the online installer from https://www.qt.io/download-qt-installer
-1. Install Qt 5 with these items checked:
-   - **Qt/Qt 5.XX.X (last version):** Check `MSVC 2019 64-bit`
+1. Install Qt 6 with these items checked:
+   - **Qt/Qt 6.x.x (last version):** Check `MSVC 2019 64-bit`
    - **Developer And Designer Tools:** Check `CMake` and `Ninja`
 2. Run Qt Creator and open an existing project, select the CMakeLists.txt in the source directory of Makou Reactor
 
@@ -77,7 +77,7 @@ In order to continue please make sure you have `brew` installed. See https://bre
 
 ```sh
 $ brew install cmake
-$ brew install qt5
+$ brew install qt6
 ```
 
 Close and reopen your terminal.
@@ -99,13 +99,13 @@ $ cmake --build .dist/build --config Release
 ##### Debian/Ubuntu
 
 ```sh
-$ apt-get install build-essential cmake qt5-default qttools5-dev
+$ apt-get install build-essential cmake qt6-default qttools6-dev
 ```
 
 ##### Arch Linux
 
 ```sh
-$ pacman -S --needed base-devel cmake qt5
+$ pacman -S --needed base-devel cmake qt6
 ```
 
 #### Build

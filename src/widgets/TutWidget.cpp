@@ -48,8 +48,8 @@ TutWidget::TutWidget(QWidget *parent) :
 	stackedWidget->addWidget(buildBrokenPage());
 	stackedWidget->setCurrentIndex(0);
 
-	exportButton = new QPushButton(tr("Export..."));
-	importButton = new QPushButton(tr("Import..."));
+	exportButton = new QPushButton(QIcon::fromTheme(QStringLiteral("document-export")), tr("Export..."));
+	importButton = new QPushButton(QIcon::fromTheme(QStringLiteral("document-import")), tr("Import..."));
 	exportButton->setEnabled(false);
 	importButton->setEnabled(false);
 

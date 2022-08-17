@@ -40,7 +40,7 @@ ScriptManager::ScriptManager(QWidget *parent) :
 	pal.setColor(QPalette::Inactive, QPalette::WindowText, Qt::red);
 	_compileScriptLabel->setPalette(pal);
 	_compileScriptIcon = new QLabel(this);
-	_compileScriptIcon->setPixmap(QApplication::style()->standardIcon(QStyle::SP_MessageBoxCritical).pixmap(16));
+	_compileScriptIcon->setPixmap(QIcon::fromTheme(QStringLiteral("dialog-critical")).pixmap(16));
 	_compileScriptIcon->hide();
 	
 	QVBoxLayout *layoutGroupScript = new QVBoxLayout;

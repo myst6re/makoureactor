@@ -26,7 +26,7 @@ EncounterWidget::EncounterWidget(EncounterFile *data, QWidget *parent) :
 	group2 = new EncounterTableWidget(tr("Encounters 2"), this);
 
 	QLabel *helpIcon = new QLabel(this);
-	helpIcon->setPixmap(QApplication::style()->standardIcon(QStyle::SP_MessageBoxInformation).pixmap(32));
+	helpIcon->setPixmap(QIcon::fromTheme(QStringLiteral("dialog-information")).pixmap(32));
 	QLabel *help = new QLabel(tr("<b>Encounters:</b> There are two groups of independent encounters, by default it is the group 1 that is active, but the opcode BTLTB (in scripts) can modify to the group 2.<br/>"
 								 "<b>Battle Rate:</b> The lower the percentage, the higher the fighting will be frequent."), this);
 	help->setTextFormat(Qt::RichText);
