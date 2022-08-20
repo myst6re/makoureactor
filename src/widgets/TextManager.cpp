@@ -134,15 +134,14 @@ TextManager::TextManager(QWidget *parent) :
 	action->setMenu(menuVars);
 	toolBar2->addSeparator();
 
-	QString mode = palette().text().color().value() >= QColor(Qt::lightGray).value() ? QStringLiteral("dark") : QStringLiteral("light");
 	menuKeys = new QMenu(this);
-	action = menuKeys->addAction(QIcon(QStringLiteral(":/psxButtons/%1/circle").arg(mode)), tr("Circle"));
+	action = menuKeys->addAction(QIcon(QStringLiteral(":/psxButtons/%1/circle").arg(Config::iconThemeColor())), tr("Circle"));
 	action->setData("{CIRCLE}");
-	action = menuKeys->addAction(QIcon(QStringLiteral(":/psxButtons/%1/triangle").arg(mode)), tr("Triangle"));
+	action = menuKeys->addAction(QIcon(QStringLiteral(":/psxButtons/%1/triangle").arg(Config::iconThemeColor())), tr("Triangle"));
 	action->setData("{TRIANGLE}");
-	action = menuKeys->addAction(QIcon(QStringLiteral(":/psxButtons/%1/square").arg(mode)), tr("Square"));
+	action = menuKeys->addAction(QIcon(QStringLiteral(":/psxButtons/%1/square").arg(Config::iconThemeColor())), tr("Square"));
 	action->setData("{SQUARE}");
-	action = menuKeys->addAction(QIcon(QStringLiteral(":/psxButtons/%1/cross").arg(mode)), tr("Cross"));
+	action = menuKeys->addAction(QIcon(QStringLiteral(":/psxButtons/%1/cross").arg(Config::iconThemeColor())), tr("Cross"));
 	action->setData("{CROSS}");
 	action = toolBar2->addAction(tr("Keys"));
 	action->setMenu(menuKeys);

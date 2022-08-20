@@ -41,6 +41,7 @@ private:
 	DialogPreview *windowPreview;
 	QCheckBox *expandedByDefault;
 	QComboBox *encodings;
+	QComboBox *comboPalette;
 	QRgb windowColorTopLeft, windowColorTopRight, windowColorBottomLeft, windowColorBottomRight;
 	QStringList customNames;
 	QPushButton *encodingEdit;

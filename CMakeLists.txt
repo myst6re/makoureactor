@@ -524,6 +524,7 @@ if(GUI)
         
         target_compile_definitions(${GUI_TARGET}
             PRIVATE TASKBAR_BUTTON=1
+            GUI=1
         )
     endif()
     

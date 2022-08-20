@@ -863,7 +863,7 @@ const char *Data::musicList2[100] =
 
 QColor Data::color(Color color)
 {
-	bool darkTheme = Config::value("dark_theme", false).toBool();
+	bool darkTheme = Config::inDarkMode();
 
 	switch (color) {
 	case ColorEvidence:
