@@ -281,7 +281,7 @@ bool Section1File::open(const QByteArray &data)
 				}
 
 				// FIXME: possible hidden data between 0xFF and posEnd - posBeg
-				_texts.append(FF7Text(data.mid(posTexts + posBeg, posEnd - posBeg)));
+				_texts.append(FF7Text(QByteArrayView(constData + posTexts + posBeg, posEnd - posBeg)));
 				posBeg = posEnd;
 			}
 			if (dataSize < sizeTextSection) {
@@ -289,7 +289,7 @@ bool Section1File::open(const QByteArray &data)
 				return false;
 			}
 			// FIXME: possible hidden data between 0xFF and posEnd - posBeg
-			_texts.append(FF7Text(data.mid(posTexts + posBeg, sizeTextSection - posBeg)));
+			_texts.append(FF7Text(QByteArrayView(constData + posTexts + posBeg, sizeTextSection - posBeg)));
 		}
 	}
 

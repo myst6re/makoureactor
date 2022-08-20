@@ -18,10 +18,10 @@
 #include "FF7Text.h"
 #include "Config.h"
 
-FF7Text::FF7Text(const QByteArray &data)
+FF7Text::FF7Text(QByteArrayView data)
 {
 	qsizetype index = data.indexOf('\xFF');
-	_data = index != -1 ? data.first(index) : data;
+	_data = (index != -1 ? data.first(index) : data).toByteArray();
 }
 
 FF7Text::FF7Text(const QString &text, bool jp)

@@ -489,7 +489,7 @@ if(APPLE)
     )
 endif()
 
-set(RESOURCES "src/qt/${RELEASE_NAME}.qrc")
+set(RESOURCES "src/qt/${RELEASE_NAME}.qrc" "icons/icons.qrc")
 
 if(APPLE)
     set(ICON_FILE "deploy/macosx/${RELEASE_NAME}.icns")
@@ -505,7 +505,7 @@ endif()
 
 # GUI
 if(GUI)
-    qt_add_executable(${GUI_TARGET} MANUAL_FINALIZATION MACOSX_BUNDLE WIN32 ${PROJECT_SOURCES} ${QM_FILES} ${RESOURCES} ${EXTRA_RESOURCES_GUI} icons/icons.qrc)
+    qt_add_executable(${GUI_TARGET} MANUAL_FINALIZATION MACOSX_BUNDLE WIN32 ${PROJECT_SOURCES} ${QM_FILES} ${RESOURCES} ${EXTRA_RESOURCES_GUI})
     target_include_directories(${GUI_TARGET} PRIVATE "${CMAKE_SOURCE_DIR}/src")
     target_link_libraries(${GUI_TARGET} PRIVATE
         Qt::OpenGL

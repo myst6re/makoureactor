@@ -176,7 +176,9 @@ bool Script::compile(int &opcodeID, QString &errorStr)
 		++opcodeID;
 	}
 
-	qDebug() << "compile" << labelPositions;
+	if (!labelPositions.isEmpty()) {
+		qDebug() << "compile" << labelPositions;
+	}
 
 	// Convert jump opcodes
 	bool wasSizeModified = false;

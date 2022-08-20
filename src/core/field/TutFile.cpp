@@ -99,7 +99,7 @@ QString TutFile::parseScripts(int tutID, bool *warnings) const
 	const QByteArray &tuto = data(tutID);
 	const char *constTuto = tuto.constData();
 	QString ret;
-	QByteArray textData;
+	QByteArrayView textData;
 	bool jp = Config::value("jp_txt", false).toBool();
 	int i=0, size = tuto.size(), endOfText;
 
@@ -146,9 +146,9 @@ QString TutFile::parseScripts(int tutID, bool *warnings) const
 			endOfText = tuto.indexOf('\xff', i);
 
 			if (endOfText != -1) {
-				textData = tuto.mid(i, endOfText-i);
+				textData = QByteArrayView(constTuto + i, endOfText - i);
 			} else {
-				textData = tuto.mid(i); // FIXME: this can break the bijection
+				textData = QByteArrayView(constTuto + i, tuto.size() - i); // FIXME: this can break the bijection
 			}
 
 			ret.append(QString("TEXT(\"%1\")")

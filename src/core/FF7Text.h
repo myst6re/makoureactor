@@ -22,7 +22,7 @@
 class FF7Text
 {
 public:
-	explicit FF7Text(const QByteArray &data=QByteArray());
+	explicit FF7Text(QByteArrayView data = QByteArrayView());
 	FF7Text(const QString &text, bool jp);
 	const QByteArray &data() const;
 	QString text(bool jp, bool simplified=false) const;
