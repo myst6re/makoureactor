@@ -28,7 +28,7 @@ void ApercuBGLabel::paintEvent(QPaintEvent *e)
 
 	if (isEnabled() && _showSave) {
 		QPainter painter(this);
-		painter.drawPixmap(0, 0, QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton).pixmap(32));
+		painter.drawPixmap(0, 0, QIcon::fromTheme(QStringLiteral("document-save")).pixmap(32));
 		painter.end();
 	}
 }

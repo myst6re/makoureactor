@@ -24,16 +24,16 @@ ModelManagerPC::ModelManagerPC(QWidget *parent) :
 {
 	QToolBar *toolBar1 = new QToolBar();
 	toolBar1->setIconSize(QSize(14, 14));
-	toolBar1->addAction(QIcon(":/images/plus.png"), QString(), this, &ModelManagerPC::addModel);
-	toolBar1->addAction(QIcon(":/images/minus.png"), QString(), this, &ModelManagerPC::delModel);
-	toolBar1->addAction(QIcon(":/images/up.png"), QString(), this, &ModelManagerPC::upModel);
-	toolBar1->addAction(QIcon(":/images/down.png"), QString(), this, &ModelManagerPC::downModel);
+	toolBar1->addAction(QIcon::fromTheme(QStringLiteral("list-add")), QString(), this, &ModelManagerPC::addModel);
+	toolBar1->addAction(QIcon::fromTheme(QStringLiteral("list-remove")), QString(), this, &ModelManagerPC::delModel);
+	toolBar1->addAction(QIcon::fromTheme(QStringLiteral("go-up")), QString(), this, &ModelManagerPC::upModel);
+	toolBar1->addAction(QIcon::fromTheme(QStringLiteral("go-down")), QString(), this, &ModelManagerPC::downModel);
 
 	models->setContextMenuPolicy(Qt::ActionsContextMenu);
 	models->setSelectionMode(QAbstractItemView::ExtendedSelection);
-	cutModelAction = new QAction(QIcon(":/images/cut.png"), tr("Cut"), models);
-	copyModelAction = new QAction(QIcon(":/images/copy.png"), tr("Copy"), models);
-	pasteModelAction = new QAction(QIcon(":/images/paste.png"), tr("Paste"), models);
+	cutModelAction = new QAction(QIcon::fromTheme(QStringLiteral("edit-cut")), tr("Cut"), models);
+	copyModelAction = new QAction(QIcon::fromTheme(QStringLiteral("edit-copy")), tr("Copy"), models);
+	pasteModelAction = new QAction(QIcon::fromTheme(QStringLiteral("edit-paste")), tr("Paste"), models);
 	models->addAction(cutModelAction);
 	models->addAction(copyModelAction);
 	models->addAction(pasteModelAction);
@@ -46,10 +46,10 @@ ModelManagerPC::ModelManagerPC(QWidget *parent) :
 
 	toolBar2 = new QToolBar();
 	toolBar2->setIconSize(QSize(14, 14));
-	toolBar2->addAction(QIcon(":/images/plus.png"), QString(), this, &ModelManagerPC::addAnim);
-	toolBar2->addAction(QIcon(":/images/minus.png"), QString(), this, &ModelManagerPC::delAnim);
-	toolBar2->addAction(QIcon(":/images/up.png"), QString(), this, &ModelManagerPC::upAnim);
-	toolBar2->addAction(QIcon(":/images/down.png"), QString(), this, &ModelManagerPC::downAnim);
+	toolBar2->addAction(QIcon::fromTheme(QStringLiteral("list-add")), QString(), this, &ModelManagerPC::addAnim);
+	toolBar2->addAction(QIcon::fromTheme(QStringLiteral("list-remove")), QString(), this, &ModelManagerPC::delAnim);
+	toolBar2->addAction(QIcon::fromTheme(QStringLiteral("go-up")), QString(), this, &ModelManagerPC::upAnim);
+	toolBar2->addAction(QIcon::fromTheme(QStringLiteral("go-down")), QString(), this, &ModelManagerPC::downAnim);
 
 	modelAnims->setColumnCount(3);
 	modelAnims->setHeaderLabels(QStringList() << tr("Id") << tr("Animation") << tr("?"));

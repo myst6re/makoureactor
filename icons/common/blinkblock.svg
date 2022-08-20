@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg version="1.1" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+ <style id="current-color-scheme" type="text/css">.ColorScheme-Text{color:#eff0f1;}</style>
+ <path d="m2 2.0411c4.6599-0.013688 9.3196-0.027376 13.979-0.041064 0.006857 9.3196 0.013686 18.64 0.020534 27.959-4.6599 0.013686-9.3196 0.027372-13.979 0.041067-0.0068573-9.3196-0.013686-18.64-0.020534-27.959z" fill="#fff" fill-rule="evenodd" stroke-width=".93869" style="paint-order:markers stroke fill"/>
+ <path d="m16 2.0411c4.6599-0.013688 9.3196-0.027376 13.979-0.041064 0.0069 9.3196 0.01369 18.64 0.02053 27.959-4.6599 0.013686-9.3196 0.027372-13.979 0.041067-0.0069-9.3196-0.01369-18.64-0.02053-27.959z" fill="#808080" fill-rule="evenodd" stroke-width=".93869" style="paint-order:markers stroke fill"/>
+ <path d="m1.0061 1.0501c9.9813-0.01466 19.963-0.029319 29.944-0.043979 0.01466 9.9813 0.02932 19.963 0.04398 29.944-9.9813 0.01466-19.963 0.02931-29.944 0.04398-0.014654-9.9813-0.029322-19.963-0.04398-29.944z" fill="none" stroke="#000" stroke-linecap="square" stroke-width="2" style="paint-order:markers stroke fill"/>
+</svg>

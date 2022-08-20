@@ -399,6 +399,7 @@ LgpItemModel::LgpItemModel(Lgp *lgp, QObject *parent) :
 
 	QFileIconProvider iconProvider;
 	fileIcon = iconProvider.icon(QFileIconProvider::File);
+	textureIcon = QIcon::fromTheme(QStringLiteral("image-x-generic"), iconProvider.icon(QFileIconProvider::File));
 	directoryIcon = iconProvider.icon(QFileIconProvider::Folder);
 
 //	iconThread.start(QThread::LowPriority);
@@ -521,6 +522,12 @@ QVariant LgpItemModel::data(const QModelIndex &index, int role) const
 				return directoryIcon;
 			} else {
 				if (static_cast<LgpFileItem *>(lgpItem)->icon().isNull()) {
+					QString fname = lgpItem->name();
+					for(const auto & ext : _textureTypes) {
+						if (fname.endsWith(ext, Qt::CaseInsensitive)) {
+							return textureIcon;
+						}
+					}
 					return fileIcon;
 				} else {
 					return static_cast<LgpFileItem *>(lgpItem)->icon();
@@ -688,17 +695,17 @@ LgpWidget::LgpWidget(Lgp *lgp, QWidget *parent) :
 	treeView->header()->setStretchLastSection(false);
 	treeView->setSortingEnabled(false); // TODO
 
-	renameButton = new QPushButton(tr("Rename"), this);
+	renameButton = new QPushButton(QIcon::fromTheme(QStringLiteral("document-edit")),tr("Rename"), this);
 	renameButton->setShortcut(Qt::Key_F2);
-	replaceButton = new QPushButton(tr("Replace"), this);
+	replaceButton = new QPushButton(QIcon::fromTheme(QStringLiteral("document-replace")), tr("Replace"), this);
 	replaceButton->setShortcut(QKeySequence("Ctrl+R"));
-	extractButton = new QPushButton(tr("Extract"), this);
+	extractButton = new QPushButton(QIcon::fromTheme(QStringLiteral("archive-extract")), tr("Extract"), this);
 	extractButton->setShortcut(QKeySequence("Ctrl+E"));
-	extractAllButton = new QPushButton(tr("Extract All"), this);
+	extractAllButton = new QPushButton(QIcon::fromTheme(QStringLiteral("archive-extract")), tr("Extract All"), this);
 	extractAllButton->setShortcut(QKeySequence("Ctrl+A"));
-	addButton = new QPushButton(QIcon(":/images/plus.png"), tr("Add"), this);
+	addButton = new QPushButton(QIcon::fromTheme(QStringLiteral("archive-insert")), tr("Add"), this);
 	addButton->setShortcut(QKeySequence::New);
-	removeButton = new QPushButton(QIcon(":/images/minus.png"), tr("Delete"), this);
+	removeButton = new QPushButton(QIcon::fromTheme(QStringLiteral("archive-remove")), tr("Delete"), this);
 	removeButton->setShortcut(QKeySequence::Delete);
 
 	preview = new ArchivePreview(this);

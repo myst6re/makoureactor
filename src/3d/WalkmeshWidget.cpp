@@ -42,7 +42,9 @@ void WalkmeshWidget::clear()
 	fieldModels.clear();
 	update();
 
-	gpuRenderer->reset();
+	if (gpuRenderer) {
+		gpuRenderer->reset();
+	}
 }
 
 WalkmeshWidget::~WalkmeshWidget()

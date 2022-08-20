@@ -43,13 +43,13 @@ FieldList::FieldList(QWidget *parent) :
 	connect(_lineSearch, &QLineEdit::textEdited, this, &FieldList::filterMap);
 	connect(_lineSearch, &QLineEdit::returnPressed, this, [&] { filterMap(_lineSearch->text()); });
 
-	QAction *rename_A = new QAction(tr("Rename field"), this);
+	QAction *rename_A = new QAction(QIcon::fromTheme(QStringLiteral("document-edit")), tr("Rename field"), this);
 	rename_A->setShortcut(QKeySequence("F2"));
 	rename_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
-	QAction *add_A = new QAction(QIcon(":/images/plus.png"), tr("Add field"), this);
+	QAction *add_A = new QAction(QIcon::fromTheme(QStringLiteral("list-add")), tr("Add field"), this);
 	add_A->setShortcut(QKeySequence("Ctrl++"));
 	add_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
-	QAction *del_A = new QAction(QIcon(":/images/minus.png"), tr("Delete field"), this);
+	QAction *del_A = new QAction(QIcon::fromTheme(QStringLiteral("list-remove")), tr("Delete field"), this);
 	del_A->setShortcut(QKeySequence(Qt::Key_Delete));
 	del_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 

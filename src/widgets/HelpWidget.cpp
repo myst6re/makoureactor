@@ -46,8 +46,8 @@ void HelpWidget::createLayout(int iconExtent, const QString &text, IconType icon
 	textLabel = new QLabel(text, this);
 	textLabel->setWordWrap(true);
 	QLabel *infoIcon = new QLabel(this);
-	infoIcon->setPixmap(QApplication::style()->standardIcon(icon == IconInfo ? QStyle::SP_MessageBoxInformation : QStyle::SP_MessageBoxWarning)
-						.pixmap(iconExtent));
+    QIcon ico = icon == IconInfo ? QIcon::fromTheme(QStringLiteral("dialog-information")) : QIcon::fromTheme(QStringLiteral("dialog-warning"));
+    infoIcon->setPixmap(ico.pixmap(iconExtent));
 	QHBoxLayout *infoLayout = new QHBoxLayout(this);
 	infoLayout->addWidget(infoIcon);
 	infoLayout->addWidget(textLabel, 1);

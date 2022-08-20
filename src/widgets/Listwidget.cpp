@@ -52,43 +52,43 @@ QAction *ListWidget::addAction(ActionType type, const QString &overrideText, boo
 
 	switch (type) {
 	case Add:
-		action->setIcon(QIcon(QStringLiteral(":images/plus.png")));
+		action->setIcon(QIcon::fromTheme(QStringLiteral("list-add")));
 		action->setShortcut(QKeySequence("Ctrl++"));
 		text = tr("Add");
 		connect(action, &QAction::triggered, this, &ListWidget::addTriggered);
 		break;
 	case Remove:
-		action->setIcon(QIcon(QStringLiteral(":images/minus.png")));
+		action->setIcon(QIcon::fromTheme(QStringLiteral("list-remove")));
 		action->setShortcut(QKeySequence::Delete);
 		text = tr("Remove");
 		connect(action, &QAction::triggered, this, &ListWidget::removeTriggered);
 		break;
 	case Up:
-		action->setIcon(QIcon(QStringLiteral(":images/up.png")));
+		action->setIcon(QIcon::fromTheme(QStringLiteral("go-up")));
 		action->setShortcut(QKeySequence("Shift+Up"));
 		text = tr("Up");
 		connect(action, &QAction::triggered, this, &ListWidget::upTriggered);
 		break;
 	case Down:
-		action->setIcon(QIcon(QStringLiteral(":images/down.png")));
+		action->setIcon(QIcon::fromTheme(QStringLiteral("go-up")));
 		action->setShortcut(QKeySequence("Shift+Down"));
 		text = tr("Down");
 		connect(action, &QAction::triggered, this, &ListWidget::downTriggered);
 		break;
 	case Cut:
-		action->setIcon(QIcon(QStringLiteral(":images/cut.png")));
+		action->setIcon(QIcon::fromTheme(QStringLiteral("edit-cut")));
 		action->setShortcut(QKeySequence::Cut);
 		text = tr("Cut");
 		connect(action, &QAction::triggered, this, &ListWidget::cutTriggered);
 		break;
 	case Copy:
-		action->setIcon(QIcon(QStringLiteral(":images/copy.png")));
+		action->setIcon(QIcon::fromTheme(QStringLiteral("edit-copy")));
 		action->setShortcut(QKeySequence::Copy);
 		text = tr("Copy");
 		connect(action, &QAction::triggered, this, &ListWidget::copyTriggered);
 		break;
 	case Paste:
-		action->setIcon(QIcon(QStringLiteral(":images/paste.png")));
+		action->setIcon(QIcon::fromTheme(QStringLiteral("edit-paste")));
 		action->setShortcut(QKeySequence::Paste);
 		text = tr("Paste");
 		connect(action, &QAction::triggered, this, &ListWidget::pasteTriggered);

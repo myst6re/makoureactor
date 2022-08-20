@@ -32,7 +32,7 @@ VarManager::VarManager(FieldArchive *fieldArchive, QWidget *parent)
 	address->setRange(0,255);
 	name = new QLineEdit(this);
 	name->setMaxLength(255);
-	rename = new QPushButton(tr("Rename"), this);
+	rename = new QPushButton(QIcon::fromTheme(QStringLiteral("document-edit")), tr("Rename"), this);
 
 	layout1->addWidget(bank);
 	layout1->addWidget(address);
@@ -57,7 +57,7 @@ VarManager::VarManager(FieldArchive *fieldArchive, QWidget *parent)
 	layout2->addWidget(liste2);
 
 	QLabel *helpIcon = new QLabel(this);
-	helpIcon->setPixmap(QApplication::style()->standardIcon(QStyle::SP_MessageBoxInformation).pixmap(32));
+	helpIcon->setPixmap(QIcon::fromTheme(QStringLiteral("dialog-information")).pixmap(32));
 	QLabel *help = new QLabel(tr("Var banks 08, 09 and 10 are temporary and do not appear in the game save. "
 	                             "<br/>Other banks are stored in pair: for example 01-02 is in the same memory location, "
 	                             "but the first is used to store 8-bit values and "
@@ -72,7 +72,7 @@ VarManager::VarManager(FieldArchive *fieldArchive, QWidget *parent)
 	QHBoxLayout *layout3 = new QHBoxLayout();
 
 	searchButton = new QPushButton(tr("Addresses Used"), this);
-	ok = new QPushButton(QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton), tr("Save"), this);
+	ok = new QPushButton(QIcon::fromTheme(QStringLiteral("document-save")), tr("Save"), this);
 	ok->setEnabled(false);
 
 	layout3->addWidget(searchButton);
