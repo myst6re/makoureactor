@@ -4,8 +4,7 @@
 #ifndef Q_OS_MAC
 
 #define systemColor(dark, light) \
-	bool darkTheme = Config::value("dark_theme", false).toBool(); \
-	return darkTheme ? dark : light;
+    return Config::inDarkMode() ? dark : light;
 
 QColor SystemColor::red()
 {

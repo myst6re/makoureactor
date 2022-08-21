@@ -17,6 +17,12 @@
  ****************************************************************************/
 #include "Config.h"
 
+#include <QPalette>
+
+#ifdef GUI
+	#include <QApplication>
+#endif
+
 QSettings *Config::settings = nullptr;
 
 QString Config::programResourceDir()
@@ -49,6 +55,35 @@ QString Config::programLanguagesDir()
 		}
 	}
 	return translationDir.absolutePath();
+}
+
+QPalette Config::paletteForSetting()
+{
+	int index = Config::value("color-scheme").toInt();
+	QPalette newPalette;
+	if( index != 0) {
+		newPalette.setColor(QPalette::Window, index == 1 ? darkWindow : lightWindow);
+		newPalette.setColor(QPalette::Base, index == 1 ? darkButton : lightButton);
+		newPalette.setColor(QPalette::Text, index == 1 ? darkText : lightText);
+		newPalette.setColor(QPalette::AlternateBase, index == 1 ? darkWindow : lightWindow);
+		newPalette.setColor(QPalette::WindowText, index == 1 ? darkText : lightText);
+		newPalette.setColor(QPalette::Button, index == 1 ? darkButton : lightButton);
+		newPalette.setColor(QPalette::ButtonText,index == 1 ? darkText : lightText);
+		newPalette.setColor(QPalette::PlaceholderText, index == 1 ? darkPlaceholderText : lightPlaceholderText);
+		newPalette.setColor(QPalette::Disabled, QPalette::Button, index == 1 ? darkDisableButton : lightDisableButton);
+		newPalette.setColor(QPalette::Disabled, QPalette::Window, index == 1 ? darkDisableButton : lightDisableButton);
+		newPalette.setColor(QPalette::Disabled, QPalette::WindowText, index == 1 ? darkInactiveText : lightInactiveText);
+		newPalette.setColor(QPalette::Disabled,QPalette::ButtonText, index == 1 ? darkInactiveText : lightInactiveText);
+		newPalette.setColor(QPalette::ToolTipBase, index == 1 ? darkText : lightText);
+		newPalette.setColor(QPalette::ToolTipText, index == 1 ? darkWindow : lightWindow);
+		newPalette.setColor(QPalette::Highlight,index == 1 ? darkHighlight : lightHighlight);
+		newPalette.setColor(QPalette::HighlightedText, index == 1 ? darkWindow : lightWindow);
+		newPalette.setColor(QPalette::Inactive, QPalette::HighlightedText, index == 1 ? darkButton : lightButton);
+		newPalette.setColor(QPalette::Active, QPalette::Text, index == 1 ? darkText : lightText);
+		newPalette.setColor(QPalette::Link, index == 1 ? darkLink : lightLink);
+		newPalette.setColor(QPalette::LinkVisited, index == 1 ? darkInactiveText : lightInactiveText);
+	}
+	return newPalette;
 }
 
 void Config::set() {
@@ -95,4 +130,18 @@ void Config::remove(const QString &key)
 void Config::flush()
 {
 	settings->sync();
+}
+
+bool Config::inDarkMode()
+{
+#ifndef GUI
+	return false;
+#else
+	return qApp->palette().text().color().value() >= QColor(Qt::lightGray).value();
+#endif
+}
+
+QString Config::iconThemeColor()
+{
+	return Config::inDarkMode() ? QStringLiteral("dark") : QStringLiteral("light");
 }

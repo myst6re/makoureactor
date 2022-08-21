@@ -37,9 +37,11 @@ Window::Window() :
     _textDialog(nullptr), _modelManager(nullptr), _tutManager(nullptr), _walkmeshManager(nullptr),
     _backgroundManager(nullptr), _lgpWidget(nullptr), _progressDialog(nullptr), timer(this)
 {
-	QString colorMode = palette().text().color().value() >= QColor(Qt::lightGray).value() ? QStringLiteral("dark") : QStringLiteral("light");
+	qApp->setPalette(Config::paletteForSetting());
+	const QString &colorMode = Config::iconThemeColor();
+	qDebug() << "MODE" << colorMode;
 	QIcon::setFallbackSearchPaths(QIcon::fallbackSearchPaths() << ":/icons/common");
-	QIcon::setFallbackSearchPaths(QIcon::fallbackSearchPaths() << QStringLiteral(":/icons/%1").arg(colorMode));
+	QIcon::setFallbackSearchPaths(QIcon::fallbackSearchPaths() << QStringLiteral(":/icons/mr-%1").arg(colorMode));
 	if (QIcon::themeName().isEmpty()) {
 		QIcon::setThemeName(QStringLiteral("mr-%1").arg(colorMode));
 	} else {

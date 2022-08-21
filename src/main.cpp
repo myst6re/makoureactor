@@ -72,44 +72,6 @@ int main(int argc, char *argv[])
 		app.installTranslator(&translator3);
 	}
 
-	if (Config::value("dark_theme", false).toBool()) {
-#ifndef Q_OS_DARWIN
-		qApp->setStyle(QStyleFactory::create("Fusion"));
-		QPalette darkPalette;
-		QColor disabledColor = QColor(127, 127, 127);
-		darkPalette.setColor(QPalette::Window, QColor(0x19, 0x19, 0x19));
-		darkPalette.setColor(QPalette::WindowText, Qt::white);
-		darkPalette.setColor(QPalette::Base, QColor(0x20, 0x20, 0x20));
-		darkPalette.setColor(QPalette::AlternateBase, QColor(0x27, 0x27, 0x27));
-		darkPalette.setColor(QPalette::ToolTipBase, QColor(0xFE, 0xFE, 0xFE));
-		darkPalette.setColor(QPalette::ToolTipText, QColor(0xFE, 0xFE, 0xFE));
-		darkPalette.setColor(QPalette::Text, QColor(0xFE, 0xFE, 0xFE));
-		darkPalette.setColor(QPalette::Disabled, QPalette::Text, disabledColor);
-		darkPalette.setColor(QPalette::Button, QColor(0x20, 0x20, 0x20));
-		darkPalette.setColor(QPalette::ButtonText, Qt::white);
-		darkPalette.setColor(QPalette::Disabled, QPalette::ButtonText, disabledColor);
-		darkPalette.setColor(QPalette::BrightText, Qt::red);
-		darkPalette.setColor(QPalette::Link, QColor(42, 130, 218));
-		darkPalette.setColor(QPalette::LinkVisited, QColor(42, 130, 218));
-
-		darkPalette.setColor(QPalette::Highlight, QColor(0x77, 0x77, 0x77));
-		darkPalette.setColor(QPalette::HighlightedText, Qt::white);
-		darkPalette.setColor(QPalette::Disabled, QPalette::HighlightedText, disabledColor);
-
-		darkPalette.setColor(QPalette::Light, QColor(0x34, 0x34, 0x34));
-		darkPalette.setColor(QPalette::Midlight, QColor(0x27, 0x27, 0x27));
-		darkPalette.setColor(QPalette::Dark, QColor(0x7, 0x7, 0x7));
-		darkPalette.setColor(QPalette::Mid, QColor(0x14, 0x14, 0x14));
-		darkPalette.setColor(QPalette::Shadow, Qt::black);
-
-		darkPalette.setColor(QPalette::PlaceholderText, QColor(0x53, 0x53, 0x53));
-
-		qApp->setPalette(darkPalette);
-
-		qApp->setStyleSheet("QToolTip { color: #ffffff; background-color: #2a82da; border: 1px solid white; }");
-#endif
-	}
-
 	if (!Var::load()) {
 		QMessageBox::warning(nullptr, QApplication::translate("main", "Error"),
 		                     QApplication::translate("main", "The file 'var.cfg' could not be loaded.\n"

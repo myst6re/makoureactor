@@ -69,12 +69,13 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	dependLayout->addWidget(charButton, 5, 3);
 	dependLayout->setColumnStretch(1, 1);
 
-	QGroupBox *theme = new QGroupBox(tr("Theme"), this);
+	QGroupBox *theme = new QGroupBox(tr("Color Scheme"), this);
 
-	darkMode = new QCheckBox(tr("Dark mode"), theme);
+	comboPalette = new QComboBox(this);
+	comboPalette->addItems({tr("System Theme"), tr("Dark Theme"), tr("Light Theme")});
 
 	QGridLayout *themeLayout = new QGridLayout(theme);
-	themeLayout->addWidget(darkMode, 0, 0);
+	themeLayout->addWidget(comboPalette, 0, 0);
 
 	QGroupBox *openGL = new QGroupBox(tr("OpenGL"), this);
 
@@ -235,7 +236,7 @@ void ConfigWindow::fillConfig()
 		charAuto->setChecked(true);
 	}
 
-	darkMode->setChecked(Config::value("dark_theme", false).toBool());
+	comboPalette->setCurrentIndex(Config::value("color-scheme", 0).toInt());
 	disableOGL->setChecked(!Config::value("OpenGL", true).toBool());
 
 	kernelPath->setText(QDir::toNativeSeparators(QDir::cleanPath(kernel_path)));
@@ -407,7 +408,7 @@ void ConfigWindow::resetColor()
 void ConfigWindow::fillCharNameEdit()
 {
 	int charId = listCharNames->currentIndex();
-	if (charId < 0 || charId > 8) {
+	if (charId < 0 || charId >= 9) {
 		return;
 	}
 
@@ -417,7 +418,7 @@ void ConfigWindow::fillCharNameEdit()
 void ConfigWindow::setCharName(const QString &charName)
 {
 	int charId = listCharNames->currentIndex();
-	if (charId < 0 || charId > 8) {
+	if (charId < 0 || charId >= 9) {
 		return;
 	}
 
@@ -444,8 +445,8 @@ void ConfigWindow::accept()
 	Config::setValue("kernel2Path", kernelAuto->isChecked() ? QDir::fromNativeSeparators(kernelPath->text()) : QString());
 	Config::setValue("windowBinPath", windowAuto->isChecked() ? QDir::fromNativeSeparators(windowPath->text()) : QString());
 	Config::setValue("charPath", charAuto->isChecked() ? QDir::fromNativeSeparators(charPath->text()) : QString());
-	if (darkMode->isChecked() != Config::value("dark_theme", false).toBool()) {
-		Config::setValue("dark_theme", darkMode->isChecked());
+	if (comboPalette->currentIndex() != Config::value("color-scheme", 0).toInt()) {
+		Config::setValue("color-scheme", comboPalette->currentIndex());
 		needsRestart = true;
 	}
 	if (!disableOGL->isChecked() != Config::value("OpenGL", true).toBool()) {
