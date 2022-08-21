@@ -135,7 +135,7 @@ private:
 	VarManager *varDialog;
 
 	QMenu *_recentMenu;
-	QAction *actionSave, *actionSaveAs, *actionExport;
+	QAction *actionSave, *actionSaveAs, *actionExport, *actionChunks;
 	QAction *actionMassExport, *actionImport, *actionMassImport, *actionClose;
 	QAction *actionRun, *actionModels, *actionArchive;
 	QAction *actionEncounter;

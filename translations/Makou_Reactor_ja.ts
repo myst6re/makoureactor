@@ -264,14 +264,6 @@ List of available commands:
         <translation>変更</translation>
     </message>
     <message>
-        <source>Theme</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Dark mode</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Disable OpenGL</source>
         <translation>OpenGL を無効化</translation>
     </message>
@@ -400,6 +392,22 @@ List of available commands:
         <source>Information</source>
         <translatorcomment>Information</translatorcomment>
         <translation>インフォメーション</translation>
+    </message>
+    <message>
+        <source>Color Scheme</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>System Theme</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dark Theme</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Light Theme</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

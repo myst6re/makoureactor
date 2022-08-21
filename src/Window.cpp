@@ -80,7 +80,7 @@ Window::Window() :
 	actionSave = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-save")), tr("&Save"), this, &Window::save, QKeySequence("Ctrl+S"));
 	actionSaveAs = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-save-as")), tr("Save &As..."), this, &Window::saveAs, QKeySequence("Shift+Ctrl+S"));
 	actionExport = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-export")), tr("&Export the current map..."), this, &Window::exportCurrentMap, QKeySequence("Ctrl+E"));
-	actionExport = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-export")), tr("Expor&t map into chunks..."), this, &Window::exportCurrentMapIntoChunks, QKeySequence("Ctrl+U"));
+	actionChunks = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-export")), tr("Expor&t map into chunks..."), this, &Window::exportCurrentMapIntoChunks, QKeySequence("Ctrl+U"));
 	actionMassExport = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-export")), tr("&Mass Export..."), this, &Window::massExport, QKeySequence("Shift+Ctrl+E"));
 	actionImport = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-import")),tr("&Import to current map..."), this, &Window::importToCurrentMap, QKeySequence("Ctrl+I"));
 //	actionMassImport = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-import")), tr("Mass im&port..."), this, &Window::massImport, QKeySequence("Shift+Ctrl+I"));
@@ -456,6 +456,7 @@ int Window::closeFile(bool quit)
 		actionSave->setEnabled(false);
 		actionSaveAs->setEnabled(false);
 		actionExport->setEnabled(false);
+		actionChunks->setEnabled(false);
 		actionMassExport->setEnabled(false);
 //		actionMassImport->setEnabled(false);
 		actionImport->setEnabled(false);
@@ -859,6 +860,7 @@ void Window::openField(bool reload)
 {
 	_fieldStackedWidget->setCurrentIndex(0);
 	actionExport->setEnabled(false);
+	actionChunks->setEnabled(false);
 
 	if (!fieldArchive) {
 		return;
@@ -903,6 +905,7 @@ void Window::openField(bool reload)
 	}
 
 	actionExport->setEnabled(true);
+	actionChunks->setEnabled(true);
 
 	if (fieldModel) {
 		fieldModel->clear();

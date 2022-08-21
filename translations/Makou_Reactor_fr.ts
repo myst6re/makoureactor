@@ -280,11 +280,11 @@ List of available commands:
     </message>
     <message>
         <source>Theme</source>
-        <translation>Thème</translation>
+        <translation type="vanished">Thème</translation>
     </message>
     <message>
         <source>Dark mode</source>
-        <translation>Mode sombre</translation>
+        <translation type="vanished">Mode sombre</translation>
     </message>
     <message>
         <source>OpenGL</source>
@@ -420,6 +420,22 @@ List of available commands:
     <message>
         <source>Information</source>
         <translation>Information</translation>
+    </message>
+    <message>
+        <source>Color Scheme</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>System Theme</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dark Theme</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Light Theme</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
