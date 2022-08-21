@@ -79,10 +79,11 @@ Window::Window() :
 	fileMenu->addMenu(_recentMenu);
 	actionSave = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-save")), tr("&Save"), this, &Window::save, QKeySequence("Ctrl+S"));
 	actionSaveAs = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-save-as")), tr("Save &As..."), this, &Window::saveAs, QKeySequence("Shift+Ctrl+S"));
-	actionExport = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-export")), tr("&Save the current map..."), this, &Window::exportCurrentMap, QKeySequence("Ctrl+E"));
+	actionExport = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-export")), tr("&Export the current map..."), this, &Window::exportCurrentMap, QKeySequence("Ctrl+E"));
+	actionExport = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-export")), tr("Expor&t map into chunks..."), this, &Window::exportCurrentMapIntoChunks, QKeySequence("Ctrl+U"));
 	actionMassExport = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-export")), tr("&Mass Export..."), this, &Window::massExport, QKeySequence("Shift+Ctrl+E"));
 	actionImport = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-import")),tr("&Import to current map..."), this, &Window::importToCurrentMap, QKeySequence("Ctrl+I"));
-//	actionMassImport = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-import")), tr("Mass &import..."), this, &Window::massImport, QKeySequence("Shift+Ctrl+I"));
+//	actionMassImport = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-import")), tr("Mass im&port..."), this, &Window::massImport, QKeySequence("Shift+Ctrl+I"));
 	actionArchive = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("archive-generic")), tr("Archive Mana&ger..."), this, &Window::archiveManager, QKeySequence("Shift+Ctrl+K"));
 	fileMenu->addSeparator();
 	actionRun = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("ff7")), tr("R&un FF7"), this, &Window::runFF7);
@@ -1259,6 +1260,21 @@ void Window::exportCurrentMap()
 	if (!out.isEmpty()) {
 		QMessageBox::warning(this, tr("Error"), out);
 	}
+}
+
+void Window::exportCurrentMapIntoChunks()
+{
+	if (!field || !fieldArchive) {
+		return;
+	}
+
+	QString path = Config::value("exportPath").toString().isEmpty() ? fieldArchive->io()->directory() : Config::value("exportPath").toString() + "/";
+	path = QFileDialog::getExistingDirectory(this, tr("Choose a directory where to create chunks"), path);
+	if (path.isNull()) {
+		return;
+	}
+
+	field->exportToChunks(path);
 }
 
 void Window::massExport()

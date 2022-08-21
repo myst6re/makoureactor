@@ -941,10 +941,6 @@ Certains scripts peuvent y faire référence !</translation>
         <source>Save Point</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Position debugging</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>ImportDialog</name>
@@ -7630,7 +7626,7 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
     </message>
     <message>
         <source>&amp;Export the current map...</source>
-        <translation type="vanished">&amp;Exporter l&apos;écran courant...</translation>
+        <translation>&amp;Exporter l&apos;écran courant...</translation>
     </message>
     <message>
         <source>&amp;Import to current map...</source>
@@ -8063,7 +8059,11 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Save the current map...</source>
+        <source>Expor&amp;t map into chunks...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose a directory where to create chunks</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

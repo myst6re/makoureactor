@@ -175,7 +175,7 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 			case DialogPreview::BOTTOMLEFT: windowColorBottomLeft = color.rgb(); break;
 			case DialogPreview::TOPRIGHT: windowColorTopRight = color.rgb(); break;
 			case DialogPreview::BOTTOMRIGHT: windowColorBottomRight = color.rgb(); break;
-		};
+		}
 	});
 	connect(windowColorReset, &QPushButton::clicked, this, &ConfigWindow::resetColor);
 	connect(listCharNames, &QComboBox::currentIndexChanged, this, &ConfigWindow::fillCharNameEdit);

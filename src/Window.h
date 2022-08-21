@@ -80,6 +80,7 @@ public slots:
 	//	void notifyFileChanged(const QString &path);
 	//	void notifyDirectoryChanged(const QString &path);
 	void exportCurrentMap();
+	void exportCurrentMapIntoChunks();
 	void massExport();
 	void massImport();
 	void importToCurrentMap();

@@ -908,10 +908,6 @@ Some scripts can refer to it!</source>
         <source>Save Point</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Position debugging</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>ImportDialog</name>
@@ -7371,7 +7367,15 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Save the current map...</source>
+        <source>&amp;Export the current map...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Expor&amp;t map into chunks...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose a directory where to create chunks</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

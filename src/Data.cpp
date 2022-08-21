@@ -607,12 +607,13 @@ bool Data::openMaplist(const QByteArray &data)
 	}
 
 	quint16 nbMap;
-	memcpy(&nbMap, data.constData(), 2);
+	const char *constData = data.constData();
+
+	memcpy(&nbMap, constData, 2);
 
 	if (data.size() != 2+nbMap*32) {
 		return false;
 	}
-	const char *constData = data.constData();
 
 	field_names.clear();
 	for (int i=0; i<nbMap; ++i) {

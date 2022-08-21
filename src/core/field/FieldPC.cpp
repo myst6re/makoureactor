@@ -27,12 +27,12 @@ FieldPC::FieldPC(const QString &name, FieldArchiveIO *io) :
 }
 
 FieldPC::FieldPC(const QString &name) :
-	Field(name, nullptr), _model(0)
+	Field(name, nullptr), _model(nullptr)
 {
 }
 
 FieldPC::FieldPC(const Field &field) :
-	Field(field), _model(0)
+	Field(field), _model(nullptr)
 {
 }
 
@@ -170,6 +170,24 @@ bool FieldPC::importModelLoader(const QByteArray &sectionData, bool isPSField, Q
 
 	modelLoader->setModified(true);
 	modelLoader->setOpen(true);
+
+	return true;
+}
+
+bool FieldPC::exportToChunks(const QDir &dir)
+{
+	quint8 sectionNum = 1;
+	QList<FieldSection> sections = orderOfSections();
+	for (FieldSection section : sections) {
+		QFile f(dir.filePath(QString("%1.chunk.%2").arg(name()).arg(sectionNum)));
+		if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+			return false;
+		}
+		bool ok = false;
+		f.write(saveSection(section, ok));
+		f.close();
+		++sectionNum;
+	}
 
 	return true;
 }

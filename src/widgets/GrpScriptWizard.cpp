@@ -99,8 +99,7 @@ void GrpScriptWizardPageType::fillSubTypeList(int type)
 		      << tr("Save Point");
 		break;
 	default:
-		items << tr("Empty")
-		      << tr("Position debugging");
+		items << tr("Empty");
 		break;
 	}
 

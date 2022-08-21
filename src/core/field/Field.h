@@ -20,7 +20,6 @@
 #include <QtCore>
 #include "Section1File.h"
 #include "EncounterFile.h"
-#include "TutFile.h"
 #include "CaFile.h"
 #include "IdFile.h"
 #include "InfFile.h"
@@ -73,10 +72,12 @@ public:
 	void setSaved();
 	bool save(QByteArray &newData, bool compress);
 	qint8 save(const QString &path, bool compress);
+	QByteArray saveSection(FieldSection fieldSection, bool &ok);
 	bool importer(const QString &path, bool isDat, bool compressed, FieldSections part, QIODevice *bsxDevice = nullptr,
 	               QIODevice *mimDevice = nullptr);
 	bool importer(const QByteArray &data, bool isPSField, FieldSections part, QIODevice *bsxDevice = nullptr,
 	               QIODevice *mimDevice = nullptr);
+	virtual bool exportToChunks(const QDir &dir) = 0;
 
 	Section1File *scriptsAndTexts(bool open=true);
 	EncounterFile *encounter(bool open=true);
@@ -128,9 +129,8 @@ private:
 
 	QHash<FieldSection, FieldPart *> _parts;
 	FieldArchiveIO *_io;
-	bool _isOpen, _isModified;
 	QString _name, _lastError;
-	bool _removeUnusedSection;
+	bool _isOpen, _isModified, _removeUnusedSection;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Field::FieldSections)

@@ -23,8 +23,8 @@
 #include "BackgroundFilePC.h"
 
 Field::Field(const QString &name, FieldArchiveIO *io) :
-	_io(io), _isOpen(false), _isModified(false),
-	_name(name.toLower()), _removeUnusedSection(false)
+    _io(io), _name(name.toLower()),
+    _isOpen(false), _isModified(false), _removeUnusedSection(false)
 {
 }
 
@@ -194,12 +194,14 @@ FieldPart *Field::part(FieldSection section, bool open)
 {
 	FieldPart *p = part(section);
 
-	if (!p) {
+	if (p == nullptr) {
 		p = createPart(section);
-		_parts.insert(section, p);
+		if (p != nullptr) {
+			_parts.insert(section, p);
+		}
 	}
 
-	if (open && !p->isOpen()) {
+	if (p != nullptr && open && !p->isOpen()) {
 		p->open();
 	}
 
@@ -329,25 +331,10 @@ bool Field::save(QByteArray &newData, bool compress)
 		QByteArray section;
 
 		if (fieldSection != Tiles || !_removeUnusedSection) { // FIXME: ugly hack only for PC version
-
-			// Section data
-			FieldPart *fieldPart = part(fieldSection == Field::PalettePC
-										? Field::Background // FIXME: EXCEPTION NEEDS TO BE REMOVED IN THE FUTURE
-										: fieldSection);
-
-			if (fieldPart && fieldPart->canSave() &&
-					fieldPart->isOpen() && fieldPart->isModified()) {
-				if (fieldSection == Field::PalettePC) { // FIXME: EXCEPTION NEEDS TO BE REMOVED IN THE FUTURE
-					section = static_cast<BackgroundFilePC *>(fieldPart)->savePal();
-				} else {
-					section = fieldPart->save();
-					if (section.isEmpty()) {
-						qWarning() << "Field::save empty section error" << int(fieldSection);
-						return false;
-					}
-				}
-			} else {
-				section = sectionData(fieldSection, true);
+			bool ok = true;
+			section = saveSection(fieldSection, ok);
+			if (!ok) {
+				return false;
 			}
 		}
 
@@ -378,6 +365,29 @@ bool Field::save(QByteArray &newData, bool compress)
 	}
 
 	return true;
+}
+
+QByteArray Field::saveSection(FieldSection fieldSection, bool &ok)
+{
+	ok = true;
+
+	// Section data
+	FieldPart *fieldPart = part(fieldSection == Field::PalettePC
+								? Field::Background // FIXME: EXCEPTION NEEDS TO BE REMOVED IN THE FUTURE
+								: fieldSection);
+
+	if (fieldPart && fieldPart->canSave() &&
+			fieldPart->isOpen() && fieldPart->isModified()) {
+		// FIXME: EXCEPTION NEEDS TO BE REMOVED IN THE FUTURE
+		QByteArray section = fieldSection == Field::PalettePC ? static_cast<BackgroundFilePC *>(fieldPart)->savePal() : fieldPart->save();
+		if (section.isEmpty()) {
+			qWarning() << "Field::save empty section error" << int(fieldSection);
+			ok = false;
+		}
+		return section;
+	}
+
+	return sectionData(fieldSection, true);
 }
 
 qint8 Field::save(const QString &path, bool compress)

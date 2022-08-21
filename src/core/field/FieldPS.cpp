@@ -249,3 +249,46 @@ qint8 FieldPS::saveBackground(const QString &path, bool compress)
 
 	return 1;
 }
+
+bool FieldPS::exportToChunks(const QDir &dir)
+{
+	QList<FieldSection> sections = orderOfSections();
+	for (FieldSection section : sections) {
+		QString extension;
+		switch (section) {
+		case Scripts:
+			extension = "chunk.1";
+			break;
+		case Walkmesh:
+			extension = "chunk.5";
+			break;
+		case Background:
+			extension = "chunk.6";
+			break;
+		case Camera:
+			extension = "chunk.2";
+			break;
+		case Inf:
+			extension = "chunk.8";
+			break;
+		case Encounter:
+			extension = "chunk.7";
+			break;
+		case ModelLoader:
+			extension = "chunkps.3";
+			break;
+		default:
+			return false;
+		}
+
+		QFile f(dir.filePath(QString("%1.%2").arg(name(), extension)));
+		if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+			return false;
+		}
+		bool ok = false;
+		f.write(saveSection(section, ok));
+		f.close();
+	}
+
+	return true;
+}

@@ -21,7 +21,6 @@
 #include "Field.h"
 #include "FieldModelLoaderPC.h"
 #include "FieldModelFilePC.h"
-#include "FieldArchiveIOPC.h"
 
 class FieldPC : public Field
 {
@@ -36,6 +35,7 @@ public:
 	FieldModelLoaderPC *fieldModelLoader(bool open = true) override;
 	FieldModelFilePC *fieldModel(int modelID, int animationID = 0, bool animate = true, bool open = true) override;
 	FieldModelFilePC *fieldModel(const QString &hrc, const QString &a, bool animate = true);
+	bool exportToChunks(const QDir &dir) override;
 protected:
 	inline int headerSize() const override { return 42; }
 	void openHeader(const QByteArray &fileData) override;
@@ -51,7 +51,7 @@ protected:
 	inline int sectionCount() const override {	return 9; }
 	inline int paddingBetweenSections() const override { return 4; }
 	inline int alignment() const override { return 0; } // Not aligned
-	QList<Field::FieldSection> orderOfSections() const override;
+	QList<FieldSection> orderOfSections() const override;
 	inline qint32 diffSectionPos() const override { return 0; }
 	inline bool hasSectionHeader() const override { return true; }
 	bool importModelLoader(const QByteArray &sectionData, bool isPSField, QIODevice *bsxDevice) override;
