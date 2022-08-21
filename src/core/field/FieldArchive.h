@@ -22,7 +22,7 @@
 #include <QtCore>
 #include "FieldArchiveIO.h"
 #include "Field.h"
-#include "core/PsfFile.h"
+#include <PsfFile.h>
 
 struct SearchQuery
 {

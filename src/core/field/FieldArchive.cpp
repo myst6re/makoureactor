@@ -19,7 +19,7 @@
 #include "FieldPS.h"
 #include "FieldPC.h"
 #include "Data.h"
-#include "core/PsfFile.h"
+#include <PsfFile.h>
 
 SearchIn::~SearchIn()
 {
