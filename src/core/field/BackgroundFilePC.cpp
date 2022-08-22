@@ -16,6 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "BackgroundFilePC.h"
+#include "BackgroundIO.h"
 #include "Palette.h"
 #include "PaletteIO.h"
 #include <PsColor.h>

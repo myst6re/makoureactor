@@ -19,7 +19,7 @@
 
 #include <QtCore>
 #include "FieldPart.h"
-#include "IdFile.h"
+#include "CaFile.h"
 
 struct Range {
 	qint16 left;

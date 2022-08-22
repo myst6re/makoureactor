@@ -82,11 +82,11 @@ public:
 private:
 	Q_DISABLE_COPY(FieldModelFilePS)
 	QList<FieldModelColorDir> _colors;
-	QRgb _globalColor;
 	FieldPS *_currentField;
-	int _currentModelID;
 	QHash<FieldModelGroup *, QImage> _loadedTex;
 	FieldModelTexturesPS _textures;
+	int _currentModelID;
+	QRgb _globalColor;
 	quint16 _scale;
 	bool _isModified;
 };

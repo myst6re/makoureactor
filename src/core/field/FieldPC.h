@@ -24,6 +24,7 @@
 
 class FieldPC : public Field
 {
+	friend class Field;
 public:
 	FieldPC(const QString &name, FieldArchiveIO *io);
 	FieldPC(const QString &name);

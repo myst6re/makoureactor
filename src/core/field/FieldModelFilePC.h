@@ -32,7 +32,7 @@ public:
 	quint8 load(CharArchive *charLgp, const QString &hrc, const QString &a, bool animate = true);
 	quint8 loadPart(CharArchive *charLgp, const QString &rsd);
 	quint8 load(const QString &hrc, const QString &a, bool animate = true);
-	inline int loadedTextureCount() const {
+	inline qsizetype loadedTextureCount() const {
 		return _loadedTex.size();
 	}
 	inline QImage loadedTexture(FieldModelGroup *group) override {

@@ -77,6 +77,7 @@ public:
 	               QIODevice *mimDevice = nullptr);
 	bool importer(const QByteArray &data, bool isPSField, FieldSections part, QIODevice *bsxDevice = nullptr,
 	               QIODevice *mimDevice = nullptr);
+	bool importChunk(const QString &path);
 	virtual bool exportToChunks(const QDir &dir) = 0;
 
 	Section1File *scriptsAndTexts(bool open=true);
@@ -124,6 +125,9 @@ protected:
 	virtual qint32 diffSectionPos() const=0;
 	virtual bool hasSectionHeader() const=0;
 	virtual bool importModelLoader(const QByteArray &sectionData, bool isPSField, QIODevice *bsxDevice);
+	inline void setErrorString(const QString &errorString) {
+		_lastError = errorString;
+	}
 private:
 	FieldPart *part(FieldSection section, bool open);
 

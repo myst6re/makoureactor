@@ -21,6 +21,7 @@
 #include "FieldPC.h"
 #include "FieldPS.h"
 #include "BackgroundFilePC.h"
+#include "BackgroundFilePS.h"
 
 Field::Field(const QString &name, FieldArchiveIO *io) :
     _io(io), _name(name.toLower()),
@@ -650,6 +651,67 @@ bool Field::importer(const QByteArray &data, bool isPSField, FieldSections part,
 			background(false)->setModified(true);
 		}
 	}
+
+	return true;
+}
+
+bool Field::importChunk(const QString &path)
+{
+	bool ok = false;
+	int num = path.right(1).toInt(&ok) - 1;
+	
+	if (!ok) {
+		setErrorString(QObject::tr("Incorrect file name format (accepted format: *.chunk.[1-9])"));
+		return false;
+	}
+	
+	QList<FieldSection> sections = FieldPC(QString()).orderOfSections();
+	
+	if (num >= sections.size()) {
+		return false;
+	}
+
+	FieldSection section = sections.at(num);
+	FieldPart *fieldPart = part(section == PalettePC ? Background : section, false);
+	
+	if (fieldPart == nullptr) {
+		return false;
+	}
+	
+	QFile f(path);
+	if (!f.open(QIODevice::ReadOnly)) {
+		setErrorString(f.errorString());
+		return false;
+	}
+	QByteArray data = f.readAll();
+	f.close();
+
+	if (section == PalettePC || (isPC() && section == Background)) {
+		if (isPS()) {
+			setErrorString(QObject::tr("Cannot import a palette chunk to the PS version"));
+			return false;
+		}
+		if (!fieldPart->open()) {
+			setErrorString(QObject::tr("Background is broken in this map"));
+			return false;
+		}
+
+		BackgroundFilePC *bg = static_cast<BackgroundFilePC *>(fieldPart);
+		if (section == PalettePC) {
+			if (!bg->open(sectionData(Background), data)) {
+				setErrorString(QObject::tr("Cannot import this chunk"));
+				return false;
+			}
+		} else if (!bg->open(data, sectionData(PalettePC))) {
+			setErrorString(QObject::tr("Cannot import this chunk"));
+			return false;
+		}
+	} else if (!fieldPart->open(data)) {
+		setErrorString(QObject::tr("Cannot import this chunk"));
+		return false;
+	}
+
+	fieldPart->setModified(true);
 
 	return true;
 }

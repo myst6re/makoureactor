@@ -20,8 +20,6 @@
 #include <QtCore>
 #include <IO.h>
 #include "BackgroundFile.h"
-#include "BackgroundFilePS.h"
-#include "BackgroundFilePC.h"
 
 class BackgroundIO : public IO
 {

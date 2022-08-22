@@ -3831,6 +3831,22 @@ Make sure it is valid or delete it.</source>
         <source>Cannot open background section</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Cannot import this chunk</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Incorrect file name format (accepted format: *.chunk.[1-9])</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot import a palette chunk to the PS version</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Background is broken in this map</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ScriptEditor</name>
@@ -7384,6 +7400,10 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
     </message>
     <message>
         <source>Choose a directory where to create chunks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Field chunk (*.chunk*.?)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

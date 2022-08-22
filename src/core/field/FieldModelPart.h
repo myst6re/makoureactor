@@ -49,10 +49,10 @@ public:
 	bool isMonochrome() const;
 	bool hasTexture() const;
 protected:
-	int _count;
 	QList<PolyVertex> _vertices;
 	QList<QRgb> _colors;
 	QList<TexCoord> _texCoords;
+	int _count;
 };
 
 class QuadPoly : public Poly

@@ -17,6 +17,7 @@
  ****************************************************************************/
 #include <LZS.h>
 #include "FieldPS.h"
+#include "FieldPC.h"
 #include "BackgroundFilePS.h"
 
 FieldPS::FieldPS(const QString &name, FieldArchiveIO *io) :
@@ -259,23 +260,23 @@ bool FieldPS::exportToChunks(const QDir &dir)
 		case Scripts:
 			extension = "chunk.1";
 			break;
+		case Camera:
+			extension = "chunk.2";
+			break;
+		case ModelLoader:
+			extension = "chunkps.3";
+			break;
 		case Walkmesh:
 			extension = "chunk.5";
 			break;
 		case Background:
 			extension = "chunk.6";
 			break;
-		case Camera:
-			extension = "chunk.2";
-			break;
-		case Inf:
-			extension = "chunk.8";
-			break;
 		case Encounter:
 			extension = "chunk.7";
 			break;
-		case ModelLoader:
-			extension = "chunkps.3";
+		case Inf:
+			extension = "chunk.8";
 			break;
 		default:
 			return false;
@@ -289,6 +290,24 @@ bool FieldPS::exportToChunks(const QDir &dir)
 		f.write(saveSection(section, ok));
 		f.close();
 	}
+
+	FieldPC fieldPC(*this);
+	BackgroundFilePS *bg = static_cast<BackgroundFilePS *>(background(false));
+	BackgroundFilePC bgPc = bg->toPC(&fieldPC);
+
+	QFile f(dir.filePath(QString("%1.chunk.9").arg(name())));
+	if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+		return false;
+	}
+	f.write(bgPc.save());
+	f.close();
+	
+	QFile fPal(dir.filePath(QString("%1.chunk.4").arg(name())));
+	if (!fPal.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+		return false;
+	}
+	fPal.write(bgPc.savePal());
+	fPal.close();
 
 	return true;
 }

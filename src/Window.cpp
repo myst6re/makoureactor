@@ -1277,7 +1277,12 @@ void Window::exportCurrentMapIntoChunks()
 		return;
 	}
 
-	field->exportToChunks(path);
+	if (!field->exportToChunks(path)) {
+		QMessageBox::warning(this, tr("Error"), field->errorString());
+		return;
+	}
+
+	Config::setValue("exportPath", path);
 }
 
 void Window::massExport()
@@ -1376,9 +1381,10 @@ void Window::importToCurrentMap()
 	qsizetype index;
 	QString name, selectedFilter,
 	    pc = tr("PC Field Map (*)"),
+	    chunk = tr("Field chunk (*.chunk*.?)"),
 	    dat = tr("PS Field Map (*.DAT)");
 	QStringList filter;
-	filter << dat << pc;
+	filter << dat << pc << chunk;
 
 	name = _fieldList->selectedItems().first()->text(0);
 	if (fieldArchive->io()->isPS()) {
@@ -1391,28 +1397,37 @@ void Window::importToCurrentMap()
 		return;
 	}
 
-	bool isDat = selectedFilter == dat;
-
-	ImportDialog dialog((isDat && fieldArchive->io()->isPS())
-						|| (!isDat && fieldArchive->io()->isPC()),
-						isDat, path, this);
-	if (dialog.exec() != QDialog::Accepted) {
-		return;
+	bool isChunk = selectedFilter == chunk;
+	
+	if (isChunk) {
+		if (!field->importChunk(path)) {
+			QMessageBox::warning(this, tr("Error"), field->errorString());
+			return;
+		}
+	} else {
+		bool isDat = selectedFilter == dat;
+	
+		ImportDialog dialog((isDat && fieldArchive->io()->isPS())
+							|| (!isDat && fieldArchive->io()->isPC()),
+							isDat, path, this);
+		if (dialog.exec() != QDialog::Accepted) {
+			return;
+		}
+	
+		Field::FieldSections parts = dialog.parts();
+		if (parts == 0) {
+			return;
+		}
+	
+		QFile bsxDevice(dialog.bsxPath()), mimDevice(dialog.mimPath());
+	
+		if (!field->importer(path, isDat, dialog.isCompressed(), parts, &bsxDevice, &mimDevice)) {
+			QMessageBox::warning(this, tr("Error"), field->errorString());
+			return;
+		}
 	}
 
-	Field::FieldSections parts = dialog.parts();
-	if (parts == 0) {
-		return;
-	}
-
-	QFile bsxDevice(dialog.bsxPath()), mimDevice(dialog.mimPath());
-
-	if (!field->importer(path, isDat, dialog.isCompressed(), parts, &bsxDevice, &mimDevice)) {
-		QMessageBox::warning(this, tr("Error"), field->errorString());
-		return;
-	}
-
-    setModified(true);
+	setModified(true);
 	index = path.lastIndexOf('/');
 	Config::setValue("importPath", index == -1 ? path : path.left(index));
 	openField(true);

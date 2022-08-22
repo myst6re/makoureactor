@@ -18,11 +18,7 @@
 #pragma once
 
 #include "BackgroundFile.h"
-#include "BackgroundTiles.h"
-#include "BackgroundTilesIO.h"
 #include "BackgroundTextures.h"
-#include "BackgroundTexturesIO.h"
-#include "BackgroundIO.h"
 
 class FieldPC;
 class FieldPS;

@@ -16,6 +16,10 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "BackgroundFilePS.h"
+#include "BackgroundIO.h"
+#include "BackgroundTiles.h"
+#include "BackgroundTilesIO.h"
+#include "BackgroundTexturesIO.h"
 #include "Palette.h"
 #include "PaletteIO.h"
 #include <PsColor.h>

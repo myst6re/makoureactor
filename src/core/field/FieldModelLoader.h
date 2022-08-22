@@ -24,12 +24,12 @@
 struct FieldModelColorDir
 {
 	FieldModelColorDir() :
-	    dirA(0), dirB(0), dirC(0), color(Qt::black) {}
+	    color(Qt::black), dirA(0), dirB(0), dirC(0) {}
 	FieldModelColorDir(qint16 dirA, qint16 dirB, qint16 dirC, QRgb color) :
-	    dirA(dirA), dirB(dirB), dirC(dirC), color(color) {}
+	    color(color), dirA(dirA), dirB(dirB), dirC(dirC) {}
 
-	qint16 dirA, dirB, dirC;
 	QRgb color;
+	qint16 dirA, dirB, dirC;
 
 	inline bool operator ==(const FieldModelColorDir &other) const {
 		return dirA == other.dirA &&

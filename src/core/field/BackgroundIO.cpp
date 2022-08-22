@@ -17,6 +17,8 @@
  ****************************************************************************/
 #include "BackgroundIO.h"
 #include "PaletteIO.h"
+#include "BackgroundFilePS.h"
+#include "BackgroundFilePC.h"
 #include "BackgroundTilesIO.h"
 #include "BackgroundTexturesIO.h"
 

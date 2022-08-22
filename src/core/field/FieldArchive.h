@@ -146,7 +146,7 @@ public:
 	void close();
 
 	virtual void clear();
-	inline int size() const {
+	inline qsizetype size() const {
 		return fileList.size();
 	}
 	const Field *field(int mapId) const;
