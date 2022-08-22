@@ -11,6 +11,7 @@
         <file>common/blinkblock.svg</file>
         <file>common/multicolorblock.svg</file>
         <file>common/ff7.png</file>
+        <file>mr-light/actions/24/document-chunks-export.svg</file>
         <file>mr-light/actions/24/document-open-recent.svg</file>
         <file>mr-light/actions/24/edit-copy.svg</file>
         <file>mr-light/actions/24/edit-cut.svg</file>
@@ -53,6 +54,7 @@
         <file>mr-light/mimetypes/22/image-x-generic.svg</file>
         <file>mr-light/mimetypes/22/archive-generic.svg</file>
         <file>mr-light/index.theme</file>
+        <file>mr-dark/actions/24/document-chunks-export.svg</file>
         <file>mr-dark/actions/24/document-open-recent.svg</file>
         <file>mr-dark/actions/24/edit-copy.svg</file>
         <file>mr-dark/actions/24/edit-cut.svg</file>
