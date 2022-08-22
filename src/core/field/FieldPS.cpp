@@ -19,6 +19,7 @@
 #include "FieldPS.h"
 #include "FieldPC.h"
 #include "BackgroundFilePS.h"
+#include "BackgroundFilePC.h"
 
 FieldPS::FieldPS(const QString &name, FieldArchiveIO *io) :
       Field(name, io), vramDiff(0)

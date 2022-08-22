@@ -18,10 +18,8 @@
 #include "BackgroundFilePS.h"
 #include "BackgroundIO.h"
 #include "BackgroundTiles.h"
-#include "BackgroundTilesIO.h"
-#include "BackgroundTexturesIO.h"
+#include "BackgroundFilePC.h"
 #include "Palette.h"
-#include "PaletteIO.h"
 #include <PsColor.h>
 #include "FieldPS.h"
 

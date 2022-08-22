@@ -17,12 +17,11 @@
  ****************************************************************************/
 #pragma once
 
-#include "BackgroundFile.h"
+#include "BackgroundFilePS.h"
 #include "BackgroundTextures.h"
 
 class FieldPC;
 class FieldPS;
-class BackgroundFilePS;
 
 class BackgroundFilePC : public BackgroundFile
 {
