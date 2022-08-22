@@ -41,7 +41,9 @@ Window::Window() :
 #if defined(Q_OS_WIN) || defined(Q_OS_DARWIN)
 	if (Config::value("color-scheme", 0).toInt() != 0) {
 		qApp->setStyle(QStyleFactory::create("Fusion"));
-		qApp->setStyleSheet("QToolTip { color: #ffffff; background-color: #2a82da; border: 1px solid white; }");
+		if (Config::value("color-scheme", 0).toInt() == 2) {
+			qApp->setStyleSheet("QToolTip { color: #ffffff; background-color: #2a82da; border: 1px solid white; }");
+		}
 	}
 #endif
 
