@@ -18,7 +18,7 @@
 
 #include <QtCore>
 #include "Arguments.h"
-#include "core/PsfFile.h"
+#include <PsfFile.h>
 
 class ArgumentsExport : public CommonArguments
 {
