@@ -59,9 +59,9 @@ QString Config::programLanguagesDir()
 
 QPalette Config::paletteForSetting()
 {
-	int index = Config::value("color-scheme").toInt();
+	int index = value("color-scheme", 0).toInt();
 	QPalette newPalette;
-	if( index != 0) {
+	if (index != 0) {
 		newPalette.setColor(QPalette::Window, index == 1 ? darkWindow : lightWindow);
 		newPalette.setColor(QPalette::Base, index == 1 ? darkButton : lightButton);
 		newPalette.setColor(QPalette::Text, index == 1 ? darkText : lightText);
@@ -107,7 +107,7 @@ void Config::remove() {
 
 QVariant Config::value(const QString &key, const QVariant &defaultValue)
 {
-	return settings->value(key, defaultValue);
+	return settings->value(key, key == "color-scheme" ? (value("dark_theme").toBool() ? 2 : defaultValue) : defaultValue);
 }
 
 void Config::setValue(const QString &key, const QVariant &value)

@@ -38,6 +38,13 @@ Window::Window() :
     _backgroundManager(nullptr), _lgpWidget(nullptr), _progressDialog(nullptr), timer(this)
 {
 	qApp->setPalette(Config::paletteForSetting());
+#if defined(Q_OS_WIN) || defined(Q_OS_DARWIN)
+	if (Config::value("color-scheme", 0).toInt() != 0) {
+		qApp->setStyle(QStyleFactory::create("Fusion"));
+		qApp->setStyleSheet("QToolTip { color: #ffffff; background-color: #2a82da; border: 1px solid white; }");
+	}
+#endif
+
 	const QString &colorMode = Config::iconThemeColor();
 	qDebug() << "MODE" << colorMode;
 	QIcon::setFallbackSearchPaths(QIcon::fallbackSearchPaths() << ":/icons/common");
@@ -261,7 +268,6 @@ Window::Window() :
 
 Window::~Window()
 {
-	Config::flush();
 	if (fieldArchive) {
 		fieldArchive->close();
 	}
@@ -295,6 +301,7 @@ void Window::closeEvent(QCloseEvent *event)
 		if (_walkmeshManager) {
 			_walkmeshManager->saveConfig();
 		}
+		Config::flush();
 		event->accept();
 	}
 }
