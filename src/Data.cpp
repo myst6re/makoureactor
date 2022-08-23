@@ -89,7 +89,7 @@ QString Data::regValue(const QString &regPath, const QString &regKey,
 		RegQueryValueExW(phkResult, regKey.toStdWString().c_str(), nullptr, &type, value, &cValue);
 		if (ERROR_SUCCESS == error && type == REG_SZ) {
 			RegCloseKey(phkResult);
-			return QString::fromUtf16((ushort *)value);
+			return QString::fromUtf16((char16_t *)value);
 		}
 		RegCloseKey(phkResult);
 	}
@@ -146,8 +146,8 @@ const QString &Data::searchRereleasedFF7Path()
 			DWORD index = 0;
 			WCHAR subKeyName[MAX_PATH];
 			DWORD subKeyCName = MAX_PATH;
-			while (ERROR_NO_MORE_ITEMS != (error = RegEnumKeyExW(phkResult, index, subKeyName, &subKeyCName, nullptr, nullptr, nullptr, nullptr))) {
-				QString subKeyNameStr = QString::fromUtf16((ushort *)subKeyName);
+			while (ERROR_NO_MORE_ITEMS != RegEnumKeyExW(phkResult, index, subKeyName, &subKeyCName, nullptr, nullptr, nullptr, nullptr)) {
+				QString subKeyNameStr = QString::fromUtf16((char16_t *)subKeyName);
 				if (subKeyNameStr.endsWith("_is1")) {
 					error = RegOpenKeyExW(phkResult, QString("%1\\").arg(subKeyNameStr).toStdWString().c_str(), 0, KEY_READ, &phkResult2);
 					if (ERROR_SUCCESS == error) {
@@ -156,7 +156,7 @@ const QString &Data::searchRereleasedFF7Path()
 						error = RegQueryValueExW(phkResult2, L"DisplayName", nullptr, &type, value, &cValue);
 						if (ERROR_SUCCESS == error) {
 							if (type == REG_SZ) {
-								QString softwareNameStr = QString::fromUtf16((ushort *)value);
+								QString softwareNameStr = QString::fromUtf16((char16_t *)value);
 								if (softwareNameStr.compare("FINAL FANTASY VII", Qt::CaseInsensitive) == 0) {
 									cValue = MAX_PATH;
 									error = RegQueryValueExW(phkResult2, L"InstallLocation", nullptr, &type, value, &cValue);
@@ -164,7 +164,7 @@ const QString &Data::searchRereleasedFF7Path()
 										if (type == REG_SZ) {
 											RegCloseKey(phkResult2);
 											RegCloseKey(phkResult);
-											ff7RereleasePath_cache = QDir::fromNativeSeparators(QDir::cleanPath(QString::fromUtf16((ushort *)value)));
+											ff7RereleasePath_cache = QDir::fromNativeSeparators(QDir::cleanPath(QString::fromUtf16((char16_t *)value)));
 											return ff7RereleasePath_cache;
 										}
 									}

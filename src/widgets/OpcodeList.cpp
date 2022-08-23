@@ -335,7 +335,8 @@ void OpcodeList::saveExpandedItems()
 		return;
 	}
 
-	for (Opcode &opcode: _script->opcodes()) {
+	QList<Opcode> &opcodes = _script->opcodes();
+	for (Opcode &opcode: opcodes) {
 		if (opcode.isIf()) {
 			opcode.setItemIsExpanded(false);
 		}
