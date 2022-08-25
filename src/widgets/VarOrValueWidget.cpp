@@ -22,10 +22,8 @@ VarOrValueWidget::VarOrValueWidget(QWidget *parent) :
     _onlyVar(false), _onlyBank(false)
 {
 	_typeSelect = new QComboBox(this);
-	updateValueType();
 
 	_value = new QSpinBox(this);
-	updateValueRange();
 
 	_bank = new QComboBox(this);
 	_bank->addItem(QString(), Bank1And2);
@@ -34,7 +32,6 @@ VarOrValueWidget::VarOrValueWidget(QWidget *parent) :
 	_bank->addItem(QString(), Bank11And12);
 	_bank->addItem(QString(), Bank13And14);
 	_bank->addItem(QString(), Bank15And7);
-	updateBankList();
 
 	_address = new QSpinBox(this);
 	_address->setRange(0, 255);
@@ -54,6 +51,9 @@ VarOrValueWidget::VarOrValueWidget(QWidget *parent) :
 	layout->addWidget(_typeSelect);
 	layout->addLayout(_varOrValuelayout);
 	layout->setContentsMargins(QMargins());
+
+	updateValueRange();
+	updateValueType();
 
 	_typeSelect->setCurrentIndex(0);
 	_varOrValuelayout->setCurrentIndex(0);
@@ -175,7 +175,14 @@ bool VarOrValueWidget::isValue() const
 
 void VarOrValueWidget::setIsValue(bool isValue)
 {
-	_typeSelect->setCurrentIndex(isValue ? 0 : 1);
+	int valueIndex = _typeSelect->findData(Value),
+	        var8Index = _typeSelect->findData(Var8),
+	        var16Index = _typeSelect->findData(Var16);
+	if (isValue && valueIndex > -1) {
+		_typeSelect->setCurrentIndex(valueIndex);
+	} else if (!isValue && (var8Index > -1 || var16Index > -1)) {
+		_typeSelect->setCurrentIndex(var8Index > -1 ? var8Index : var16Index);
+	}
 }
 
 VarOrValueWidget::Sizes VarOrValueWidget::size() const
@@ -197,7 +204,6 @@ void VarOrValueWidget::setSize(Sizes size)
 	_size = size;
 	updateValueRange();
 	updateValueType();
-	updateBankList();
 }
 
 void VarOrValueWidget::setShortAndLong()
@@ -236,6 +242,7 @@ void VarOrValueWidget::updateValueRange()
 void VarOrValueWidget::updateValueType()
 {
 	int index = 0;
+
 	if (!_onlyVar) {
 		updateValueTypeAddOrSetItem(index, tr("Value"), Value);
 		index += 1;
@@ -252,6 +259,9 @@ void VarOrValueWidget::updateValueType()
 		_typeSelect->removeItem(index);
 	}
 	_typeSelect->setDisabled(_typeSelect->count() <= 1);
+
+	updateBankList();
+	updateVarOrValueLayout();
 }
 
 void VarOrValueWidget::updateValueTypeAddOrSetItem(int index, const QString &text, const QVariant &data)

@@ -281,7 +281,7 @@ List of available commands:
     </message>
     <message>
         <source>You must restart %1 to apply all changes.</source>
-        <translation type="unfinished"></translation>
+        <translation>変更を適用するために %1 を再起動してください。</translation>
     </message>
     <message>
         <source>Japanese Characters</source>
@@ -386,7 +386,7 @@ List of available commands:
     </message>
     <message>
         <source>Lgp Archives (*.lgp);;All Files (*)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Lgp ファイル (*.lgp);;All Files (*)</translation>
     </message>
     <message>
         <source>Information</source>
@@ -1011,7 +1011,7 @@ Some scripts can refer to it!</source>
     </message>
     <message>
         <source>Musics/Tutorials</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">サウンド/解説</translation>
     </message>
 </context>
 <context>
@@ -1923,14 +1923,6 @@ Some scripts can refer to it!</source>
     </message>
     <message>
         <source>%1 (char ID)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%4 = amount of materia %1 in the inventory (AP=%2)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Shake (type=%1, xAmplitude=%2, xFrames=%3, yAmplitude=%2, yFrames=%3)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3317,6 +3309,14 @@ Some scripts can refer to it!</source>
     </message>
     <message>
         <source>Get character ID of the party member #%1 to %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%3 = amount of materia %1 in the inventory (AP=%2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shake (type=%1, xAmplitude=%2, xFrames=%3, yAmplitude=%4, yFrames=%5)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

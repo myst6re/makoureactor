@@ -314,11 +314,11 @@ List of available commands:
     </message>
     <message>
         <source>Dialog Background</source>
-        <translation type="unfinished"></translation>
+        <translation>Couleur des dialogues</translation>
     </message>
     <message>
         <source>You must restart %1 to apply all changes.</source>
-        <translation type="unfinished"></translation>
+        <translation>Vous devez redémarrer %1 pour appliquer tous les changements.</translation>
     </message>
     <message>
         <source>Edit...</source>
@@ -368,11 +368,11 @@ List of available commands:
     </message>
     <message>
         <source>{CHOICE} width</source>
-        <translation type="unfinished"></translation>
+        <translation>Largeur {CHOICE}</translation>
     </message>
     <message>
         <source>Tabulation width</source>
-        <translation type="unfinished"></translation>
+        <translation>Largeur tabulation</translation>
     </message>
     <message>
         <source>Script Editor</source>
@@ -415,7 +415,7 @@ List of available commands:
     </message>
     <message>
         <source>Lgp Archives (*.lgp);;All Files (*)</source>
-        <translation type="unfinished"></translation>
+        <translation>Archives LGP (*.lgp);;Tous les fichiers (*)</translation>
     </message>
     <message>
         <source>Information</source>
@@ -423,19 +423,19 @@ List of available commands:
     </message>
     <message>
         <source>Color Scheme</source>
-        <translation type="unfinished"></translation>
+        <translation>Thème de couleur</translation>
     </message>
     <message>
         <source>System Theme</source>
-        <translation type="unfinished"></translation>
+        <translation>Thème par défaut</translation>
     </message>
     <message>
         <source>Dark Theme</source>
-        <translation type="unfinished"></translation>
+        <translation>Thème sombre</translation>
     </message>
     <message>
         <source>Light Theme</source>
-        <translation type="unfinished"></translation>
+        <translation>Thème clair</translation>
     </message>
 </context>
 <context>
@@ -753,7 +753,7 @@ D&apos;autres écrans peuvent y référer !</translation>
     </message>
     <message>
         <source>Left padding:</source>
-        <translation type="unfinished"></translation>
+        <translation>Marge à gauche:</translation>
     </message>
     <message>
         <source>Table %1</source>
@@ -923,39 +923,39 @@ Certains scripts peuvent y faire référence !</translation>
     <name>GrpScriptWizardPageType</name>
     <message>
         <source>Empty</source>
-        <translation type="unfinished"></translation>
+        <translation>Vide</translation>
     </message>
     <message>
         <source>3D Model</source>
-        <translation type="unfinished"></translation>
+        <translation>Modèle 3D</translation>
     </message>
     <message>
         <source>Line</source>
-        <translation type="unfinished">Ligne</translation>
+        <translation>Ligne</translation>
     </message>
     <message>
         <source>Animation</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Other</source>
-        <translation type="unfinished"></translation>
+        <translation>Autre</translation>
     </message>
     <message>
         <source>Main Character</source>
-        <translation type="unfinished"></translation>
+        <translation>Personnage principal</translation>
     </message>
     <message>
         <source>Non Playable Character</source>
-        <translation type="unfinished"></translation>
+        <translation>Personnage non jouable</translation>
     </message>
     <message>
         <source>Item</source>
-        <translation type="unfinished">Objet</translation>
+        <translation>Objet</translation>
     </message>
     <message>
         <source>Save Point</source>
-        <translation type="unfinished"></translation>
+        <translation>Point de sauvegarde</translation>
     </message>
 </context>
 <context>
@@ -1002,7 +1002,7 @@ Certains scripts peuvent y faire référence !</translation>
     </message>
     <message>
         <source>File is not compressed</source>
-        <translation type="unfinished"></translation>
+        <translation>Le fichier n&apos;est pas compressé</translation>
     </message>
     <message>
         <source> (partial: models and animations are not linked properly)</source>
@@ -1047,7 +1047,7 @@ Certains scripts peuvent y faire référence !</translation>
     </message>
     <message>
         <source>Musics/Tutorials</source>
-        <translation type="unfinished"></translation>
+        <translation>Musiques / Tutoriels</translation>
     </message>
 </context>
 <context>
@@ -1324,31 +1324,31 @@ Certains scripts peuvent y faire référence !</translation>
     <name>ListWidget</name>
     <message>
         <source>Add</source>
-        <translation type="unfinished">Ajouter</translation>
+        <translation>Ajouter</translation>
     </message>
     <message>
         <source>Remove</source>
-        <translation type="unfinished">Supprimer</translation>
+        <translation>Supprimer</translation>
     </message>
     <message>
         <source>Up</source>
-        <translation type="unfinished"></translation>
+        <translation>Déplacer vers le haut</translation>
     </message>
     <message>
         <source>Down</source>
-        <translation type="unfinished"></translation>
+        <translation>Déplacer vers le bas</translation>
     </message>
     <message>
         <source>Cut</source>
-        <translation type="unfinished">Couper</translation>
+        <translation>Couper</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation type="unfinished">Copier</translation>
+        <translation>Copier</translation>
     </message>
     <message>
         <source>Paste</source>
-        <translation type="unfinished">Coller</translation>
+        <translation>Coller</translation>
     </message>
 </context>
 <context>
@@ -1397,27 +1397,27 @@ Certains scripts peuvent y faire référence !</translation>
     </message>
     <message>
         <source>Flatten PNG image</source>
-        <translation type="unfinished"></translation>
+        <translation>Image PNG applatie</translation>
     </message>
     <message>
         <source>Flatten JPG image</source>
-        <translation type="unfinished"></translation>
+        <translation>Image JPG applatie</translation>
     </message>
     <message>
         <source>Flatten BMP image</source>
-        <translation type="unfinished"></translation>
+        <translation>Image BMP applatie</translation>
     </message>
     <message>
         <source>Multi-layers PNG images</source>
-        <translation type="unfinished"></translation>
+        <translation>Image PNG multi-couches</translation>
     </message>
     <message>
         <source>Multi-layers JPG images</source>
-        <translation type="unfinished"></translation>
+        <translation>Image JPG multi-couches</translation>
     </message>
     <message>
         <source>Multi-layers BMP images</source>
-        <translation type="unfinished"></translation>
+        <translation>Image BMP multi-couches</translation>
     </message>
     <message>
         <source>Export musics</source>
@@ -1580,7 +1580,7 @@ Certains scripts peuvent y faire référence !</translation>
     </message>
     <message>
         <source>Import musics</source>
-        <translation type="unfinished"></translation>
+        <translation>Importer des musiques</translation>
     </message>
 </context>
 <context>
@@ -2298,14 +2298,6 @@ Certains scripts peuvent y faire référence !</translation>
     </message>
     <message>
         <source>%1 (char ID)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%4 = amount of materia %1 in the inventory (AP=%2)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Shake (type=%1, xAmplitude=%2, xFrames=%3, yAmplitude=%2, yFrames=%3)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3753,6 +3745,14 @@ Certains scripts peuvent y faire référence !</translation>
         <source>Get character ID of the party member #%1 to %2</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>%3 = amount of materia %1 in the inventory (AP=%2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shake (type=%1, xAmplitude=%2, xFrames=%3, yAmplitude=%4, yFrames=%5)</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OpcodeList</name>
@@ -3887,11 +3887,11 @@ Certains scripts peuvent y faire référence !</translation>
     </message>
     <message>
         <source>option + Click to go to the label</source>
-        <translation type="unfinished"></translation>
+        <translation>option + clic pour aller au label</translation>
     </message>
     <message>
         <source>option + Click to go to the script</source>
-        <translation type="unfinished"></translation>
+        <translation>option + clic pour aller au script</translation>
     </message>
 </context>
 <context>

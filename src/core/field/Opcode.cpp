@@ -3332,7 +3332,7 @@ QString Opcode::toStringDMTRA(const Section1File *scriptsAndTexts, const OpcodeD
 QString Opcode::toStringCMTRA(const Section1File *scriptsAndTexts, const OpcodeCMTRA &opcode) const
 {
 	Q_UNUSED(scriptsAndTexts)
-	return Opcode::tr("%4 = amount of materia %1 in the inventory (AP=%2)")
+	return Opcode::tr("%3 = amount of materia %1 in the inventory (AP=%2)")
 	        .arg(
 	            _materia(opcode.materiaID, 0),
 	            _var(opcode.APCount, B1(opcode.banks[0]), B2(opcode.banks[0]), B1(opcode.banks[1]), B2(opcode.banks[1])),
@@ -3343,7 +3343,7 @@ QString Opcode::toStringCMTRA(const Section1File *scriptsAndTexts, const OpcodeC
 QString Opcode::toStringSHAKE(const Section1File *scriptsAndTexts, const OpcodeSHAKE &opcode) const
 {
 	Q_UNUSED(scriptsAndTexts)
-	return Opcode::tr("Shake (type=%1, xAmplitude=%2, xFrames=%3, yAmplitude=%2, yFrames=%3)")
+	return Opcode::tr("Shake (type=%1, xAmplitude=%2, xFrames=%3, yAmplitude=%4, yFrames=%5)")
 	        .arg(opcode.type)
 	        .arg(opcode.xAmplitude)
 	        .arg(opcode.xFrames)
