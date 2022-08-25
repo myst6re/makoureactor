@@ -17,7 +17,6 @@
  ****************************************************************************/
 #include "GrpScriptList.h"
 #include "Data.h"
-#include "GrpScriptWizard.h"
 #include <FF7Char.h>
 
 GrpScriptList::GrpScriptList(QWidget *parent) :
@@ -298,14 +297,11 @@ void GrpScriptList::add()
 
 	int grpScriptID = selectedID() + 1;
 
-	GrpScriptWizard wizard(this);
-	if (wizard.exec() == QDialog::Accepted) {
-		scripts->insertGrpScript(grpScriptID, wizard.selectedGroup());
-		fill();
-		scroll(grpScriptID);
-		emit changed();
-		rename();
-	}
+	scripts->insertGrpScript(grpScriptID, GrpScript());
+	fill();
+	scroll(grpScriptID);
+	emit changed();
+	rename();
 }
 
 void GrpScriptList::del(bool totalDel)
