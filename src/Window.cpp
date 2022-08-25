@@ -89,7 +89,7 @@ Window::Window() :
 	actionSave = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-save")), tr("&Save"), this, &Window::save, QKeySequence("Ctrl+S"));
 	actionSaveAs = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-save-as")), tr("Save &As..."), this, &Window::saveAs, QKeySequence("Shift+Ctrl+S"));
 	actionExport = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-export")), tr("&Export the current map..."), this, &Window::exportCurrentMap, QKeySequence("Ctrl+E"));
-	actionChunks = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-export")), tr("Expor&t map into chunks..."), this, &Window::exportCurrentMapIntoChunks, QKeySequence("Ctrl+U"));
+	actionChunks = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-chunks-export")), tr("Expor&t map into chunks..."), this, &Window::exportCurrentMapIntoChunks, QKeySequence("Ctrl+U"));
 	actionMassExport = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-export")), tr("&Mass Export..."), this, &Window::massExport, QKeySequence("Shift+Ctrl+E"));
 	actionImport = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-import")),tr("&Import to current map..."), this, &Window::importToCurrentMap, QKeySequence("Ctrl+I"));
 //	actionMassImport = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-import")), tr("Mass im&port..."), this, &Window::massImport, QKeySequence("Shift+Ctrl+I"));
