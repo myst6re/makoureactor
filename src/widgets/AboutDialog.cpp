@@ -31,30 +31,37 @@ AboutDialog::AboutDialog(QWidget *parent)
 	desc1->setTextInteractionFlags(Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard);
 	desc1->setTextFormat(Qt::RichText);
 	desc1->setOpenExternalLinks(true);
-
-	QLabel *desc2 = new QLabel(tr("Thanks to:<ul style=\"margin:0\"><li>Squall78</li>"
-	                              "<li>Synergy Blades</li><li>TrueOdin</li><li>Akari</li><li>Asa</li><li>Aali</li>"
-	                              "<li>DLPB</li></ul>"), this);
+	
+	QLabel *desc2 = new QLabel(tr("Contributors:<ul style=\"margin:0\"><li>Sithlord48</li>"
+	                              "<li>TrueOdin</li><li>dangarfield</li><li>vegetass4</li><li>nickrum</li></ul>"), this);
 	desc2->setTextInteractionFlags(Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard);
 	desc2->setTextFormat(Qt::RichText);
 	desc2->setOpenExternalLinks(true);
+
+	QLabel *desc3 = new QLabel(tr("Thanks to:<ul style=\"margin:0\"><li>Squall78</li>"
+	                              "<li>Synergy Blades</li><li>Akari</li><li>Asa</li><li>Aali</li>"
+	                              "<li>DLPB</li></ul>"), this);
+	desc3->setTextInteractionFlags(Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard);
+	desc3->setTextFormat(Qt::RichText);
+	desc3->setOpenExternalLinks(true);
 
 	QDialogButtonBox *buttonBox = new QDialogButtonBox(Qt::Horizontal, this);
 	buttonBox->addButton(QDialogButtonBox::Close);
 	connect(buttonBox, &QDialogButtonBox::rejected, this, &AboutDialog::close);
 
-	QLabel *desc3 = new QLabel(QString("Qt %1").arg(QT_VERSION_STR), this);
-	QLabel *desc4 = new QLabel(QStringLiteral("ff7tk %1").arg(ff7tk_version()), this);
-	QPalette pal = desc3->palette();
+	QLabel *desc4 = new QLabel(QString("Qt %1").arg(QT_VERSION_STR), this);
+	QLabel *desc5 = new QLabel(QStringLiteral("ff7tk %1").arg(ff7tk_version()), this);
+	QPalette pal = desc4->palette();
 	pal.setColor(QPalette::WindowText, Data::color(Data::ColorGreyForeground));
-	desc3->setPalette(pal);
 	desc4->setPalette(pal);
+	desc5->setPalette(pal);
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(desc1, 0, 0, 1, 2);
 	layout->addWidget(desc2, 1, 0);
-	layout->addWidget(image, 1, 1, Qt::AlignRight);
-	layout->addWidget(desc3, 2, 0, 1, 2);
+	layout->addWidget(image, 1, 1, 2, 1, Qt::AlignRight);
+	layout->addWidget(desc3, 2, 0);
 	layout->addWidget(desc4, 3, 0, 1, 2);
-	layout->addWidget(buttonBox, 4, 0, 1, 2);
+	layout->addWidget(desc5, 4, 0, 1, 2);
+	layout->addWidget(buttonBox, 5, 0, 1, 2);
 }

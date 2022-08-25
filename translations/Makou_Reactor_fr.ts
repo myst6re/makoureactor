@@ -9,7 +9,15 @@
     </message>
     <message>
         <source>Thanks to:&lt;ul style=&quot;margin:0&quot;&gt;&lt;li&gt;Squall78&lt;/li&gt;&lt;li&gt;Synergy Blades&lt;/li&gt;&lt;li&gt;TrueOdin&lt;/li&gt;&lt;li&gt;Akari&lt;/li&gt;&lt;li&gt;Asa&lt;/li&gt;&lt;li&gt;Aali&lt;/li&gt;&lt;li&gt;DLPB&lt;/li&gt;&lt;/ul&gt;</source>
-        <translation>Merci à&amp;nbsp;:&lt;ul style=&quot;margin:0&quot;&gt;&lt;li&gt;Squall78&lt;/li&gt;&lt;li&gt;Synergy Blades&lt;/li&gt;&lt;li&gt;TrueOdin&lt;/li&gt;&lt;li&gt;Akari&lt;/li&gt;&lt;li&gt;Asa&lt;/li&gt;&lt;li&gt;Aali&lt;/li&gt;&lt;li&gt;DLPB&lt;/li&gt;&lt;/ul&gt;</translation>
+        <translation type="vanished">Merci à&amp;nbsp;:&lt;ul style=&quot;margin:0&quot;&gt;&lt;li&gt;Squall78&lt;/li&gt;&lt;li&gt;Synergy Blades&lt;/li&gt;&lt;li&gt;TrueOdin&lt;/li&gt;&lt;li&gt;Akari&lt;/li&gt;&lt;li&gt;Asa&lt;/li&gt;&lt;li&gt;Aali&lt;/li&gt;&lt;li&gt;DLPB&lt;/li&gt;&lt;/ul&gt;</translation>
+    </message>
+    <message>
+        <source>Contributors:&lt;ul style=&quot;margin:0&quot;&gt;&lt;li&gt;Sithlord48&lt;/li&gt;&lt;li&gt;TrueOdin&lt;/li&gt;&lt;li&gt;dangarfield&lt;/li&gt;&lt;li&gt;vegetass4&lt;/li&gt;&lt;li&gt;nickrum&lt;/li&gt;&lt;/ul&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Thanks to:&lt;ul style=&quot;margin:0&quot;&gt;&lt;li&gt;Squall78&lt;/li&gt;&lt;li&gt;Synergy Blades&lt;/li&gt;&lt;li&gt;Akari&lt;/li&gt;&lt;li&gt;Asa&lt;/li&gt;&lt;li&gt;Aali&lt;/li&gt;&lt;li&gt;DLPB&lt;/li&gt;&lt;/ul&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
