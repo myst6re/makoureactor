@@ -1830,7 +1830,7 @@ Some scripts can refer to it!</source>
     </message>
     <message>
         <source>Return and execute script #%2 from the current entity (Priority %1/6)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">リターンして呼び出したグループのスクリプト #%2 を実行 (優先度 %1/6)</translation>
     </message>
     <message>
         <source>Get party to memory: %1 | %2 | %3</source>
@@ -3305,7 +3305,7 @@ Some scripts can refer to it!</source>
     </message>
     <message>
         <source>Numeric (00)</source>
-        <translation type="unfinished">数値 (000000) {00)?}</translation>
+        <translation type="unfinished">数値 (00)</translation>
     </message>
     <message>
         <source>Perform no operation</source>
@@ -4070,7 +4070,7 @@ Make sure it is valid or delete it.</source>
     </message>
     <message>
         <source>Sinus / Cosinus</source>
-        <translation type="unfinished"></translation>
+        <translation>サイン / コサイン</translation>
     </message>
     <message>
         <source>Window creation</source>
@@ -4675,11 +4675,11 @@ Make sure it is valid or delete it.</source>
     </message>
     <message>
         <source>If character exists</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">キャラクターが存在する場合</translation>
     </message>
     <message>
         <source>Set window variable</source>
-        <translation type="unfinished"></translation>
+        <translation>ウィンドウの変数をセット</translation>
     </message>
     <message>
         <source>Play animation (1)</source>
@@ -5593,11 +5593,11 @@ Make sure it is valid or delete it.</source>
     <name>ScriptEditorSinCosPage</name>
     <message>
         <source>Sinus</source>
-        <translation type="unfinished">サイン</translation>
+        <translation>サイン</translation>
     </message>
     <message>
         <source>Cosinus</source>
-        <translation type="unfinished">コサイン</translation>
+        <translation>コサイン</translation>
     </message>
 </context>
 <context>
@@ -6520,8 +6520,8 @@ Are you sure you want to continue?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Tutorials/Musics</source>
-        <translation type="unfinished"></translation>
+        <source>Musics/Tutorials</source>
+        <translation type="unfinished">サウンド/解説</translation>
     </message>
 </context>
 <context>
@@ -7391,10 +7391,6 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
         <translation type="obsolete">閉じる</translation>
     </message>
     <message>
-        <source>Tutorials/Mu&amp;sics...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>&amp;Export the current map...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7408,6 +7404,10 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
     </message>
     <message>
         <source>Field chunk (*.chunk*.?)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mu&amp;sics/Tutorials...</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

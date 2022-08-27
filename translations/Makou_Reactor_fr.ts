@@ -13,11 +13,11 @@
     </message>
     <message>
         <source>Contributors:&lt;ul style=&quot;margin:0&quot;&gt;&lt;li&gt;Sithlord48&lt;/li&gt;&lt;li&gt;TrueOdin&lt;/li&gt;&lt;li&gt;dangarfield&lt;/li&gt;&lt;li&gt;vegetass4&lt;/li&gt;&lt;li&gt;nickrum&lt;/li&gt;&lt;/ul&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Constributeurs&amp;nbsp;:&lt;ul style=&quot;margin:0&quot;&gt;&lt;li&gt;Sithlord48&lt;/li&gt;&lt;li&gt;TrueOdin&lt;/li&gt;&lt;li&gt;dangarfield&lt;/li&gt;&lt;li&gt;vegetass4&lt;/li&gt;&lt;li&gt;nickrum&lt;/li&gt;&lt;/ul&gt;</translation>
     </message>
     <message>
         <source>Thanks to:&lt;ul style=&quot;margin:0&quot;&gt;&lt;li&gt;Squall78&lt;/li&gt;&lt;li&gt;Synergy Blades&lt;/li&gt;&lt;li&gt;Akari&lt;/li&gt;&lt;li&gt;Asa&lt;/li&gt;&lt;li&gt;Aali&lt;/li&gt;&lt;li&gt;DLPB&lt;/li&gt;&lt;/ul&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Merci à&amp;nbsp;:&lt;ul style=&quot;margin:0&quot;&gt;&lt;li&gt;Squall78&lt;/li&gt;&lt;li&gt;Synergy Blades&lt;/li&gt;&lt;li&gt;Akari&lt;/li&gt;&lt;li&gt;Asa&lt;/li&gt;&lt;li&gt;Aali&lt;/li&gt;&lt;li&gt;DLPB&lt;/li&gt;&lt;/ul&gt;</translation>
     </message>
 </context>
 <context>
@@ -2214,111 +2214,111 @@ Certains scripts peuvent y faire référence !</translation>
     </message>
     <message>
         <source>Return and execute script #%2 from the current entity (Priority %1/6)</source>
-        <translation type="unfinished"></translation>
+        <translation>Retourner et exécuter le script n°%2 de l&apos;entité courante (priorité %1/6)</translation>
     </message>
     <message>
         <source>Get party to memory: %1 | %2 | %3</source>
-        <translation type="unfinished"></translation>
+        <translation>Récupérer les membres de l&apos;équipe : %1 | %2 | %3</translation>
     </message>
     <message>
         <source>Unused opcode 0x%1</source>
-        <translation type="unfinished"></translation>
+        <translation>Opcode non utilisé 0x%1</translation>
     </message>
     <message>
         <source>PNAME - Disable right menu (%1, bank=%2, size=%3)</source>
-        <translation type="unfinished"></translation>
+        <translation>PNAME - Désactiver le menu de droite (%1, bank=%2, taille=%3)</translation>
     </message>
     <message>
         <source>Set field message speed: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Modifier la vitesse des dialogues : %1</translation>
     </message>
     <message>
         <source>SPECIAL - Unknown %1</source>
-        <translation type="unfinished"></translation>
+        <translation>SPECIAL - Inconnu %1</translation>
     </message>
     <message>
         <source>Write bytes to address 0x%1 (length=%2)</source>
-        <translation type="unfinished"></translation>
+        <translation>Écrire des octets à l&apos;adresse 0x%1 (longueur=%2)</translation>
     </message>
     <message>
         <source>%1 Field Model blinking</source>
-        <translation type="unfinished"></translation>
+        <translation>L&apos;objet 3D cligne des yeux : %1</translation>
     </message>
     <message>
         <source>Field Model graphic filter - Change the state of the eye/mouth texture (eye 1=%1, eye 2=%2, mouth=%3, 3D object ID=%4)</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtre graphique de modèle 3D - Changer l&apos;état des textures des yeux / bouche (œil 1=%1, œil 2=%2, bouche=%3, ID modèle 3D=%4)</translation>
     </message>
     <message>
         <source>Field Model graphic filter - %1 blending</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtre graphique de modèle 3D - %1 blending</translation>
     </message>
     <message>
         <source>Field Model graphic filter - Change the ambient color of the model: RGB(%1, %2, %3) RGB(%4, %5, %6) (flags=%7)</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtre graphique de modèle 3D - Modifier la couleur ambiante du modèle : RVB(%1, %2, %3) RVB(%4, %5, %6) (flags=%7)</translation>
     </message>
     <message>
         <source>Field Model graphic filter - UNKNOWN4</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtre graphique de modèle 3D - INCONNU4</translation>
     </message>
     <message>
         <source>Field Model graphic filter - LIGHT</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtre graphique de modèle 3D - LUMIÈRE</translation>
     </message>
     <message>
         <source>Field Model graphic filter - UNKNOWN7</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtre graphique de modèle 3D - INCONNU7</translation>
     </message>
     <message>
         <source>Field Model graphic filter - UNKNOWN8</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtre graphique de modèle 3D - INCONNU8</translation>
     </message>
     <message>
         <source>Field Model graphic filter - UNKNOWN9</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtre graphique de modèle 3D - INCONNU9</translation>
     </message>
     <message>
         <source>Field Model graphic filter - SBOBJ</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtre graphique de modèle 3D - SBOBJ</translation>
     </message>
     <message>
         <source>Field Model graphic filter - UNKNOWNB</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtre graphique de modèle 3D - INCONNUB</translation>
     </message>
     <message>
         <source>Field Model graphic filter - UNKNOWNC</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtre graphique de modèle 3D - INCONNUC</translation>
     </message>
     <message>
         <source>Field Model graphic filter - SHINE</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtre graphique de modèle 3D - BRILLER</translation>
     </message>
     <message>
         <source>Field Model graphic filter - RESET</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtre graphique de modèle 3D - REINITIALISER</translation>
     </message>
     <message>
         <source>Field Model graphic filter - Unknown %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtre graphique de modèle 3D - Inconnu %1</translation>
     </message>
     <message>
         <source>Wait for Field Model graphic filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Attendre pour le filtre graphique de modèle 3D</translation>
     </message>
     <message>
         <source>%1 (char ID)</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 (ID de personnage)</translation>
     </message>
     <message>
         <source>Scroll to location (?=%1, ?=%2, enable=%3)</source>
-        <translation type="unfinished"></translation>
+        <translation>Centrer sur Zone (?=%1, ?=%2, activer=%3)</translation>
     </message>
     <message>
         <source>SETX[%1][%2 + %3] = %4</source>
-        <translation type="unfinished"></translation>
+        <translation>SETX[%1][%2 + %3] = %4</translation>
     </message>
     <message>
         <source>%1 = GETX[%2][%3 + %4]</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 = GETX[%2][%3 + %4]</translation>
     </message>
     <message>
         <source>Copy palette 2 (sourceTile=%1, targetTile=%2, sourcePal=%3, targetPal=%4, color count=%3 + 1)</source>
@@ -2342,7 +2342,7 @@ Certains scripts peuvent y faire référence !</translation>
     </message>
     <message>
         <source>CMUSC (music #%1, operation=%2, param1=%3, param2=%4)</source>
-        <translation type="unfinished"></translation>
+        <translation>CMUSC (musique n°%1, opération=%2, param1=%3, param2=%4)</translation>
     </message>
     <message>
         <source>Play music and resume from last position [param1: music ID, 0-based]</source>
@@ -2454,7 +2454,7 @@ Certains scripts peuvent y faire référence !</translation>
     </message>
     <message>
         <source>%1 and %2 and %3 and %4</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 et %2 et %3 et %4</translation>
     </message>
     <message>
         <source>normal</source>
@@ -3739,27 +3739,27 @@ Certains scripts peuvent y faire référence !</translation>
     </message>
     <message>
         <source>%1 = Field message speed</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 = Vitesse des dialogues</translation>
     </message>
     <message>
         <source>Numeric (00)</source>
-        <translation type="unfinished">Affichage numérique {00)?}</translation>
+        <translation>Affichage numérique (00)</translation>
     </message>
     <message>
         <source>Perform no operation</source>
-        <translation type="unfinished"></translation>
+        <translation>Ne rien faire</translation>
     </message>
     <message>
         <source>Get character ID of the party member #%1 to %2</source>
-        <translation type="unfinished"></translation>
+        <translation>Obtenir l&apos;id du personnage n°%1 de l&apos;équipe actuelle et le stocker dans %2</translation>
     </message>
     <message>
         <source>%3 = amount of materia %1 in the inventory (AP=%2)</source>
-        <translation type="unfinished"></translation>
+        <translation>%3 = quantité de matéria %1 dans l&apos;inventaire (AP=%2)</translation>
     </message>
     <message>
         <source>Shake (type=%1, xAmplitude=%2, xFrames=%3, yAmplitude=%4, yFrames=%5)</source>
-        <translation type="unfinished"></translation>
+        <translation>Secouer l&apos;écran (type=%1, xAmplitude=%2, xFrames=%3, yAmplitude=%4, yFrames=%5)</translation>
     </message>
 </context>
 <context>
@@ -4167,11 +4167,11 @@ Certains scripts peuvent y faire référence !</translation>
     </message>
     <message>
         <source>Label %1 not found.</source>
-        <translation type="unfinished"></translation>
+        <translation>Label %1 introuvable.</translation>
     </message>
     <message>
         <source>Invalid jump, you must point to a valid label.</source>
-        <translation type="unfinished"></translation>
+        <translation>Saut invalide, il faut définir un label valide.</translation>
     </message>
     <message>
         <source>The label %1 is unreachable because it is located before the opcode.</source>
@@ -4180,11 +4180,11 @@ Certains scripts peuvent y faire référence !</translation>
     </message>
     <message>
         <source>Invalid jump to the label %1 which is after the maximum possible size of the script.</source>
-        <translation type="unfinished"></translation>
+        <translation>Le label %1 est inaccessible car votre script dépasse 65535 octets, veuillez réduire la taille du script.</translation>
     </message>
     <message>
         <source>Invalid jump to before the script.</source>
-        <translation type="unfinished"></translation>
+        <translation>Saut invalide avant le début du script.</translation>
     </message>
     <message>
         <source>Script too big, it should not exceed 65535 bytes. Actual size: %1.</source>
@@ -4282,19 +4282,19 @@ id=%2
     </message>
     <message>
         <source>Cannot import this chunk</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible d&apos;importer cette section</translation>
     </message>
     <message>
         <source>Incorrect file name format (accepted format: *.chunk.[1-9])</source>
-        <translation type="unfinished"></translation>
+        <translation>Format de fichier invalide (format accepté : *.chunk.[1-9])</translation>
     </message>
     <message>
         <source>Cannot import a palette chunk to the PS version</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible d&apos;importer la section palette vers la version PS</translation>
     </message>
     <message>
         <source>Background is broken in this map</source>
-        <translation type="unfinished"></translation>
+        <translation>Le décor est invalide sur cet écran</translation>
     </message>
 </context>
 <context>
@@ -4625,7 +4625,7 @@ id=%2
     </message>
     <message>
         <source>If character exists</source>
-        <translation type="unfinished"></translation>
+        <translation>Si personnage existe</translation>
     </message>
     <message>
         <source>[DLPB&apos;s custom opcode] If Red XIII is named Nanaki</source>
@@ -4645,7 +4645,7 @@ id=%2
     </message>
     <message>
         <source>Sinus / Cosinus</source>
-        <translation type="unfinished"></translation>
+        <translation>Sinus / Cosinus</translation>
     </message>
     <message>
         <source>Window creation</source>
@@ -4693,7 +4693,7 @@ id=%2
     </message>
     <message>
         <source>Set numerical display value</source>
-        <translation type="unfinished"></translation>
+        <translation>Modifier affichage numérique</translation>
     </message>
     <message>
         <source>Set window variable (8-bit)</source>
@@ -5047,11 +5047,11 @@ id=%2
     </message>
     <message>
         <source>Play temporary music</source>
-        <translation type="unfinished"></translation>
+        <translation>Jouer musique temporaire</translation>
     </message>
     <message>
         <source>MUSVM (unused)</source>
-        <translation type="unfinished"></translation>
+        <translation>MUSVM (pas utilisé)</translation>
     </message>
     <message>
         <source>Music Unlock/Lock</source>
@@ -5060,19 +5060,19 @@ id=%2
     </message>
     <message>
         <source>CHMPH (unused)</source>
-        <translation type="unfinished"></translation>
+        <translation>CHMPH (pas utilisé)</translation>
     </message>
     <message>
         <source>Get music status</source>
-        <translation type="unfinished"></translation>
+        <translation>Obtenir statut musique</translation>
     </message>
     <message>
         <source>Field music</source>
-        <translation type="unfinished"></translation>
+        <translation>Musique de jeu</translation>
     </message>
     <message>
         <source>Play basic akao operation</source>
-        <translation type="unfinished"></translation>
+        <translation>Jouer une opération de musique Akao</translation>
     </message>
     <message>
         <source>Set next movie</source>
@@ -5121,7 +5121,7 @@ id=%2
     </message>
     <message>
         <source>Set window variable</source>
-        <translation type="unfinished"></translation>
+        <translation>Modifier variable dans fenêtre</translation>
     </message>
     <message>
         <source>Enable/Disable rotation</source>
@@ -5336,7 +5336,7 @@ id=%2
     </message>
     <message>
         <source>[DLPB&apos;s custom opcode] Write to any memory address via array</source>
-        <translation type="unfinished"></translation>
+        <translation>[DLPB&apos;s custom opcode] Écrire dans n&apos;importe quelle adresse mémoire via un tableau</translation>
     </message>
     <message>
         <source>SPECIAL - Cursor On/Off</source>
@@ -5406,7 +5406,7 @@ id=%2
     </message>
     <message>
         <source>Get Party Member Character ID (I)</source>
-        <translation type="unfinished"></translation>
+        <translation>Obtenir l&apos;identifiant de personnage d&apos;un équipier (I)</translation>
     </message>
 </context>
 <context>
@@ -5436,7 +5436,7 @@ id=%2
     </message>
     <message>
         <source>Modulo</source>
-        <translation type="unfinished"></translation>
+        <translation>Modulo</translation>
     </message>
     <message>
         <source>And</source>
@@ -5452,7 +5452,7 @@ id=%2
     </message>
     <message>
         <source>It is not possible to divide per 0 or use mod 0, or the game will crash.</source>
-        <translation type="unfinished"></translation>
+        <translation>Il est impossible de diviser par 0 ou faire un modulo 0. Le jeu plante si vous le faites.</translation>
     </message>
     <message>
         <source>Multiplication</source>
@@ -5522,39 +5522,39 @@ id=%2
     <name>ScriptEditorBooleanPage</name>
     <message>
         <source>Enable</source>
-        <translation type="unfinished">Activer</translation>
+        <translation>Activer</translation>
     </message>
     <message>
         <source>Disable</source>
-        <translation type="unfinished">Désactiver</translation>
+        <translation>Désactiver</translation>
     </message>
     <message>
         <source>Show</source>
-        <translation type="unfinished"></translation>
+        <translation>Afficher</translation>
     </message>
     <message>
         <source>Hide</source>
-        <translation type="unfinished">Cacher</translation>
+        <translation>Cacher</translation>
     </message>
     <message>
         <source>Activate</source>
-        <translation type="unfinished">Activer</translation>
+        <translation>Activer</translation>
     </message>
     <message>
         <source>Deactivate</source>
-        <translation type="unfinished">Désactiver</translation>
+        <translation>Désactiver</translation>
     </message>
     <message>
         <source>ON</source>
-        <translation type="unfinished">Autoriser</translation>
+        <translation>Autoriser</translation>
     </message>
     <message>
         <source>OFF</source>
-        <translation type="unfinished">Empêcher</translation>
+        <translation>Empêcher</translation>
     </message>
     <message>
         <source>Display</source>
-        <translation type="unfinished">Afficher</translation>
+        <translation>Afficher</translation>
     </message>
 </context>
 <context>
@@ -5604,11 +5604,11 @@ id=%2
     <name>ScriptEditorDLPBWriteToMemory</name>
     <message>
         <source>Address</source>
-        <translation type="unfinished">Adresse</translation>
+        <translation>Adresse</translation>
     </message>
     <message>
         <source>Bytes</source>
-        <translation type="unfinished"></translation>
+        <translation>Octets</translation>
     </message>
 </context>
 <context>
@@ -5928,23 +5928,23 @@ id=%2
     </message>
     <message>
         <source>Shake type</source>
-        <translation type="unfinished"></translation>
+        <translation>Type de secouage</translation>
     </message>
     <message>
         <source>X Amplitude</source>
-        <translation type="unfinished"></translation>
+        <translation>Amplitude X</translation>
     </message>
     <message>
         <source>X Frames</source>
-        <translation type="unfinished"></translation>
+        <translation>Frames X</translation>
     </message>
     <message>
         <source>Y Amplitude</source>
-        <translation type="unfinished"></translation>
+        <translation>Amplitude Y</translation>
     </message>
     <message>
         <source>Y Frames</source>
-        <translation type="unfinished"></translation>
+        <translation>Frames Y</translation>
     </message>
     <message>
         <source>???</source>
@@ -6006,7 +6006,7 @@ id=%2
     </message>
     <message>
         <source>Test</source>
-        <translation type="unfinished">Test</translation>
+        <translation>Test</translation>
     </message>
     <message>
         <source>Test to be performed</source>
@@ -6131,26 +6131,26 @@ id=%2
     <name>ScriptEditorSinCosPage</name>
     <message>
         <source>Sinus</source>
-        <translation type="unfinished">Sinus</translation>
+        <translation>Sinus</translation>
     </message>
     <message>
         <source>Cosinus</source>
-        <translation type="unfinished">Cosinus</translation>
+        <translation>Cosinus</translation>
     </message>
 </context>
 <context>
     <name>ScriptEditorSpecialPName</name>
     <message>
         <source>Var or value</source>
-        <translation type="unfinished"></translation>
+        <translation>Var ou valeur</translation>
     </message>
     <message>
         <source>Bank</source>
-        <translation type="unfinished">Bank</translation>
+        <translation>Bank</translation>
     </message>
     <message>
         <source>Size</source>
-        <translation type="unfinished">Taille</translation>
+        <translation>Taille</translation>
     </message>
 </context>
 <context>
@@ -6250,39 +6250,39 @@ id=%2
     <name>ScriptEditorWindowNumDisplayPage</name>
     <message>
         <source>None</source>
-        <translation type="unfinished">Aucun</translation>
+        <translation>Aucun</translation>
     </message>
     <message>
         <source>Numerical (00)</source>
-        <translation type="unfinished"></translation>
+        <translation>Numérique (00)</translation>
     </message>
     <message>
         <source>Clock (00:00)</source>
-        <translation type="unfinished">Horloge</translation>
+        <translation>Horloge (00:00)</translation>
     </message>
     <message>
         <source>Window ID</source>
-        <translation type="unfinished">Fenêtre ID</translation>
+        <translation>Fenêtre ID</translation>
     </message>
     <message>
         <source>Display Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Mode d&apos;affichage</translation>
     </message>
     <message>
         <source>Margin left</source>
-        <translation type="unfinished"></translation>
+        <translation>Marge à gauche</translation>
     </message>
     <message>
         <source>Margin top</source>
-        <translation type="unfinished"></translation>
+        <translation>Marge en haut</translation>
     </message>
     <message>
         <source>Window in preview:</source>
-        <translation type="unfinished"></translation>
+        <translation>Fenêtre en aperçu :</translation>
     </message>
     <message>
         <source>Window %1 (x: %2, y: %3, w: %4, h: %5)</source>
-        <translation type="unfinished"></translation>
+        <translation>Fenêtre %1 (x : %2, y : %3, w : %4, h : %5)</translation>
     </message>
     <message>
         <source>[Keep empty window]</source>
@@ -6290,7 +6290,7 @@ id=%2
     </message>
     <message>
         <source>Text in preview:</source>
-        <translation type="unfinished">Texte en aperçu :</translation>
+        <translation>Texte en aperçu :</translation>
     </message>
 </context>
 <context>
@@ -6357,22 +6357,22 @@ id=%2
     </message>
     <message>
         <source>Window ID</source>
-        <translation type="unfinished">Fenêtre ID</translation>
+        <translation>Fenêtre ID</translation>
     </message>
     <message>
         <source>Window Variable</source>
-        <translation type="unfinished"></translation>
+        <translation>Variable dans fenêtre</translation>
     </message>
     <message>
         <source>Value</source>
-        <translation type="unfinished">Valeur</translation>
+        <translation>Valeur</translation>
     </message>
 </context>
 <context>
     <name>ScriptEditorWithPriorityPage</name>
     <message>
         <source>Lower priority number is higher priority in the game</source>
-        <translation type="unfinished"></translation>
+        <translation>Plus le chiffre est petit, plus grande est la priorité dans le jeu</translation>
     </message>
 </context>
 <context>
@@ -6505,7 +6505,7 @@ id=%2
     </message>
     <message>
         <source>%1 occurrences replaced.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 occurrences remplacées.</translation>
     </message>
     <message>
         <source>All fields</source>
@@ -6573,15 +6573,15 @@ poursuite à la fin.</translation>
     </message>
     <message>
         <source>All maps</source>
-        <translation type="unfinished"></translation>
+        <translation>Tous les écrans</translation>
     </message>
     <message>
         <source>Current map</source>
-        <translation type="unfinished"></translation>
+        <translation>Écran courant</translation>
     </message>
     <message>
         <source>Last map</source>
-        <translation type="unfinished"></translation>
+        <translation>Dernier écran</translation>
     </message>
     <message>
         <source>Last group</source>
@@ -6600,7 +6600,7 @@ poursuite à la fin.</translation>
     </message>
     <message>
         <source>First map</source>
-        <translation type="unfinished"></translation>
+        <translation>Premier écran</translation>
     </message>
     <message>
         <source>First group</source>
@@ -7103,8 +7103,8 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
         <translation>Exporter</translation>
     </message>
     <message>
-        <source>Tutorials/Musics</source>
-        <translation type="unfinished"></translation>
+        <source>Musics/Tutorials</source>
+        <translation>Musiques / Tutoriels</translation>
     </message>
 </context>
 <context>
@@ -7210,11 +7210,11 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
     </message>
     <message>
         <source>8-bit Var</source>
-        <translation type="unfinished"></translation>
+        <translation>Var 8 bits</translation>
     </message>
     <message>
         <source>16-bit Var</source>
-        <translation type="unfinished"></translation>
+        <translation>Var 16 bits</translation>
     </message>
     <message>
         <source>Variable</source>
@@ -7272,7 +7272,7 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
     </message>
     <message>
         <source>Show Background</source>
-        <translation type="unfinished"></translation>
+        <translation>Afficher décor</translation>
     </message>
     <message>
         <source>Gateways</source>
@@ -7750,11 +7750,11 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
     </message>
     <message>
         <source>Uncompressed PC Field Map (*.dec)</source>
-        <translation type="unfinished"></translation>
+        <translation>Écran PC décompressé (*.dec)</translation>
     </message>
     <message>
         <source>PS Field Map (*.DAT)</source>
-        <translation type="unfinished"></translation>
+        <translation>Fichier Field PS (*.DAT)</translation>
     </message>
     <message>
         <source>Field List</source>
@@ -8095,32 +8095,32 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
         <translation>Importer un fichier</translation>
     </message>
     <message>
-        <source>Tutorials/Mu&amp;sics...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Expor&amp;t map into chunks...</source>
-        <translation type="unfinished"></translation>
+        <translation>Expor&amp;ter écran en sections...</translation>
     </message>
     <message>
         <source>Choose a directory where to create chunks</source>
-        <translation type="unfinished"></translation>
+        <translation>Choisir un dossier où crééer les sections</translation>
     </message>
     <message>
         <source>Field chunk (*.chunk*.?)</source>
-        <translation type="unfinished"></translation>
+        <translation>Section d&apos;écran (*.chunk*.?)</translation>
+    </message>
+    <message>
+        <source>Mu&amp;sics/Tutorials...</source>
+        <translation>M&amp;usiques/Tutoriels...</translation>
     </message>
 </context>
 <context>
     <name>main</name>
     <message>
         <source>Error</source>
-        <translation type="unfinished">Erreur</translation>
+        <translation>Erreur</translation>
     </message>
     <message>
         <source>The file &apos;var.cfg&apos; could not be loaded.
 Make sure it is valid or delete it.</source>
-        <translation type="unfinished">Le fichier &apos;var.cfg&apos; n&apos;a pas pu être chargé.
+        <translation>Le fichier &apos;var.cfg&apos; n&apos;a pas pu être chargé.
 Vérifiez que ce fichier est valide ou supprimez-le.</translation>
     </message>
 </context>

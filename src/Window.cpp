@@ -108,7 +108,7 @@ Window::Window() :
 	QAction *actionText = menu->addAction(QIcon(":/images/text-editor.png"), tr("&Texts..."), this, [&] {textManager(-1, 0, 0, true);}, QKeySequence("Ctrl+T"));
 	actionModels = menu->addAction(QIcon(":/images/model.png"), tr("Map &Models..."), this, &Window::modelManager, QKeySequence("Ctrl+M"));
 	actionEncounter = menu->addAction(tr("Encounte&rs..."), this, &Window::encounterManager, QKeySequence("Ctrl+N"));
-	menu->addAction(QIcon::fromTheme(QStringLiteral("new-audio-alarm")), tr("Tutorials/Mu&sics..."), this, &Window::tutManager, QKeySequence("Ctrl+K"));
+	menu->addAction(QIcon::fromTheme(QStringLiteral("new-audio-alarm")), tr("Mu&sics/Tutorials..."), this, &Window::tutManager, QKeySequence("Ctrl+K"));
 	QAction *actionWalkmesh = menu->addAction(QIcon::fromTheme(QStringLiteral("kstars_grid")), tr("&Walkmesh..."), this, &Window::walkmeshManager, QKeySequence("Ctrl+W"));
 	menu->addAction(QIcon::fromTheme(QStringLiteral("view-preview")), tr("&Background..."), this, &Window::backgroundManager, QKeySequence("Ctrl+B"));
 	actionMisc = menu->addAction(tr("M&iscellaneous..."), this, &Window::miscManager);

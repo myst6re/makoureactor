@@ -25,7 +25,7 @@
 TutWidget::TutWidget(QWidget *parent) :
 	QDialog(parent, Qt::Tool), copied(false)
 {
-	setWindowTitle(tr("Tutorials/Musics"));
+	setWindowTitle(tr("Musics/Tutorials"));
 
 	ListWidget *_list = new ListWidget(this);
 	_list->addAction(ListWidget::Add);
