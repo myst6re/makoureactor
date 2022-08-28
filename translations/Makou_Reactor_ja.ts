@@ -65,65 +65,6 @@
     </message>
 </context>
 <context>
-    <name>Arguments</name>
-    <message>
-        <source>Input file or directory.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Warning: cannot open file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Command to execute</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>
-List of available commands:
-  export  Export various assets from archive to files
-  patch   Patch archive
-
-&quot;%1 export --help&quot; to see help of the specific subcommand</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Please specify a command</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Unknown command type:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Error: you cannot specify both background and bg-layer parameters</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Error: too much parameters</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Error: --psf-lib-path is required with --music psf</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Error: target directory does not exist:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Output file (optional).</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>ArgumentsExport</name>
-    <message>
-        <source>Output directory.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>BGDialog</name>
     <message>
         <source>Background</source>
@@ -190,56 +131,24 @@ List of available commands:
 <context>
     <name>CLI</name>
     <message>
-        <source>Retry? [Yn] </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>y</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>An error occured when exporting</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Nothing found!</source>
-        <translation type="unfinished">見つかりませんでした！</translation>
-    </message>
-    <message>
-        <source>The file already exists</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">見つかりませんでした！</translation>
     </message>
     <message>
         <source>The file is inaccessible</source>
-        <translation type="unfinished">ファイルにアクセスできません</translation>
+        <translation type="obsolete">ファイルにアクセスできません</translation>
     </message>
     <message>
         <source>Can not create temporary file</source>
-        <translation type="unfinished">一時ファイルが作成できません</translation>
-    </message>
-    <message>
-        <source>Unable to remove the file, check write permissions.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Failed to rename the file, check write permissions.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Failed to copy the file, check write permissions.</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">一時ファイルが作成できません</translation>
     </message>
     <message>
         <source>Invalid file</source>
-        <translation type="unfinished">無効なファイル</translation>
-    </message>
-    <message>
-        <source>This error should not appear, thank you for reporting it</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">無効なファイル</translation>
     </message>
     <message>
         <source>Error</source>
-        <translation type="unfinished">エラー</translation>
+        <translation type="obsolete">エラー</translation>
     </message>
 </context>
 <context>
@@ -1983,14 +1892,6 @@ Some scripts can refer to it!</source>
         <translation>回転を %1</translation>
     </message>
     <message>
-        <source>Copy palette 2 (sourceTile=%1, targetTile=%2, sourcePal=%3, targetPal=%4, color count=%3 + 1)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Copy partially palette 2 %1 (sourceTile=%1, targetTile=%2, sourcePal=%3, targetPal=%4, first color=%5)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Add RGB(%6, %5, %4) on the colors in a palette (2) (sourceTile=%1, targetTile=%2, first color=%3, color count=%7)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3321,6 +3222,14 @@ Some scripts can refer to it!</source>
     </message>
     <message>
         <source>Shake (type=%1, xAmplitude=%2, xFrames=%3, yAmplitude=%4, yFrames=%5)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy palette (2) (sourceTile=%1, targetTile=%2, sourcePal=%3, targetPal=%4, color count=%5 + 1)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy partially palette (2) (sourceTile=%1, targetTile=%2, sourcePal=%3, targetPal=%4, first color=%5)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

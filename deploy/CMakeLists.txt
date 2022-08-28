@@ -1,3 +1,14 @@
+# Deploy translations
+if(APPLE)
+    set(TRANSLATIONS_PATH ${PROJECT_NAME}.app/Contents/MacOS/translations)
+elseif(WIN32)
+    set(TRANSLATIONS_PATH translations)
+else()
+    set(TRANSLATIONS_PATH share/makoureactor/translations)
+endif()
+
+install(FILES ${QM_FILES} DESTINATION "${TRANSLATIONS_PATH}")
+
 # Deploy ff7tk
 if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.20.0")
     # Remove \ occurrences

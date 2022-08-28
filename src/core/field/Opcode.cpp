@@ -4702,7 +4702,7 @@ QString Opcode::toStringCPPAL2(const Section1File *scriptsAndTexts, const Opcode
 	QString colorCount = B2(opcode.banks[1])
 	    ? QString("%1 + 1").arg(_var(opcode.colorCount, B2(opcode.banks[1])))
 	    : QString::number(opcode.colorCount + 1);
-	return Opcode::tr("Copy palette 2 (sourceTile=%1, targetTile=%2, sourcePal=%3, targetPal=%4, color count=%3 + 1)")
+	return Opcode::tr("Copy palette (2) (sourceTile=%1, targetTile=%2, sourcePal=%3, targetPal=%4, color count=%5 + 1)")
 	        .arg(opcode.posTileSrc)
 	        .arg(opcode.posTileDst)
 	        .arg(
@@ -4716,7 +4716,7 @@ QString Opcode::toStringRTPAL2(const Section1File *scriptsAndTexts, const Opcode
 {
 	Q_UNUSED(scriptsAndTexts)
 	Q_UNUSED(opcode)
-	return Opcode::tr("Copy partially palette 2 %1 (sourceTile=%1, targetTile=%2, sourcePal=%3, targetPal=%4, first color=%5)")
+	return Opcode::tr("Copy partially palette (2) (sourceTile=%1, targetTile=%2, sourcePal=%3, targetPal=%4, first color=%5)")
 	        .arg(opcode.posTileSrc)
 	        .arg(opcode.posTileDst)
 	        .arg(

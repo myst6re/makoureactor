@@ -68,65 +68,6 @@
     </message>
 </context>
 <context>
-    <name>Arguments</name>
-    <message>
-        <source>Input file or directory.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Warning: cannot open file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Command to execute</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>
-List of available commands:
-  export  Export various assets from archive to files
-  patch   Patch archive
-
-&quot;%1 export --help&quot; to see help of the specific subcommand</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Please specify a command</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Unknown command type:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Error: you cannot specify both background and bg-layer parameters</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Error: too much parameters</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Error: --psf-lib-path is required with --music psf</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Error: target directory does not exist:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Output file (optional).</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>ArgumentsExport</name>
-    <message>
-        <source>Output directory.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>BGDialog</name>
     <message>
         <source>Z :</source>
@@ -197,56 +138,48 @@ List of available commands:
 <context>
     <name>CLI</name>
     <message>
-        <source>Retry? [Yn] </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>y</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>An error occured when exporting</source>
-        <translation type="unfinished">Une erreur s&apos;est produite lors de l&apos;exportation</translation>
+        <translation type="obsolete">Une erreur s&apos;est produite lors de l&apos;exportation</translation>
     </message>
     <message>
         <source>Nothing found!</source>
-        <translation type="unfinished">Rien trouvé !</translation>
+        <translation type="obsolete">Rien trouvé !</translation>
     </message>
     <message>
         <source>The file already exists</source>
-        <translation type="unfinished">Le fichier existe déjà</translation>
+        <translation type="obsolete">Le fichier existe déjà</translation>
     </message>
     <message>
         <source>The file is inaccessible</source>
-        <translation type="unfinished">Le fichier est inaccessible</translation>
+        <translation type="obsolete">Le fichier est inaccessible</translation>
     </message>
     <message>
         <source>Can not create temporary file</source>
-        <translation type="unfinished">Impossible de créer un fichier temporaire</translation>
+        <translation type="obsolete">Impossible de créer un fichier temporaire</translation>
     </message>
     <message>
         <source>Unable to remove the file, check write permissions.</source>
-        <translation type="unfinished">Impossible de supprimer le fichier, vérifiez les droits d&apos;écriture.</translation>
+        <translation type="obsolete">Impossible de supprimer le fichier, vérifiez les droits d&apos;écriture.</translation>
     </message>
     <message>
         <source>Failed to rename the file, check write permissions.</source>
-        <translation type="unfinished">Impossible de renommer le fichier, vérifiez les droits d&apos;écriture.</translation>
+        <translation type="obsolete">Impossible de renommer le fichier, vérifiez les droits d&apos;écriture.</translation>
     </message>
     <message>
         <source>Failed to copy the file, check write permissions.</source>
-        <translation type="unfinished">Impossible de copier le fichier, vérifiez les droits d&apos;écriture.</translation>
+        <translation type="obsolete">Impossible de copier le fichier, vérifiez les droits d&apos;écriture.</translation>
     </message>
     <message>
         <source>Invalid file</source>
-        <translation type="unfinished">Fichier invalide</translation>
+        <translation type="obsolete">Fichier invalide</translation>
     </message>
     <message>
         <source>This error should not appear, thank you for reporting it</source>
-        <translation type="unfinished">Cette erreur ne devrais pas s&apos;afficher, merci de le signaler</translation>
+        <translation type="obsolete">Cette erreur ne devrais pas s&apos;afficher, merci de le signaler</translation>
     </message>
     <message>
         <source>Error</source>
-        <translation type="unfinished">Erreur</translation>
+        <translation type="obsolete">Erreur</translation>
     </message>
 </context>
 <context>
@@ -2321,24 +2254,16 @@ Certains scripts peuvent y faire référence !</translation>
         <translation>%1 = GETX[%2][%3 + %4]</translation>
     </message>
     <message>
-        <source>Copy palette 2 (sourceTile=%1, targetTile=%2, sourcePal=%3, targetPal=%4, color count=%3 + 1)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Copy partially palette 2 %1 (sourceTile=%1, targetTile=%2, sourcePal=%3, targetPal=%4, first color=%5)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Add RGB(%6, %5, %4) on the colors in a palette (2) (sourceTile=%1, targetTile=%2, first color=%3, color count=%7)</source>
-        <translation type="unfinished"></translation>
+        <translation>Additionner RVB(%6, %5, %4) sur les couleurs d&apos;une palette (2) (sourceTile=%1, targetTile=%2, première couleur=%3, nombre de couleurs=%7)</translation>
     </message>
     <message>
         <source>Play temporary music #%1</source>
-        <translation type="unfinished"></translation>
+        <translation>Jouer musique temporaire n°%1</translation>
     </message>
     <message>
         <source>Set next field music for when we will be back to the map: #%1</source>
-        <translation type="unfinished"></translation>
+        <translation>Définir la prochaine musique de terrain pour le retour à l&apos;écran : n°%1</translation>
     </message>
     <message>
         <source>CMUSC (music #%1, operation=%2, param1=%3, param2=%4)</source>
@@ -3760,6 +3685,14 @@ Certains scripts peuvent y faire référence !</translation>
     <message>
         <source>Shake (type=%1, xAmplitude=%2, xFrames=%3, yAmplitude=%4, yFrames=%5)</source>
         <translation>Secouer l&apos;écran (type=%1, xAmplitude=%2, xFrames=%3, yAmplitude=%4, yFrames=%5)</translation>
+    </message>
+    <message>
+        <source>Copy palette (2) (sourceTile=%1, targetTile=%2, sourcePal=%3, targetPal=%4, color count=%5 + 1)</source>
+        <translation>Copier palette (2) (sourceTile=%1, targetTile=%2, sourcePal=%3, ciblePal=%4, nombre de couleurs=%5 + 1)</translation>
+    </message>
+    <message>
+        <source>Copy partially palette (2) (sourceTile=%1, targetTile=%2, sourcePal=%3, targetPal=%4, first color=%5)</source>
+        <translation>Copier un morceau de palette (2) (sourceTile=%1, targetTile=%2, sourcePal=%3, ciblePal=%4, première couleur=%5)</translation>
     </message>
 </context>
 <context>
