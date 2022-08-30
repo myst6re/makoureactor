@@ -42,7 +42,7 @@ if(WIN32)
     install(FILES ${FF7TK_DEPENDS} DESTINATION ".")
 endif()
 
-list(TRANSFORM LANGS REPLACE ".+" "${_ff7tk_ROOT}/share/ff7tk/lang/ff7tk_\\0.qm" OUTPUT_VARIABLE FF7TK_QM_FILES)
+list(TRANSFORM LANGS REPLACE ".+" "${_ff7tk_ROOT}/share/ff7tk/translations/ff7tk_\\0.qm" OUTPUT_VARIABLE FF7TK_QM_FILES)
 if(BUNDLE_FF7TK_QM)
     install(FILES ${FF7TK_QM_FILES} DESTINATION "${TRANSLATIONS_PATH}")
 endif()
