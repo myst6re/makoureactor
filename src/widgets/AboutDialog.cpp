@@ -17,7 +17,7 @@
  ****************************************************************************/
 #include "AboutDialog.h"
 #include "../Data.h"
-#include <ff7tkAbout.h>
+#include <ff7tkAbout>
 
 AboutDialog::AboutDialog(QWidget *parent)
     : QDialog(parent, Qt::Dialog | Qt::CustomizeWindowHint)

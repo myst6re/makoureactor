@@ -17,7 +17,7 @@
  ****************************************************************************/
 #include "GrpScriptList.h"
 #include "Data.h"
-#include <FF7Char.h>
+#include <FF7Char>
 
 GrpScriptList::GrpScriptList(QWidget *parent) :
     QTreeWidget(parent)

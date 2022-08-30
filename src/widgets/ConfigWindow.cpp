@@ -20,8 +20,8 @@
 #include "core/Config.h"
 #include "TextPreview.h"
 #include "widgets/FontManager.h"
-#include <DialogPreview.h>
-#include <FF7Char.h>
+#include <DialogPreview>
+#include <FF7Char>
 
 ConfigWindow::ConfigWindow(QWidget *parent)
 	: QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint)

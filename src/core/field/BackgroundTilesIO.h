@@ -18,7 +18,7 @@
 #pragma once
 
 #include <QtCore>
-#include <IO.h>
+#include <IO>
 #include "BackgroundTiles.h"
 
 #define MAX_TILE_DST	1024

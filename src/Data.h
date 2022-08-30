@@ -18,8 +18,8 @@
 #pragma once
 
 #include <QtCore>
-#include <Lgp.h>
-#include <WindowBinFile.h>
+#include <Lgp>
+#include <WindowBinFile>
 #include "core/field/CharArchive.h"
 
 #define FF7_WIN_REGISTER_PATH "Square Soft, Inc./Final Fantasy VII"

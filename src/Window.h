@@ -18,7 +18,7 @@
 #pragma once
 
 #include <QtWidgets>
-#include <QTaskBarButton.h>
+#include <QTaskBarButton>
 #include "core/field/FieldArchive.h"
 #include "widgets/FieldList.h"
 #include "widgets/ScriptManager.h"

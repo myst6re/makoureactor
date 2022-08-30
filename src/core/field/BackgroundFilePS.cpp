@@ -20,7 +20,7 @@
 #include "BackgroundTiles.h"
 #include "BackgroundFilePC.h"
 #include "Palette.h"
-#include <PsColor.h>
+#include <PsColor>
 #include "FieldPS.h"
 
 BackgroundFilePS::BackgroundFilePS(FieldPS *field) :

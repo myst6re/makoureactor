@@ -16,7 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "TdbFile.h"
-#include <PsColor.h>
+#include <PsColor>
 #include <QImage>
 
 TdbFile::TdbFile()

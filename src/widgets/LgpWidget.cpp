@@ -17,8 +17,8 @@
  ****************************************************************************/
 #include "LgpWidget.h"
 #include "core/Config.h"
-#include <TimFile.h>
-#include <TexFile.h>
+#include <TimFile>
+#include <TexFile>
 #include "core/field/CharArchive.h"
 
 IconThread::IconThread(QObject *parent) :

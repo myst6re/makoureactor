@@ -16,7 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "Palette.h"
-#include <PsColor.h>
+#include <PsColor>
 
 Palette::Palette()
 {

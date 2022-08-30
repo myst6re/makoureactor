@@ -17,7 +17,7 @@
  ****************************************************************************/
 #pragma once
 
-#include <IO.h>
+#include <IO>
 #include "FieldModelSkeleton.h"
 
 class HrcFile : public IO

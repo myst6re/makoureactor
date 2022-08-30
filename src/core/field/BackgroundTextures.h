@@ -18,8 +18,8 @@
 #pragma once
 
 #include <QtCore>
-#include <PsColor.h>
-#include <TimFile.h>
+#include <PsColor>
+#include <TimFile>
 #include "BackgroundTiles.h"
 #include "Palette.h"
 

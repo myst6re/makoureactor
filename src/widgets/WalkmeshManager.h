@@ -18,7 +18,7 @@
 #pragma once
 
 #include <QtWidgets>
-#include <HexLineEdit.h>
+#include <HexLineEdit>
 #include "core/field/Field.h"
 #include "3d/WalkmeshWidget.h"
 #include "VertexWidget.h"

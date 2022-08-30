@@ -18,7 +18,7 @@
 #pragma once
 
 #include <QtWidgets>
-#include <Lgp.h>
+#include <Lgp>
 #include "ArchivePreview.h"
 
 class IconThread : public QThread

@@ -19,7 +19,7 @@
 
 #include <QtWidgets>
 #include "core/field/FieldPS.h"
-#include "ColorDisplay.h"
+#include <ColorDisplay>
 #include "ModelManager.h"
 
 class ModelManagerPS : public ModelManager

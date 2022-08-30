@@ -18,7 +18,7 @@
 #pragma once
 
 #include <QtCore>
-#include <IO.h>
+#include <IO>
 #include "FieldModelPart.h"
 
 #define MODEL_SCALE_PC				132.0f // 1.0f

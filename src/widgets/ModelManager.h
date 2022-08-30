@@ -19,7 +19,7 @@
 
 #include <QtWidgets>
 #include "core/field/FieldPC.h"
-#include "ColorDisplay.h"
+#include <ColorDisplay>
 #include "3d/FieldModel.h"
 #include "ModelColorsLayout.h"
 
