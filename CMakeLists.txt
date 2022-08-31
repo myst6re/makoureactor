@@ -70,18 +70,12 @@ add_compile_definitions(
     MAKOU_REACTOR_VERSION_TWEAK=0
 )
 
-find_package(QT NAMES Qt6 COMPONENTS Widgets OpenGLWidgets OpenGL Svg LinguistTools REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets OpenGLWidgets Svg OpenGL LinguistTools REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets OpenGLWidgets Svg OpenGL LinguistTools Core5Compat Xml Quick REQUIRED)
 
-set(REQUIRED_FF7TK_VERSION 0.82.0)
-find_package(ff7tk ${REQUIRED_FF7TK_VERSION} REQUIRED COMPONENTS ff7tk ff7tkQtWidgets ff7tkFormats ff7tkUtils)
+set(REQUIRED_FF7TK_VERSION 0.83.0)
+find_package(ff7tk ${REQUIRED_FF7TK_VERSION} REQUIRED COMPONENTS ff7tk fftkData ff7tkQtWidgets ff7tkFormats ff7tkUtils)
 
 find_package(ZLIB REQUIRED)
-
-if(${QT_VERSION_MAJOR} EQUAL 6)
-    find_package(QT NAMES Qt6 COMPONENTS Core5Compat REQUIRED)
-    find_package(Qt6 COMPONENTS Core5Compat REQUIRED)
-endif()
 
 set(LANGS
     fr
@@ -529,6 +523,7 @@ if(GUI)
         Qt::Svg
         ZLIB::ZLIB
         ff7tk::ff7tk
+        ff7tk::ff7tkData
         ff7tk::ff7tkQtWidgets
         ff7tk::ff7tkFormats
         ff7tk::ff7tkUtils
@@ -568,6 +563,7 @@ if(CLI)
     target_link_libraries(${CLI_TARGET} PRIVATE
         ZLIB::ZLIB
         ff7tk::ff7tk
+        ff7tk::ff7tkData
         ff7tk::ff7tkFormats
         ff7tk::ff7tkUtils
     )

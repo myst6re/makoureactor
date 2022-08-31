@@ -21,6 +21,7 @@ if(WIN32)
   if(GUI)
     set(FF7TK_DEPENDS
         ff7tk
+        ff7tkData
         ff7tkQtWidgets
         ff7tkFormats
         ff7tkUtils
@@ -28,6 +29,7 @@ if(WIN32)
   else()
     set(FF7TK_DEPENDS
       ff7tk
+      ff7tkData
       ff7tkFormats
       ff7tkUtils
     )
