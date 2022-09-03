@@ -27,6 +27,7 @@
 //#include "core/FF7Font.h"
 #endif
 #include "core/Config.h"
+#include "Data.h"
 #include <ff7tkInfo>
 int main(int argc, char *argv[])
 {
@@ -38,6 +39,9 @@ int main(int argc, char *argv[])
 	// QTextCodec::setCodecForLocale(QTextCodec::codecForName("IBM 850"));
 #endif
 	Config::set();
+	if (!Data::load()) {
+		qWarning() << "Error loading data!";
+	}
 	CLI::exec();
 
 	QTimer::singleShot(0, &app, &QCoreApplication::quit);

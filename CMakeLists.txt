@@ -91,8 +91,8 @@ set(PROJECT_SOURCES
     "src/3d/WalkmeshWidget.h"
     "src/Data.cpp"
     "src/Data.h"
-    "src/FieldModelThread.cpp"
-    "src/FieldModelThread.h"
+    #"src/FieldModelThread.cpp"
+    #"src/FieldModelThread.h"
     "src/Window.cpp"
     "src/Window.h"
     "src/core/Clipboard.cpp"
@@ -255,8 +255,8 @@ set(PROJECT_SOURCES
     "src/widgets/FormatSelectionWidget.h"
     "src/widgets/GrpScriptList.cpp"
     "src/widgets/GrpScriptList.h"
-    "src/widgets/GrpScriptWizard.cpp"
-    "src/widgets/GrpScriptWizard.h"
+    #"src/widgets/GrpScriptWizard.cpp"
+    #"src/widgets/GrpScriptWizard.h"
     "src/widgets/HelpWidget.cpp"
     "src/widgets/HelpWidget.h"
     "src/widgets/ImportDialog.cpp"
@@ -354,8 +354,6 @@ set(PROJECT_CLI_SOURCES
     "src/CLI.h"
     "src/Data.cpp"
     "src/Data.h"
-    "src/FieldModelThread.cpp"
-    "src/FieldModelThread.h"
     "src/core/Config.cpp"
     "src/core/Config.h"
     "src/core/FF7Font.cpp"
@@ -568,7 +566,7 @@ if(CLI)
         ff7tk::ff7tkUtils
     )
     target_compile_definitions(${CLI_TARGET}
-        PRIVATE MR_CONSOLE=1
+        PRIVATE MR_CONSOLE=1 QT_NO_DEBUG_OUTPUT=1
     )
 endif()
 

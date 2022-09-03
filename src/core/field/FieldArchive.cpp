@@ -1835,7 +1835,7 @@ bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &
 							if (overwrite || !QFile::exists(path)) {
 								QFile tutExport(path);
 								if (tutExport.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-									if (extension == "minipsf") {
+									if (extension == "minipsf" || extension == "psf") {
 										tags->setTitle(Data::music_desc.value(akaoList->akaoID(i), f->name()));
 										tutExport.write(PsfFile::fromAkao(akaoList->data(i), *tags).save());
 									} else {

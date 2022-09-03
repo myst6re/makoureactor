@@ -23,9 +23,9 @@ ArgumentsExport::ArgumentsExport() : CommonArguments()
 	              "Cannot be specified with bg-layer option.", "background", "");
 	_ADD_ARGUMENT("bg-layer", "Export backgrounds with multiple layers. Possible values: png, jpg, bmp. "
 	                          "Cannot be specified with background option.", "bg-layer", "");
-	_ADD_ARGUMENT("music", "Export musics. Possible values: psf, akao, snd (alias of akao)", "music", "");
+	_ADD_ARGUMENT("music", "Export musics. Possible values: psf, minipsf, akao, snd (alias of akao)", "music", "");
 	_ADD_ARGUMENT("text", "Export texts. Possible values: xml, txt", "text", "");
-	_ADD_ARGUMENT("psf-lib-path", "PSF lib path. Required only when --music psf is set.", "psf-lib-path", "");
+	_ADD_ARGUMENT("psf-lib-path", "PSF lib path. Required only when --music psf/minipsf is set.", "psf-lib-path", "");
 	_ADD_FLAG(_OPTION_NAMES("f", "force"),
 	             "Overwrite destination file if exists.");
 
@@ -44,7 +44,11 @@ QString ArgumentsExport::backgroundFormat() const
 	QString ret = _parser.value("background");
 
 	if (ret.isEmpty()) {
-		ret = _parser.value("bg-layer") % "_";
+		ret = _parser.value("bg-layer");
+
+		if (!ret.isEmpty()) {
+			ret = ret % "_";
+		}
 	}
 
 	return ret;
@@ -87,9 +91,9 @@ void ArgumentsExport::parse()
 		exit(1);
 	}
 
-	if (_parser.value("music") == "psf" && !_parser.isSet("psf-lib-path")) {
+	if ((_parser.value("music") == "psf" || _parser.value("music") == "minipsf") && !_parser.isSet("psf-lib-path")) {
 		qWarning() << qPrintable(
-		    QCoreApplication::translate("Arguments", "Error: --psf-lib-path is required with --music psf"));
+		    QCoreApplication::translate("Arguments", "Error: --psf-lib-path is required with --music psf/minipsf"));
 		exit(1);
 	}
 
