@@ -17,6 +17,7 @@
  ****************************************************************************/
 #include "FontWidget.h"
 #include "core/FF7Text.h"
+#include "core/FF7Font.h"
 #include <TexFile>
 
 FontWidget::FontWidget(QWidget *parent) :

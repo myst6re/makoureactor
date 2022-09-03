@@ -78,7 +78,7 @@ bool InfFile::open(const QByteArray &data)
 
 QByteArray InfFile::save() const
 {
-	quint32 size = field()->sectionSize(Field::Inf);
+	qsizetype size = field()->sectionSize(Field::Inf);
 	if (size != 740 && size != 536) {
 		size = 740;
 	}

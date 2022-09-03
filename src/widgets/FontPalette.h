@@ -20,8 +20,8 @@
 #include <QtWidgets>
 #include <WindowBinFile>
 
-#define CELL_SIZE		16
-#define BORDER_SIZE		1
+#define CELL_SIZE   16
+#define BORDER_SIZE 1
 
 class FontPalette : public QWidget
 {

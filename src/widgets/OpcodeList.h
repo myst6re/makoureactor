@@ -19,6 +19,8 @@
 
 #include <QtWidgets>
 #include "core/field/Field.h"
+#include "core/field/GrpScript.h"
+#include "core/field/Script.h"
 #include "core/field/Opcode.h"
 
 class OpcodeList : public QTreeWidget

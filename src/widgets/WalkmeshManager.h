@@ -23,7 +23,6 @@
 #include "3d/WalkmeshWidget.h"
 #include "VertexWidget.h"
 #include "OrientationWidget.h"
-#include "Listwidget.h"
 
 class WalkmeshManager : public QDialog
 {

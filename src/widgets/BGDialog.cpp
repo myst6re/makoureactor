@@ -17,6 +17,7 @@
  ****************************************************************************/
 #include "BGDialog.h"
 #include "core/Config.h"
+#include "core/field/Field.h"
 
 BGDialog::BGDialog(QWidget *parent) :
     QDialog(parent, Qt::Tool), field(nullptr), zoomFactor(1.0f)

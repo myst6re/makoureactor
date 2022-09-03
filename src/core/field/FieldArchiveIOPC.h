@@ -51,10 +51,14 @@ public:
 	Archive *device() override;
 
 	void setObserverValue(int value) override {
-		if(observer)	observer->setObserverValue(value);
+		if (observer) {
+			observer->setObserverValue(value);
+		}
 	}
 	void setObserverMaximum(unsigned int max) override {
-		if(observer)	observer->setObserverMaximum(max);
+		if (observer) {
+			observer->setObserverMaximum(max);
+		}
 	}
 	bool observerWasCanceled() const override {
 		return observer && observer->observerWasCanceled();

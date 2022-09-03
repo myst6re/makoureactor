@@ -16,7 +16,6 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "ModelManagerPC.h"
-#include "core/Config.h"
 #include "core/field/CharArchive.h"
 
 ModelManagerPC::ModelManagerPC(QWidget *parent) :

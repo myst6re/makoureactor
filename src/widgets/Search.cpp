@@ -18,6 +18,7 @@
 #include "Search.h"
 #include "Window.h"
 #include "core/Config.h"
+#include "core/Var.h"
 #include "Data.h"
 
 Search::Search(Window *mainWindow) :

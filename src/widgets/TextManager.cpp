@@ -20,6 +20,7 @@
 #include "TextHighlighter.h"
 #include "core/Config.h"
 #include "Data.h"
+#include "widgets/Listwidget.h"
 #include <FF7Char>
 
 QIcon TextManager::winIcon;

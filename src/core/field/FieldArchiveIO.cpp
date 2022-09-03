@@ -17,7 +17,6 @@
  ****************************************************************************/
 #include <LZS>
 #include "FieldArchiveIO.h"
-#include "../Config.h"
 #include "FieldArchive.h"
 #include "Field.h"
 

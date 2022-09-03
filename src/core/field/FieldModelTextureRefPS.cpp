@@ -21,8 +21,8 @@
 #include <QPainter>
 
 FieldModelTexturesPS::FieldModelTexturesPS(const QList<QRect> &rects,
-										 const QList<QByteArray> &data) :
-	_rects(rects), _data(data)
+                                           const QList<QByteArray> &data) :
+    _rects(rects), _data(data)
 {
 }
 
@@ -98,12 +98,12 @@ QImage FieldModelTexturesPS::toImage(int imgId, int palId, Bpp bpp) const
 	}
 
 	QImage image(width, imgRect.height(), QImage::Format_ARGB32);
-	QRgb *px = (QRgb *)image.bits();
+	QRgb *px = reinterpret_cast<QRgb *>(image.bits());
 	int i = 0;
 
 	for (int y = 0; y < imgRect.height(); ++y) {
 		for (int x = 0; x < imgRect.width() * 2; ++x) {
-			quint8 index = imgConstData[i];
+			quint8 index = quint8(imgConstData[i]);
 			quint16 color;
 
 			if (bpp == Bpp8) {

@@ -42,9 +42,9 @@ public:
 	virtual bool isPS() const=0;
 	inline bool isPC() const { return !isPS(); }
 
-	QByteArray fieldData(Field *field, const QString &extension, bool unlzs=true);
-	QByteArray fileData(const QString &fileName, bool unlzs=true);
-	int exportFieldData(Field *field, const QString &extension, const QString &path, bool unlzs=true);
+	QByteArray fieldData(Field *field, const QString &extension, bool unlzs = true);
+	QByteArray fileData(const QString &fileName, bool unlzs = true);
+	int exportFieldData(Field *field, const QString &extension, const QString &path, bool unlzs = true);
 
 	static bool fieldDataIsCached(Field *field, const QString &fileType);
 	virtual void clearCachedData();

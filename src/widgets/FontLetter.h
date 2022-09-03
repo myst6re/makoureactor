@@ -21,7 +21,7 @@
 #include "FontDisplay.h"
 #include "FontGrid.h"
 
-#define PIXEL_SIZE	21
+#define PIXEL_SIZE 21
 
 class FontLetter : public FontDisplay
 {

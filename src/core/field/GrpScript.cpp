@@ -16,7 +16,6 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "GrpScript.h"
-#include "../FF7Text.h"
 #include "../../Data.h"
 
 GrpScript::GrpScript(const QList<Script> &scripts) :

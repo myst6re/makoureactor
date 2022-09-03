@@ -19,8 +19,9 @@
 
 #include <QtWidgets>
 #include "Renderer.h"
-#include "core/field/FieldModelFile.h"
-#include "core/field/FieldPC.h"
+#include "core/field/FieldModelSkeleton.h"
+
+class FieldModelFile;
 
 class FieldModel : public QOpenGLWidget, protected QOpenGLFunctions
 {

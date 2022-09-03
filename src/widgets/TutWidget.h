@@ -18,7 +18,6 @@
 #pragma once
 
 #include <QtWidgets>
-#include "widgets/Listwidget.h"
 #include "core/field/Field.h"
 #include "core/field/TutFileStandard.h"
 #include "core/field/TutFilePC.h"

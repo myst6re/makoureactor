@@ -18,7 +18,6 @@
 #pragma once
 
 #include <QtWidgets>
-#include "core/field/FieldArchive.h"
 
 class OperationsManager : public QDialog
 {

@@ -18,8 +18,9 @@
 #pragma once
 
 #include <QtWidgets>
-#include "core/field/FieldArchive.h"
-#include "core/Var.h"
+#include "core/field/Opcode.h"
+
+class FieldArchive;
 
 class VarManager : public QWidget
 {

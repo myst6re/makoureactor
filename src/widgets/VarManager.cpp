@@ -17,6 +17,7 @@
  ****************************************************************************/
 #include "VarManager.h"
 #include "core/field/FieldArchive.h"
+#include "core/Var.h"
 #include "../Data.h"
 
 VarManager::VarManager(FieldArchive *fieldArchive, QWidget *parent)

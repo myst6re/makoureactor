@@ -18,7 +18,8 @@
 #pragma once
 
 #include <QtWidgets>
-#include "core/field/Field.h"
+
+class Field;
 
 class ApercuBG : public QLabel
 {

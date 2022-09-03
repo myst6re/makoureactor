@@ -18,6 +18,7 @@
 #include "FontManager.h"
 #include "Data.h"
 #include "core/Config.h"
+#include "core/FF7Font.h"
 
 FontManager::FontManager(QWidget *parent) :
       QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint)

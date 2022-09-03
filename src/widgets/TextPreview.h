@@ -20,14 +20,14 @@
 #include <QtWidgets>
 #include "core/field/Opcode.h"
 
-#define DARKGREY	0
-#define DARKBLUE	1
-#define RED			2
-#define PURPLE		3
-#define GREEN		4
-#define CYAN		5
-#define YELLOW		6
-#define WHITE		7
+#define DARKGREY 0
+#define DARKBLUE 1
+#define RED      2
+#define PURPLE   3
+#define GREEN    4
+#define CYAN     5
+#define YELLOW   6
+#define WHITE    7
 
 class TextPreview : public QWidget
 {

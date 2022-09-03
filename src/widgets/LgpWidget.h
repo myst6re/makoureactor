@@ -20,6 +20,7 @@
 #include <QtWidgets>
 #include <Lgp>
 #include "ArchivePreview.h"
+#include "core/field/FieldModelFilePC.h"
 
 class IconThread : public QThread
 {
@@ -132,11 +133,11 @@ public:
 		return _childItems.at(row);
 	}
 
-	inline int indexOfChild(const LgpItem *child) const {
+	inline qsizetype indexOfChild(const LgpItem *child) const {
 		return _childItems.indexOf(const_cast<LgpItem *>(child));
 	}
 
-	inline int childCount() const {
+	inline qsizetype childCount() const {
 		return _childItems.size();
 	}
 

@@ -21,7 +21,7 @@
 #include <IO>
 #include "BackgroundTiles.h"
 
-#define MAX_TILE_DST	1024
+#define MAX_TILE_DST 1024
 
 //Sizeof : 36
 struct TilePC {

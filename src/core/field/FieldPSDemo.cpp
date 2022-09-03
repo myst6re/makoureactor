@@ -42,15 +42,15 @@ int FieldPSDemo::sectionId(FieldSection part) const
 QString FieldPSDemo::sectionFile(FieldSection part) const
 {
 	switch (part) {
-	case Scripts:		return "ATE";
-	case Akaos:			return "ATE";
-	case Walkmesh:		return "ID";
-	case Background:	return "MAP";
-	case Camera:		return "CA";
-	case Inf:			return QString();
-	case Encounter:		return QString();
-	case ModelLoader:	return QString();
-	default:			return QString();
+	case Scripts:     return "ATE";
+	case Akaos:       return "ATE";
+	case Walkmesh:    return "ID";
+	case Background:  return "MAP";
+	case Camera:      return "CA";
+	case Inf:         return QString();
+	case Encounter:   return QString();
+	case ModelLoader: return QString();
+	default:          return QString();
 	}
 }
 
@@ -63,9 +63,9 @@ quint32 FieldPSDemo::sectionPosition(int idPart) const
 FieldPart *FieldPSDemo::createPart(FieldSection part)
 {
 	switch (part) {
-	case ModelLoader:	return new FieldModelLoaderPS(this);
-	case Background:	return new BackgroundFilePS(this);
-	default:			return Field::createPart(part);
+	case ModelLoader: return new FieldModelLoaderPS(this);
+	case Background:  return new BackgroundFilePS(this);
+	default:          return Field::createPart(part);
 	}
 }
 

@@ -17,6 +17,7 @@
  ****************************************************************************/
 #include "GrpScriptList.h"
 #include "Data.h"
+#include "core/field/Section1File.h"
 #include <FF7Char>
 
 GrpScriptList::GrpScriptList(QWidget *parent) :

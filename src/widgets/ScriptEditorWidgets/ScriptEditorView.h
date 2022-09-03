@@ -18,8 +18,10 @@
 #pragma once
 
 #include <QtWidgets>
-#include "../VarOrValueWidget.h"
-#include "core/field/Field.h"
+#include "core/field/Section1File.h"
+#include "core/field/GrpScript.h"
+#include "core/field/Script.h"
+#include "core/field/Opcode.h"
 
 class ScriptEditorView : public QWidget
 {

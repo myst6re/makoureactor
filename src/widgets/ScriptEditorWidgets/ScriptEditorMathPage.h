@@ -20,6 +20,7 @@
 #include <QtWidgets>
 #include "ScriptEditorView.h"
 #include "widgets/HelpWidget.h"
+#include "../VarOrValueWidget.h"
 
 class ScriptEditorBinaryOpPage : public ScriptEditorView
 {

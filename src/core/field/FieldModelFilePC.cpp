@@ -57,7 +57,7 @@ quint8 FieldModelFilePC::load(CharArchive *charLgp, const QString &hrc, const QS
 	_charLgp = charLgp;
 
 	QString hrcFilename, aFilename;
-	int index;
+	qsizetype index;
 
 	index = hrc.lastIndexOf('.');
 	hrcFilename = index > -1 ? hrc.left(index) : hrc;

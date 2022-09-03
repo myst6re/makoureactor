@@ -18,8 +18,10 @@
 #pragma once
 
 #include <QtWidgets>
-#include "core/field/Section1File.h"
 #include "widgets/HelpWidget.h"
+#include "core/field/GrpScript.h"
+
+class Section1File;
 
 class GrpScriptList : public QTreeWidget
 {

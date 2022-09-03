@@ -16,6 +16,8 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "MiscWidget.h"
+#include "core/field/InfFile.h"
+#include "core/field/Field.h"
 
 MiscWidget::MiscWidget(InfFile *data, Field *field, QWidget *parent) :
 	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint),

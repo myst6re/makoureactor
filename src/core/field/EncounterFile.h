@@ -20,14 +20,14 @@
 #include <QtCore>
 #include "FieldPart.h"
 
-#define PROBABILITY(x)		(x >> 10)
-#define BATTLE_ID(x)		(x & 0x03FF)
+#define PROBABILITY(x) (x >> 10)
+#define BATTLE_ID(x)   (x & 0x03FF)
 
 struct EncounterTable {
 	quint8 enabled;
 	quint8 rate;
-	quint16 enc_standard[6];// probability(6) | battle_id(10)
-	quint16 enc_special[4];// probability(6) | battle_id(10)
+	quint16 enc_standard[6]; // probability(6) | battle_id(10)
+	quint16 enc_special[4];  // probability(6) | battle_id(10)
 	quint16 _pad;
 };
 
@@ -35,7 +35,7 @@ class EncounterFile : public FieldPart
 {
 public:
 	enum Table {
-		Table1=0, Table2=1
+		Table1 = 0, Table2 = 1
 	};
 
 	explicit EncounterFile(Field *field);

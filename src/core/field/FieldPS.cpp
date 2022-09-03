@@ -195,7 +195,7 @@ bool FieldPS::saveModels(QByteArray &newData, bool compress)
 
 	if (compress) {
 		const QByteArray &compresse = LZS::compress(newData);
-		quint32 lzsSize = compresse.size();
+		quint32 lzsSize = quint32(compresse.size());
 		newData = QByteArray((char *)&lzsSize, 4).append(compresse);
 	}
 

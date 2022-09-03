@@ -20,6 +20,8 @@
 #include "core/Config.h"
 #include "core/Clipboard.h"
 #include "Data.h"
+#include "core/field/Field.h"
+#include "core/field/Opcode.h"
 
 OpcodeList::OpcodeList(QWidget *parent) :
     QTreeWidget(parent), _field(nullptr), _grpScript(nullptr), _script(nullptr), errorLine(-1),

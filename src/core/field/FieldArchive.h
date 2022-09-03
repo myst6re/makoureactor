@@ -32,7 +32,7 @@ struct SearchOpcodeQuery : public SearchQuery
 {
 	int opcode;
 	explicit SearchOpcodeQuery(int opcode) :
-		opcode(opcode) {}
+	    opcode(opcode) {}
 };
 
 struct SearchVarQuery : public SearchQuery
@@ -42,28 +42,28 @@ struct SearchVarQuery : public SearchQuery
 	Opcode::Operation op;
 	int value;
 	SearchVarQuery(quint8 bank, quint16 address, Opcode::Operation op, int value) :
-		bank(bank), address(address), op(op), value(value) {}
+	    bank(bank), address(address), op(op), value(value) {}
 };
 
 struct SearchExecQuery : public SearchQuery
 {
 	quint8 group, script;
 	SearchExecQuery(quint8 group, quint8 script) :
-		group(group), script(script) {}
+	    group(group), script(script) {}
 };
 
 struct SearchFieldQuery : public SearchQuery
 {
 	int mapID;
 	explicit SearchFieldQuery(int mapID) :
-		mapID(mapID) {}
+	    mapID(mapID) {}
 };
 
 struct SearchTextQuery : public SearchQuery
 {
 	QRegularExpression text;
 	explicit SearchTextQuery(QRegularExpression text) :
-		text(text) {}
+	    text(text) {}
 };
 
 struct SearchIn
@@ -78,7 +78,7 @@ struct SearchInScript : public SearchIn
 	int &groupID, &scriptID, &opcodeID;
 
 	SearchInScript(int &groupID, int &scriptID, int &opcodeID) :
-		groupID(groupID), scriptID(scriptID), opcodeID(opcodeID)
+	    groupID(groupID), scriptID(scriptID), opcodeID(opcodeID)
 	{}
 
 	void reset() override;
@@ -106,15 +106,15 @@ class FieldArchiveIterator : public QMapIterator<int, Field *>
 public:
 	explicit FieldArchiveIterator(const FieldArchive &archive);
 	bool seek(int mapId);
-	Field *next(bool open=true, bool dontOptimize=false);
-	Field *peekNext(bool open=true, bool dontOptimize=false) const;
-	Field *peekPrevious(bool open=true, bool dontOptimize=false) const;
-	Field *previous(bool open=true, bool dontOptimize=false);
+	Field *next(bool open = true, bool dontOptimize = false);
+	Field *peekNext(bool open = true, bool dontOptimize = false) const;
+	Field *peekPrevious(bool open = true, bool dontOptimize = false) const;
+	Field *previous(bool open = true, bool dontOptimize = false);
 	inline int mapId() const {
 		return key();
 	}
 private:
-	static Field *openField(Field *field, bool open=true, bool dontOptimize=false);
+	static Field *openField(Field *field, bool open = true, bool dontOptimize = false);
 	QMap<int, Field *> mapList;
 };
 
@@ -150,9 +150,9 @@ public:
 		return fileList.size();
 	}
 	const Field *field(int mapId) const;
-	Field *field(int mapId, bool open=true, bool dontOptimize=false);
+	Field *field(int mapId, bool open = true, bool dontOptimize = false);
 	const Field *field(const QString &name) const;
-	Field *field(const QString &name, bool open=true, bool dontOptimize=false);
+	Field *field(const QString &name, bool open = true, bool dontOptimize = false);
 	int appendField(Field *field);
 	void addNewField(Field *field, int &mapID);
 	void delField(int id);
@@ -202,10 +202,10 @@ public:
 	void autosizeTextWindows();
 
 	bool exportation(const QList<int> &selectedFields, const QString &directory,
-					 bool overwrite, const QMap<ExportType, QString> &toExport,
+	                 bool overwrite, const QMap<ExportType, QString> &toExport,
 	                 PsfTags *tags = nullptr);
 	bool importation(const QList<int> &selectedFields, const QString &directory,
-					 const QMap<Field::FieldSection, QString> &toImport);
+	                 const QMap<Field::FieldSection, QString> &toImport);
 
 	virtual FieldArchiveIO *io() const;
 	inline void setObserver(ArchiveObserver *observer) {
@@ -221,7 +221,7 @@ protected:
 private:
 	int indexOfField(const QString &name) const;
 	void updateFieldLists(Field *field, int fieldID);
-	static bool openField(Field *field, bool dontOptimize=false);
+	static bool openField(Field *field, bool dontOptimize = false);
 
 	QMap<int, Field *> fileList;
 	QMultiMap<QString, int> fieldsSortByName;

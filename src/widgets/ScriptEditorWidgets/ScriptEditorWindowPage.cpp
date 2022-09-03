@@ -17,7 +17,6 @@
  ****************************************************************************/
 #include "ScriptEditorWindowPage.h"
 #include "core/Config.h"
-#include "Data.h"
 
 ScriptEditorWindowPage::ScriptEditorWindowPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent) :
 	ScriptEditorView(scriptsAndTexts, grpScript, script, opcodeID, parent)

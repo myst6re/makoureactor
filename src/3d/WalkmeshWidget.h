@@ -20,7 +20,6 @@
 #include <QtWidgets>
 #include "Renderer.h"
 #include "core/field/Field.h"
-#include "FieldModel.h"
 
 class WalkmeshWidget : public QOpenGLWidget
 {

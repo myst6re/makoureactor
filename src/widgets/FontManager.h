@@ -19,7 +19,6 @@
 
 #include <QtWidgets>
 #include "FontWidget.h"
-#include "Listwidget.h"
 
 class FontManager : public QDialog
 {

@@ -21,6 +21,8 @@
 #include "widgets/VertexWidget.h"
 #include "3d/WalkmeshWidget.h"
 
+class Field;
+
 class ScriptEditorWalkmeshPage : public ScriptEditorView
 {
 	Q_OBJECT

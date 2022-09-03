@@ -26,11 +26,11 @@ struct Vertex_s {
 
 struct Camera {
 	Vertex_s camera_axis[3];
-	qint16 camera_axis2z;// copy (padding)
+	qint16 camera_axis2z; // copy (padding)
 	qint32 camera_position[3];
 	qint32 blank;
 	quint16 camera_zoom;
-	quint16 unknown;// seems to be undefined
+	quint16 unknown; // seems to be undefined
 };
 
 class CaFile : public FieldPart
@@ -43,7 +43,7 @@ public:
 	QByteArray save() const override;
 	void clear() override;
 	bool hasCamera() const;
-	int cameraCount() const;
+	qsizetype cameraCount() const;
 	const Camera &camera(int camID) const;
 	void setCamera(int camID, const Camera &cam);
 	void insertCamera(int camID, const Camera &cam);

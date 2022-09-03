@@ -54,7 +54,7 @@ struct Arrow {
 	qint32 positionX;
 	qint32 positionZ;
 	qint32 positionY;
-	quint32 type;// 0 - Invisible, 1 - Red, 2 - Green
+	quint32 type; // 0 - Invisible, 1 - Red, 2 - Green
 };
 
 struct InfData {
@@ -71,11 +71,11 @@ struct InfData {
 	qint16 bg_layer4_width;
 	qint16 bg_layer4_height;
 	quint8 unknown[24];
-	Exit doors[12];// 24 * 12 bytes
-	Trigger triggers[12];// 16 * 12 bytes
+	Exit doors[12]; // 24 * 12 bytes
+	Trigger triggers[12]; // 16 * 12 bytes
 	// Only in occidental/international version
 	quint8 display_arrow[12];
-	Arrow arrows[12];// 16 * 12 bytes
+	Arrow arrows[12]; // 16 * 12 bytes
 };
 
 class InfFile : public FieldPart

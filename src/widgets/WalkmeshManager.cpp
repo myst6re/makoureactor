@@ -16,6 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "WalkmeshManager.h"
+#include "Listwidget.h"
 #include "core/Config.h"
 #include "Data.h"
 

@@ -51,7 +51,7 @@ bool CaFile::open()
 bool CaFile::open(const QByteArray &data)
 {
 	const char *constData = data.constData();
-	int caSize = data.size();
+	qsizetype caSize = data.size();
 	bool isPC;
 
 	if (sizeof(Camera) != 40) {
@@ -82,13 +82,13 @@ bool CaFile::open(const QByteArray &data)
 		 * are implicitly used to complete. */
 		quint32 caCount;
 		if (isPC) {
-			caCount = caSize/38;
+			caCount = quint32(caSize / 38);
 			for (quint32 i=1; i<caCount; ++i) {
 				memcpy(&camera, constData + i * 38, 38);
 				cameras.append(camera);
 			}
 		} else {
-			caCount = (caSize - 38) / 18;
+			caCount = quint32((caSize - 38) / 18);
 			for (quint32 i=0; i<caCount; ++i) {
 				memcpy(&camera, constData + 38 + i * 18, 18);
 				cameras.append(camera);
@@ -132,7 +132,7 @@ bool CaFile::hasCamera() const
 	return !cameras.isEmpty();
 }
 
-int CaFile::cameraCount() const
+qsizetype CaFile::cameraCount() const
 {
 	return cameras.size();
 }

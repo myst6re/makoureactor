@@ -16,7 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "FieldModel.h"
-#include "core/field/FieldModelFilePS.h"
+#include "core/field/FieldModelFile.h"
 
 FieldModel::FieldModel(QWidget *parent) :
 	QOpenGLWidget(parent), blockAll(false), distance(-0.25/*-35*/),

@@ -18,8 +18,9 @@
 #pragma once
 
 #include <QtWidgets>
-#include "core/field/FieldPC.h"
 #include <ColorDisplay>
+#include "core/field/FieldPC.h"
+#include "core/field/FieldModelLoaderPC.h"
 #include "ModelManager.h"
 
 class ModelManagerPC : public ModelManager

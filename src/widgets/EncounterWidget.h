@@ -18,8 +18,8 @@
 #pragma once
 
 #include <QtWidgets>
-#include "core/field/EncounterFile.h"
 #include "EncounterTableWidget.h"
+#include "core/field/EncounterFile.h"
 
 class EncounterWidget : public QDialog
 {

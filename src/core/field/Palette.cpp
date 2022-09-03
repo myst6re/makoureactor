@@ -48,10 +48,10 @@ QByteArray Palette::toByteArray() const
 {
 	QByteArray data;
 	quint8 colorId = 0;
-
+	
 	for (const QRgb color : _colors) {
 		quint16 psColor = (PsColor::toPsColor(color) & 0x7FFF)
-				| (_masks.at(colorId) << 15);
+		        | (_masks.at(colorId) << 15);
 		data.append((char *)&psColor, 2);
 		++colorId;
 	}

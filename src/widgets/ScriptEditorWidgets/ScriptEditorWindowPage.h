@@ -19,6 +19,7 @@
 
 #include <QtWidgets>
 #include "ScriptEditorView.h"
+#include "../VarOrValueWidget.h"
 #include "../TextPreview.h"
 
 class ScriptEditorWindowPage : public ScriptEditorView

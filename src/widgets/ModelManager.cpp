@@ -17,6 +17,7 @@
  ****************************************************************************/
 #include "ModelManager.h"
 #include "core/Config.h"
+#include "core/field/Field.h"
 #include "Data.h"
 
 ModelManager::ModelManager(QWidget *parent) :

@@ -21,7 +21,8 @@
 #include "FontGrid.h"
 #include "FontLetter.h"
 #include "FontPalette.h"
-#include "core/FF7Font.h"
+
+class FF7Font;
 
 class FontWidget : public QWidget
 {

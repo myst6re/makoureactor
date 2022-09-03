@@ -18,9 +18,9 @@
 #pragma once
 
 #include <QtWidgets>
-#include "widgets/GrpScriptList.h"
-#include "widgets/ScriptList.h"
-#include "widgets/OpcodeList.h"
+#include "GrpScriptList.h"
+#include "ScriptList.h"
+#include "OpcodeList.h"
 
 class ScriptManager : public QWidget
 {

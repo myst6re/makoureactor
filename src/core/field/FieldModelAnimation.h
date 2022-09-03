@@ -32,7 +32,7 @@ public:
 		return _framesTrans.value(frame);
 	}
 	inline void insertFrame(int frame, const QList<PolyVertex> &rotations,
-							const QList<PolyVertex> &translations) {
+	                        const QList<PolyVertex> &translations) {
 		_framesRot.insert(frame, rotations);
 		_framesTrans.insert(frame, translations);
 	}

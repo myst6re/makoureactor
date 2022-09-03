@@ -16,6 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "ApercuBG.h"
+#include "core/field/Field.h"
 
 ApercuBG::ApercuBG(QWidget *parent) :
 	QLabel(parent), _field(nullptr), _error(false)

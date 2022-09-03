@@ -24,7 +24,7 @@
 #include "BsxFile.h"
 
 FieldModelFilePS::FieldModelFilePS() :
-	FieldModelFile(),
+    FieldModelFile(),
     _currentField(nullptr), _currentModelID(-1),
     _scale(0), _isModified(false)
 {

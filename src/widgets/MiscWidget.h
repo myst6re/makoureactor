@@ -18,8 +18,9 @@
 #pragma once
 
 #include <QtWidgets>
-#include "core/field/InfFile.h"
-#include "core/field/Field.h"
+
+class InfFile;
+class Field;
 
 class MiscWidget : public QDialog
 {

@@ -16,7 +16,6 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "BcxFile.h"
-#include "FieldModelTextureRefPS.h"
 
 BcxFile::BcxFile(QIODevice *io) :
 	BsxFile(io)

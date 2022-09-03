@@ -68,6 +68,8 @@
 #include "core/Config.h"
 #include "../KeyEditorDialog.h"
 #include "../AnimEditorDialog.h"
+#include "core/field/Section1File.h"
+#include "widgets/ScriptEditorWidgets/ScriptEditorGenericList.h"
 
 SpinBoxDelegate::SpinBoxDelegate(QObject *parent) :
     QItemDelegate(parent), _scriptsAndTexts(nullptr)

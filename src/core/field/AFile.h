@@ -18,7 +18,6 @@
 #pragma once
 
 #include <IO>
-#include "PFile.h"
 #include "FieldModelAnimation.h"
 
 struct AHeader {

@@ -18,11 +18,10 @@
 #include <LZS>
 #include "FieldPC.h"
 #include "BackgroundFilePC.h"
-#include "BackgroundTiles.h"
 #include "FieldModelLoaderPS.h"
 
 FieldPC::FieldPC(const QString &name, FieldArchiveIO *io) :
-	Field(name, io), _model(0)
+	Field(name, io), _model(nullptr)
 {
 }
 

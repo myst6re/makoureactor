@@ -29,8 +29,8 @@ public:
 	explicit FieldArchiveIOPS(FieldArchivePS *fieldArchive);
 	inline bool isPS() const override { return true; }
 
-	QByteArray mimData(Field *field, bool unlzs=true);
-	QByteArray modelData(Field *field, bool unlzs=true);
+	QByteArray mimData(Field *field, bool unlzs = true);
+	QByteArray modelData(Field *field, bool unlzs = true);
 
 	static bool mimDataIsCached(Field *field);
 	static bool modelDataIsCached(Field *field);

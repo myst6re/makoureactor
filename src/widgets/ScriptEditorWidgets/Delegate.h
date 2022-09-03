@@ -59,8 +59,8 @@
 #pragma once
 
 #include <QtWidgets>
-#include "core/field/Section1File.h"
-#include "widgets/ScriptEditorWidgets/ScriptEditorGenericList.h"
+
+class Section1File;
 
 class SpinBoxDelegate : public QItemDelegate
 {

@@ -292,7 +292,9 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::open2(ArchiveObserver *observer)
 
 	QList<IsoFile *> files = isoFieldDirectory->files();
 
-	if (observer)	observer->setObserverMaximum(files.size());
+	if (observer) {
+		observer->setObserverMaximum(files.size());
+	}
 	bool isDemo = iso.isDemo();
 
 	// QTime t;t.start();

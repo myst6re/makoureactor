@@ -23,9 +23,9 @@
 #include "FieldModelTextureRefPS.h"
 #include "CaFile.h"
 
-#define MODEL_SCALE_PS			4096.0f //31.0f
-#define COLORRGB_2_QRGB(c)		qRgb(c.red, c.green, c.blue)
-#define QRGB_2_COLORRGB(c, r)	r.red = qRed(c);r.green = qGreen(c);r.blue = qBlue(c)
+#define MODEL_SCALE_PS        4096.0f // 31.0f
+#define COLORRGB_2_QRGB(c)    qRgb(c.red, c.green, c.blue)
+#define QRGB_2_COLORRGB(c, r) r.red = qRed(c);r.green = qGreen(c);r.blue = qBlue(c)
 
 struct BsxModelsHeader {
 	quint32 psxMemory;
@@ -68,39 +68,39 @@ struct BsxModelHeader {
 };
 
 struct FieldModelPartPSHeader {
-	quint8 unknown;					// 0 - not calculate stage lighting and color. 1 - calculate.
-	qint8 boneIndex;				// bone to which this part attached to.
-	quint8 numVertices;				// Number of vertices
-	quint8 numTexCs;				// Number of Texture coord
-	quint8 numQuadColorTex;			// number of textured quads (Gourad Shading)
-	quint8 numTriColorTex;			// number of textured triangles (Gourad Shading)
-	quint8 numQuadMonoTex;			// number of textured quads (Flat Shading)
-	quint8 numTriMonoTex;			// number of textured triangles (Flat Shading)
-	quint8 numTriMono;				// number of monochrome triangles
-	quint8 numQuadMono;				// number of monochrome quads
-	quint8 numTriColor;				// number of gradated triangles
-	quint8 numQuadColor;			// number of gradated quads
-	quint8 numFlags;				// number of data in block 4 (flags).
-	quint8 numControl;				// number of data in block 5 (control).
-	quint16 offsetPoly;				// Relative offset to ?
-	quint16 offsetTexcoord;			// Relative offset to ?
-	quint16 offsetFlags;			// Relative offset to texture settings. Indexed by 5th block data (control).
-	quint16 offsetControl;			// Relative offset to one byte stream for every packet with texture.
-	quint16 bufferSize;				// Relative offset to ?
-	quint32 offsetVertex;			// Offset to skeleton data section
-	quint32 offsetPrec;				// Offset to ?
+	quint8 unknown;         // 0 - not calculate stage lighting and color. 1 - calculate.
+	qint8 boneIndex;        // bone to which this part attached to.
+	quint8 numVertices;     // Number of vertices
+	quint8 numTexCs;        // Number of Texture coord
+	quint8 numQuadColorTex; // number of textured quads (Gourad Shading)
+	quint8 numTriColorTex;  // number of textured triangles (Gourad Shading)
+	quint8 numQuadMonoTex;  // number of textured quads (Flat Shading)
+	quint8 numTriMonoTex;   // number of textured triangles (Flat Shading)
+	quint8 numTriMono;      // number of monochrome triangles
+	quint8 numQuadMono;     // number of monochrome quads
+	quint8 numTriColor;     // number of gradated triangles
+	quint8 numQuadColor;    // number of gradated quads
+	quint8 numFlags;        // number of data in block 4 (flags).
+	quint8 numControl;      // number of data in block 5 (control).
+	quint16 offsetPoly;     // Relative offset to ?
+	quint16 offsetTexcoord; // Relative offset to ?
+	quint16 offsetFlags;    // Relative offset to texture settings. Indexed by 5th block data (control).
+	quint16 offsetControl;  // Relative offset to one byte stream for every packet with texture.
+	quint16 bufferSize;     // Relative offset to ?
+	quint32 offsetVertex;   // Offset to skeleton data section
+	quint32 offsetPrec;     // Offset to ?
 };
 
 struct FieldModelAnimationPSHeader {
-	quint16 numFrames;					// Number of frames
-	quint8 numBones;					// Number of bones
-	quint8 numFramesTranslation;		// Number of translation frames
-	quint8 numStaticTranslation;		// Number of static translation frames
-	quint8 numFramesRotation;			// Number of rotation frames
-	quint16 offsetFramesTranslation;	// Relative offset to translation frames
-	quint16 offsetStaticTranslation;	// Relative offset to statis translation frames
-	quint16 offsetFramesRotation;		// Relative offset to rotation frames
-	quint32 offsetData;					// Offset to animation data section
+	quint16 numFrames;               // Number of frames
+	quint8 numBones;                 // Number of bones
+	quint8 numFramesTranslation;     // Number of translation frames
+	quint8 numStaticTranslation;     // Number of static translation frames
+	quint8 numFramesRotation;        // Number of rotation frames
+	quint16 offsetFramesTranslation; // Relative offset to translation frames
+	quint16 offsetStaticTranslation; // Relative offset to statis translation frames
+	quint16 offsetFramesRotation;    // Relative offset to rotation frames
+	quint32 offsetData;              // Offset to animation data section
 };
 
 struct FrameTranslation {

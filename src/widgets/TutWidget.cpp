@@ -17,6 +17,7 @@
  ****************************************************************************/
 #include "TutWidget.h"
 #include "TextHighlighter.h"
+#include "Listwidget.h"
 #include "Data.h"
 #include "PsfDialog.h"
 #include "core/Config.h"

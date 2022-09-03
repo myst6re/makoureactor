@@ -19,7 +19,8 @@
 
 #include <QtWidgets>
 #include "ApercuBGLabel.h"
-#include "core/field/Field.h"
+
+class Field;
 
 class BGDialog : public QDialog
 {

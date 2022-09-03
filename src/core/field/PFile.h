@@ -21,7 +21,7 @@
 #include <IO>
 #include "FieldModelPart.h"
 
-#define MODEL_SCALE_PC				132.0f // 1.0f
+#define MODEL_SCALE_PC 132.0f // 1.0f
 
 struct PHeader {
 	quint32 version;
