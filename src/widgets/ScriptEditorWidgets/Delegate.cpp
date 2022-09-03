@@ -87,17 +87,29 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
 	if (type == ScriptEditorGenericList::field_id
 	        && !Data::maplist().isEmpty()) {
 		QComboBox *comboBox = new QComboBox(parent);
+		comboBox->setEditable(true);
+		comboBox->setInsertPolicy(QComboBox::NoInsert);
+		comboBox->completer()->setCompletionMode(QCompleter::PopupCompletion);
+		comboBox->completer()->setFilterMode(Qt::MatchContains);
 		comboBox->addItems(Data::maplist());
 		return comboBox;
 	} else if (type == ScriptEditorGenericList::group_id
 	          && _scriptsAndTexts->grpScriptCount() > 0) {
 		QComboBox *comboBox = new QComboBox(parent);
+		comboBox->setEditable(true);
+		comboBox->setInsertPolicy(QComboBox::NoInsert);
+		comboBox->completer()->setCompletionMode(QCompleter::PopupCompletion);
+		comboBox->completer()->setFilterMode(Qt::MatchContains);
 		for (const GrpScript &grp : _scriptsAndTexts->grpScripts()) {
 			comboBox->addItem(grp.name());
 		}
 		return comboBox;
 	} else if (type == ScriptEditorGenericList::personnage_id) {
 		QComboBox *comboBox = new QComboBox(parent);
+		comboBox->setEditable(true);
+		comboBox->setInsertPolicy(QComboBox::NoInsert);
+		comboBox->completer()->setCompletionMode(QCompleter::PopupCompletion);
+		comboBox->completer()->setFilterMode(Qt::MatchContains);
 		comboBox->addItems(Data::char_names);
 		int nbItems = comboBox->count();
 		for (int i=nbItems; i<100; i++)
@@ -111,6 +123,10 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
 	} else if (type == ScriptEditorGenericList::text_id
 	          && _scriptsAndTexts->textCount() > 0) {
 		QComboBox *comboBox = new QComboBox(parent);
+		comboBox->setEditable(true);
+		comboBox->setInsertPolicy(QComboBox::NoInsert);
+		comboBox->completer()->setCompletionMode(QCompleter::PopupCompletion);
+		comboBox->completer()->setFilterMode(Qt::MatchContains);
 		bool jp = Config::value("jp_txt", false).toBool();
 		for (const FF7Text &t : _scriptsAndTexts->texts()) {
 			comboBox->addItem(comboBox->fontMetrics().elidedText(t.text(jp, true).simplified(), Qt::ElideRight, 640));
@@ -119,6 +135,10 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
 	} else if (type == ScriptEditorGenericList::item_id
 	          && !Data::item_names.isEmpty()) {
 		QComboBox *comboBox = new QComboBox(parent);
+		comboBox->setEditable(true);
+		comboBox->setInsertPolicy(QComboBox::NoInsert);
+		comboBox->completer()->setCompletionMode(QCompleter::PopupCompletion);
+		comboBox->completer()->setFilterMode(Qt::MatchContains);
 		comboBox->addItems(Data::item_names);
 		
 		int nbItems = comboBox->count();
@@ -151,6 +171,10 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
 	} else if (type == ScriptEditorGenericList::materia_id
 	          && !Data::materia_names.isEmpty()) {
 		QComboBox *comboBox = new QComboBox(parent);
+		comboBox->setEditable(true);
+		comboBox->setInsertPolicy(QComboBox::NoInsert);
+		comboBox->completer()->setCompletionMode(QCompleter::PopupCompletion);
+		comboBox->completer()->setFilterMode(Qt::MatchContains);
 		comboBox->addItems(Data::materia_names);
 		int nbItems = comboBox->count();
 		for (int i=nbItems; i<256; ++i) {
@@ -172,6 +196,10 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
 	} else if (type == ScriptEditorGenericList::movie_id
 	          && !Data::movie_names_cd1.isEmpty()) {
 		QComboBox *comboBox = new QComboBox(parent);
+		comboBox->setEditable(true);
+		comboBox->setInsertPolicy(QComboBox::NoInsert);
+		comboBox->completer()->setCompletionMode(QCompleter::PopupCompletion);
+		comboBox->completer()->setFilterMode(Qt::MatchContains);
 		comboBox->addItems(Data::movie_names_cd1);
 		int nbItems = comboBox->count();
 		for (int i = nbItems; i < 256; ++i) {
@@ -180,6 +208,10 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
 		return comboBox;
 	} else if (type == ScriptEditorGenericList::operateur) {
 		QComboBox *comboBox = new QComboBox(parent);
+		comboBox->setEditable(true);
+		comboBox->setInsertPolicy(QComboBox::NoInsert);
+		comboBox->completer()->setCompletionMode(QCompleter::PopupCompletion);
+		comboBox->completer()->setFilterMode(Qt::MatchContains);
 		for (int i=0; i<OPERATORS_SIZE; ++i) {
 			comboBox->addItem(QString::fromUtf8(Opcode::operators[i]), i);
 		}
@@ -189,6 +221,10 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
 		return comboBox;
 	} else if (type == ScriptEditorGenericList::akao) {
 		QComboBox *comboBox = new QComboBox(parent);
+		comboBox->setEditable(true);
+		comboBox->setInsertPolicy(QComboBox::NoInsert);
+		comboBox->completer()->setCompletionMode(QCompleter::PopupCompletion);
+		comboBox->completer()->setFilterMode(Qt::MatchContains);
 		QList<quint8> unknownItems;
 		for (quint16 i = 0; i < 256; ++i) {
 			bool ok;

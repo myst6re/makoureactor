@@ -7404,7 +7404,7 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
     <message>
         <source>Field ID:</source>
         <oldsource>Id écran :</oldsource>
-        <translation>Id écran :</translation>
+        <translation type="vanished">Id écran :</translation>
     </message>
     <message>
         <source>Background parameter ID:</source>
@@ -7488,6 +7488,10 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
     <message>
         <source>?</source>
         <translation>?</translation>
+    </message>
+    <message>
+        <source>Map ID:</source>
+        <translation>ID écran :</translation>
     </message>
 </context>
 <context>

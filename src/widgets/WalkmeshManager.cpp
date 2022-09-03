@@ -238,8 +238,11 @@ QWidget *WalkmeshManager::buildGatewaysPage()
 	exitPoints[1] = new VertexWidget(ret);
 	entryPoint = new VertexWidget(QString(), QString(), tr("T"), ret);
 
-	fieldId = new QSpinBox(ret);
-	fieldId->setRange(-32768, 32766);
+	mapId = new QComboBox(ret);
+	mapId->setEditable(true);
+	mapId->setInsertPolicy(QComboBox::NoInsert);
+	mapId->completer()->setCompletionMode(QCompleter::PopupCompletion);
+	mapId->completer()->setFilterMode(Qt::MatchContains);
 
 	exitDirection = new QSpinBox(ret);
 	exitDirection->setRange(0, 255);
@@ -257,8 +260,8 @@ QWidget *WalkmeshManager::buildGatewaysPage()
 	layout->addWidget(entryPoint, 3, 2);
 	layout->addWidget(new QLabel(tr("Character orientation:")), 4, 1);
 	layout->addWidget(exitDirection, 4, 2);
-	layout->addWidget(new QLabel(tr("Field ID:")), 5, 1);
-	layout->addWidget(fieldId, 5, 2);
+	layout->addWidget(new QLabel(tr("Map ID:")), 5, 1);
+	layout->addWidget(mapId, 5, 2);
 	layout->addWidget(arrowDisplay, 6, 1, 1, 2);
 	layout->setRowStretch(7, 1);
 
@@ -267,7 +270,7 @@ QWidget *WalkmeshManager::buildGatewaysPage()
 	connect(exitPoints[0], &VertexWidget::valuesChanged, this, [&] (const Vertex_s &vertex_s){ editExitPoint(vertex_s); });
 	connect(exitPoints[1], &VertexWidget::valuesChanged, this, [&] (const Vertex_s &vertex_s){ editExitPoint(vertex_s); });
 	connect(entryPoint, &VertexWidget::valuesChanged, this, [&] (const Vertex_s &vertex_s){ editEntryPoint(vertex_s);});
-	connect(fieldId, &QSpinBox::valueChanged, this, &WalkmeshManager::editFieldId);
+	connect(mapId, &QComboBox::currentIndexChanged, this, &WalkmeshManager::editMapId);
 	connect(arrowDisplay, &QCheckBox::toggled, this, &WalkmeshManager::editArrowDisplay);
 	connect(exitDirection, &QSpinBox::valueChanged, this, &WalkmeshManager::editExitDirection);
 
@@ -502,7 +505,7 @@ void WalkmeshManager::fill(Field *field, bool reload)
 	caFile = field->camera();
 	scriptsAndTexts = field->scriptsAndTexts();
 
-	int camCount = 0;
+	qsizetype camCount = 0;
 
 	if (walkmesh) {
 		walkmesh->setModelsVisible(showModels->isChecked());
@@ -552,6 +555,14 @@ void WalkmeshManager::fill(Field *field, bool reload)
 				gateList->addItem(item);
 			}
 		}
+		mapId->blockSignals(true);
+		mapId->clear();
+		const QStringList &mapList = Data::maplist();
+		int mapID = 0;
+		for (const QString &fieldName : mapList) {
+			mapId->addItem(QString("%1 - %2").arg(mapID++, 3, 10, QChar('0')).arg(fieldName));
+		}
+		mapId->blockSignals(false);
 		gateList->setCurrentRow(0);
 		setCurrentGateway(0);
 
@@ -968,16 +979,16 @@ void WalkmeshManager::setCurrentGateway(int id)
 	exitPoints[0]->setValues(gateway.exit_line[0]);
 	exitPoints[1]->setValues(gateway.exit_line[1]);
 	entryPoint->setValues(gateway.destination);
-	fieldId->blockSignals(true);
+	mapId->blockSignals(true);
 	gateEnabled->blockSignals(true);
 	if (gateway.fieldID == 0x7FFF) {
 		gateEnabled->setChecked(false);
-		fieldId->setValue(0);
+		mapId->setCurrentIndex(0);
 	} else {
 		gateEnabled->setChecked(true);
-		fieldId->setValue(gateway.fieldID);
+		mapId->setCurrentIndex(gateway.fieldID);
 	}
-	fieldId->blockSignals(false);
+	mapId->blockSignals(false);
 	gateEnabled->blockSignals(false);
 	setGateEnabled(gateEnabled->isChecked());
 	if (!infFile->isJap()) {
@@ -1153,7 +1164,7 @@ void WalkmeshManager::editExitDirection(int dir)
 void WalkmeshManager::setGateEnabled(bool enabled)
 {
 	exitDirection->setEnabled(enabled);
-	fieldId->setEnabled(enabled);
+	mapId->setEnabled(enabled);
 	exitPoints[0]->setEnabled(enabled);
 	exitPoints[1]->setEnabled(enabled);
 	entryPoint->setEnabled(enabled);
@@ -1165,13 +1176,13 @@ void WalkmeshManager::editGateEnabled(bool enabled)
 	setGateEnabled(enabled);
 
 	if (enabled) {
-		editFieldId(fieldId->value());
+		editMapId(mapId->currentIndex());
 	} else {
-		editFieldId(0x7FFF);
+		editMapId(0);
 	}
 }
 
-void WalkmeshManager::editFieldId(int v)
+void WalkmeshManager::editMapId(int v)
 {
 	if (infFile->isOpen()) {
 		if (!gateEnabled->isChecked()) {
@@ -1227,7 +1238,7 @@ void WalkmeshManager::editDoorEnabled(bool enabled)
 	setDoorEnabled(enabled);
 
 	if (enabled) {
-		editParamId(fieldId->value());
+		editParamId(bgParamId->value());
 	} else {
 		editParamId(0xFF);
 	}

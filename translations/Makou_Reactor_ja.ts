@@ -6674,10 +6674,6 @@ Are you sure you want to continue?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Field ID:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Background parameter ID:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6840,6 +6836,10 @@ Are you sure you want to continue?</source>
     <message>
         <source>?</source>
         <translation>?</translation>
+    </message>
+    <message>
+        <source>Map ID:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

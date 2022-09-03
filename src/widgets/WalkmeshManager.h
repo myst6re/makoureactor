@@ -57,7 +57,7 @@ private slots:
 	void editDoorPoint(const Vertex_s &values);
 	void setGateEnabled(bool enabled);
 	void editGateEnabled(bool enabled);
-	void editFieldId(int v);
+	void editMapId(int v);
 	void editArrowDisplay(bool checked);
 	void setDoorEnabled(bool enabled);
 	void editDoorEnabled(bool enabled);
@@ -119,7 +119,7 @@ private:
 	QListWidget *gateList;
 	QCheckBox *gateEnabled;
 	QSpinBox *exitDirection;
-	QSpinBox *fieldId;
+	QComboBox *mapId;
 	VertexWidget *exitPoints[2], *entryPoint;
 	QCheckBox *arrowDisplay;
 	//ArrowPage

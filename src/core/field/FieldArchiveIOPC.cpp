@@ -174,7 +174,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCLgp::save2(const QString &path, Archiv
 	}
 
 	if (oneFieldAdded && _lgp.fileExists("maplist")) {
-		QStringList maplistCopy = Data::maplist();
+		const QStringList &maplistCopy = Data::maplist();
 		// Check if the list was correctly opened before // FIXME
 		if (Data::openMaplist(_lgp.fileData("maplist"))) {
 			Data::setMaplist(maplistCopy);

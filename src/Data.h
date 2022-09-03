@@ -58,7 +58,7 @@ public:
 	static bool saveMaplist(QByteArray &data);
 	static void toPCMaplist(QStringList &field_names);
 	static QColor color(Color color);
-	inline static QStringList maplist() {
+	inline static const QStringList &maplist() {
 		return field_names;
 	}
 	inline static void setMaplist(const QStringList &maplist) {

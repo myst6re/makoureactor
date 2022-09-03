@@ -240,7 +240,7 @@ void FieldArchive::delField(int mapId)
 		return;
 	}
 
-	QStringList maplist = Data::maplist();
+	const QStringList &maplist = Data::maplist();
 
 	for (int i = 0; i < maplist.size(); ++i) {
 		if (maplist.at(i) == field->name()) {

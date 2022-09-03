@@ -387,7 +387,7 @@ void Search::setFieldArchive(FieldArchive *fieldArchive)
 	setActionsEnabled(fieldArchive != nullptr);
 	if (mapJump->count() <= 0) {
 		int mapID=0;
-		const auto mapList = Data::maplist();
+		const QStringList &mapList = Data::maplist();
 		for (const QString &fieldName : mapList) {
 			mapJump->addItem(QString("%1 - %2").arg(mapID++, 3, 10, QChar('0')).arg(fieldName));
 		}
