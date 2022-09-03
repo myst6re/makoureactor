@@ -17,9 +17,9 @@
  ****************************************************************************/
 #pragma once
 
-#include <QLockedFile.h>
+#include <QLockedFile>
 #include "FieldArchiveIO.h"
-#include <IsoArchiveFF7.h>
+#include <IsoArchiveFF7>
 
 class FieldArchivePS;
 

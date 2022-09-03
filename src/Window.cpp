@@ -138,10 +138,6 @@ Window::Window() :
 		if (translator.load(dir.filePath(str))) {
 			action = menuLang->addAction(translator.translate("Window", "English"));
 			QString lang = str.mid(14, 2);
-			QString ff7tkTrPath = dir.filePath(QString("ff7tk_%1.qm").arg(lang));
-			if (!translator.load(ff7tkTrPath)) {
-				qWarning() << "No translations for ff7tk, file" << ff7tkTrPath << "not found";
-			}
 			action->setData(lang);
 			action->setCheckable(true);
 			action->setChecked(Config::value("lang").toString() == lang);

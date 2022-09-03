@@ -18,7 +18,7 @@
 #pragma once
 
 #include <QtCore>
-#include <IO.h>
+#include <IO>
 #include "BsxFile.h"
 
 struct BcxModelHeader {

@@ -17,7 +17,7 @@
  ****************************************************************************/
 #include "AboutDialog.h"
 #include "../Data.h"
-#include <ff7tkAbout.h>
+#include <ff7tkInfo>
 
 AboutDialog::AboutDialog(QWidget *parent)
     : QDialog(parent, Qt::Dialog | Qt::CustomizeWindowHint)
@@ -50,7 +50,7 @@ AboutDialog::AboutDialog(QWidget *parent)
 	connect(buttonBox, &QDialogButtonBox::rejected, this, &AboutDialog::close);
 
 	QLabel *desc4 = new QLabel(QString("Qt %1").arg(QT_VERSION_STR), this);
-	QLabel *desc5 = new QLabel(QStringLiteral("ff7tk %1").arg(ff7tk_version()), this);
+	QLabel *desc5 = new QLabel(QStringLiteral("ff7tk %1").arg(ff7tkInfo::version()), this);
 	QPalette pal = desc4->palette();
 	pal.setColor(QPalette::WindowText, Data::color(Data::ColorGreyForeground));
 	desc4->setPalette(pal);

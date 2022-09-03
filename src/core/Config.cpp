@@ -40,16 +40,22 @@ QString Config::programResourceDir()
 
 QString Config::programLanguagesDir()
 {
-	QDir translationDir(QStringLiteral("%1/%2").arg(QCoreApplication::applicationDirPath(), QStringLiteral("translations")));
+	QDir translationDir(QStringLiteral("%1").arg(QCoreApplication::applicationDirPath()));
 	QStringList nameFilter{QStringLiteral("Makou_Reactor_*.qm")};
 	if (translationDir.entryList(nameFilter, QDir::Files, QDir::Name).isEmpty()) {
-		translationDir.setPath(QStringLiteral("%1/../share/makoureactor/translations").arg(QCoreApplication::applicationDirPath()));
+		translationDir.setPath(QStringLiteral("%1/%2").arg(QCoreApplication::applicationDirPath(), QStringLiteral("translations")));
 		if (translationDir.entryList(nameFilter, QDir::Files, QDir::Name).isEmpty()) {
-			translationDir.setPath(QStringLiteral("%1/%2").arg(QDir::homePath(), QStringLiteral(".local/share/makoureactor/lang")));
+			translationDir.setPath(QStringLiteral("%1/../translations").arg(QCoreApplication::applicationDirPath()));
 			if (translationDir.entryList(nameFilter, QDir::Files, QDir::Name).isEmpty()) {
-				translationDir.setPath(QStringLiteral("/usr/local/share/makourector/lang"));
+				translationDir.setPath(QStringLiteral("%1/../share/makoureactor/translations").arg(QCoreApplication::applicationDirPath()));
 				if (translationDir.entryList(nameFilter, QDir::Files, QDir::Name).isEmpty()) {
-					translationDir.setPath(QStringLiteral("/usr/share/makoureactor/lang"));
+					translationDir.setPath(QStringLiteral("%1/%2").arg(QDir::homePath(), QStringLiteral(".local/share/makoureactor/translations")));
+					if (translationDir.entryList(nameFilter, QDir::Files, QDir::Name).isEmpty()) {
+						translationDir.setPath(QStringLiteral("/usr/local/share/makourector/translations"));
+						if (translationDir.entryList(nameFilter, QDir::Files, QDir::Name).isEmpty()) {
+							translationDir.setPath(QStringLiteral("/usr/share/makoureactor/translations"));
+						}
+					}
 				}
 			}
 		}
@@ -112,6 +118,9 @@ QVariant Config::value(const QString &key, const QVariant &defaultValue)
 
 void Config::setValue(const QString &key, const QVariant &value)
 {
+	if(value.isNull()) {
+		settings->remove(key);
+	}
 	settings->setValue(key, value);
 }
 

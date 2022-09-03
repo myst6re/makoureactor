@@ -19,7 +19,7 @@
 #include "FieldPS.h"
 #include "FieldPSDemo.h"
 #include "FieldArchivePS.h"
-#include <GZIP.h>
+#include <GZIP>
 #include "Data.h"
 
 QByteArray FieldArchiveIOPS::mimDataCache;

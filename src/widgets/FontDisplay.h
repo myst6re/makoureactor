@@ -18,7 +18,7 @@
 #pragma once
 
 #include <QtWidgets>
-#include <WindowBinFile.h>
+#include <WindowBinFile>
 
 class FontDisplay : public QWidget
 {

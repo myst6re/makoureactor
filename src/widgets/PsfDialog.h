@@ -18,7 +18,7 @@
 #pragma once
 
 #include <QtWidgets>
-#include <PsfFile.h>
+#include <PsfFile>
 
 class PsfDialog : public QDialog
 {

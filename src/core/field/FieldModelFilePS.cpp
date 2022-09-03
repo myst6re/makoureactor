@@ -18,7 +18,7 @@
 #include "FieldModelFilePS.h"
 #include "FieldArchiveIO.h"
 #include "TdbFile.h"
-#include <PsColor.h>
+#include <PsColor>
 #include "FieldPS.h"
 #include "BcxFile.h"
 #include "BsxFile.h"

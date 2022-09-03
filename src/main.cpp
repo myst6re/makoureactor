@@ -27,7 +27,7 @@
 //#include "core/FF7Font.h"
 #endif
 #include "core/Config.h"
-
+#include <ff7tkInfo>
 int main(int argc, char *argv[])
 {
 #ifdef MR_CONSOLE
@@ -67,9 +67,8 @@ int main(int argc, char *argv[])
 	} else {
 		Config::setValue("lang", QVariant());
 	}
-	QTranslator translator3;
-	if (translator3.load("ff7tk_" % lang, Config::programLanguagesDir()) || translator3.load("ff7tk_" % lang)) {
-		app.installTranslator(&translator3);
+	if(!app.installTranslator(ff7tkInfo::translations().value(lang))) {
+		qDebug() << "Unable to load ff7tk translation";
 	}
 
 	if (!Var::load()) {

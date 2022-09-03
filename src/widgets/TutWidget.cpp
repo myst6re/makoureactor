@@ -20,7 +20,7 @@
 #include "Data.h"
 #include "PsfDialog.h"
 #include "core/Config.h"
-#include <PsfFile.h>
+#include <PsfFile>
 
 TutWidget::TutWidget(QWidget *parent) :
 	QDialog(parent, Qt::Tool), copied(false)

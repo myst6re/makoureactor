@@ -18,7 +18,7 @@
 #pragma once
 
 #include <QtCore>
-#include <IO.h>
+#include <IO>
 #include "BackgroundTextures.h"
 
 class BackgroundTexturesIO : public IO

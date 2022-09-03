@@ -19,7 +19,7 @@
 #include "BackgroundIO.h"
 #include "Palette.h"
 #include "PaletteIO.h"
-#include <PsColor.h>
+#include <PsColor>
 #include "FieldPC.h"
 #include <algorithm>
 
