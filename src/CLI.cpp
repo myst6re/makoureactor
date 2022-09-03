@@ -119,6 +119,9 @@ void CLI::commandExport()
 	if (!argsExport.textFormat().isEmpty()) {
 		toExport.insert(FieldArchive::Texts, argsExport.textFormat());
 	}
+	if (!argsExport.chunkFormat().isEmpty()) {
+		toExport.insert(FieldArchive::Chunks, argsExport.chunkFormat());
+	}
 
 	if (!fieldArchive->exportation(selectedFields, argsExport.destination(),
 								   argsExport.force(), toExport, &tags)) {

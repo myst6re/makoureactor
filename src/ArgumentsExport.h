@@ -28,6 +28,7 @@ public:
 	QString backgroundFormat() const;
 	QString soundFormat() const;
 	QString textFormat() const;
+	QString chunkFormat() const;
 	PsfTags psfTags() const;
 	bool force() const;
 	inline QString destination() const {

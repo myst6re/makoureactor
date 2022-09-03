@@ -1303,17 +1303,20 @@ void Window::massExport()
 
 			showProgression(tr("Export..."), false);
 
-			if (massExportDialog->exportModule(MassExportDialog::Fields)) {
-				toExport.insert(FieldArchive::Fields, massExportDialog->moduleFormat(MassExportDialog::Fields));
+			if (massExportDialog->exportModule(FieldArchive::Fields)) {
+				toExport.insert(FieldArchive::Fields, massExportDialog->moduleFormat(FieldArchive::Fields));
 			}
-			if (massExportDialog->exportModule(MassExportDialog::Backgrounds)) {
-				toExport.insert(FieldArchive::Backgrounds, massExportDialog->moduleFormat(MassExportDialog::Backgrounds));
+			if (massExportDialog->exportModule(FieldArchive::Backgrounds)) {
+				toExport.insert(FieldArchive::Backgrounds, massExportDialog->moduleFormat(FieldArchive::Backgrounds));
 			}
-			if (massExportDialog->exportModule(MassExportDialog::Akaos)) {
-				toExport.insert(FieldArchive::Akaos, massExportDialog->moduleFormat(MassExportDialog::Akaos));
+			if (massExportDialog->exportModule(FieldArchive::Akaos)) {
+				toExport.insert(FieldArchive::Akaos, massExportDialog->moduleFormat(FieldArchive::Akaos));
 			}
-			if (massExportDialog->exportModule(MassExportDialog::Texts)) {
-				toExport.insert(FieldArchive::Texts, massExportDialog->moduleFormat(MassExportDialog::Texts));
+			if (massExportDialog->exportModule(FieldArchive::Texts)) {
+				toExport.insert(FieldArchive::Texts, massExportDialog->moduleFormat(FieldArchive::Texts));
+			}
+			if (massExportDialog->exportModule(FieldArchive::Chunks)) {
+				toExport.insert(FieldArchive::Chunks, massExportDialog->moduleFormat(FieldArchive::Chunks));
 			}
 
 			PsfTags tags;

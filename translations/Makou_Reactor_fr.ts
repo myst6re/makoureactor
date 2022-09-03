@@ -864,39 +864,35 @@ Certains scripts peuvent y faire référence !</translation>
     <name>GrpScriptWizardPageType</name>
     <message>
         <source>Empty</source>
-        <translation>Vide</translation>
+        <translation type="vanished">Vide</translation>
     </message>
     <message>
         <source>3D Model</source>
-        <translation>Modèle 3D</translation>
+        <translation type="vanished">Modèle 3D</translation>
     </message>
     <message>
         <source>Line</source>
-        <translation>Ligne</translation>
-    </message>
-    <message>
-        <source>Animation</source>
-        <translation></translation>
+        <translation type="vanished">Ligne</translation>
     </message>
     <message>
         <source>Other</source>
-        <translation>Autre</translation>
+        <translation type="vanished">Autre</translation>
     </message>
     <message>
         <source>Main Character</source>
-        <translation>Personnage principal</translation>
+        <translation type="vanished">Personnage principal</translation>
     </message>
     <message>
         <source>Non Playable Character</source>
-        <translation>Personnage non jouable</translation>
+        <translation type="vanished">Personnage non jouable</translation>
     </message>
     <message>
         <source>Item</source>
-        <translation>Objet</translation>
+        <translation type="vanished">Objet</translation>
     </message>
     <message>
         <source>Save Point</source>
-        <translation>Point de sauvegarde</translation>
+        <translation type="vanished">Point de sauvegarde</translation>
     </message>
 </context>
 <context>
@@ -1431,6 +1427,14 @@ Certains scripts peuvent y faire référence !</translation>
         <source>Choose a directory</source>
         <oldsource>Choisir un dossier</oldsource>
         <translation>Choisir un dossier</translation>
+    </message>
+    <message>
+        <source>Export chunks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Field Chunks</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

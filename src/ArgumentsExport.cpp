@@ -25,6 +25,7 @@ ArgumentsExport::ArgumentsExport() : CommonArguments()
 	                          "Cannot be specified with background option.", "bg-layer", "");
 	_ADD_ARGUMENT("music", "Export musics. Possible values: psf, minipsf, akao, snd (alias of akao)", "music", "");
 	_ADD_ARGUMENT("text", "Export texts. Possible values: xml, txt", "text", "");
+	_ADD_ARGUMENT("chunk", "Export field chunks. Possible value: chunk", "chunk", "");
 	_ADD_ARGUMENT("psf-lib-path", "PSF lib path. Required only when --music psf/minipsf is set.", "psf-lib-path", "");
 	_ADD_FLAG(_OPTION_NAMES("f", "force"),
 	             "Overwrite destination file if exists.");
@@ -62,6 +63,11 @@ QString ArgumentsExport::soundFormat() const
 QString ArgumentsExport::textFormat() const
 {
 	return _parser.value("text");
+}
+
+QString ArgumentsExport::chunkFormat() const
+{
+	return _parser.value("chunk");
 }
 
 PsfTags ArgumentsExport::psfTags() const

@@ -131,7 +131,7 @@ public:
 	};
 
 	enum ExportType {
-		Fields, Backgrounds, Akaos, Texts
+		Fields, Backgrounds, Akaos, Texts, Chunks
 	};
 	Q_DECLARE_FLAGS(ExportTypes, ExportType)
 

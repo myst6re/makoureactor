@@ -25,15 +25,11 @@ class MassExportDialog : public QDialog
 {
 	Q_OBJECT
 public:
-	enum ExportType {
-		Fields, Backgrounds, Akaos, Texts
-	};
-
 	explicit MassExportDialog(QWidget *parent = nullptr);
 	void fill(const FieldArchive *fieldArchive, int currentMapId);
 	QList<int> selectedFields() const;
-	bool exportModule(ExportType type) const;
-	const QString &moduleFormat(ExportType type) const;
+	bool exportModule(FieldArchive::ExportType type) const;
+	const QString &moduleFormat(FieldArchive::ExportType type) const;
 	QString directory() const;
 	bool overwrite() const;
 private slots:
@@ -41,7 +37,7 @@ private slots:
 	void selectCurrentField();
 private:
 	QListWidget *fieldList;
-	QMap<ExportType, FormatSelectionWidget *> exports;
+	QMap<FieldArchive::ExportType, FormatSelectionWidget *> exports;
 	QLineEdit *dirPath;
 	QPushButton *changeDir;
 	QCheckBox *overwriteIfExists;

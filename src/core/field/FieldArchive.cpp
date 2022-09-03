@@ -16,8 +16,6 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "FieldArchive.h"
-#include "FieldPS.h"
-#include "FieldPC.h"
 #include "Data.h"
 #include <PsfFile.h>
 
@@ -1868,6 +1866,16 @@ bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &
 							return false;
 						}
 					}
+				}
+			}
+			if (toExport.contains(Chunks)) {
+				path = QDir::cleanPath(QString("%1/%2").arg(directory, f->name()));
+				QDir dir(path);
+				if (!dir.exists()) {
+					dir.mkpath("./");
+				}
+				if (!f->exportToChunks(dir)) {
+					return false;
 				}
 			}
 		}

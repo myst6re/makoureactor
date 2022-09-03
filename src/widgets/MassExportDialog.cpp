@@ -37,10 +37,10 @@ MassExportDialog::MassExportDialog(QWidget *parent) :
 	listLayout->addWidget(toolBar);
 	listLayout->addWidget(fieldList, 1);
 
-	exports.insert(Fields,
+	exports.insert(FieldArchive::Fields,
 	               new FormatSelectionWidget(tr("Export fields"),
 	                                         QStringList(), this));
-	exports.insert(Backgrounds,
+	exports.insert(FieldArchive::Backgrounds,
 	               new FormatSelectionWidget(tr("Export backgrounds"),
 	                                         QStringList() <<
 	                                             tr("Flatten PNG image") + ";;png" <<
@@ -49,18 +49,22 @@ MassExportDialog::MassExportDialog(QWidget *parent) :
 	                                             tr("Multi-layers PNG images") + ";;png_" <<
 	                                             tr("Multi-layers JPG images") + ";;jpg_" <<
 	                                             tr("Multi-layers BMP images") + ";;bmp_", this));
-	exports.insert(Akaos,
+	exports.insert(FieldArchive::Akaos,
 	               new FormatSelectionWidget(tr("Export musics"),
 	                                         QStringList() <<
 	                                             tr("AKAO music") + ";;akao" <<
 	                                             tr("PSF MIDI") + ";;minipsf", this));
-	exports.insert(Texts,
+	exports.insert(FieldArchive::Texts,
 	               new FormatSelectionWidget(tr("Export texts"),
 	                                         QStringList() <<
 	                                             tr("XML Text") + ";;xml" <<
 	                                             tr("Simple text TXT") + ";;txt", this));
+	exports.insert(FieldArchive::Chunks,
+	               new FormatSelectionWidget(tr("Export chunks"),
+	                                         QStringList() <<
+	                                             tr("Field Chunks") + ";;chunk", this));
 
-	exports.value(Backgrounds)->setCurrentFormat(Config::value("exportBackgroundFormat").toString());
+	exports.value(FieldArchive::Backgrounds)->setCurrentFormat(Config::value("exportBackgroundFormat").toString());
 
 	dirPath = new QLineEdit(this);
 	dirPath->setText(Config::value("exportDirectory").toString());
@@ -75,7 +79,7 @@ MassExportDialog::MassExportDialog(QWidget *parent) :
 	exportButton->setDisabled(dirPath->text().isEmpty());
 
 	QGridLayout *layout = new QGridLayout(this);
-	layout->addLayout(listLayout, 0, 0, 3 + exports.size(), 1);
+	layout->addLayout(listLayout, 0, 0, 3 + int(exports.size()), 1);
 	int row = 0;
 	for (FormatSelectionWidget *formatSelection : qAsConst(exports)) {
 		layout->addWidget(formatSelection, row++, 1, 1, 2);
@@ -104,7 +108,7 @@ void MassExportDialog::fill(const FieldArchive *fieldArchive, int currentMapId)
 	formats.append(tr("FIELD File %1").arg(fieldType) + (_fieldArchive->isPC() ? QString() : QLatin1String(";;dat")));
 	formats.append(tr("Uncompressed FIELD %1").arg(fieldType) + QLatin1String(";;dec"));
 
-	exports.value(Fields)->setFormats(formats);
+	exports.value(FieldArchive::Fields)->setFormats(formats);
 
 	fieldList->clear();
 	FieldArchiveIterator it(*_fieldArchive);
@@ -159,12 +163,12 @@ QList<int> MassExportDialog::selectedFields() const
 	return ids;
 }
 
-bool MassExportDialog::exportModule(ExportType type) const
+bool MassExportDialog::exportModule(FieldArchive::ExportType type) const
 {
 	return exports.value(type)->isChecked();
 }
 
-const QString &MassExportDialog::moduleFormat(ExportType type) const
+const QString &MassExportDialog::moduleFormat(FieldArchive::ExportType type) const
 {
 	return exports[type]->currentFormat();
 }
@@ -182,7 +186,7 @@ bool MassExportDialog::overwrite() const
 void MassExportDialog::accept()
 {
 	Config::setValue("overwriteOnExport", overwrite());
-	Config::setValue("exportBackgroundFormat", moduleFormat(Backgrounds));
+	Config::setValue("exportBackgroundFormat", moduleFormat(FieldArchive::Backgrounds));
 	Config::setValue("exportDirectory", directory());
 
 	QDialog::accept();

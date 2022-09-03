@@ -794,40 +794,12 @@ Some scripts can refer to it!</source>
 <context>
     <name>GrpScriptWizardPageType</name>
     <message>
-        <source>Empty</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>3D Model</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Line</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Animation</source>
-        <translation type="unfinished">アニメーション</translation>
-    </message>
-    <message>
-        <source>Other</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Main Character</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Non Playable Character</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">アニメーション</translation>
     </message>
     <message>
         <source>Item</source>
-        <translation type="unfinished">アイテム</translation>
-    </message>
-    <message>
-        <source>Save Point</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">アイテム</translation>
     </message>
 </context>
 <context>
@@ -1250,6 +1222,14 @@ Some scripts can refer to it!</source>
     </message>
     <message>
         <source>PS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export chunks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Field Chunks</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
