@@ -1159,6 +1159,7 @@ void Window::gotoOpcode(int mapID, int grpScriptID, int scriptID, int opcodeID)
 	if (gotoField(mapID)) {
 		_scriptManager->blockSignals(true);
 		_scriptManager->gotoOpcode(grpScriptID, scriptID, opcodeID);
+		showModel(grpScriptID);
 		_scriptManager->blockSignals(false);
 	}
 }
