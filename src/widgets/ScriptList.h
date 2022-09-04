@@ -29,7 +29,8 @@ public:
 	Script *currentScript();
 	int selectedID();
 
-	void fill(GrpScript *grpScript = nullptr);
+	void fill(GrpScript *grpScript);
+	void clear();
 	void localeRefresh();
 	void scroll(int, bool focus = true);
 

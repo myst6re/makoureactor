@@ -39,7 +39,7 @@ void ScriptList::evidence(QListWidgetItem *current, QListWidgetItem *previous)
 
 Script *ScriptList::currentScript()
 {
-	if (!_grpScript) {
+	if (_grpScript == nullptr) {
 		return nullptr;
 	}
 
@@ -50,12 +50,19 @@ Script *ScriptList::currentScript()
 	return nullptr;
 }
 
+void ScriptList::clear()
+{
+	QListWidget::clear();
+	_grpScript = nullptr;
+}
+
 void ScriptList::fill(GrpScript *grpScript)
 {
-	clear();
+	QListWidget::clear();
+	_grpScript = grpScript;
 
-	if (grpScript) {
-		_grpScript = grpScript;
+	if (_grpScript == nullptr) {
+		return;
 	}
 
 	for (quint8 i = 0; i < SCRIPTS_SIZE; ++i) {
@@ -71,7 +78,7 @@ void ScriptList::fill(GrpScript *grpScript)
 
 void ScriptList::localeRefresh()
 {
-	if (!_grpScript) {
+	if (_grpScript == nullptr) {
 		return;
 	}
 

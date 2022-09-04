@@ -449,6 +449,7 @@ int Window::closeFile(bool quit)
 
 		disableEditors();
 		_scriptManager->removeCopiedReferences();
+		_scriptManager->clear();
 		if (_modelManager) {
 			_modelManager->close();
 			_modelManager->deleteLater();

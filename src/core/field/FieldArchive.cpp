@@ -1662,7 +1662,7 @@ bool FieldArchive::compileScripts(int &mapID, int &groupID, int &scriptID, int &
 		mapID = it.mapId();
 		if (field != nullptr && field->isOpen()) {
 			Section1File *section1 = field->scriptsAndTexts();
-			if (section1->isOpen() && !section1->compileScripts(groupID, scriptID, opcodeID, errorStr)) {
+			if (section1->isOpen() && section1->isModified() && !section1->compileScripts(groupID, scriptID, opcodeID, errorStr)) {
 				return false;
 			}
 		}

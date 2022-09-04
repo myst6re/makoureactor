@@ -196,6 +196,9 @@ void OpcodeList::clear()
 	enableActions(false);
 	QTreeWidget::clear();
 	clearHist();
+	_field = nullptr;
+	_grpScript = nullptr;
+	_script = nullptr;
 }
 
 void OpcodeList::setEnabled(bool enabled)
@@ -420,6 +423,11 @@ void OpcodeList::fill()
 	blockSignals(true);
 	QTreeWidget::clear();
 	blockSignals(false);
+
+	if (_field == nullptr || _script == nullptr) {
+		return;
+	}
+
 	header()->setMinimumSectionSize(0);
 	Section1File *scriptsAndTexts = _field->scriptsAndTexts();
 	

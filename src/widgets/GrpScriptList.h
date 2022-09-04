@@ -41,7 +41,9 @@ public:
 	void clearCopiedGroups();
 	void setEnabled(bool enabled);
 
-	void fill(Section1File *scripts = nullptr);
+	void clear();
+	void fill(Section1File *scripts);
+	void fill();
 	void localeRefresh();
 	void scroll(int, bool focus=true);
 	void enableActions(bool enabled);
@@ -89,6 +91,6 @@ private:
 	QToolBar *_toolBar;
 	HelpWidget *_helpWidget;
 
-	Section1File *scripts;
-	QList<GrpScript> grpScriptCopied;
+	Section1File *_scripts;
+	QList<GrpScript> _grpScriptCopied;
 };
