@@ -64,14 +64,15 @@ WalkmeshManager::WalkmeshManager(QWidget *parent) :
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(walkmeshWidget, 0, 0, 5, 1);
-	layout->addWidget(slider1, 0, 1);
-	layout->addWidget(slider2, 0, 2);
-	layout->addWidget(slider3, 0, 3);
+	layout->addWidget(slider1, 0, 1, Qt::AlignLeft);
+	layout->addWidget(slider2, 0, 2, Qt::AlignHCenter);
+	layout->addWidget(slider3, 0, 3, Qt::AlignRight);
 	layout->addWidget(keyInfos, 1, 1, 1, 3);
 	layout->addWidget(resetCamera, 2, 1, 1, 3);
 	layout->addWidget(showModels, 3, 1, 1, 3);
 	layout->addWidget(showBackground, 4, 1, 1, 3);
 	layout->addWidget(tabWidget, 5, 0, 1, 4);
+	layout->setColumnStretch(0, 1);
 
 	if (walkmesh) {
 		connect(slider1, &QSlider::valueChanged, walkmesh, &WalkmeshWidget::setXRotation);
@@ -385,8 +386,8 @@ QWidget *WalkmeshManager::buildCameraRangePage()
 	QWidget *ret = new QWidget(this);
 
 	QGroupBox *group1 = new QGroupBox(tr("Camera range"), ret);
-	QGroupBox *group2 = new QGroupBox(tr("Layer sizes (for layer animations)"), ret);
-	QGroupBox *group3 = new QGroupBox(tr("Layer flags"), ret);
+	QGroupBox *group2 = new QGroupBox(tr("Background layer sizes (for layer animations)"), ret);
+	QGroupBox *group3 = new QGroupBox(tr("Background layer flags"), ret);
 
 	for (int i=0; i<4; ++i) {
 		rangeEdit[i] = new QSpinBox(group1);
@@ -401,29 +402,22 @@ QWidget *WalkmeshManager::buildCameraRangePage()
 	layout1->addWidget(rangeEdit[0], 0, 1);
 	layout1->addWidget(new QLabel(tr("Bottom")), 0, 2);
 	layout1->addWidget(rangeEdit[1], 0, 3);
-	layout1->addWidget(new QLabel(tr("Right")), 1, 0);
-	layout1->addWidget(rangeEdit[2], 1, 1);
-	layout1->addWidget(new QLabel(tr("Left")), 1, 2);
-	layout1->addWidget(rangeEdit[3], 1, 3);
-	layout1->setColumnStretch(0, 1);
-	layout1->setColumnStretch(1, 1);
-	layout1->setColumnStretch(2, 1);
-	layout1->setColumnStretch(3, 1);
+	layout1->addWidget(new QLabel(tr("Right")), 0, 4);
+	layout1->addWidget(rangeEdit[2], 0, 5);
+	layout1->addWidget(new QLabel(tr("Left")), 0, 6);
+	layout1->addWidget(rangeEdit[3], 0, 7);
+	layout1->setRowStretch(1, 1);
 
 	QGridLayout *layout2 = new QGridLayout(group2);
-	layout2->addWidget(new QLabel(tr("Background layer 3 width")), 0, 0);
+	layout2->addWidget(new QLabel(tr("Layer 3 width")), 0, 0);
 	layout2->addWidget(bgSizeEdit[0], 0, 1);
-	layout2->addWidget(new QLabel(tr("Background layer 3 height")), 0, 2);
+	layout2->addWidget(new QLabel(tr("Layer 3 height")), 0, 2);
 	layout2->addWidget(bgSizeEdit[1], 0, 3);
-	layout2->addWidget(new QLabel(tr("Background layer 4 width")), 1, 0);
-	layout2->addWidget(bgSizeEdit[2], 1, 1);
-	layout2->addWidget(new QLabel(tr("Background layer 4 height")), 1, 2);
-	layout2->addWidget(bgSizeEdit[3], 1, 3);
-	layout2->setRowStretch(2, 1);
-	layout2->setColumnStretch(0, 1);
-	layout2->setColumnStretch(1, 1);
-	layout2->setColumnStretch(2, 1);
-	layout2->setColumnStretch(3, 1);
+	layout2->addWidget(new QLabel(tr("Layer 4 width")), 0, 4);
+	layout2->addWidget(bgSizeEdit[2], 0, 5);
+	layout2->addWidget(new QLabel(tr("Layer 4 height")), 0, 6);
+	layout2->addWidget(bgSizeEdit[3], 0, 7);
+	layout2->setRowStretch(1, 1);
 
 	QGridLayout *layout3 = new QGridLayout(group3);
 	layout3->addWidget(new QLabel(tr("Layer 1")), 0, 0);

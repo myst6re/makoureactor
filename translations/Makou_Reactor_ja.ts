@@ -6706,14 +6706,6 @@ Are you sure you want to continue?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Layer sizes (for layer animations)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Layer flags</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Up</source>
         <translation type="obsolete">上に</translation>
     </message>
@@ -6727,14 +6719,6 @@ Are you sure you want to continue?</source>
     </message>
     <message>
         <source>Left</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Background layer 3 width</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Background layer 4 width</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -6804,16 +6788,6 @@ Are you sure you want to continue?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Background layer 3 height</source>
-        <oldsource>Largeur couche 3 décor</oldsource>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Background layer 4 height</source>
-        <oldsource>Largeur couche 4 décor</oldsource>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Triangle %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6839,6 +6813,30 @@ Are you sure you want to continue?</source>
     </message>
     <message>
         <source>Map ID:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Background layer sizes (for layer animations)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Background layer flags</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layer 3 width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layer 3 height</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layer 4 width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layer 4 height</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -6890,10 +6888,6 @@ Are you sure you want to continue?</source>
     </message>
     <message>
         <source>&amp;Mass Export...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Archive Mana&amp;ger...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -7268,10 +7262,6 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
         <translation type="unfinished">各種情報が開けません！</translation>
     </message>
     <message>
-        <source>Go back to field map editor...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Applying...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7297,6 +7287,14 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
     </message>
     <message>
         <source>Mu&amp;sics/Tutorials...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Archive Manager</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Field Scripts</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

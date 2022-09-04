@@ -67,7 +67,15 @@ Window::Window() :
 	authorLbl->setWordWrap(true);
 
 	QWidget *toolBarRight = new QWidget();
+
+	_tabBar = new QTabBar();
+	_tabBar->addTab(tr("Field Scripts"));
+	_tabBar->addTab(QIcon::fromTheme(QStringLiteral("archive-generic")), tr("Archive Manager"));
+
+	connect(_tabBar, &QTabBar::currentChanged, this, &Window::setEditorPageIndex);
+
 	QHBoxLayout *toolBarRightLayout = new QHBoxLayout(toolBarRight);
+	toolBarRightLayout->addWidget(_tabBar);
 	toolBarRightLayout->addStretch();
 	toolBarRightLayout->addWidget(authorLbl, 0, Qt::AlignRight);
 	toolBarRightLayout->setContentsMargins(QMargins());
@@ -93,7 +101,6 @@ Window::Window() :
 	actionMassExport = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-export")), tr("&Mass Export..."), this, &Window::massExport, QKeySequence("Shift+Ctrl+E"));
 	actionImport = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-import")),tr("&Import to current map..."), this, &Window::importToCurrentMap, QKeySequence("Ctrl+I"));
 //	actionMassImport = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-import")), tr("Mass im&port..."), this, &Window::massImport, QKeySequence("Shift+Ctrl+I"));
-	actionArchive = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("archive-generic")), tr("Archive Mana&ger..."), this, &Window::archiveManager, QKeySequence("Shift+Ctrl+K"));
 	fileMenu->addSeparator();
 	actionRun = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("ff7")), tr("R&un FF7"), this, &Window::runFF7);
 	actionRun->setShortcut(Qt::Key_F8);
@@ -166,10 +173,10 @@ Window::Window() :
 	toolBar->addAction(actionModels);
 	actionModels->setStatusTip(tr("Model loader editor"));
 	toolBar->addAction(actionWalkmesh);
-	toolBar->addSeparator();
-	toolBar->addAction(actionArchive);
 	actionWalkmesh->setStatusTip(tr("Walkmesh editor"));
-	authorAction = toolBar->addWidget(toolBarRight);
+	toolBar->addSeparator();
+
+	toolBar->addWidget(toolBarRight);
 
 	_fieldList = new FieldList(this);
 
@@ -268,6 +275,15 @@ Window::~Window()
 {
 	if (fieldArchive) {
 		fieldArchive->close();
+	}
+}
+
+void Window::setEditorPageIndex(int index)
+{
+	if (index == 1) {
+		archiveManager();
+	} else {
+		_mainStackedWidget->setCurrentIndex(0); // Back to standard view
 	}
 }
 
@@ -430,7 +446,6 @@ int Window::closeFile(bool quit)
 		}
 
 		if (_lgpWidget != nullptr) {
-			actionArchive->setText(tr("Archive Mana&ger..."));
 			_mainStackedWidget->removeWidget(_lgpWidget);
 			delete _lgpWidget;
 			_lgpWidget = nullptr;
@@ -466,7 +481,7 @@ int Window::closeFile(bool quit)
 		actionMassExport->setEnabled(false);
 //		actionMassImport->setEnabled(false);
 		actionImport->setEnabled(false);
-		actionArchive->setEnabled(false);
+		_tabBar->setEnabled(false);
 		actionClose->setEnabled(false);
 		actionModels->setEnabled(false);
 		actionEncounter->setEnabled(false);
@@ -653,7 +668,7 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 		break;
 	case FieldArchiveIO::FieldNotFound:
 		if (fieldArchive->io()->type() == FieldArchiveIO::Lgp) {
-			actionArchive->setEnabled(true);
+			_tabBar->setTabEnabled(_tabBar->count() - 1, true);
 			setWindowTitle();
 			archiveManager();
 			return;
@@ -694,6 +709,7 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 
 	_fieldList->fill(fieldArchive);
 	zonePreview->setEnabled(true);
+	_tabBar->setEnabled(true);
 
 	// Select memorized entry
 	QString previousSessionField = Config::value("currentField").toString();
@@ -722,7 +738,7 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 		actionModels->setEnabled(true);
 	}
 	if (fieldArchive->io()->type() == FieldArchiveIO::Lgp) {
-		actionArchive->setEnabled(true);
+		_tabBar->setTabEnabled(_tabBar->count() - 1, true);
 	}
 	actionSaveAs->setEnabled(true);
 	actionClose->setEnabled(true);
@@ -839,7 +855,7 @@ void Window::disableEditors()
 	_scriptManager->clear();
 	_scriptManager->setEnabled(false);
 
-	authorAction->setVisible(false);
+	authorLbl->setVisible(false);
 	if (_textDialog) {
 		_textDialog->clear();
 		_textDialog->setEnabled(false);
@@ -954,7 +970,7 @@ void Window::openField(bool reload)
 	if (scriptsAndTexts->isOpen()) {
 		// Show author
 		authorLbl->setText(tr("Author: %1").arg(scriptsAndTexts->author()));
-		authorAction->setVisible(true);
+		authorLbl->setVisible(true);
 
 		// Fill group script list
 		_scriptManager->fill(field);
@@ -1670,12 +1686,8 @@ void Window::miscManager()
 void Window::archiveManager()
 {
 	if (_lgpWidget != nullptr && _mainStackedWidget->currentWidget() == _lgpWidget) {
-		actionArchive->setText(tr("Archive Mana&ger..."));
-		actionArchive->setIcon(QIcon::fromTheme(QStringLiteral("archive-generic")));
 		_mainStackedWidget->setCurrentIndex(0); // Back to standard view
 	} else if (fieldArchive && fieldArchive->io()->type() == FieldArchiveIO::Lgp) {
-		actionArchive->setText(tr("Go back to field map editor..."));
-		actionArchive->setIcon(QIcon());
 		if (_lgpWidget == nullptr) {
 			_lgpWidget = new LgpWidget(static_cast<Lgp *>(fieldArchive->io()->device()), this);
 			connect(_lgpWidget, &LgpWidget::modified, this, [&] {setModified(true);});

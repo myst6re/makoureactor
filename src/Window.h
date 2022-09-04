@@ -97,6 +97,7 @@ public slots:
 	void archiveManager();
 	void miscOperations();
 	void about();
+	void setEditorPageIndex(int index);
 private slots:
 	void openRecentFile(QAction *action);
 	void disableEditors();
@@ -118,6 +119,7 @@ private:
 	QProgressDialog *progressDialog();
 	void fillRecentMenu();
 
+	QTabBar *_tabBar;
 	QLineEdit *lineSearch;
 	FieldList *_fieldList;
 	QStackedWidget *zonePreview;
@@ -137,7 +139,7 @@ private:
 	QMenu *_recentMenu;
 	QAction *actionSave, *actionSaveAs, *actionExport, *actionChunks;
 	QAction *actionMassExport, *actionImport, *actionMassImport, *actionClose;
-	QAction *actionRun, *actionModels, *actionArchive;
+	QAction *actionRun, *actionModels;
 	QAction *actionEncounter;
 	QAction *actionMisc, *actionMiscOperations, *actionJp_txt;
 	QMenu *menuLang;
@@ -154,7 +156,6 @@ private:
 
 	QTaskBarButton *taskBarButton;
 	QProgressDialog *_progressDialog;
-	QAction *authorAction;
 	QLabel *authorLbl;
 	QTimer timer;
 

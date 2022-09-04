@@ -1430,11 +1430,11 @@ Certains scripts peuvent y faire référence !</translation>
     </message>
     <message>
         <source>Export chunks</source>
-        <translation type="unfinished"></translation>
+        <translation>Exporter les sections</translation>
     </message>
     <message>
         <source>Field Chunks</source>
-        <translation type="unfinished"></translation>
+        <translation>Sections d&apos;écran</translation>
     </message>
 </context>
 <context>
@@ -7348,15 +7348,15 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
     </message>
     <message>
         <source>Background layer 3 height</source>
-        <translation>Hauteur couche 3 décor</translation>
+        <translation type="vanished">Hauteur couche 3 décor</translation>
     </message>
     <message>
         <source>Background layer 4 width</source>
-        <translation>Largeur couche 4 décor</translation>
+        <translation type="vanished">Largeur couche 4 décor</translation>
     </message>
     <message>
         <source>Background layer 4 height</source>
-        <translation>Hauteur couche 4 décor</translation>
+        <translation type="vanished">Hauteur couche 4 décor</translation>
     </message>
     <message>
         <source>Layer 1</source>
@@ -7433,12 +7433,12 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
     <message>
         <source>Layer sizes (for layer animations)</source>
         <oldsource>Tailles des couches (pour les animations de couche)</oldsource>
-        <translation>Tailles des couches (pour les animations de couche)</translation>
+        <translation type="vanished">Tailles des couches (pour les animations de couche)</translation>
     </message>
     <message>
         <source>Layer flags</source>
         <oldsource>Flags couches</oldsource>
-        <translation>Flags couches</translation>
+        <translation type="vanished">Flags couches</translation>
     </message>
     <message>
         <source>Top</source>
@@ -7451,7 +7451,7 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
     <message>
         <source>Background layer 3 width</source>
         <oldsource>Largeur couche 3 décor</oldsource>
-        <translation>Largeur couche 3 décor</translation>
+        <translation type="vanished">Largeur couche 3 décor</translation>
     </message>
     <message>
         <source>Movements orientation:</source>
@@ -7493,6 +7493,30 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
         <source>Map ID:</source>
         <translation>ID écran :</translation>
     </message>
+    <message>
+        <source>Background layer sizes (for layer animations)</source>
+        <translation>Tailles des couches du décor (pour les animations de couche)</translation>
+    </message>
+    <message>
+        <source>Background layer flags</source>
+        <translation>Flags couche du décor</translation>
+    </message>
+    <message>
+        <source>Layer 3 width</source>
+        <translation>Largeur couche 3</translation>
+    </message>
+    <message>
+        <source>Layer 3 height</source>
+        <translation>Hauteur couche 3</translation>
+    </message>
+    <message>
+        <source>Layer 4 width</source>
+        <translation>Largeur couche 4</translation>
+    </message>
+    <message>
+        <source>Layer 4 height</source>
+        <translation>Hauteur couche 4</translation>
+    </message>
 </context>
 <context>
     <name>Window</name>
@@ -7524,7 +7548,7 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
     <message>
         <source>Archive Mana&amp;ger...</source>
         <oldsource>Ges&amp;tionnaire d&apos;archive...</oldsource>
-        <translation>Ges&amp;tionnaire d&apos;archive...</translation>
+        <translation type="vanished">Ges&amp;tionnaire d&apos;archive...</translation>
     </message>
     <message>
         <source>R&amp;un FF7</source>
@@ -7935,7 +7959,7 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
     </message>
     <message>
         <source>Go back to field map editor...</source>
-        <translation>Revenir sur l&apos;éditeur d&apos;écrans de jeu...</translation>
+        <translation type="vanished">Revenir sur l&apos;éditeur d&apos;écrans de jeu...</translation>
     </message>
     <message>
         <source>Applying...</source>
@@ -8050,6 +8074,18 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
     <message>
         <source>Mu&amp;sics/Tutorials...</source>
         <translation>M&amp;usiques/Tutoriels...</translation>
+    </message>
+    <message>
+        <source>Test</source>
+        <translation type="obsolete">Test</translation>
+    </message>
+    <message>
+        <source>Archive Manager</source>
+        <translation>Gestionnaire d&apos;archive</translation>
+    </message>
+    <message>
+        <source>Field Scripts</source>
+        <translation>Scripts d&apos;écran</translation>
     </message>
 </context>
 <context>
