@@ -20,6 +20,7 @@
 #include "FieldArchivePC.h"
 #include "FieldIO.h"
 #include "Data.h"
+#include "MapList.h"
 
 FieldArchiveIOPC::FieldArchiveIOPC(FieldArchivePC *fieldArchive) :
 	FieldArchiveIO(fieldArchive)
@@ -100,13 +101,17 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCLgp::open2(ArchiveObserver *observer)
 		qWarning() << "cannot find" << maplistName << "file";
 		return FieldNotFound;
 	}
+	
+	MapList mapList;
 
-	if (!Data::openMaplist(_lgp.fileData(maplistName))) {
+	if (!mapList.open(_lgp.fileData(maplistName))) {
 		qWarning() << "Cannot open" << maplistName;
 		return FieldNotFound;
 	}
 
-	QStringList maplist = Data::maplist();
+	fieldArchive()->setMapList(mapList);
+
+	QStringList mapNames = mapList.mapNames();
 
 //	QTime t;t.start();
 
@@ -126,23 +131,17 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCLgp::open2(ArchiveObserver *observer)
 			fieldArchive()->addTut(name.toLower().left(name.size()-4));
 		} else if (!name.contains('.')) {
 			fieldArchive()->appendField(new FieldPC(name, this));
-			maplist.removeOne(name);
-			++i;
+			mapNames.removeOne(name);
 		}
+
+		++i;
 	}
 
 	// Adding missing fields
-	QStringList ml = maplist.mid(65);
+	QStringList ml = mapNames.mid(65);
 	for (const QString &name : ml) {
 		fieldArchive()->appendField(new FieldPC(name));
 	}
-
-//	qDebug("Ouverture : %d ms", t.elapsed());
-	// qDebug() << FICHIER::size << " o";
-	// qDebug() << "nbGS : " << GrpScript::COUNT;
-	// qDebug() << "nbS : " << Script::COUNT;
-	// qDebug() << "nbC : " << Opcode::COUNT;
-	// qDebug("-------------------------------------------------");
 
 	return Ok;
 }
@@ -153,7 +152,6 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCLgp::save2(const QString &path, Archiv
 		return ErrorOpening;
 	}
 	FieldArchiveIterator it(*(fieldArchive()));
-	bool oneFieldAdded = false;
 
 	while (it.hasNext()) {
 		if (observer && observer->observerWasCanceled()) {
@@ -167,23 +165,16 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCLgp::save2(const QString &path, Archiv
 				}
 			} else if (!_lgp.addFile(field->name(), new FieldSaveIO(field))) {
 				return ErrorOpening;
-			} else {
-				oneFieldAdded = true;
 			}
 		}
 	}
 
-	if (oneFieldAdded && _lgp.fileExists("maplist")) {
-		const QStringList &maplistCopy = Data::maplist();
-		// Check if the list was correctly opened before // FIXME
-		if (Data::openMaplist(_lgp.fileData("maplist"))) {
-			Data::setMaplist(maplistCopy);
-			QByteArray mapListData;
-			if (Data::saveMaplist(mapListData)){
-				_lgp.setFileData("maplist", mapListData);
-			} else {
-				return Invalid;
-			}
+	if (fieldArchive()->mapList().isModified() && _lgp.fileExists("maplist")) {
+		QByteArray mapListData;
+		if (fieldArchive()->mapList().save(mapListData)){
+			_lgp.setFileData("maplist", mapListData);
+		} else {
+			return Invalid;
 		}
 	}
 
@@ -358,6 +349,15 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCDir::open2(ArchiveObserver *observer)
 	}
 
 	// QTime t;t.start();
+	MapList mapList;
+	QStringList mapNames;
+	if (!mapList.open(fileData2("maplist"))) {
+		qWarning() << "Cannot open maplist!";
+		mapNames = Data::maplist();
+	} else {
+		mapNames = mapList.mapNames();
+	}
+	fieldArchive()->setMapList(mapList);
 
 	int i = 0;
 	for (const QString &name : qAsConst(list)) {
@@ -368,13 +368,9 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCDir::open2(ArchiveObserver *observer)
 			observer->setObserverValue(i++);
 		}
 
-		if (name.compare("maplist", Qt::CaseInsensitive) == 0) {
-			if (!Data::openMaplist(fileData2(name))) {
-				qWarning() << "Cannot open maplist!";
-			}
-		} else if (name.endsWith(".tut", Qt::CaseInsensitive)) {
+		if (name.endsWith(".tut", Qt::CaseInsensitive)) {
 			fieldArchive()->addTut(name.toLower().left(name.size()-4));
-		} else if (!name.contains(".")) {
+		} else if (name.compare("maplist", Qt::CaseInsensitive) != 0 && !name.contains(".")) {
 			fieldArchive()->appendField(new FieldPC(name, this));
 		}
 	}

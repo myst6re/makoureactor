@@ -19,10 +19,13 @@
 #include "Listwidget.h"
 #include "core/Config.h"
 #include "Data.h"
+#include "core/field/Field.h"
+#include "core/field/FieldArchive.h"
 
 WalkmeshManager::WalkmeshManager(QWidget *parent) :
 	QDialog(parent, Qt::Tool),
-    idFile(nullptr), caFile(nullptr), infFile(nullptr), scriptsAndTexts(nullptr)
+    idFile(nullptr), caFile(nullptr), infFile(nullptr), scriptsAndTexts(nullptr),
+    _fieldArchive(nullptr)
 {
 	setWindowTitle(tr("Walkmesh"));
 
@@ -488,11 +491,13 @@ void WalkmeshManager::saveConfig()
 	Config::setValue("fieldModelsVisible", showModels->isChecked());
 }
 
-void WalkmeshManager::fill(Field *field, bool reload)
+void WalkmeshManager::fill(FieldArchive *fieldArchive, Field *field, bool reload)
 {
-	if (!field || (!reload && field->inf() == infFile)) {
+	if (fieldArchive == nullptr || field == nullptr || (!reload && field->inf() == infFile)) {
 		return;
 	}
+
+	_fieldArchive = fieldArchive;
 
 	infFile = field->inf();
 	idFile = field->walkmesh();
@@ -542,7 +547,7 @@ void WalkmeshManager::fill(Field *field, bool reload)
 		gateList->clear();
 		for (const Exit &gateway : infFile->exitLines()) {
 			if (gateway.fieldID != 0x7FFF) {
-				gateList->addItem(QString("%1 (%2)").arg(Data::mapName(gateway.fieldID)).arg(gateway.fieldID));
+				gateList->addItem(QString("%1 (%2)").arg(_fieldArchive->mapName(gateway.fieldID)).arg(gateway.fieldID));
 			} else {
 				QListWidgetItem *item = new QListWidgetItem(tr("Unused"));
 				item->setForeground(Data::color(Data::ColorDisabledForeground));
@@ -1191,7 +1196,7 @@ void WalkmeshManager::editMapId(int v)
 			QListWidgetItem *item = gateList->currentItem();
 			if (v != 0x7FFF) {
 				item->setText(QString("%1 (%2)")
-				                  .arg(Data::mapName(v))
+				                  .arg(_fieldArchive->mapName(v))
 				              .arg(v));
 				// Default foreground
 				item->setForeground(palette().brush(QPalette::WindowText));

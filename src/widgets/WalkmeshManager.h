@@ -19,10 +19,12 @@
 
 #include <QtWidgets>
 #include <HexLineEdit>
-#include "core/field/Field.h"
 #include "3d/WalkmeshWidget.h"
 #include "VertexWidget.h"
 #include "OrientationWidget.h"
+
+class Field;
+class FieldArchive;
 
 class WalkmeshManager : public QDialog
 {
@@ -30,7 +32,7 @@ class WalkmeshManager : public QDialog
 public:
 	explicit WalkmeshManager(QWidget *parent = nullptr);
 	void saveConfig();
-	void fill(Field *field, bool reload = false);
+	void fill(FieldArchive *fieldArchive, Field *field, bool reload = false);
 	void clear();
 	int currentCamera() const;
 signals:
@@ -138,4 +140,6 @@ private:
 	QSpinBox *navigation2, *cameraFocusHeight;
 	HexLineEdit *unknown;
 	QSpinBox *mapScale;
+
+	FieldArchive *_fieldArchive;
 };

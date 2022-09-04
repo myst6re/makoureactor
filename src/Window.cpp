@@ -952,7 +952,7 @@ void Window::openField(bool reload)
 		_tutManager->setEnabled(true);
 	}
 	if (_walkmeshManager && (reload || _walkmeshManager->isVisible())) {
-		_walkmeshManager->fill(field, reload);
+		_walkmeshManager->fill(fieldArchive, field, reload);
 		_walkmeshManager->setEnabled(true);
 	}
 	if (_backgroundManager && (reload || _backgroundManager->isVisible())) {
@@ -1635,7 +1635,7 @@ void Window::walkmeshManager()
 	}
 
 	if (field) {
-		_walkmeshManager->fill(field);
+		_walkmeshManager->fill(fieldArchive, field);
 		_walkmeshManager->setEnabled(true);
 	} else {
 		_walkmeshManager->clear();

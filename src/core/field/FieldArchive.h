@@ -22,6 +22,7 @@
 #include <QtCore>
 #include "FieldArchiveIO.h"
 #include "Field.h"
+#include "MapList.h"
 #include <PsfFile>
 
 struct SearchQuery
@@ -151,8 +152,6 @@ public:
 	}
 	const Field *field(int mapId) const;
 	Field *field(int mapId, bool open = true, bool dontOptimize = false);
-	const Field *field(const QString &name) const;
-	Field *field(const QString &name, bool open = true, bool dontOptimize = false);
 	int appendField(Field *field);
 	void addNewField(Field *field, int &mapID);
 	void delField(int id);
@@ -211,6 +210,13 @@ public:
 	inline void setObserver(ArchiveObserver *observer) {
 		_observer = observer;
 	}
+	inline const MapList &mapList() const {
+		return _mapList;
+	}
+	inline void setMapList(const MapList &mapList) {
+		_mapList = mapList;
+	}
+	QString mapName(int mapID) const;
 
 protected:
 	virtual void setSaved();
@@ -219,12 +225,15 @@ protected:
 		return _observer;
 	}
 private:
+	const Field *field(const QString &name) const;
+	Field *field(const QString &name, bool open = true, bool dontOptimize = false);
 	int indexOfField(const QString &name) const;
 	void updateFieldLists(Field *field, int fieldID);
 	static bool openField(Field *field, bool dontOptimize = false);
 
 	QMap<int, Field *> fileList;
 	QMultiMap<QString, int> fieldsSortByName;
+	MapList _mapList;
 
 	FieldArchiveIO *_io;
 	ArchiveObserver *_observer;

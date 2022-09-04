@@ -53,22 +53,11 @@ public:
 	static int loadKernel2Bin();
 	static int loadWindowBin();
 	static bool load();
-	static bool openMaplist(const QByteArray &data);
-	static void openMaplist(bool PC=false);
-	static bool saveMaplist(QByteArray &data);
+	static void openMaplist(bool PC = false);
 	static void toPCMaplist(QStringList &field_names);
 	static QColor color(Color color);
 	inline static const QStringList &maplist() {
 		return field_names;
-	}
-	inline static void setMaplist(const QStringList &maplist) {
-		field_names = maplist;
-	}
-	inline static void addMap(const QString &map) {
-		field_names.append(map);
-	}
-	inline static void setMap(int i, const QString &map) {
-		field_names[i] = map;
 	}
 	inline static QString mapName(int i) {
 		return field_names.value(i);

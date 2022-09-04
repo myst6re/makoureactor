@@ -129,7 +129,9 @@ FieldArchiveIO::ErrorCode FieldArchive::open()
 		return error;
 	}
 
-	if (fileList.isEmpty())	return FieldArchiveIO::FieldNotFound;
+	if (fileList.isEmpty()) {
+		return FieldArchiveIO::FieldNotFound;
+	}
 
 	if (Data::maplist().isEmpty()) {
 		Data::openMaplist(_io->isPC());
@@ -170,7 +172,7 @@ void FieldArchive::clear()
 	qDeleteAll(fileList);
 	fileList.clear();
 	fieldsSortByName.clear();
-	Data::setMaplist(QStringList());
+	_mapList.clear();
 }
 
 FieldArchiveIO *FieldArchive::io() const
@@ -228,7 +230,7 @@ void FieldArchive::updateFieldLists(Field *field, int mapId)
 void FieldArchive::addNewField(Field *field, int &mapID)
 {
 	mapID = appendField(field);
-	Data::addMap(field->name());
+	_mapList.addMap(field->name());
 	updateFieldLists(field, mapID);
 }
 
@@ -240,13 +242,7 @@ void FieldArchive::delField(int mapId)
 		return;
 	}
 
-	const QStringList &maplist = Data::maplist();
-
-	for (int i = 0; i < maplist.size(); ++i) {
-		if (maplist.at(i) == field->name()) {
-			Data::setMap(i, "");
-		}
-	}
+	_mapList.softDeleteMap(field->name());
 
 	fileList.insert(mapId, nullptr);
 	delete field;
@@ -254,9 +250,14 @@ void FieldArchive::delField(int mapId)
 
 int FieldArchive::appendField(Field *field)
 {
-	qsizetype mapId = Data::maplist().indexOf(field->name());
+	qsizetype mapId = _mapList.mapNames().indexOf(field->name());
 	if (mapId < 0) {
-		mapId = 1200 + (fileList.isEmpty() ? 0 : fileList.lastKey() + 1);
+		if (_mapList.mapNames().isEmpty()) {
+			mapId = Data::maplist().indexOf(field->name());
+		}
+		if (mapId < 0) {
+			mapId = 1200 + (fileList.isEmpty() ? 0 : fileList.lastKey() + 1);
+		}
 	}
 	fileList.insert(int(mapId), field);
 	return int(mapId);
@@ -1922,4 +1923,14 @@ void FieldArchive::setSaved()
 			field->setSaved();
 		}
 	}
+	_mapList.setSaved();
+}
+
+QString FieldArchive::mapName(int mapID) const
+{
+	if (mapID < _mapList.mapNames().size()) {
+		return _mapList.mapNames().at(mapID);
+	}
+
+	return Data::mapName(mapID);
 }

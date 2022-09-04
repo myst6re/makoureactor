@@ -600,51 +600,6 @@ void Data::fill(const QByteArray &data, int pos, int dataSize, QStringList &name
 	}
 }
 
-bool Data::openMaplist(const QByteArray &data)
-{
-	if (data.size() < 2) {
-		return false;
-	}
-
-	quint16 nbMap;
-	const char *constData = data.constData();
-
-	memcpy(&nbMap, constData, 2);
-
-	if (data.size() != 2+nbMap*32) {
-		return false;
-	}
-
-	field_names.clear();
-	for (int i=0; i<nbMap; ++i) {
-		const char *fieldName = constData + 2 + i * 32;
-		// Trim \0 at the end
-		field_names.append(QString::fromLatin1(fieldName, qstrnlen(fieldName, 32)).simplified());
-	}
-	// Remove empty entries at the end
-	while (!field_names.isEmpty() && field_names.last().isEmpty()) {
-		field_names.removeLast();
-	}
-
-	return true;
-}
-
-bool Data::saveMaplist(QByteArray &data)
-{
-	if (field_names.size() > 65535) {
-		return false;
-	}
-	quint16 nbMap = quint16(field_names.size());
-	data.append((char *)&nbMap, 2);
-
-	for (const QString &fieldName : qAsConst(field_names)) {
-		data.append(fieldName.toLatin1()
-		            .leftJustified(32, '\0', true));
-	}
-
-	return true;
-}
-
 const char *Data::movieList[106] = {
 	"fship2", "fship2n", "d_ropego", "d_ropein", "u_ropein", "u_ropego",
 	"gold2", "gold3", "gold4", "gold6", "gold5",
