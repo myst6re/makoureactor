@@ -359,10 +359,12 @@ void OpcodeList::saveExpandedItems()
 	while (!items.empty()) {
 		QTreeWidgetItem *item = items.dequeue();
 		const int opcodeID = item->data(0, Qt::UserRole).toInt();
-		Opcode &opcode = _script->opcode(opcodeID);
-		
-		if (opcode.isIf()) {
-			opcode.setItemIsExpanded(item->isExpanded());
+		if (opcodeID >= 0 && opcodeID < _script->size()) {
+			Opcode &opcode = _script->opcode(opcodeID);
+			
+			if (opcode.isIf()) {
+				opcode.setItemIsExpanded(item->isExpanded());
+			}
 		}
 
 		// Add children
