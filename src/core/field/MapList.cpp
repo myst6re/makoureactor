@@ -82,6 +82,20 @@ void MapList::addMap(const QString &name)
 	_mapNames.append(name);
 }
 
+bool MapList::renameMap(const QString &oldName, const QString &newName)
+{
+	qsizetype index = _mapNames.indexOf(oldName);
+	if (index < 0) {
+		return false;
+	}
+
+	_mapNames.replace(index, newName);
+
+	_modified = true;
+	
+	return true;
+}
+
 bool MapList::softDeleteMap(const QString &name)
 {
 	qsizetype index = _mapNames.indexOf(name);

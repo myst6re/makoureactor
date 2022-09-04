@@ -154,6 +154,7 @@ public:
 	Field *field(int mapId, bool open = true, bool dontOptimize = false);
 	int appendField(Field *field);
 	void addNewField(Field *field, int &mapID);
+	void renameField(Field *field, const QString &newName);
 	void delField(int id);
 
 	bool isAllOpened() const;

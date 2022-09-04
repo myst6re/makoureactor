@@ -234,6 +234,17 @@ void FieldArchive::addNewField(Field *field, int &mapID)
 	updateFieldLists(field, mapID);
 }
 
+void FieldArchive::renameField(Field *field, const QString &newName)
+{
+	const QString oldName = field->name();
+	field->setName(newName);
+	InfFile *inf = field->inf();
+	if (inf != nullptr && inf->isOpen()) {
+		inf->setMapName(newName);
+	}
+	_mapList.renameMap(oldName, newName);
+}
+
 void FieldArchive::delField(int mapId)
 {
 	Field *field = fileList.value(mapId);

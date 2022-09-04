@@ -27,6 +27,7 @@ public:
 	bool save(QByteArray &data) const;
 	void clear();
 	void addMap(const QString &name);
+	bool renameMap(const QString &oldName, const QString &newName);
 	bool softDeleteMap(const QString &name);
 	inline const QStringList &mapNames() const {
 		return _mapNames;

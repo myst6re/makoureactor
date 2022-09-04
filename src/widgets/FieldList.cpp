@@ -219,11 +219,7 @@ void FieldList::renameOK(QTreeWidgetItem *item, int column)
 		return;
 	}
 
-	f->setName(newName);
-	InfFile *inf = f->inf();
-	if (inf != nullptr) {
-		inf->setMapName(newName);
-	}
+	_fieldArchive->renameField(f, newName);
 
 	item->setText(column, f->name());
 
