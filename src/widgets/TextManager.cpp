@@ -552,7 +552,7 @@ void TextManager::changeTextPreviewWin()
 {
 	int currentWin = textPreview->currentWin();
 	qsizetype nbWin = textPreview->winCount();
-	bool currentWinIsValid = nbWin > 0 && textPreview->getWindow().type != NOWIN;
+	bool currentWinIsValid = nbWin > 0 && textPreview->getWindow().type != NOWIN && textPreview->getWindow().type != OpcodeKey::MPNAM;
 
 	textWin->setText(tr("Window %1/%2").arg(currentWin).arg(nbWin));
 	prevWin->setEnabled(currentWin > 1);

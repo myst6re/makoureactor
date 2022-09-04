@@ -589,7 +589,7 @@ void Script::listWindows(int groupID, int scriptID, QMultiMap<quint64, FF7Window
 	int opcodeID = 0;
 	for (const Opcode &opcode : _opcodes) {
 		qint16 windowID = opcode.windowID();
-		if (windowID >= 0) {
+		if (windowID >= 0 || opcode.id() == OpcodeKey::MPNAM) {
 			FF7Window win = FF7Window();
 			win.groupID = quint16(groupID);
 			win.scriptID = quint16(scriptID);
@@ -600,6 +600,10 @@ void Script::listWindows(int groupID, int scriptID, QMultiMap<quint64, FF7Window
 			} else if (opcode.id() == OpcodeKey::WMODE && opcode.op().opcodeWMODE.mode == 0x01) {
 				win.type = NOWIN;
 				win.mode = 0x01;
+				windows.insert(quint64((groupID << 16) | (scriptID << 8) | windowID), win);
+			} else if (opcode.id() == OpcodeKey::MPNAM) {
+				windowID = -1;
+				win.type = OpcodeKey::MPNAM;
 				windows.insert(quint64((groupID << 16) | (scriptID << 8) | windowID), win);
 			}
 			qint16 textID = opcode.textID();
@@ -665,6 +669,11 @@ void Script::listWindows(int groupID, int scriptID, int textID, QList<FF7Window>
 				win.displayX = opcode.op().opcodeWSPCL.marginLeft;
 				win.displayY = opcode.op().opcodeWSPCL.marginTop;
 				lastWinPerWindowID.insert(opcode.windowID(), win);
+			} else if (opcode.id() == OpcodeKey::MPNAM && opcode.textID() == textID) {
+				win.type = OpcodeKey::MPNAM;
+				if (winID < 0) {
+					windows.append(win);
+				}
 			}
 		}
 

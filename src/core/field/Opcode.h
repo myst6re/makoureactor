@@ -38,45 +38,6 @@
 #define OPERATORS_SIZE    11
 #define NOWIN             255
 
-struct FF7Window {
-	qint16 x, y;
-	quint16 w, h;
-	quint16 ask_first, ask_last;
-	quint8 type, mode, displayType;
-	quint8 displayX, displayY;
-	quint16 groupID, scriptID, opcodeID;
-
-	QPoint realPos() {
-		if (this->type == NOWIN) {
-			return QPoint();
-		}
-
-		int windowX = this->x, windowY = this->y;
-
-		if (windowX + this->w > 312) {
-			windowX = 312 - this->w;
-		}
-
-		if (windowY + this->h > 223) {
-			windowY = 223 - this->h;
-		}
-
-		if (windowX < 8) {
-			windowX = 8;
-		}
-
-		if (windowY < 8) {
-			windowY = 8;
-		}
-
-		return QPoint(windowX, windowY);
-	}
-};
-
-inline bool operator==(const FF7Window &w1, const FF7Window &w2) {
-	return w1.x == w2.x && w1.y == w2.y && w1.w == w2.w && w1.h == w2.h;
-}
-
 struct FF7Position {
 	qint16 x, y, z;
 	quint16 id;
@@ -245,6 +206,45 @@ class Section1File;
 enum OpcodeKey : quint16 {
 	OPCODE_GENERATE_LIST
 };
+
+struct FF7Window {
+	qint16 x, y;
+	quint16 w, h;
+	quint16 ask_first, ask_last;
+	quint8 type, mode, displayType;
+	quint8 displayX, displayY;
+	quint16 groupID, scriptID, opcodeID;
+
+	QPoint realPos() {
+		if (this->type == NOWIN || this->type == OpcodeKey::MPNAM) {
+			return QPoint();
+		}
+
+		int windowX = this->x, windowY = this->y;
+
+		if (windowX + this->w > 312) {
+			windowX = 312 - this->w;
+		}
+
+		if (windowY + this->h > 223) {
+			windowY = 223 - this->h;
+		}
+
+		if (windowX < 8) {
+			windowX = 8;
+		}
+
+		if (windowY < 8) {
+			windowY = 8;
+		}
+
+		return QPoint(windowX, windowY);
+	}
+};
+
+inline bool operator==(const FF7Window &w1, const FF7Window &w2) {
+	return w1.x == w2.x && w1.y == w2.y && w1.w == w2.w && w1.h == w2.h;
+}
 
 #undef op_fun
 #undef op_sep

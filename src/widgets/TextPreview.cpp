@@ -346,7 +346,16 @@ bool TextPreview::drawTextArea(QPainter *painter)
 
 	/* Window Background */
 
-	if (ff7Window.type != NOWIN) {
+	if (ff7Window.type == OpcodeKey::MPNAM) {
+		painter->translate(0, 10);
+		drawWindow(painter, 260, 204, Normal);
+		painter->translate(320 - 156 / 2, -10);
+		drawWindow(painter, 156 / 2, 156, Normal);
+		painter->translate(162 - 320 + 156 / 2, 199);
+		maxW = 156;
+		maxH = 25;
+		drawWindow(painter, maxW / 2, maxW, Normal);
+	} else if (ff7Window.type != NOWIN) {
 		painter->translate(ff7Window.realPos());
 		maxW = ff7Window.w;
 		maxH = ff7Window.h;
@@ -519,7 +528,7 @@ void TextPreview::mousePressEvent(QMouseEvent *event)
 {
 	if (event->button() == Qt::LeftButton && !readOnly) {
 		FF7Window ff7Window = getWindow();
-		if (ff7Window.type != NOWIN) {
+		if (ff7Window.type != NOWIN && ff7Window.type != OpcodeKey::MPNAM) {
 			QPoint real = ff7Window.realPos();
 
 			acceptMove = event->x() >= real.x() && event->x() < real.x() + maxW
@@ -544,7 +553,7 @@ void TextPreview::mouseMoveEvent(QMouseEvent *event)
 
 	FF7Window ff7Window = getWindow();
 
-	if (ff7Window.type == NOWIN) {
+	if (ff7Window.type == NOWIN || ff7Window.type == OpcodeKey::MPNAM) {
 		return;
 	}
 
