@@ -73,7 +73,7 @@
     <message>
         <source>Z :</source>
         <translatorcomment>Z:</translatorcomment>
-        <translation>Z:</translation>
+        <translation type="vanished">Z:</translation>
     </message>
     <message>
         <source>Layers</source>
@@ -125,6 +125,10 @@
     </message>
     <message>
         <source>The errors were not corrected.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Z:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

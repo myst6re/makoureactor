@@ -57,6 +57,9 @@ public:
 	inline bool isModified() const {
 		return _isModified;
 	}
+	inline bool isRenamed() const {
+		return !_oldName.isEmpty() && _oldName != _name;
+	}
 	void setModified(bool modified);
 
 	virtual bool isPC() const=0;
@@ -94,6 +97,9 @@ public:
 
 	inline const QString &name() const {
 		return _name;
+	}
+	inline const QString &oldName() const {
+		return _oldName;
 	}
 	void setName(const QString &name);
 	inline virtual FieldArchiveIO *io() const {
@@ -133,7 +139,7 @@ private:
 
 	QHash<FieldSection, FieldPart *> _parts;
 	FieldArchiveIO *_io;
-	QString _name, _lastError;
+	QString _name, _oldName, _lastError;
 	bool _isOpen, _isModified, _removeUnusedSection;
 };
 

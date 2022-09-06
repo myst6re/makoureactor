@@ -240,9 +240,13 @@ void FieldArchive::renameField(Field *field, const QString &newName)
 	field->setName(newName);
 	InfFile *inf = field->inf();
 	if (inf != nullptr && inf->isOpen()) {
-		inf->setMapName(newName);
+		inf->setMapName(field->name());
 	}
-	_mapList.renameMap(oldName, newName);
+	int mapId = fieldsSortByName.take(oldName.toLower());
+	updateFieldLists(field, mapId);
+	if (!_mapList.renameMap(oldName, field->name())) {
+		qWarning() << "FieldArchive::renameField map not found in maplist";
+	}
 }
 
 void FieldArchive::delField(int mapId)

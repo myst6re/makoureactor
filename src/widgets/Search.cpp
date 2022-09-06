@@ -385,9 +385,9 @@ void Search::setFieldArchive(FieldArchive *fieldArchive)
 	searchAllDialog->setFieldArchive(fieldArchive);
 	updateRunSearch();
 	setActionsEnabled(fieldArchive != nullptr);
-	if (mapJump->count() <= 0) {
-		int mapID=0;
-		const QStringList &mapList = Data::maplist();
+	if (mapJump->count() <= 0 && fieldArchive != nullptr) {
+		int mapID = 0;
+		const QStringList &mapList = fieldArchive->mapList().mapNames();
 		for (const QString &fieldName : mapList) {
 			mapJump->addItem(QString("%1 - %2").arg(mapID++, 3, 10, QChar('0')).arg(fieldName));
 		}

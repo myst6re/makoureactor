@@ -1019,14 +1019,17 @@ void Window::showModel(Field *field, FieldModelFile *fieldModelFile)
 
 void Window::setModified(bool enabled)
 {
-	if (field != nullptr)		field->setModified(enabled);
+	if (field != nullptr) {
+		field->setModified(enabled);
+	}
+
 	actionSave->setEnabled(enabled);
 	setWindowModified(enabled);
 
 	QColor red = Data::color(Data::ColorRedForeground),
 	       green = Data::color(Data::ColorGreenForeground);
-	int size=_fieldList->topLevelItemCount();
-	for (int i=0; i<size; ++i) {
+	int size = _fieldList->topLevelItemCount();
+	for (int i = 0; i < size; ++i) {
 		QTreeWidgetItem *item = _fieldList->topLevelItem(i);
 		int mapId = item->data(0, Qt::UserRole).toInt();
 		if (mapId >= 0) {

@@ -159,11 +159,27 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCLgp::save2(const QString &path, Archiv
 		}
 		Field *field = it.next(false);
 		if (field && field->isOpen() && field->isModified()) {
+			if (field->isRenamed()) {
+				if (_lgp.fileExists(field->name())) {
+					_lgp.removeFile(field->name());
+				}
+
+				if (_lgp.fileExists(field->oldName())) {
+					if (!_lgp.renameFile(field->oldName(), field->name())) {
+						qDebug() << "Cannot rename" << field->oldName() << field->name();
+						return ErrorOpening;
+					}
+				}
+				
+			}
+
 			if (_lgp.fileExists(field->name())) {
 				if (!_lgp.setFile(field->name(), new FieldSaveIO(field))) {
+					qDebug() << "Cannot set file" << field->name();
 					return ErrorOpening;
 				}
 			} else if (!_lgp.addFile(field->name(), new FieldSaveIO(field))) {
+				qDebug() << "Cannot add file" << field->name();
 				return ErrorOpening;
 			}
 		}
@@ -350,12 +366,8 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCDir::open2(ArchiveObserver *observer)
 
 	// QTime t;t.start();
 	MapList mapList;
-	QStringList mapNames;
 	if (!mapList.open(fileData2("maplist"))) {
 		qWarning() << "Cannot open maplist!";
-		mapNames = Data::maplist();
-	} else {
-		mapNames = mapList.mapNames();
 	}
 	fieldArchive()->setMapList(mapList);
 

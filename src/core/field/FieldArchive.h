@@ -233,7 +233,7 @@ private:
 	static bool openField(Field *field, bool dontOptimize = false);
 
 	QMap<int, Field *> fileList;
-	QMultiMap<QString, int> fieldsSortByName;
+	QMap<QString, int> fieldsSortByName;
 	MapList _mapList;
 
 	FieldArchiveIO *_io;

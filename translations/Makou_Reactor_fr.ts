@@ -70,10 +70,6 @@
 <context>
     <name>BGDialog</name>
     <message>
-        <source>Z :</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Sections (layer 1)</source>
         <oldsource>Sections (Layer 1)</oldsource>
         <translation>Sections (couche 1)</translation>
@@ -133,6 +129,10 @@
     <message>
         <source>Errors were found and repaired, save to apply the changes.</source>
         <translation>Des erreurs ont été trouvées et réparées, sauvegardez l&apos;écran pour appliquer les changements.</translation>
+    </message>
+    <message>
+        <source>Z:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

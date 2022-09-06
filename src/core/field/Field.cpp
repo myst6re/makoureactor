@@ -54,7 +54,9 @@ void Field::setModified(bool modified)
 	}
 	_isModified = modified;
 	FieldPart *section1 = part(Scripts);
-	if (section1)	section1->setModified(modified);
+	if (section1) {
+		section1->setModified(modified);
+	}
 }
 
 bool Field::open(bool dontOptimize)
@@ -294,6 +296,7 @@ QMap<int, FieldModelFile *> Field::fieldModels(bool animate, bool open)
 
 void Field::setName(const QString &name)
 {
+	_oldName = _name;
 	_name = name;
 	_isModified = true;
 }
@@ -306,6 +309,7 @@ void Field::setSaved()
 	for (FieldPart *part : qAsConst(_parts)) {
 		part->setModified(false);
 	}
+	_oldName.clear();
 }
 
 bool Field::save(QByteArray &newData, bool compress)

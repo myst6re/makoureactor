@@ -51,7 +51,7 @@ BGDialog::BGDialog(QWidget *parent) :
 	zWidget->setRange(0, 4096);
 
 	QHBoxLayout *hLayout = new QHBoxLayout;
-	hLayout->addWidget(new QLabel(tr("Z :")));
+	hLayout->addWidget(new QLabel(tr("Z:")));
 	hLayout->addWidget(zWidget, 1);
 
 	QVBoxLayout *page1Layout = new QVBoxLayout;

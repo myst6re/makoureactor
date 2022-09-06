@@ -556,7 +556,7 @@ void WalkmeshManager::fill(FieldArchive *fieldArchive, Field *field, bool reload
 		}
 		mapId->blockSignals(true);
 		mapId->clear();
-		const QStringList &mapList = Data::maplist();
+		const QStringList &mapList = _fieldArchive->mapList().mapNames();
 		int mapID = 0;
 		for (const QString &fieldName : mapList) {
 			mapId->addItem(QString("%1 - %2").arg(mapID++, 3, 10, QChar('0')).arg(fieldName));
