@@ -20,9 +20,11 @@
 #include "core/field/Field.h"
 
 BGDialog::BGDialog(QWidget *parent) :
-    QDialog(parent, Qt::Tool), field(nullptr), zoomFactor(1.0f)
+    QDialog(parent, Qt::Tool), _field(nullptr), zoomFactor(1.0f)
 {
 	setWindowTitle(tr("Background"));
+
+	viewerPage = new QWidget();
 
 	image = new ApercuBGLabel();
 	image->setAlignment(Qt::AlignCenter);
@@ -60,13 +62,14 @@ BGDialog::BGDialog(QWidget *parent) :
 	page1Layout->addLayout(hLayout);
 
 	tabBar = new QTabBar(this);
+	tabBar->setDrawBase(false);
 	tabBar->addTab(tr("Layers"));
 	tabBar->addTab(tr("Sections (layer 1)"));
 
 	buttonRepair = new QPushButton(tr("Repair"), this);
 	buttonRepair->hide();
 
-	QGridLayout *layout = new QGridLayout(this);
+	QGridLayout *layout = new QGridLayout(viewerPage);
 	layout->addWidget(imageBox, 0, 0, 5, 1);
 	layout->addWidget(parametersWidget, 0, 1);
 	layout->addWidget(statesWidget, 1, 1);
@@ -75,6 +78,14 @@ BGDialog::BGDialog(QWidget *parent) :
 	layout->addWidget(buttonRepair, 4, 1);
 	layout->setColumnStretch(0, 2);
 	layout->setColumnStretch(1, 1);
+
+	editorPage = new BackgroundEditor();
+
+	tabWidget = new QTabWidget(this);
+	tabWidget->addTab(viewerPage, tr("Viewer"));
+	tabWidget->addTab(editorPage, tr("Editor"));
+
+	(new QVBoxLayout(this))->addWidget(tabWidget);
 
 	connect(image, &ApercuBGLabel::saveRequested, this, &BGDialog::saveImage);
 	connect(parametersWidget, &QComboBox::currentIndexChanged, this, &BGDialog::parameterChanged);
@@ -87,13 +98,16 @@ BGDialog::BGDialog(QWidget *parent) :
 	connect(buttonRepair, &QPushButton::clicked, this, &BGDialog::tryToRepairBG);
 	connect(tabBar, &QTabBar::currentChanged, this, &BGDialog::updateBG);
 	connect(tabBar, &QTabBar::currentChanged, this, &BGDialog::showLayersPage);
+	connect(editorPage, &BackgroundEditor::modified, this, &BGDialog::modified);
 }
 
 void BGDialog::fill(Field *field, bool reload)
 {
-	if ((!reload && this->field == field) || !field)	return;
+	if ((!reload && _field == field) || field == nullptr) {
+		return;
+	}
 
-	this->field = field;
+	_field = field;
 
 	fillWidgets();
 
@@ -109,7 +123,7 @@ void BGDialog::clear()
 	layersWidget->blockSignals(true);
 	zWidget->blockSignals(true);
 
-	field = nullptr;
+	_field = nullptr;
 	allparams.clear();
 	params.clear();
 	image->clear();
@@ -118,6 +132,7 @@ void BGDialog::clear()
 	layersWidget->clear();
 	sectionsWidget->clear();
 	zWidget->clear();
+	editorPage->clear();
 
 	parametersWidget->blockSignals(false);
 	statesWidget->blockSignals(false);
@@ -127,7 +142,9 @@ void BGDialog::clear()
 
 void BGDialog::fillWidgets()
 {
-	if (!field)	return;
+	if (_field == nullptr) {
+		return;
+	}
 
 	QHash<quint8, quint8> usedParams;
 	bool layerExists[] = {false, false, false};
@@ -142,7 +159,7 @@ void BGDialog::fillWidgets()
 	params.clear();
 	sections.clear();
 
-	if (field->background()->usedParams(usedParams, layerExists, &usedIDs)) {
+	if (_field->background()->usedParams(usedParams, layerExists, &usedIDs)) {
 
 		QList<quint8> usedParamsList = usedParams.keys();
 		std::sort(usedParamsList.begin(), usedParamsList.end());
@@ -194,7 +211,10 @@ void BGDialog::fillWidgets()
 		y[1] = -1;
 		z[0] = -1;
 		z[1] = -1;
-		field->scriptsAndTexts()->bgParamAndBgMove(params, z, x, y);
+		_field->scriptsAndTexts()->bgParamAndBgMove(params, z, x, y);
+
+		editorPage->setSections(sections);
+		editorPage->setBackgroundFile(_field->background());
 	}
 }
 
@@ -309,7 +329,7 @@ void BGDialog::enableSection(QListWidgetItem *item)
 
 void BGDialog::changeZ(int value)
 {
-	if (tabBar->currentIndex() != 0) {
+	if (_field == nullptr || tabBar->currentIndex() != 0) {
 		return;
 	}
 	QList<QListWidgetItem *> items = layersWidget->selectedItems();
@@ -324,14 +344,20 @@ void BGDialog::changeZ(int value)
 
 void BGDialog::saveImage()
 {
+	if (_field == nullptr) {
+		return;
+	}
+
 	QString path = Config::value("saveBGPath").toString();
 	if (!path.isEmpty()) {
 		path.append("/");
 	}
 	path = QFileDialog::getSaveFileName(this, tr("Save Background"),
-	                                    path + field->name() + ".png",
+	                                    path + _field->name() + ".png",
 	                                    tr("PNG image (*.png);;JPG image (*.jpg);;BMP image (*.bmp);;Portable Pixmap (*.ppm)"));
-	if (path.isNull())	return;
+	if (path.isNull()) {
+		return;
+	}
 
 	background().save(path);
 
@@ -341,7 +367,11 @@ void BGDialog::saveImage()
 
 void BGDialog::tryToRepairBG()
 {
-	if (field->background()->repair()) {
+	if (_field == nullptr) {
+		return;
+	}
+
+	if (_field->background()->repair()) {
 		QMessageBox::information(this, tr("Background Repaired"), tr("Errors were found and repaired, save to apply the changes."));
 		emit modified();
 		updateBG();
@@ -352,26 +382,32 @@ void BGDialog::tryToRepairBG()
 
 QImage BGDialog::background(bool *bgWarning)
 {
-	if (tabBar->currentIndex() == 0) {
-		return field->background()->openBackground(params, z, layers, nullptr, bgWarning);
-	} else {
-		bool layers[4] = { false, true, false, false };
-		return field->background()->openBackground(params, z, layers, &sections, bgWarning);
+	if (_field == nullptr) {
+		return QImage();
 	}
+
+	if (tabBar->currentIndex() == 0) {
+		return _field->background()->openBackground(&params, z, layers, nullptr, bgWarning);
+	}
+
+	bool layers[4] = { false, true, false, false };
+	return _field->background()->openBackground(&params, z, layers, &sections, bgWarning);
 }
 
 void BGDialog::updateBG()
 {
-	if (!field)	return;
+	if (_field == nullptr) {
+		return;
+	}
 
 	bool bgWarning;
 	QImage img = background(&bgWarning);
 
 	if (tabBar->currentIndex() == 0) {
-		img = field->background()->openBackground(params, z, layers, nullptr, &bgWarning);
+		img = _field->background()->openBackground(&params, z, layers, nullptr, &bgWarning);
 	} else {
 		bool layers[4] = { false, true, false, false };
-		img = field->background()->openBackground(params, z, layers, &sections, &bgWarning);
+		img = _field->background()->openBackground(&params, z, layers, &sections, &bgWarning);
 	}
 
 	if (img.isNull()) {
@@ -405,15 +441,13 @@ bool BGDialog::eventFilter(QObject *obj, QEvent *event)
 			} else if (wheelEvent->angleDelta().y() > 0) {
 				if (zoomFactor >= 4){
 					return false; // cap zoom in at 400%
-				} else {
-					zoomFactor += step;
 				}
+				zoomFactor += step;
 			} else if (wheelEvent->angleDelta().y() < 0) {
 				if (zoomFactor <= 0.25f){
 					return false; // cap zoom in at 25%
-				} else {
-					zoomFactor -= step;
 				}
+				zoomFactor -= step;
 			} else {
 				return false; // A delta of 0 should never happen
 			}
@@ -421,8 +455,6 @@ bool BGDialog::eventFilter(QObject *obj, QEvent *event)
 			updateBG();
 
 			return true;
-		} else {
-			return false;
 		}
 	}
 

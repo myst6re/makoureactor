@@ -69,6 +69,7 @@ Window::Window() :
 	QWidget *toolBarRight = new QWidget();
 
 	_tabBar = new QTabBar();
+	_tabBar->setDrawBase(false);
 	_tabBar->addTab(tr("Field Scripts"));
 	_tabBar->addTab(QIcon::fromTheme(QStringLiteral("archive-generic")), tr("Archive Manager"));
 

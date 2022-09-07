@@ -131,6 +131,37 @@
         <source>Z:</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Viewer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Editor</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>BackgroundEditor</name>
+    <message>
+        <source>Layer %1</source>
+        <translation type="unfinished">レイヤー %1</translation>
+    </message>
+    <message>
+        <source>Section %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Width (in tile unit):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height (in tile unit):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Z:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CLI</name>

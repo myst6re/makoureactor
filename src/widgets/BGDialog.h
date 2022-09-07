@@ -19,6 +19,7 @@
 
 #include <QtWidgets>
 #include "ApercuBGLabel.h"
+#include "BackgroundEditor.h"
 
 class Field;
 
@@ -47,8 +48,11 @@ private:
 	QImage background(bool *bgWarning = nullptr);
 	void fillWidgets();
 
-	Field *field;
+	Field *_field;
 	ApercuBGLabel *image;
+	QTabWidget *tabWidget;
+	QWidget *viewerPage;
+	BackgroundEditor *editorPage;
 	QComboBox *parametersWidget;
 	QListWidget *statesWidget, *layersWidget, *sectionsWidget;
 	QSpinBox *zWidget;
