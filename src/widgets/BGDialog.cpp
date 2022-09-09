@@ -213,7 +213,7 @@ void BGDialog::fillWidgets()
 		z[1] = -1;
 		_field->scriptsAndTexts()->bgParamAndBgMove(params, z, x, y);
 
-		editorPage->setSections(sections);
+		editorPage->setSections(usedIDsList);
 		editorPage->setBackgroundFile(_field->background());
 	}
 }
@@ -361,7 +361,7 @@ void BGDialog::saveImage()
 
 	background().save(path);
 
-	int index = path.lastIndexOf('/');
+	qsizetype index = path.lastIndexOf('/');
 	Config::setValue("saveBGPath", index == -1 ? path : path.left(index));
 }
 

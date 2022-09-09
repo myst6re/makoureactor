@@ -58,25 +58,15 @@ BackgroundEditor::BackgroundEditor(QWidget *parent)
 	connect(_zSpinBox, &QSpinBox::valueChanged, this, &BackgroundEditor::updateZ);
 }
 
-void BackgroundEditor::setSections(const QSet<quint16> &sections)
+void BackgroundEditor::setSections(const QList<quint16> &sections)
 {
 	_sectionsList->clear();
-	QMap<quint16, bool> sectionSorted;
-	for (quint16 id: qAsConst(sections)) {
-		sectionSorted.insert(id == 0 ? 10000 : -id, true);
-	}
+	int i = 0;
 
-	QMap<quint16, bool>::key_iterator it = sectionSorted.keyBegin(),
-	    end = sectionSorted.keyEnd();
-	while (it != end) {
-		quint16 id = -(*it);
-		if (id == 10000) {
-			id = 0;
-		}
-		QListWidgetItem *item = new QListWidgetItem(tr("Section %1").arg(id));
+	for (quint16 id: sections) {
+		QListWidgetItem *item = new QListWidgetItem(tr("Section %1").arg(i++));
 		item->setData(Qt::UserRole, id);
 		_sectionsList->addItem(item);
-		++it;
 	}
 }
 
@@ -146,7 +136,7 @@ void BackgroundEditor::updateImageLabel(int layer, int section)
 	QSet<quint16> sections;
 	_zSpinBox->blockSignals(true);
 	if (section >= 0) {
-		sections.insert(section);
+		sections.insert(quint16(section));
 		if (_zSpinBox->value() != section) {
 			_zSpinBox->setValue(section);
 			_zSpinBox->setEnabled(true);
@@ -162,9 +152,10 @@ void BackgroundEditor::updateImageLabel(int layer, int section)
 	QImage background = _backgroundFile->openBackground(nullptr, z, layers, sections.isEmpty() ? nullptr : &sections);
 	_editBGLabel->setPixmap(QPixmap::fromImage(background));
 
-	QSize size = _backgroundFile->tiles().area();
-	_tileCountWidthSpinBox->setValue(size.width());
-	_tileCountHeightSpinBox->setValue(size.height());
+	QSize size = _backgroundFile->tiles().filter(nullptr, z, layers, sections.isEmpty() ? nullptr : &sections).area();
+	quint8 tileSize = layer > 1 ? 32 : 16;
+	_tileCountWidthSpinBox->setValue(size.width() / tileSize);
+	_tileCountHeightSpinBox->setValue(size.height() / tileSize);
 }
 
 void BackgroundEditor::updateZ(int z)
@@ -179,8 +170,7 @@ void BackgroundEditor::updateZ(int z)
 	if (section >= 0) {
 		_backgroundFile->setZLayer1(quint16(section), quint16(z));
 		item->setData(Qt::UserRole, z);
-		item->setText(tr("Section %1").arg(z));
-		updateImageLabel(1, section);
+		updateImageLabel(1, z);
 		emit modified();
 	}
 }

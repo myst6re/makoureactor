@@ -27,7 +27,7 @@ class BackgroundEditor : public QWidget
 	Q_OBJECT
 public:
 	explicit BackgroundEditor(QWidget *parent = nullptr);
-	void setSections(const QSet<quint16> &sections);
+	void setSections(const QList<quint16> &sections);
 	void setBackgroundFile(BackgroundFile *backgroundFile);
 	void clear();
 signals:
