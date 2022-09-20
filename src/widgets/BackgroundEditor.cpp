@@ -34,7 +34,9 @@ BackgroundEditor::BackgroundEditor(QWidget *parent)
 	_tileCountHeightSpinBox->setRange(-MAX_TILE_DST, MAX_TILE_DST);
 	_zSpinBox = new QSpinBox(this);
 	_zSpinBox->setRange(0, 4096);
-	_editBGLabel = new EditBGLabel(this);
+	_backgroundLayerWidget = new ImageGridWidget(this);
+	_tileWidget = new ImageGridWidget(this);
+	_tileWidget->setCellSize(1);
 
 	QHBoxLayout *layerEditorLayout = new QHBoxLayout();
 	layerEditorLayout->addWidget(new QLabel(tr("Width (in tile unit):"), this));
@@ -48,14 +50,17 @@ BackgroundEditor::BackgroundEditor(QWidget *parent)
 	layout->addWidget(_layersComboBox, 0, 0);
 	layout->addWidget(_sectionsList, 1, 0);
 	layout->addLayout(layerEditorLayout, 0, 1);
-	layout->addWidget(_editBGLabel, 1, 1);
+	layout->addWidget(_backgroundLayerWidget, 1, 1);
+	layout->addWidget(_tileWidget, 0, 2, 2, 1);
 	layout->setColumnStretch(0, 1);
 	layout->setColumnStretch(1, 2);
+	layout->setColumnStretch(2, 1);
 	layout->setRowStretch(1, 2);
 
 	connect(_layersComboBox, &QComboBox::currentIndexChanged, this, &BackgroundEditor::updateCurrentLayer);
 	connect(_sectionsList, &QListWidget::currentItemChanged, this, &BackgroundEditor::updateCurrentSection);
 	connect(_zSpinBox, &QSpinBox::valueChanged, this, &BackgroundEditor::updateZ);
+	connect(_backgroundLayerWidget, &ImageGridWidget::currentCellChanged, this, &BackgroundEditor::updateCurrentTile);
 }
 
 void BackgroundEditor::setSections(const QList<quint16> &sections)
@@ -150,10 +155,11 @@ void BackgroundEditor::updateImageLabel(int layer, int section)
 	_zSpinBox->blockSignals(false);
 
 	QImage background = _backgroundFile->openBackground(nullptr, z, layers, sections.isEmpty() ? nullptr : &sections);
-	_editBGLabel->setPixmap(QPixmap::fromImage(background));
+	_backgroundLayerWidget->setPixmap(QPixmap::fromImage(background));
 
 	QSize size = _backgroundFile->tiles().filter(nullptr, z, layers, sections.isEmpty() ? nullptr : &sections).area();
 	quint8 tileSize = layer > 1 ? 32 : 16;
+	_backgroundLayerWidget->setCellSize(tileSize);
 	_tileCountWidthSpinBox->setValue(size.width() / tileSize);
 	_tileCountHeightSpinBox->setValue(size.height() / tileSize);
 }
@@ -173,4 +179,9 @@ void BackgroundEditor::updateZ(int z)
 		updateImageLabel(1, z);
 		emit modified();
 	}
+}
+
+void BackgroundEditor::updateCurrentTile(const QPoint &point)
+{
+	_tileWidget->setPixmap(_backgroundLayerWidget->cellPixmap(point));
 }
