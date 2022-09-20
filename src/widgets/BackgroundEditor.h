@@ -19,6 +19,7 @@
 
 #include <QtWidgets>
 #include "EditBGLabel.h"
+#include "ImageGridWidget.h"
 
 class BackgroundFile;
 
@@ -36,6 +37,7 @@ private slots:
 	void updateCurrentLayer(int layer);
 	void updateCurrentSection(QListWidgetItem *current, QListWidgetItem *previous);
 	void updateZ(int z);
+	void updateCurrentTile(const QPoint &point);
 private:
 	int currentSection() const;
 	void updateCurrentSection2(int section);
@@ -45,6 +47,7 @@ private:
 	QListWidget *_sectionsList;
 	QSpinBox *_tileCountWidthSpinBox, *_tileCountHeightSpinBox, *_zSpinBox;
 	EditBGLabel *_editBGLabel;
+	ImageGridWidget *_backgroundLayerWidget, *_tileWidget;
 
 	BackgroundFile *_backgroundFile;
 };
