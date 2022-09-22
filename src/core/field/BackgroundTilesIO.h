@@ -31,17 +31,17 @@ struct TilePC {
 	quint8 srcY, unused3;
 	quint8 srcX2, unused4;
 	quint8 srcY2, unused5;
-	quint16 width, height;//Normaly unused
+	quint16 width, height; // Normaly unused
 	quint8 paletteID, unused6;
 	quint16 ID;
 	quint8 param;
 	quint8 state;
-	quint8 blending;
+	quint8 blending; // boolean
 	quint8 unused7;
 	quint8 typeTrans, unused8;
 	quint8 textureID, unused9;
-	quint8 textureID2, unused10;
-	quint8 depth, unused11;//Normaly unused
+	quint8 textureID2, unused10; // if blending > 0, textureID2 is used instead of textureID except for layer 0
+	quint8 depth, unused11; // Normaly unused
 	quint32 IDBig;
 };
 

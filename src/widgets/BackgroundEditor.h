@@ -48,6 +48,10 @@ private:
 	QSpinBox *_tileCountWidthSpinBox, *_tileCountHeightSpinBox, *_zSpinBox;
 	EditBGLabel *_editBGLabel;
 	ImageGridWidget *_backgroundLayerWidget, *_tileWidget;
+	QGroupBox *_bgParamGroup;
+	QSpinBox *_bgParamInput, *_bgParamStateInput;
+	QComboBox *_blendTypeInput, *_depthInput;
+	QSpinBox *_paletteIdInput;
 
 	BackgroundFile *_backgroundFile;
 };

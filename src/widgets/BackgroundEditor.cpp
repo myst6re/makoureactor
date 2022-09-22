@@ -38,6 +38,43 @@ BackgroundEditor::BackgroundEditor(QWidget *parent)
 	_tileWidget = new ImageGridWidget(this);
 	_tileWidget->setCellSize(1);
 
+	_bgParamGroup = new QGroupBox(tr("Parameter"), this);
+	_bgParamGroup->setCheckable(true);
+	
+	_bgParamInput = new QSpinBox(_bgParamGroup);
+	_bgParamInput->setRange(0, 255);
+	_bgParamStateInput = new QSpinBox(_bgParamGroup);
+	_bgParamStateInput->setRange(0, 255);
+
+	QFormLayout *tileParameterEditorLayout = new QFormLayout(_bgParamGroup);
+	tileParameterEditorLayout->addRow(tr("Param ID"), _bgParamInput);
+	tileParameterEditorLayout->addRow(tr("State ID"), _bgParamStateInput);
+	
+	_blendTypeInput = new QComboBox(this);
+	_blendTypeInput->addItem(tr("None"));
+	_blendTypeInput->addItem(tr("Average"));
+	_blendTypeInput->addItem(tr("Plus"));
+	_blendTypeInput->addItem(tr("Minus"));
+	_blendTypeInput->addItem(tr("Source +25% destination"));
+	
+	_depthInput = new QComboBox(this);
+	_depthInput->addItem(tr("Paletted 4-bit"));
+	_depthInput->addItem(tr("Paletted 8-bit"));
+	_depthInput->addItem(tr("Direct color 16-bit"));
+	
+	_paletteIdInput = new QSpinBox(this);
+	_paletteIdInput->setRange(0, 255);
+	
+	QFormLayout *tileEditorLayout = new QFormLayout();
+	tileEditorLayout->addRow(tr("Blend type"), _blendTypeInput);
+	tileEditorLayout->addRow(tr("Depth"), _depthInput);
+	tileEditorLayout->addRow(tr("Palette ID"), _paletteIdInput);
+	
+	QVBoxLayout *rightPaneLayout = new QVBoxLayout();
+	rightPaneLayout->addWidget(_tileWidget);
+	rightPaneLayout->addLayout(tileEditorLayout);
+	rightPaneLayout->addWidget(_bgParamGroup);
+
 	QHBoxLayout *layerEditorLayout = new QHBoxLayout();
 	layerEditorLayout->addWidget(new QLabel(tr("Width (in tile unit):"), this));
 	layerEditorLayout->addWidget(_tileCountWidthSpinBox);
@@ -51,7 +88,7 @@ BackgroundEditor::BackgroundEditor(QWidget *parent)
 	layout->addWidget(_sectionsList, 1, 0);
 	layout->addLayout(layerEditorLayout, 0, 1);
 	layout->addWidget(_backgroundLayerWidget, 1, 1);
-	layout->addWidget(_tileWidget, 0, 2, 2, 1);
+	layout->addLayout(rightPaneLayout, 0, 2, 2, 1);
 	layout->setColumnStretch(0, 1);
 	layout->setColumnStretch(1, 2);
 	layout->setColumnStretch(2, 1);

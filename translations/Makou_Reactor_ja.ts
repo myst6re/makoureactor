@@ -162,6 +162,62 @@
         <source>Z:</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Parameter</source>
+        <translation type="unfinished">パラメータ</translation>
+    </message>
+    <message>
+        <source>Param ID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>State ID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation type="unfinished">なし</translation>
+    </message>
+    <message>
+        <source>Average</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Plus</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minus</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Source +25% destination</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Paletted 4-bit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Paletted 8-bit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Direct color 16-bit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Blend type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Depth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Palette ID</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CLI</name>
