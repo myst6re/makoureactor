@@ -52,6 +52,7 @@ public:
 	          int &width, int &height) const;
 	QSize area() const;
 	Tile search(quint8 textureID1, quint8 textureID2, quint8 srcX, quint8 srcY) const;
+	Tile search(quint8 layerID, qint16 dstX, qint16 dstY, quint16 ID = 0) const;
 	void setZLayer1(quint16 oldZ, quint16 newZ);
 };
 

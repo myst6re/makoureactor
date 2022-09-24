@@ -227,6 +227,22 @@ Tile BackgroundTiles::search(quint8 textureID1, quint8 textureID2,
 	return nullTile;
 }
 
+Tile BackgroundTiles::search(quint8 layerID, qint16 dstX, qint16 dstY, quint16 ID) const
+{
+	for (const Tile &tile : *this) {
+		if (tile.layerID == layerID &&
+		        ((layerID == 1 && tile.ID == ID) || layerID != 1) &&
+		        tile.dstX == dstX &&
+		        tile.dstY == dstY) {
+			return tile;
+		}
+	}
+
+	Tile nullTile = Tile();
+	nullTile.tileID = quint16(-1);
+	return nullTile;
+}
+
 void BackgroundTiles::setZLayer1(quint16 oldZ, quint16 newZ)
 {
 	if (oldZ == newZ) {

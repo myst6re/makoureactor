@@ -18,9 +18,10 @@
 #include "ImageGridWidget.h"
 
 ImageGridWidget::ImageGridWidget(QWidget *parent)
-    : QWidget(parent), _scaledRatio(0.0), _cellSize(0)
+    : QFrame(parent), _currentCell(-1, -1), _hoverCell(-1, -1), _scaledRatio(0.0), _cellSize(0)
 {
 	setMouseTracking(true);
+	setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
 }
 
 void ImageGridWidget::setPixmap(const QPixmap &pixmap)
@@ -37,12 +38,15 @@ void ImageGridWidget::setCellSize(int size)
 	update();
 }
 
-QPixmap ImageGridWidget::cellPixmap(const QPoint &point) const
+QPixmap ImageGridWidget::cellPixmap(const Cell &point) const
 {
+	if (point == Cell(-1, -1)) {
+		return QPixmap();
+	}
 	return _pixmap.copy(QRect(point * _cellSize, QSize(_cellSize, _cellSize)));
 }
 
-void ImageGridWidget::setCurrentCell(const QPoint &point)
+void ImageGridWidget::setCurrentCell(const Cell &point)
 {
 	if (_currentCell != point) {
 		_currentCell = point;
@@ -61,18 +65,24 @@ void ImageGridWidget::updateScaledPixmapSize()
 	_scaledPixmapPoint = QPoint((width() - _scaledPixmapSize.width()) / 2, (height() - _scaledPixmapSize.height()) / 2);
 }
 
-QPoint ImageGridWidget::scaledPoint(const QPoint &point) const
+QPoint ImageGridWidget::scaledPoint(const Cell &point) const
 {
 	return _scaledRatio * point;
 }
 
-QPoint ImageGridWidget::getCell(const QPoint &pos) const
+Cell ImageGridWidget::getCell(const QPoint &pos) const
 {
-	if (_cellSize == 0 || _scaledRatio == 0) {
-		return QPoint();
+	if (_cellSize == 0 || _scaledRatio == 0.0) {
+		return Cell(-1, -1);
 	}
-	QPointF res = QPointF(pos - _scaledPixmapPoint) / (_scaledRatio * _cellSize);
-	return QPoint(qFloor(res.x()), qFloor(res.y()));
+	QPointF cell = QPointF(pos - _scaledPixmapPoint) / (_scaledRatio * _cellSize);
+	Cell ret(qFloor(cell.x()), qFloor(cell.y()));
+	return cellIsInRange(ret) ? ret : Cell(-1, -1);
+}
+
+bool ImageGridWidget::cellIsInRange(const Cell &point) const
+{
+	return _pixmap.rect().contains(point * _cellSize);
 }
 
 void ImageGridWidget::updateGrid()
@@ -98,8 +108,6 @@ void ImageGridWidget::updateGrid()
 
 void ImageGridWidget::paintEvent(QPaintEvent *event)
 {
-	Q_UNUSED(event)
-
 	QPainter p(this);
 
 	if (isEnabled()) {
@@ -107,13 +115,13 @@ void ImageGridWidget::paintEvent(QPaintEvent *event)
 		p.drawRect(0, 0, width(), height());
 	}
 
-	p.setPen(Qt::gray);
-
 	p.translate(_scaledPixmapPoint);
-	p.drawPixmap(QRect(QPoint(0, 0), _scaledPixmapSize), _pixmap);
-	p.drawLines(_gridLines);
 
 	if (isEnabled()) {
+		p.drawPixmap(QRect(QPoint(), _scaledPixmapSize), _pixmap);
+		p.setPen(Qt::gray);
+		p.drawLines(_gridLines);
+
 		QColor lightRed(0xff, 0x7f, 0x7f);
 
 		p.setPen(hasFocus() ? Qt::red : lightRed);
@@ -121,12 +129,18 @@ void ImageGridWidget::paintEvent(QPaintEvent *event)
 
 		p.setPen(lightRed);
 		drawSelection(p, _hoverCell);
+	} else {
+		QStyleOption opt;
+		opt.initFrom(this);
+		p.drawPixmap(QRect(QPoint(), _scaledPixmapSize), QWidget::style()->generatedIconPixmap(QIcon::Disabled, _pixmap, &opt));
 	}
+
+	QFrame::paintEvent(event);
 }
 
 void ImageGridWidget::drawSelection(QPainter &p, QPoint selection)
 {
-	if (selection.isNull()) {
+	if (selection == Cell(-1, -1)) {
 		return;
 	}
 
@@ -139,7 +153,7 @@ void ImageGridWidget::drawSelection(QPainter &p, QPoint selection)
 
 void ImageGridWidget::mouseMoveEvent(QMouseEvent *event)
 {
-	QPoint newCell = getCell(event->pos());
+	Cell newCell = getCell(event->pos());
 
 	if (newCell != _hoverCell) {
 		_hoverCell = newCell;
@@ -152,8 +166,10 @@ void ImageGridWidget::mouseMoveEvent(QMouseEvent *event)
 void ImageGridWidget::leaveEvent(QEvent *event)
 {
 	Q_UNUSED(event)
-	if (!_hoverCell.isNull()) {
-		_hoverCell = QPoint();
+	Cell newCell(-1, -1);
+
+	if (newCell != _hoverCell) {
+		_hoverCell = newCell;
 		update();
 	}
 }

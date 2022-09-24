@@ -37,7 +37,7 @@ private slots:
 	void updateCurrentLayer(int layer);
 	void updateCurrentSection(QListWidgetItem *current, QListWidgetItem *previous);
 	void updateZ(int z);
-	void updateCurrentTile(const QPoint &point);
+	void updateCurrentTile(const Cell &point);
 private:
 	int currentSection() const;
 	void updateCurrentSection2(int section);
@@ -54,4 +54,5 @@ private:
 	QSpinBox *_paletteIdInput;
 
 	BackgroundFile *_backgroundFile;
+	quint16 _currentOffsetX, _currentOffsetY;
 };

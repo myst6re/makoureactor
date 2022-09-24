@@ -19,7 +19,9 @@
 
 #include <QtWidgets>
 
-class ImageGridWidget : public QWidget
+typedef QPoint Cell;
+
+class ImageGridWidget : public QFrame
 {
 	Q_OBJECT
 public:
@@ -28,13 +30,19 @@ public:
 		return _pixmap;
 	}
 	void setPixmap(const QPixmap &pixmap);
+	inline int cellSize() const {
+		return _cellSize;
+	}
 	void setCellSize(int size);
-	QPixmap cellPixmap(const QPoint &point) const;
+	QPixmap cellPixmap(const Cell &point) const;
+	inline const Cell &currentCell() const {
+		return _currentCell;
+	}
 signals:
-	void currentCellChanged(const QPoint &point);
-	void highlighted(const QPoint &point);
+	void currentCellChanged(const Cell &point);
+	void highlighted(const Cell &point);
 public slots:
-	void setCurrentCell(const QPoint &point);
+	void setCurrentCell(const Cell &point);
 protected:
 	virtual void paintEvent(QPaintEvent *event) override;
 	virtual void mouseMoveEvent(QMouseEvent *event) override;
@@ -43,14 +51,15 @@ protected:
 	virtual void resizeEvent(QResizeEvent *event) override;
 private:
 	void drawSelection(QPainter &p, QPoint selection);
-	QPoint scaledPoint(const QPoint &point) const;
-	QPoint getCell(const QPoint &pos) const;
+	QPoint scaledPoint(const Cell &point) const;
+	Cell getCell(const QPoint &pos) const;
+	bool cellIsInRange(const Cell &point) const;
 	void updateGrid();
 	void updateScaledPixmapSize();
 
 	QPixmap _pixmap;
 	QList<QLine> _gridLines;
-	QPoint _currentCell, _hoverCell;
+	Cell _currentCell, _hoverCell;
 	QPoint _scaledPixmapPoint;
 	QSize _scaledPixmapSize;
 	double _scaledRatio;

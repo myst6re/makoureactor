@@ -28,6 +28,7 @@ BackgroundEditor::BackgroundEditor(QWidget *parent)
 	}
 	_sectionsList = new QListWidget(this);
 	_sectionsList->setUniformItemSizes(true);
+	_sectionsList->setFixedWidth(fontMetrics().horizontalAdvance("WWWWWWWWWWW"));
 	_tileCountWidthSpinBox = new QSpinBox(this);
 	_tileCountWidthSpinBox->setRange(-MAX_TILE_DST, MAX_TILE_DST);
 	_tileCountHeightSpinBox = new QSpinBox(this);
@@ -42,7 +43,7 @@ BackgroundEditor::BackgroundEditor(QWidget *parent)
 	_bgParamGroup->setCheckable(true);
 	
 	_bgParamInput = new QSpinBox(_bgParamGroup);
-	_bgParamInput->setRange(0, 255);
+	_bgParamInput->setRange(1, 255);
 	_bgParamStateInput = new QSpinBox(_bgParamGroup);
 	_bgParamStateInput->setRange(0, 255);
 
@@ -125,6 +126,7 @@ void BackgroundEditor::clear()
 	_sectionsList->blockSignals(true);
 	_sectionsList->clear();
 	_sectionsList->blockSignals(false);
+	_backgroundLayerWidget->setPixmap(QPixmap());
 }
 
 int BackgroundEditor::currentSection() const
@@ -199,6 +201,11 @@ void BackgroundEditor::updateImageLabel(int layer, int section)
 	_backgroundLayerWidget->setCellSize(tileSize);
 	_tileCountWidthSpinBox->setValue(size.width() / tileSize);
 	_tileCountHeightSpinBox->setValue(size.height() / tileSize);
+
+	int width, height;
+	_backgroundFile->tiles().area(_currentOffsetX, _currentOffsetY, width, height);
+
+	updateCurrentTile(_backgroundLayerWidget->currentCell());
 }
 
 void BackgroundEditor::updateZ(int z)
@@ -218,7 +225,44 @@ void BackgroundEditor::updateZ(int z)
 	}
 }
 
-void BackgroundEditor::updateCurrentTile(const QPoint &point)
+void BackgroundEditor::updateCurrentTile(const Cell &point)
 {
+	if (_backgroundFile == nullptr) {
+		return;
+	}
+
+	bool enabled = point != Cell(-1, -1);
+	Tile tile = Tile();
+
+	qDebug() << "updateCurrentTile" << point;
+	
+	if (enabled) {
+		int cellSize = _backgroundLayerWidget->cellSize();
+		tile = _backgroundFile->tiles().search(
+					quint8(_layersComboBox->currentIndex()),
+					qint16(point.x() * cellSize - _currentOffsetX),
+					qint16(point.y() * cellSize - _currentOffsetY),
+					quint16(_zSpinBox->value()));
+		enabled = tile.tileID != quint16(-1);
+	}
+
 	_tileWidget->setPixmap(_backgroundLayerWidget->cellPixmap(point));
+
+	_bgParamGroup->setChecked(tile.param > 0);
+	_bgParamInput->setValue(tile.param);
+	_bgParamStateInput->setValue(tile.state);
+	_depthInput->setCurrentIndex(tile.depth);
+	_paletteIdInput->setValue(tile.paletteID);
+
+	if (tile.blending) {
+		_blendTypeInput->setCurrentIndex(tile.typeTrans + 1);
+	} else {
+		_blendTypeInput->setCurrentIndex(0);
+	}
+
+	_tileWidget->setEnabled(enabled);
+	_depthInput->setEnabled(enabled);
+	_paletteIdInput->setEnabled(enabled);
+	_blendTypeInput->setEnabled(enabled);
+	_bgParamGroup->setEnabled(enabled);
 }
