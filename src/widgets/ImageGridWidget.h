@@ -49,6 +49,8 @@ protected:
 	virtual void leaveEvent(QEvent *event) override;
 	virtual void mouseReleaseEvent(QMouseEvent *event) override;
 	virtual void resizeEvent(QResizeEvent *event) override;
+	virtual QSize minimumSizeHint() const override;
+	virtual QSize sizeHint() const override;
 private:
 	void drawSelection(QPainter &p, QPoint selection);
 	QPoint scaledPoint(const Cell &point) const;

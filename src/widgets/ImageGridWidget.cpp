@@ -186,3 +186,13 @@ void ImageGridWidget::resizeEvent(QResizeEvent *event)
 	updateGrid();
 	QWidget::resizeEvent(event);
 }
+
+QSize ImageGridWidget::minimumSizeHint() const
+{
+	return _pixmap.isNull() ? QFrame::minimumSizeHint() : _pixmap.size() / _cellSize * 4;
+}
+
+QSize ImageGridWidget::sizeHint() const
+{
+	return _pixmap.isNull() ? QFrame::sizeHint() : _pixmap.size();
+}
