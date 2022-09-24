@@ -38,6 +38,11 @@ BackgroundEditor::BackgroundEditor(QWidget *parent)
 	_backgroundLayerWidget = new ImageGridWidget(this);
 	_tileWidget = new ImageGridWidget(this);
 	_tileWidget->setCellSize(1);
+	_tileWidget->setFixedHeight(32 * 4);
+
+	_texturesWidget = new ImageGridWidget(this);
+	_texturesWidget->setCellSize(16);
+	_texturesWidget->setSelectable(false);
 
 	_bgParamGroup = new QGroupBox(tr("Parameter"), this);
 	_bgParamGroup->setCheckable(true);
@@ -90,6 +95,7 @@ BackgroundEditor::BackgroundEditor(QWidget *parent)
 	layout->addLayout(layerEditorLayout, 0, 1);
 	layout->addWidget(_backgroundLayerWidget, 1, 1);
 	layout->addLayout(rightPaneLayout, 0, 2, 2, 1);
+	layout->addWidget(_texturesWidget, 2, 0, 1, 3);
 	layout->setColumnStretch(0, 1);
 	layout->setColumnStretch(1, 2);
 	layout->setColumnStretch(2, 1);
@@ -118,6 +124,14 @@ void BackgroundEditor::setBackgroundFile(BackgroundFile *backgroundFile)
 	_backgroundFile = backgroundFile;
 
 	updateCurrentLayer(_layersComboBox->currentIndex());
+
+	QPixmap pix;
+
+	if (_backgroundFile != nullptr) {
+		pix = QPixmap::fromImage(_backgroundFile->textures()->toImage(_backgroundFile->tiles(), _backgroundFile->palettes()));
+	}
+
+	_texturesWidget->setPixmap(pix);
 }
 
 void BackgroundEditor::clear()
@@ -265,4 +279,7 @@ void BackgroundEditor::updateCurrentTile(const Cell &point)
 	_paletteIdInput->setEnabled(enabled);
 	_blendTypeInput->setEnabled(enabled);
 	_bgParamGroup->setEnabled(enabled);
+
+	quint8 textureID = tile.textureID2 ? tile.textureID2 : tile.textureID;
+	_texturesWidget->setCurrentCell(Cell(((textureID % 15) * 256 + tile.srcX) / 16, ((textureID / 15) * 256 + tile.srcY) / 16));
 }

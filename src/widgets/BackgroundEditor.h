@@ -53,6 +53,8 @@ private:
 	QComboBox *_blendTypeInput, *_depthInput;
 	QSpinBox *_paletteIdInput;
 
+	ImageGridWidget *_texturesWidget;
+
 	BackgroundFile *_backgroundFile;
 	quint16 _currentOffsetX, _currentOffsetY;
 };

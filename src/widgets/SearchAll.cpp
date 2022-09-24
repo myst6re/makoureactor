@@ -78,7 +78,7 @@ void SearchAll::setFieldArchive(FieldArchive *fieldArchive)
 {
 	_fieldArchive = fieldArchive;
 	setEnabled(fieldArchive);
-	if(!fieldArchive) {
+	if (fieldArchive == nullptr) {
 		clear();
 	}
 }

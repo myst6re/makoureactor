@@ -38,6 +38,10 @@ public:
 	inline const Cell &currentCell() const {
 		return _currentCell;
 	}
+	inline bool isSelectable() const {
+		return _isSelectable;
+	}
+	void setSelectable(bool selectable);
 signals:
 	void currentCellChanged(const Cell &point);
 	void highlighted(const Cell &point);
@@ -58,6 +62,7 @@ private:
 	bool cellIsInRange(const Cell &point) const;
 	void updateGrid();
 	void updateScaledPixmapSize();
+	void clearHover();
 
 	QPixmap _pixmap;
 	QList<QLine> _gridLines;
@@ -66,5 +71,6 @@ private:
 	QSize _scaledPixmapSize;
 	double _scaledRatio;
 	int _cellSize;
+	bool _isSelectable;
 };
 

@@ -95,7 +95,7 @@ QAction *ListWidget::addAction(ActionType type, const QString &overrideText, boo
 		break;
 	}
 
-	if(!overrideText.isEmpty()) {
+	if (!overrideText.isEmpty()) {
 		text = overrideText;
 	}
 

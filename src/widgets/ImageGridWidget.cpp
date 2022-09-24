@@ -18,9 +18,10 @@
 #include "ImageGridWidget.h"
 
 ImageGridWidget::ImageGridWidget(QWidget *parent)
-    : QFrame(parent), _currentCell(-1, -1), _hoverCell(-1, -1), _scaledRatio(0.0), _cellSize(0)
+    : QFrame(parent), _currentCell(-1, -1), _hoverCell(-1, -1), _scaledRatio(0.0), _cellSize(0),
+      _isSelectable(true)
 {
-	setMouseTracking(true);
+	setMouseTracking(_isSelectable);
 	setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
 }
 
@@ -28,6 +29,7 @@ void ImageGridWidget::setPixmap(const QPixmap &pixmap)
 {
 	_pixmap = pixmap;
 	updateScaledPixmapSize();
+	updateGrid();
 	update();
 }
 
@@ -44,6 +46,13 @@ QPixmap ImageGridWidget::cellPixmap(const Cell &point) const
 		return QPixmap();
 	}
 	return _pixmap.copy(QRect(point * _cellSize, QSize(_cellSize, _cellSize)));
+}
+
+void ImageGridWidget::setSelectable(bool selectable)
+{
+	_isSelectable = selectable;
+	setMouseTracking(_isSelectable);
+	clearHover();
 }
 
 void ImageGridWidget::setCurrentCell(const Cell &point)
@@ -63,6 +72,16 @@ void ImageGridWidget::updateScaledPixmapSize()
 	_scaledRatio = _pixmap.width() == 0 ? 0.0 : _scaledPixmapSize.width() / double(_pixmap.width());
 
 	_scaledPixmapPoint = QPoint((width() - _scaledPixmapSize.width()) / 2, (height() - _scaledPixmapSize.height()) / 2);
+}
+
+void ImageGridWidget::clearHover()
+{
+	Cell newCell(-1, -1);
+
+	if (newCell != _hoverCell) {
+		_hoverCell = newCell;
+		update();
+	}
 }
 
 QPoint ImageGridWidget::scaledPoint(const Cell &point) const
@@ -153,6 +172,10 @@ void ImageGridWidget::drawSelection(QPainter &p, QPoint selection)
 
 void ImageGridWidget::mouseMoveEvent(QMouseEvent *event)
 {
+	if (!_isSelectable) {
+		return;
+	}
+
 	Cell newCell = getCell(event->pos());
 
 	if (newCell != _hoverCell) {
@@ -166,16 +189,20 @@ void ImageGridWidget::mouseMoveEvent(QMouseEvent *event)
 void ImageGridWidget::leaveEvent(QEvent *event)
 {
 	Q_UNUSED(event)
-	Cell newCell(-1, -1);
 
-	if (newCell != _hoverCell) {
-		_hoverCell = newCell;
-		update();
+	if (!_isSelectable) {
+		return;
 	}
+
+	clearHover();
 }
 
 void ImageGridWidget::mouseReleaseEvent(QMouseEvent *event)
 {
+	if (!_isSelectable) {
+		return;
+	}
+
 	setCurrentCell(getCell(event->pos()));
 	setFocus();
 }

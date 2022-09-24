@@ -90,7 +90,7 @@ QImage BackgroundFile::backgroundPart(quint16 ID, bool *warning)
 
 QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles, bool *warning) const
 {
-	if (tiles.isEmpty() || !_textures) {
+	if (tiles.isEmpty() || _textures == nullptr) {
 		if (warning) {
 			*warning = false;
 		}

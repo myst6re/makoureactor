@@ -23,7 +23,7 @@
 #include "BackgroundTiles.h"
 #include "Palette.h"
 
-#define BACKGROUND_TEXTURE_PC_MAX_COUNT	42
+#define BACKGROUND_TEXTURE_PC_MAX_COUNT 42
 
 struct BackgroundTexturesPCInfos
 {
@@ -42,7 +42,7 @@ struct BackgroundConversionTexture
 {
 	BackgroundConversionTexture() : tile(Tile()) {}
 	BackgroundConversionTexture(const QVector<uint> &data, const Tile &tile) :
-		data(data), tile(tile) {}
+	    data(data), tile(tile) {}
 	QVector<uint> data;
 	Tile tile;
 };
@@ -65,6 +65,7 @@ public:
 	virtual inline quint8 depth(const Tile &tile) const {
 		return tile.depth;
 	}
+	virtual QImage toImage(const BackgroundTiles &tiles, const Palettes &palettes) const=0;
 protected:
 	virtual quint16 textureWidth(const Tile &tile) const=0;
 	virtual int originInData(const Tile &tile) const=0;
@@ -92,11 +93,12 @@ public:
 	void setTexInfos(const QHash<quint8, BackgroundTexturesPCInfos> &texInfos);
 	QList<uint> tex(quint8 texID) const;
 	void setTex(quint8 texID, const QList<uint> &indexOrRgbList, const BackgroundTexturesPCInfos &infos);
+	QImage toImage(const BackgroundTiles &tiles, const Palettes &palettes) const override;
 	QImage toImage(quint8 texID) const;
 	QImage toImage(quint8 texID, const BackgroundTiles &tiles, const Palettes &palettes) const;
 	BackgroundTexturesPS toPS(const BackgroundTiles &pcTiles,
-							  BackgroundTiles &psTiles,
-							  const PalettesPS &palettesPS) const;
+	                          BackgroundTiles &psTiles,
+	                          const PalettesPS &palettesPS) const;
 protected:
 	quint16 textureWidth(const Tile &tile) const override;
 	quint8 depth(const Tile &tile) const override;
@@ -115,9 +117,10 @@ public:
 	void setHeaderEffect(const MIM &headerEffect);
 	QList<uint> tex(quint8 x, quint8 y, quint8 depth) const;
 	TimFile tim(quint8 pageID, quint8 depth) const;
+	QImage toImage(const BackgroundTiles &tiles, const Palettes &palettes) const override;
 	BackgroundTexturesPC toPC(const BackgroundTiles &psTiles,
-							  BackgroundTiles &pcTiles,
-							  const PalettesPC &palettesPC) const;
+	                          BackgroundTiles &pcTiles,
+	                          const PalettesPC &palettesPC) const;
 protected:
 	quint16 textureWidth(const Tile &tile) const override;
 	int originInData(const Tile &tile) const override;
