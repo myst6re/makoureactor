@@ -36,13 +36,24 @@ BackgroundEditor::BackgroundEditor(QWidget *parent)
 	_zSpinBox = new QSpinBox(this);
 	_zSpinBox->setRange(0, 4096);
 	_backgroundLayerWidget = new ImageGridWidget(this);
+	_backgroundLayerWidget->setSelectionMode(ImageGridWidget::MultiSelection);
+	QScrollArea *backgroundLayerScrollArea = new QScrollArea(this);
+	backgroundLayerScrollArea->setWidget(_backgroundLayerWidget);
+	backgroundLayerScrollArea->setWidgetResizable(true);
+	backgroundLayerScrollArea->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 	_tileWidget = new ImageGridWidget(this);
 	_tileWidget->setCellSize(1);
 	_tileWidget->setFixedHeight(32 * 4);
 
 	_texturesWidget = new ImageGridWidget(this);
 	_texturesWidget->setCellSize(16);
-	_texturesWidget->setSelectable(false);
+	_texturesWidget->setSelectionMode(ImageGridWidget::NoSelection);
+	QScrollArea *texturesScrollArea = new QScrollArea(this);
+	texturesScrollArea->setWidget(_texturesWidget);
+	texturesScrollArea->setWidgetResizable(true);
+	texturesScrollArea->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+
+	_currentTileComboBox = new QComboBox(this);
 
 	_bgParamGroup = new QGroupBox(tr("Parameter"), this);
 	_bgParamGroup->setCheckable(true);
@@ -55,31 +66,33 @@ BackgroundEditor::BackgroundEditor(QWidget *parent)
 	QFormLayout *tileParameterEditorLayout = new QFormLayout(_bgParamGroup);
 	tileParameterEditorLayout->addRow(tr("Param ID"), _bgParamInput);
 	tileParameterEditorLayout->addRow(tr("State ID"), _bgParamStateInput);
-	
+
 	_blendTypeInput = new QComboBox(this);
 	_blendTypeInput->addItem(tr("None"));
 	_blendTypeInput->addItem(tr("Average"));
 	_blendTypeInput->addItem(tr("Plus"));
 	_blendTypeInput->addItem(tr("Minus"));
 	_blendTypeInput->addItem(tr("Source +25% destination"));
-	
+
 	_depthInput = new QComboBox(this);
 	_depthInput->addItem(tr("Paletted 4-bit"));
 	_depthInput->addItem(tr("Paletted 8-bit"));
 	_depthInput->addItem(tr("Direct color 16-bit"));
-	
+
 	_paletteIdInput = new QSpinBox(this);
 	_paletteIdInput->setRange(0, 255);
-	
-	QFormLayout *tileEditorLayout = new QFormLayout();
-	tileEditorLayout->addRow(tr("Blend type"), _blendTypeInput);
-	tileEditorLayout->addRow(tr("Depth"), _depthInput);
-	tileEditorLayout->addRow(tr("Palette ID"), _paletteIdInput);
-	
-	QVBoxLayout *rightPaneLayout = new QVBoxLayout();
-	rightPaneLayout->addWidget(_tileWidget);
-	rightPaneLayout->addLayout(tileEditorLayout);
-	rightPaneLayout->addWidget(_bgParamGroup);
+
+	_tileEditorLayout = new QFormLayout();
+	_tileEditorLayout->addRow(tr("Blend type"), _blendTypeInput);
+	_tileEditorLayout->addRow(tr("Depth"), _depthInput);
+	_tileEditorLayout->addRow(tr("Palette ID"), _paletteIdInput);
+
+	_rightPaneLayout = new QVBoxLayout();
+	_rightPaneLayout->addWidget(_currentTileComboBox);
+	_rightPaneLayout->addWidget(_tileWidget);
+	_rightPaneLayout->addLayout(_tileEditorLayout);
+	_rightPaneLayout->addWidget(_bgParamGroup);
+	_rightPaneLayout->setContentsMargins(QMargins());
 
 	QHBoxLayout *layerEditorLayout = new QHBoxLayout();
 	layerEditorLayout->addWidget(new QLabel(tr("Width (in tile unit):"), this));
@@ -93,9 +106,9 @@ BackgroundEditor::BackgroundEditor(QWidget *parent)
 	layout->addWidget(_layersComboBox, 0, 0);
 	layout->addWidget(_sectionsList, 1, 0);
 	layout->addLayout(layerEditorLayout, 0, 1);
-	layout->addWidget(_backgroundLayerWidget, 1, 1);
-	layout->addLayout(rightPaneLayout, 0, 2, 2, 1);
-	layout->addWidget(_texturesWidget, 2, 0, 1, 3);
+	layout->addWidget(backgroundLayerScrollArea, 1, 1);
+	layout->addLayout(_rightPaneLayout, 0, 2, 2, 1);
+	layout->addWidget(texturesScrollArea, 2, 0, 1, 3);
 	layout->setColumnStretch(0, 1);
 	layout->setColumnStretch(1, 2);
 	layout->setColumnStretch(2, 1);
@@ -104,7 +117,8 @@ BackgroundEditor::BackgroundEditor(QWidget *parent)
 	connect(_layersComboBox, &QComboBox::currentIndexChanged, this, &BackgroundEditor::updateCurrentLayer);
 	connect(_sectionsList, &QListWidget::currentItemChanged, this, &BackgroundEditor::updateCurrentSection);
 	connect(_zSpinBox, &QSpinBox::valueChanged, this, &BackgroundEditor::updateZ);
-	connect(_backgroundLayerWidget, &ImageGridWidget::currentCellChanged, this, &BackgroundEditor::updateCurrentTile);
+	connect(_backgroundLayerWidget, &ImageGridWidget::currentSelectionChanged, this, &BackgroundEditor::updateSelectedTiles);
+	connect(_currentTileComboBox, &QComboBox::currentIndexChanged, this, &BackgroundEditor::updateSelectedTile);
 }
 
 void BackgroundEditor::setSections(const QList<quint16> &sections)
@@ -132,6 +146,7 @@ void BackgroundEditor::setBackgroundFile(BackgroundFile *backgroundFile)
 	}
 
 	_texturesWidget->setPixmap(pix);
+	_texturesWidget->setMinimumSize(pix.size());
 }
 
 void BackgroundEditor::clear()
@@ -209,6 +224,7 @@ void BackgroundEditor::updateImageLabel(int layer, int section)
 
 	QImage background = _backgroundFile->openBackground(nullptr, z, layers, sections.isEmpty() ? nullptr : &sections);
 	_backgroundLayerWidget->setPixmap(QPixmap::fromImage(background));
+	_backgroundLayerWidget->setMinimumSize(background.size());
 
 	QSize size = _backgroundFile->tiles().filter(nullptr, z, layers, sections.isEmpty() ? nullptr : &sections).area();
 	quint8 tileSize = layer > 1 ? 32 : 16;
@@ -219,7 +235,7 @@ void BackgroundEditor::updateImageLabel(int layer, int section)
 	int width, height;
 	_backgroundFile->tiles().area(_currentOffsetX, _currentOffsetY, width, height);
 
-	updateCurrentTile(_backgroundLayerWidget->currentCell());
+	updateSelectedTiles(_backgroundLayerWidget->selectedCells());
 }
 
 void BackgroundEditor::updateZ(int z)
@@ -239,28 +255,60 @@ void BackgroundEditor::updateZ(int z)
 	}
 }
 
-void BackgroundEditor::updateCurrentTile(const Cell &point)
+void BackgroundEditor::updateSelectedTiles(const QList<Cell> &cells)
 {
 	if (_backgroundFile == nullptr) {
 		return;
 	}
 
-	bool enabled = point != Cell(-1, -1);
-	Tile tile = Tile();
+	_currentTileComboBox->blockSignals(true);
+	_currentTileComboBox->clear();
+	_selectedTiles.clear();
 
-	qDebug() << "updateCurrentTile" << point;
-	
-	if (enabled) {
+	if (!cells.isEmpty()) {
 		int cellSize = _backgroundLayerWidget->cellSize();
-		tile = _backgroundFile->tiles().search(
-					quint8(_layersComboBox->currentIndex()),
-					qint16(point.x() * cellSize - _currentOffsetX),
-					qint16(point.y() * cellSize - _currentOffsetY),
-					quint16(_zSpinBox->value()));
-		enabled = tile.tileID != quint16(-1);
+		quint8 layerID = quint8(_layersComboBox->currentIndex());
+		quint16 ID = quint16(_zSpinBox->value());
+
+		for (const Tile &tile : _backgroundFile->tiles().tiles(layerID, ID)) {
+			for (const Cell &cell: cells) {
+				qint16 dstX = qint16(cell.x() * cellSize - _currentOffsetX),
+				        dstY = qint16(cell.y() * cellSize - _currentOffsetY);
+
+				if (tile.dstX == dstX &&
+				        tile.dstY == dstY) {
+					_currentTileComboBox->addItem(tr("Tile %1 (%2, %3) %4").arg(_selectedTiles.size()).arg(tile.srcX).arg(tile.srcY).arg(tile.param ? tr("Params %1 State %2").arg(tile.param).arg(tile.state) : "").trimmed());
+					_selectedTiles.append(tile);
+				}
+			}
+		}
 	}
 
-	_tileWidget->setPixmap(_backgroundLayerWidget->cellPixmap(point));
+	_currentTileComboBox->blockSignals(false);
+	_currentTileComboBox->setEnabled(_currentTileComboBox->count() > 1);
+	updateSelectedTile(_currentTileComboBox->count() >= 0 ? 0 : -1);
+}
+
+void BackgroundEditor::updateSelectedTile(int index)
+{
+	bool enableRightPane = index >= 0 && index < _selectedTiles.size();
+
+	_tileWidget->setEnabled(enableRightPane);
+	_bgParamGroup->setEnabled(enableRightPane);
+	_blendTypeInput->setEnabled(enableRightPane);
+	_tileEditorLayout->labelForField(_blendTypeInput)->setEnabled(enableRightPane);
+	_depthInput->setEnabled(enableRightPane);
+	_tileEditorLayout->labelForField(_depthInput)->setEnabled(enableRightPane);
+	_paletteIdInput->setEnabled(enableRightPane);
+	_tileEditorLayout->labelForField(_paletteIdInput)->setEnabled(enableRightPane);
+
+	if (!enableRightPane) {
+		return;
+	}
+
+	const Tile &tile = _selectedTiles.at(index);
+	QPixmap pix = QPixmap::fromImage(_backgroundFile->textures()->toImage(tile, _backgroundFile->palettes()));
+	_tileWidget->setPixmap(pix);
 
 	_bgParamGroup->setChecked(tile.param > 0);
 	_bgParamInput->setValue(tile.param);
@@ -268,18 +316,7 @@ void BackgroundEditor::updateCurrentTile(const Cell &point)
 	_depthInput->setCurrentIndex(tile.depth);
 	_paletteIdInput->setValue(tile.paletteID);
 
-	if (tile.blending) {
-		_blendTypeInput->setCurrentIndex(tile.typeTrans + 1);
-	} else {
-		_blendTypeInput->setCurrentIndex(0);
-	}
+	_blendTypeInput->setCurrentIndex(tile.blending ? tile.typeTrans + 1 : 0);
 
-	_tileWidget->setEnabled(enabled);
-	_depthInput->setEnabled(enabled);
-	_paletteIdInput->setEnabled(enabled);
-	_blendTypeInput->setEnabled(enabled);
-	_bgParamGroup->setEnabled(enabled);
-
-	quint8 textureID = tile.textureID2 ? tile.textureID2 : tile.textureID;
-	_texturesWidget->setCurrentCell(Cell(((textureID % 15) * 256 + tile.srcX) / 16, ((textureID / 15) * 256 + tile.srcY) / 16));
+	_texturesWidget->setSelectedCell(Cell(((tile.textureID % 15) * 256 + tile.srcX) / 16, ((tile.textureID / 15) * 256 + tile.srcY) / 16));
 }

@@ -18,11 +18,10 @@
 #include "ImageGridWidget.h"
 
 ImageGridWidget::ImageGridWidget(QWidget *parent)
-    : QFrame(parent), _currentCell(-1, -1), _hoverCell(-1, -1), _scaledRatio(0.0), _cellSize(0),
-      _isSelectable(true)
+    : QWidget(parent), _hoverCell(-1, -1), _scaledRatio(0.0),
+      _selectionMode(SingleSelection), _cellSize(0), _startMousePress(false)
 {
-	setMouseTracking(_isSelectable);
-	setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
+	setMouseTracking(_selectionMode != NoSelection);
 }
 
 void ImageGridWidget::setPixmap(const QPixmap &pixmap)
@@ -48,20 +47,20 @@ QPixmap ImageGridWidget::cellPixmap(const Cell &point) const
 	return _pixmap.copy(QRect(point * _cellSize, QSize(_cellSize, _cellSize)));
 }
 
-void ImageGridWidget::setSelectable(bool selectable)
+void ImageGridWidget::setSelectionMode(SelectionMode selectionMode)
 {
-	_isSelectable = selectable;
-	setMouseTracking(_isSelectable);
+	_selectionMode = selectionMode;
+	setMouseTracking(_selectionMode != NoSelection);
 	clearHover();
 }
 
-void ImageGridWidget::setCurrentCell(const Cell &point)
+void ImageGridWidget::setSelectedCells(const QList<Cell> &cells)
 {
-	if (_currentCell != point) {
-		_currentCell = point;
+	if (_selectedCells != cells) {
+		_selectedCells = cells;
 		update();
 
-		emit currentCellChanged(point);
+		emit currentSelectionChanged(cells);
 	}
 }
 
@@ -144,7 +143,9 @@ void ImageGridWidget::paintEvent(QPaintEvent *event)
 		QColor lightRed(0xff, 0x7f, 0x7f);
 
 		p.setPen(hasFocus() ? Qt::red : lightRed);
-		drawSelection(p, _currentCell);
+		for (const Cell &cell: _selectedCells) {
+			drawSelection(p, cell);
+		}
 
 		p.setPen(lightRed);
 		drawSelection(p, _hoverCell);
@@ -154,7 +155,7 @@ void ImageGridWidget::paintEvent(QPaintEvent *event)
 		p.drawPixmap(QRect(QPoint(), _scaledPixmapSize), QWidget::style()->generatedIconPixmap(QIcon::Disabled, _pixmap, &opt));
 	}
 
-	QFrame::paintEvent(event);
+	QWidget::paintEvent(event);
 }
 
 void ImageGridWidget::drawSelection(QPainter &p, QPoint selection)
@@ -172,11 +173,20 @@ void ImageGridWidget::drawSelection(QPainter &p, QPoint selection)
 
 void ImageGridWidget::mouseMoveEvent(QMouseEvent *event)
 {
-	if (!_isSelectable) {
+	QWidget::mouseMoveEvent(event);
+
+	if (_selectionMode == NoSelection) {
 		return;
 	}
 
 	Cell newCell = getCell(event->pos());
+
+	if (_startMousePress) {
+		_selectedCells.append(newCell);
+		// Unique values
+		setSelectedCells(QSet<Cell>(_selectedCells.begin(), _selectedCells.end()).values());
+		return;
+	}
 
 	if (newCell != _hoverCell) {
 		_hoverCell = newCell;
@@ -188,23 +198,61 @@ void ImageGridWidget::mouseMoveEvent(QMouseEvent *event)
 
 void ImageGridWidget::leaveEvent(QEvent *event)
 {
-	Q_UNUSED(event)
+	QWidget::leaveEvent(event);
 
-	if (!_isSelectable) {
+	if (_selectionMode == NoSelection) {
 		return;
 	}
 
 	clearHover();
 }
 
+void ImageGridWidget::mousePressEvent(QMouseEvent *event)
+{
+	if (_selectionMode != NoSelection) {
+		setSelectedCell(getCell(event->pos()));
+		setFocus();
+		_startMousePress = _selectionMode == MultiSelection;
+	}
+
+	QWidget::mousePressEvent(event);
+}
+
 void ImageGridWidget::mouseReleaseEvent(QMouseEvent *event)
 {
-	if (!_isSelectable) {
+	_startMousePress = false;
+
+	QWidget::mouseReleaseEvent(event);
+}
+
+void ImageGridWidget::keyPressEvent(QKeyEvent *event)
+{
+	QWidget::keyPressEvent(event);
+
+	if (_selectedCells.isEmpty()) {
 		return;
 	}
 
-	setCurrentCell(getCell(event->pos()));
-	setFocus();
+	Cell cell = _selectedCells.last();
+
+	switch (event->key()) {
+	case Qt::Key_Left:
+		cell.setX(cell.x() - 1);
+		break;
+	case Qt::Key_Right:
+		cell.setX(cell.x() + 1);
+		break;
+	case Qt::Key_Up:
+		cell.setY(cell.y() - 1);
+		break;
+	case Qt::Key_Down:
+		cell.setY(cell.y() + 1);
+		break;
+	}
+
+	if (cellIsInRange(cell)) {
+		setSelectedCell(cell);
+	}
 }
 
 void ImageGridWidget::resizeEvent(QResizeEvent *event)
@@ -216,10 +264,10 @@ void ImageGridWidget::resizeEvent(QResizeEvent *event)
 
 QSize ImageGridWidget::minimumSizeHint() const
 {
-	return _pixmap.isNull() ? QFrame::minimumSizeHint() : _pixmap.size() / _cellSize * 4;
+	return _pixmap.isNull() ? QWidget::minimumSizeHint() : _pixmap.size() / _cellSize * 4;
 }
 
 QSize ImageGridWidget::sizeHint() const
 {
-	return _pixmap.isNull() ? QFrame::sizeHint() : _pixmap.size();
+	return _pixmap.isNull() ? QWidget::sizeHint() : _pixmap.size();
 }

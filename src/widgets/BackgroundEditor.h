@@ -20,6 +20,7 @@
 #include <QtWidgets>
 #include "EditBGLabel.h"
 #include "ImageGridWidget.h"
+#include "core/field/BackgroundTiles.h"
 
 class BackgroundFile;
 
@@ -37,7 +38,8 @@ private slots:
 	void updateCurrentLayer(int layer);
 	void updateCurrentSection(QListWidgetItem *current, QListWidgetItem *previous);
 	void updateZ(int z);
-	void updateCurrentTile(const Cell &point);
+	void updateSelectedTiles(const QList<Cell> &cells);
+	void updateSelectedTile(int index);
 private:
 	int currentSection() const;
 	void updateCurrentSection2(int section);
@@ -48,13 +50,17 @@ private:
 	QSpinBox *_tileCountWidthSpinBox, *_tileCountHeightSpinBox, *_zSpinBox;
 	EditBGLabel *_editBGLabel;
 	ImageGridWidget *_backgroundLayerWidget, *_tileWidget;
+	QVBoxLayout *_rightPaneLayout;
+	QComboBox *_currentTileComboBox;
 	QGroupBox *_bgParamGroup;
 	QSpinBox *_bgParamInput, *_bgParamStateInput;
 	QComboBox *_blendTypeInput, *_depthInput;
+	QFormLayout *_tileEditorLayout;
 	QSpinBox *_paletteIdInput;
 
 	ImageGridWidget *_texturesWidget;
 
 	BackgroundFile *_backgroundFile;
+	QList<Tile> _selectedTiles;
 	quint16 _currentOffsetX, _currentOffsetY;
 };

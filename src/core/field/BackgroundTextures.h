@@ -65,6 +65,7 @@ public:
 	virtual inline quint8 depth(const Tile &tile) const {
 		return tile.depth;
 	}
+	QImage toImage(const Tile &tile, const Palettes &palettes) const;
 	virtual QImage toImage(const BackgroundTiles &tiles, const Palettes &palettes) const=0;
 protected:
 	virtual quint16 textureWidth(const Tile &tile) const=0;

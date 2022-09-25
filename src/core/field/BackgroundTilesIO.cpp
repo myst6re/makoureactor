@@ -380,7 +380,7 @@ Tile BackgroundTilesIOPC::tilePC2Tile(const TilePC &tile, quint8 layerID, quint1
 {
 	Tile ret;
 
-	if (layerID > 0 && tile.textureID2 > 0) {
+	if (layerID > 0 && tile.blending) {
 		ret.srcX = tile.srcX2;
 		ret.srcY = tile.srcY2;
 		ret.textureID = tile.textureID2;
@@ -406,7 +406,7 @@ Tile BackgroundTilesIOPC::tilePC2Tile(const TilePC &tile, quint8 layerID, quint1
 	default:	ret.ID = tile.ID;	break;
 	}
 	ret.typeTrans = tile.typeTrans;
-	ret.textureID2 = tile.textureID2;
+	ret.textureY = tile.textureID2;
 	ret.depth = tile.depth;
 	ret.size = layerID > 1 ? 32 : 16;
 	ret.layerID = layerID;
@@ -434,8 +434,8 @@ TilePC BackgroundTilesIOPC::tile2TilePC(const Tile &tile)
 	ret.state = tile.state;
 	ret.blending = tile.blending;
 	ret.typeTrans = tile.typeTrans;
-	ret.textureID = tile.textureID2 > 0 ? 0 : tile.textureID;
-	ret.textureID2 = tile.textureID2;
+	ret.textureID = tile.layerID > 0 && tile.blending ? 0 : tile.textureID;
+	ret.textureID2 = tile.layerID > 0 && tile.blending ? tile.textureID : 0;
 	ret.depth = tile.depth;
 	ret.IDBig = tile.IDBig;
 
@@ -570,7 +570,7 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 			}
 
 			tile.textureID = tile2.page_x;
-			tile.textureID2 = tile2.page_y;
+			tile.textureY = tile2.page_y;
 			tile.depth = tile2.depth;
 			tile.typeTrans = tile2.typeTrans;
 
@@ -610,7 +610,7 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 			tile.param = tile3.param & 0x7F;
 			tile.state = tile3.state;
 			tile.textureID = tile2data & 0xF;
-			tile.textureID2 = (tile2data >> 4) & 0x1;
+			tile.textureY = (tile2data >> 4) & 0x1;
 			tile.depth = (tile2data >> 7) & 0x3;
 			tile.typeTrans = (tile2data >> 5) & 0x3;
 
@@ -676,7 +676,7 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 
 			tile.blending = (tile4.param >> 7) & 0x1;
 			tile.textureID = tile2.page_x;
-			tile.textureID2 = tile2.page_y;
+			tile.textureY = tile2.page_y;
 			tile.depth = tile2.depth;
 			tile.typeTrans = tile2.typeTrans;
 
@@ -866,7 +866,7 @@ bool BackgroundTilesIOPS::writeTileTex(const Tile &tile) const
 {
 	// Note: we can't use bitfields directly
 	quint16 tile2data = (tile.textureID & 0xF) |
-	                    ((tile.textureID2 & 0x1) << 4) |
+	                    ((tile.textureY & 0x1) << 4) |
 	                    ((tile.typeTrans & 0x3) << 5) |
 	                    ((tile.depth & 0x3) << 7);
 

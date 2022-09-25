@@ -218,6 +218,18 @@
         <source>Palette ID</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>State %1</source>
+        <translation type="obsolete">ステート %1</translation>
+    </message>
+    <message>
+        <source>Params %1 State %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tile %1 (%2, %3) %4</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CLI</name>

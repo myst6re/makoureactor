@@ -112,7 +112,7 @@ QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles, bool *warnin
 
 		if (indexOrColorList.isEmpty()) {
 			if (!warned) {
-				qWarning() << "Texture ID overflow" << tile.textureID << tile.textureID2;
+				qWarning() << "Texture ID overflow" << tile.textureID;
 				warned = true;
 			}
 			continue;
@@ -143,7 +143,7 @@ QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles, bool *warnin
 		qint32 baseX = minWidth + tile.dstX;
 
 		for (uint indexOrColor : qAsConst(indexOrColorList)) {
-			if (!palette) {
+			if (palette == nullptr) {
 				if (indexOrColor != 0) {
 					pixels[baseX + right + top] = indexOrColor;
 				}

@@ -21,10 +21,15 @@
 
 typedef QPoint Cell;
 
-class ImageGridWidget : public QFrame
+class ImageGridWidget : public QWidget
 {
 	Q_OBJECT
 public:
+	enum SelectionMode {
+		NoSelection,
+		SingleSelection,
+		MultiSelection
+	};
 	explicit ImageGridWidget(QWidget *parent = nullptr);
 	inline const QPixmap &pixmap() const {
 		return _pixmap;
@@ -34,43 +39,50 @@ public:
 		return _cellSize;
 	}
 	void setCellSize(int size);
-	QPixmap cellPixmap(const Cell &point) const;
-	inline const Cell &currentCell() const {
-		return _currentCell;
+	QPixmap cellPixmap(const Cell &cell) const;
+	inline const QList<Cell> &selectedCells() const {
+		return _selectedCells;
 	}
-	inline bool isSelectable() const {
-		return _isSelectable;
+	inline SelectionMode selectionMode() const {
+		return _selectionMode;
 	}
-	void setSelectable(bool selectable);
+	void setSelectionMode(SelectionMode mode);
 signals:
-	void currentCellChanged(const Cell &point);
-	void highlighted(const Cell &point);
+	void currentSelectionChanged(const QList<Cell> &cells);
+	void highlighted(const Cell &cell);
 public slots:
-	void setCurrentCell(const Cell &point);
+	inline void setSelectedCell(const Cell &cell) {
+		setSelectedCells(QList<Cell>() << cell);
+	}
+	void setSelectedCells(const QList<Cell> &cells);
 protected:
 	virtual void paintEvent(QPaintEvent *event) override;
 	virtual void mouseMoveEvent(QMouseEvent *event) override;
 	virtual void leaveEvent(QEvent *event) override;
+	virtual void mousePressEvent(QMouseEvent *event) override;
 	virtual void mouseReleaseEvent(QMouseEvent *event) override;
+	virtual void keyPressEvent(QKeyEvent *event) override;
 	virtual void resizeEvent(QResizeEvent *event) override;
 	virtual QSize minimumSizeHint() const override;
 	virtual QSize sizeHint() const override;
 private:
-	void drawSelection(QPainter &p, QPoint selection);
-	QPoint scaledPoint(const Cell &point) const;
+	void drawSelection(QPainter &painter, QPoint selection);
+	QPoint scaledPoint(const Cell &cell) const;
 	Cell getCell(const QPoint &pos) const;
-	bool cellIsInRange(const Cell &point) const;
+	bool cellIsInRange(const Cell &cell) const;
 	void updateGrid();
 	void updateScaledPixmapSize();
 	void clearHover();
 
 	QPixmap _pixmap;
 	QList<QLine> _gridLines;
-	Cell _currentCell, _hoverCell;
+	Cell _hoverCell;
+	QList<Cell> _selectedCells;
 	QPoint _scaledPixmapPoint;
 	QSize _scaledPixmapSize;
 	double _scaledRatio;
+	SelectionMode _selectionMode;
 	int _cellSize;
-	bool _isSelectable;
+	bool _startMousePress;
 };
 

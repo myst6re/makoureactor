@@ -99,6 +99,36 @@ BackgroundTiles BackgroundTiles::tiles(quint8 layerID, bool orderedForSaving) co
 	return ret;
 }
 
+BackgroundTiles BackgroundTiles::tiles(quint8 layerID, quint16 ID) const
+{
+	BackgroundTiles ret;
+
+	for (const Tile &tile : *this) {
+		if (tile.layerID == layerID &&
+		        ((layerID == 1 && tile.ID == ID) || layerID != 1)) {
+			ret.insert(4096 - tile.ID, tile);
+		}
+	}
+
+	return ret;
+}
+
+BackgroundTiles BackgroundTiles::tiles(quint8 layerID, quint16 ID, qint16 dstX, qint16 dstY) const
+{
+	BackgroundTiles ret;
+
+	for (const Tile &tile : *this) {
+		if (tile.layerID == layerID &&
+		        ((layerID == 1 && tile.ID == ID) || layerID != 1) &&
+		        tile.dstX == dstX &&
+		        tile.dstY == dstY) {
+			ret.insert(4096 - tile.ID, tile);
+		}
+	}
+
+	return ret;
+}
+
 BackgroundTiles BackgroundTiles::tilesByID(quint16 ID, bool orderedForSaving) const
 {
 	BackgroundTiles ret;
@@ -215,29 +245,13 @@ Tile BackgroundTiles::search(quint8 textureID1, quint8 textureID2,
 {
 	for (const Tile &tile : *this) {
 		if (tile.textureID == textureID1 &&
-		    (textureID2 == quint8(-1) || tile.textureID2 == textureID2) &&
+		    (textureID2 == quint8(-1) || tile.textureY == textureID2) &&
 		    tile.srcX == srcX &&
 		    tile.srcY == srcY) {
 			return tile;
 		}
 	}
 	
-	Tile nullTile = Tile();
-	nullTile.tileID = quint16(-1);
-	return nullTile;
-}
-
-Tile BackgroundTiles::search(quint8 layerID, qint16 dstX, qint16 dstY, quint16 ID) const
-{
-	for (const Tile &tile : *this) {
-		if (tile.layerID == layerID &&
-		        ((layerID == 1 && tile.ID == ID) || layerID != 1) &&
-		        tile.dstX == dstX &&
-		        tile.dstY == dstY) {
-			return tile;
-		}
-	}
-
 	Tile nullTile = Tile();
 	nullTile.tileID = quint16(-1);
 	return nullTile;
