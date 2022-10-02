@@ -28,7 +28,7 @@ OpcodeList::OpcodeList(QWidget *parent) :
     isInit(false), _treeEnabled(true)
 {
 	setColumnCount(1);
-	setHeaderLabels(QStringList(tr("Action")));
+	setHeaderHidden(true);
 	setAutoScroll(false);
 	setIconSize(QSize(32, 11));
 	setAlternatingRowColors(true);

@@ -15,10 +15,40 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#include "EditBGLabel.h"
+#pragma once
 
-EditBGLabel::EditBGLabel(QWidget *parent)
-    : ApercuBG(parent)
+#include <QtWidgets>
+#include "ImageGridWidget.h"
+#include "core/field/BackgroundTiles.h"
+
+class BackgroundFile;
+
+class BackgroundTileEditor : public QWidget
 {
-	
-}
+	Q_OBJECT
+public:
+	explicit BackgroundTileEditor(QWidget *parent = nullptr);
+	void setBackgroundFile(BackgroundFile *backgroundFile);
+	void clear();
+signals:
+public slots:
+	inline void setTile(const Tile &tile) {
+		setTiles(QList<Tile>() << tile);
+	}
+	void setTiles(const QList<Tile> &tiles);
+private slots:
+	void createTile();
+private:
+	ImageGridWidget *_tileWidget;
+	QGroupBox *_bgParamGroup;
+	QSpinBox *_bgParamInput, *_bgParamStateInput;
+	QComboBox *_blendTypeInput, *_depthInput;
+	QFormLayout *_tileEditorLayout;
+	QSpinBox *_paletteIdInput;
+	QStackedLayout *_stackedLayout;
+	QWidget *_formPage;
+	QWidget *_createPage;
+
+	BackgroundFile *_backgroundFile;
+	QList<Tile> _tiles;
+};

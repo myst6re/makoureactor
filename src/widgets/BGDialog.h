@@ -59,7 +59,7 @@ private:
 	QPushButton *buttonRepair;
 	QTabBar *tabBar;
 
-	QHash<quint8, quint8> allparams;
+	QMap<quint8, quint8> allparams;
 	QHash<quint8, quint8> params;
 	QSet<quint16> sections;
 	QScrollArea *imageBox;

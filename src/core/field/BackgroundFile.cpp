@@ -53,18 +53,18 @@ void BackgroundFile::initEmpty()
 
 }
 
-QImage BackgroundFile::openBackground(bool *warning)
+QImage BackgroundFile::openBackground(bool transparent, bool *warning)
 {
 	// Search default background params
 	QHash<quint8, quint8> paramActifs;
 	qint16 z[] = {-1, -1};
 	field()->scriptsAndTexts()->bgParamAndBgMove(paramActifs, z);
-	return openBackground(&paramActifs, z, nullptr, nullptr, warning);
+	return openBackground(&paramActifs, z, nullptr, nullptr, transparent, warning);
 }
 
 QImage BackgroundFile::openBackground(const QHash<quint8, quint8> *paramActifs, const qint16 *z,
                                       const bool *layers, const QSet<quint16> *IDs,
-                                      bool *warning)
+                                      bool transparent, bool *warning)
 {
 	if (!isOpen() && !open()) {
 		if (warning) {
@@ -73,10 +73,10 @@ QImage BackgroundFile::openBackground(const QHash<quint8, quint8> *paramActifs, 
 		return QImage();
 	}
 
-	return drawBackground(tiles().filter(paramActifs, z, layers, IDs), warning);
+	return drawBackground(tiles().filter(paramActifs, z, layers, IDs), transparent, warning);
 }
 
-QImage BackgroundFile::backgroundPart(quint16 ID, bool *warning)
+QImage BackgroundFile::backgroundPart(quint16 ID, bool transparent, bool *warning)
 {
 	if (!isOpen() && !open()) {
 		if (warning) {
@@ -85,10 +85,10 @@ QImage BackgroundFile::backgroundPart(quint16 ID, bool *warning)
 		return QImage();
 	}
 
-	return drawBackground(tiles().tilesByID(ID, false), warning);
+	return drawBackground(tiles().tilesByID(ID, false), transparent, warning);
 }
 
-QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles, bool *warning) const
+QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles, bool transparent, bool *warning) const
 {
 	if (tiles.isEmpty() || _textures == nullptr) {
 		if (warning) {
@@ -102,7 +102,7 @@ QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles, bool *warnin
 	_tiles.area(minWidth, minHeight, width, height);
 
 	QImage image(width, height, QImage::Format_ARGB32);
-	image.fill(0xFF000000);
+	image.fill(transparent ? 0 : 0xFF000000);
 
 	QRgb *pixels = reinterpret_cast<QRgb *>(image.bits());
 	bool warned = false; // To prevent verbosity of warnings
@@ -173,7 +173,7 @@ QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles, bool *warnin
 	return image;
 }
 
-bool BackgroundFile::usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists, QSet<quint16> *usedIDs)
+bool BackgroundFile::usedParams(QMap<quint8, quint8> &usedParams, bool *layerExists, QSet<quint16> *usedIDs)
 {
 	if (!isOpen() && !open()) {
 		return false;

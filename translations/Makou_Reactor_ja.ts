@@ -151,17 +151,24 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Width (in tile unit):</source>
-        <translation type="unfinished"></translation>
+        <source>Parameter</source>
+        <translation type="obsolete">パラメータ</translation>
     </message>
     <message>
-        <source>Height (in tile unit):</source>
-        <translation type="unfinished"></translation>
+        <source>None</source>
+        <translation type="obsolete">なし</translation>
     </message>
     <message>
-        <source>Z:</source>
+        <source>State %1</source>
+        <translation type="unfinished">ステート %1</translation>
+    </message>
+    <message>
+        <source>Param %1</source>
         <translation type="unfinished"></translation>
     </message>
+</context>
+<context>
+    <name>BackgroundTileEditor</name>
     <message>
         <source>Parameter</source>
         <translation type="unfinished">パラメータ</translation>
@@ -219,15 +226,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>State %1</source>
-        <translation type="obsolete">ステート %1</translation>
-    </message>
-    <message>
-        <source>Params %1 State %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Tile %1 (%2, %3) %4</source>
+        <source>Create tile</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3320,7 +3319,7 @@ Some scripts can refer to it!</source>
     <name>OpcodeList</name>
     <message>
         <source>Action</source>
-        <translation>アクション</translation>
+        <translation type="vanished">アクション</translation>
     </message>
     <message>
         <source>Copy</source>

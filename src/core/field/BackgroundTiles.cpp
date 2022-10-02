@@ -159,9 +159,9 @@ QMap<qint32, Tile> BackgroundTiles::sortedTiles() const
 	return ret;
 }
 
-QHash<quint8, quint8> BackgroundTiles::usedParams(bool *layerExists, QSet<quint16> *usedIDs) const
+QMap<quint8, quint8> BackgroundTiles::usedParams(bool *layerExists, QSet<quint16> *usedIDs) const
 {
-	QHash<quint8, quint8> ret;
+	QMap<quint8, quint8> ret;
 	layerExists[0] = layerExists[1] = layerExists[2] = false;
 	
 	for (const Tile &tile : *this) {

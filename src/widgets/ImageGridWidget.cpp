@@ -18,7 +18,7 @@
 #include "ImageGridWidget.h"
 
 ImageGridWidget::ImageGridWidget(QWidget *parent)
-    : QWidget(parent), _hoverCell(-1, -1), _scaledRatio(0.0),
+    : QWidget(parent), _hoverCell(-1, -1), _pixmapPoint(-1, -1), _scaledRatio(0.0),
       _selectionMode(SingleSelection), _cellSize(0), _startMousePress(false)
 {
 	setMouseTracking(_selectionMode != NoSelection);
@@ -27,7 +27,21 @@ ImageGridWidget::ImageGridWidget(QWidget *parent)
 void ImageGridWidget::setPixmap(const QPixmap &pixmap)
 {
 	_pixmap = pixmap;
-	updateScaledPixmapSize();
+	updateGrid();
+	update();
+}
+
+void ImageGridWidget::setPixmap(const QPoint &point, const QPixmap &pixmap)
+{
+	_pixmapPoint = point;
+	_pixmap = pixmap;
+	updateGrid();
+	update();
+}
+
+void ImageGridWidget::setPixmapPoint(const QPoint &point)
+{
+	_pixmapPoint = point;
 	updateGrid();
 	update();
 }
@@ -35,6 +49,13 @@ void ImageGridWidget::setPixmap(const QPixmap &pixmap)
 void ImageGridWidget::setCellSize(int size)
 {
 	_cellSize = size;
+	updateGrid();
+	update();
+}
+
+void ImageGridWidget::setGridSize(const QSize &gridSize)
+{
+	_gridSize = gridSize;
 	updateGrid();
 	update();
 }
@@ -64,15 +85,6 @@ void ImageGridWidget::setSelectedCells(const QList<Cell> &cells)
 	}
 }
 
-void ImageGridWidget::updateScaledPixmapSize()
-{
-	_scaledPixmapSize = _pixmap.size().scaled(size(), Qt::KeepAspectRatio);
-
-	_scaledRatio = _pixmap.width() == 0 ? 0.0 : _scaledPixmapSize.width() / double(_pixmap.width());
-
-	_scaledPixmapPoint = QPoint((width() - _scaledPixmapSize.width()) / 2, (height() - _scaledPixmapSize.height()) / 2);
-}
-
 void ImageGridWidget::clearHover()
 {
 	Cell newCell(-1, -1);
@@ -83,24 +95,19 @@ void ImageGridWidget::clearHover()
 	}
 }
 
-QPoint ImageGridWidget::scaledPoint(const Cell &point) const
-{
-	return _scaledRatio * point;
-}
-
 Cell ImageGridWidget::getCell(const QPoint &pos) const
 {
 	if (_cellSize == 0 || _scaledRatio == 0.0) {
 		return Cell(-1, -1);
 	}
-	QPointF cell = QPointF(pos - _scaledPixmapPoint) / (_scaledRatio * _cellSize);
+	QPointF cell = QPointF(pos - _scaledGridPoint) / (_scaledRatio * _cellSize);
 	Cell ret(qFloor(cell.x()), qFloor(cell.y()));
 	return cellIsInRange(ret) ? ret : Cell(-1, -1);
 }
 
 bool ImageGridWidget::cellIsInRange(const Cell &point) const
 {
-	return _pixmap.rect().contains(point * _cellSize);
+	return QRect(QPoint(0, 0), _gridSize).contains(point);
 }
 
 void ImageGridWidget::updateGrid()
@@ -111,17 +118,24 @@ void ImageGridWidget::updateGrid()
 		return;
 	}
 
-	const QSize imageSize = _pixmap.size();
-	const int lineCountV = imageSize.width() / _cellSize + 1,
-	        lineCountH = imageSize.height() / _cellSize + 1;
+	const QSize gridS = gridSize();
+	const int lineCountV = gridS.width() + 1,
+	        lineCountH = gridS.height() + 1;
+
+	_scaledRatio = gridS.width() == 0 ? 0.0 : (gridS * _cellSize).scaled(size(), Qt::KeepAspectRatio).width() / double(gridS.width() * _cellSize);
+
+	qDebug() << "updateGrid" << _scaledRatio << lineCountV << lineCountH << gridS << _pixmap.size() << _gridSize << size();
 
 	for (int i = 0; i < lineCountV; ++i) {
-		_gridLines.append(QLine(scaledPoint(QPoint(i * _cellSize, 0)), scaledPoint(QPoint(i * _cellSize, imageSize.height()))));
+		_gridLines.append(QLine(scaledPoint(QPoint(i * _cellSize, 0)), scaledPoint(QPoint(i, gridS.height()) * _cellSize)));
 	}
 
 	for (int i = 0; i < lineCountH; ++i) {
-		_gridLines.append(QLine(scaledPoint(QPoint(0, i * _cellSize)), scaledPoint(QPoint(imageSize.width(), i * _cellSize))));
+		_gridLines.append(QLine(scaledPoint(QPoint(0, i * _cellSize)), scaledPoint(QPoint(gridS.width(), i) * _cellSize)));
 	}
+
+	_scaledGridPoint = (QPoint(width(), height()) - scaledPoint(QPoint(gridS.width(), gridS.height()) * _cellSize)) / 2;
+	_scaledPixmapPoint = _pixmapPoint == QPoint(-1, -1) ? _scaledGridPoint : scaledPoint(_pixmapPoint);
 }
 
 void ImageGridWidget::paintEvent(QPaintEvent *event)
@@ -129,15 +143,17 @@ void ImageGridWidget::paintEvent(QPaintEvent *event)
 	QPainter p(this);
 
 	if (isEnabled()) {
+		// Background
 		p.setBrush(Qt::black);
 		p.drawRect(0, 0, width(), height());
-	}
-
-	p.translate(_scaledPixmapPoint);
-
-	if (isEnabled()) {
-		p.drawPixmap(QRect(QPoint(), _scaledPixmapSize), _pixmap);
+		// Grid Background
+		p.setBrush(palette().color(QPalette::Dark));
+		p.drawRect(QRect(_scaledGridPoint, gridSizePixel() * _scaledRatio));
+		// Pixmap
+		p.drawPixmap(QRect(_scaledPixmapPoint, _pixmap.size() * _scaledRatio), _pixmap);
+		// Grid
 		p.setPen(Qt::gray);
+		p.translate(_scaledGridPoint);
 		p.drawLines(_gridLines);
 
 		QColor lightRed(0xff, 0x7f, 0x7f);
@@ -152,7 +168,7 @@ void ImageGridWidget::paintEvent(QPaintEvent *event)
 	} else {
 		QStyleOption opt;
 		opt.initFrom(this);
-		p.drawPixmap(QRect(QPoint(), _scaledPixmapSize), QWidget::style()->generatedIconPixmap(QIcon::Disabled, _pixmap, &opt));
+		p.drawPixmap(QRect(_scaledPixmapPoint, _pixmap.size() * _scaledRatio), QWidget::style()->generatedIconPixmap(QIcon::Disabled, _pixmap, &opt));
 	}
 
 	QWidget::paintEvent(event);
@@ -257,17 +273,16 @@ void ImageGridWidget::keyPressEvent(QKeyEvent *event)
 
 void ImageGridWidget::resizeEvent(QResizeEvent *event)
 {
-	updateScaledPixmapSize();
 	updateGrid();
 	QWidget::resizeEvent(event);
 }
 
 QSize ImageGridWidget::minimumSizeHint() const
 {
-	return _pixmap.isNull() ? QWidget::minimumSizeHint() : _pixmap.size() / _cellSize * 4;
+	return gridSize() * 8;
 }
 
 QSize ImageGridWidget::sizeHint() const
 {
-	return _pixmap.isNull() ? QWidget::sizeHint() : _pixmap.size();
+	return minimumSizeHint();
 }

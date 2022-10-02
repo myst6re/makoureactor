@@ -18,8 +18,8 @@
 #pragma once
 
 #include <QtWidgets>
-#include "EditBGLabel.h"
 #include "ImageGridWidget.h"
+#include "BackgroundTileEditor.h"
 #include "core/field/BackgroundTiles.h"
 
 class BackgroundFile;
@@ -30,37 +30,32 @@ class BackgroundEditor : public QWidget
 public:
 	explicit BackgroundEditor(QWidget *parent = nullptr);
 	void setSections(const QList<quint16> &sections);
+	void setParams(const QMap<quint8, quint8> &params);
 	void setBackgroundFile(BackgroundFile *backgroundFile);
 	void clear();
 signals:
 	void modified();
+protected:
+	void showEvent(QShowEvent *event) override;
 private slots:
 	void updateCurrentLayer(int layer);
 	void updateCurrentSection(QListWidgetItem *current, QListWidgetItem *previous);
-	void updateZ(int z);
+	void updateCurrentParam(QListWidgetItem *current, QListWidgetItem *previous);
 	void updateSelectedTiles(const QList<Cell> &cells);
-	void updateSelectedTile(int index);
 private:
 	int currentSection() const;
 	void updateCurrentSection2(int section);
-	void updateImageLabel(int layer, int section);
+	void updateCurrentParam2(int param);
+	void updateImageLabelFromSection(int layer, int section);
+	void updateImageLabelFromParam(int layer, int param);
+	void updateImageLabel(int layer, int section, int param);
 
 	QComboBox *_layersComboBox;
 	QListWidget *_sectionsList;
-	QSpinBox *_tileCountWidthSpinBox, *_tileCountHeightSpinBox, *_zSpinBox;
-	EditBGLabel *_editBGLabel;
-	ImageGridWidget *_backgroundLayerWidget, *_tileWidget;
-	QVBoxLayout *_rightPaneLayout;
-	QComboBox *_currentTileComboBox;
-	QGroupBox *_bgParamGroup;
-	QSpinBox *_bgParamInput, *_bgParamStateInput;
-	QComboBox *_blendTypeInput, *_depthInput;
-	QFormLayout *_tileEditorLayout;
-	QSpinBox *_paletteIdInput;
-
-	ImageGridWidget *_texturesWidget;
+	QTreeWidget *_paramsList;
+	QScrollArea *_backgroundLayerScrollArea;
+	ImageGridWidget *_backgroundLayerWidget, *_texturesWidget;
+	BackgroundTileEditor *_backgroundTileEditor;
 
 	BackgroundFile *_backgroundFile;
-	QList<Tile> _selectedTiles;
-	quint16 _currentOffsetX, _currentOffsetY;
 };

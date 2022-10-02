@@ -29,7 +29,7 @@ BackgroundTextures::~BackgroundTextures()
 QVector<uint> BackgroundTextures::tile(const Tile &tile) const
 {
 	QVector<uint> indexOrRgbList;
-	quint8 depth = this->depth(tile),  x = 0;
+	quint8 depth = this->depth(tile), x = 0;
 	quint8 multiplicator = depth == 0 ? 1 : depth * 2;
 
 	int origin = originInData(tile);

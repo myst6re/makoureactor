@@ -35,10 +35,22 @@ public:
 		return _pixmap;
 	}
 	void setPixmap(const QPixmap &pixmap);
+	void setPixmap(const QPoint &point, const QPixmap &pixmap);
+	inline QPoint pixmapPoint() const {
+		return _pixmapPoint;
+	}
+	void setPixmapPoint(const QPoint &point);
 	inline int cellSize() const {
 		return _cellSize;
 	}
 	void setCellSize(int size);
+	inline QSize gridSize() const {
+		return _gridSize.isValid() ? _gridSize : _pixmap.size() / _cellSize;
+	}
+	inline QSize gridSizePixel() const {
+		return _gridSize.isValid() ? _gridSize * _cellSize : _pixmap.size();
+	}
+	void setGridSize(const QSize &gridSize);
 	QPixmap cellPixmap(const Cell &cell) const;
 	inline const QList<Cell> &selectedCells() const {
 		return _selectedCells;
@@ -67,19 +79,21 @@ protected:
 	virtual QSize sizeHint() const override;
 private:
 	void drawSelection(QPainter &painter, QPoint selection);
-	QPoint scaledPoint(const Cell &cell) const;
+	inline QPoint scaledPoint(const Cell &cell) const {
+		return _scaledRatio * cell;
+	}
 	Cell getCell(const QPoint &pos) const;
 	bool cellIsInRange(const Cell &cell) const;
 	void updateGrid();
-	void updateScaledPixmapSize();
 	void clearHover();
 
 	QPixmap _pixmap;
 	QList<QLine> _gridLines;
 	Cell _hoverCell;
 	QList<Cell> _selectedCells;
-	QPoint _scaledPixmapPoint;
+	QPoint _pixmapPoint, _scaledPixmapPoint, _scaledGridPoint;
 	QSize _scaledPixmapSize;
+	QSize _gridSize;
 	double _scaledRatio;
 	SelectionMode _selectionMode;
 	int _cellSize;

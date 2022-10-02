@@ -108,6 +108,7 @@ void BGDialog::fill(Field *field, bool reload)
 	}
 
 	_field = field;
+	editorPage->clear();
 
 	fillWidgets();
 
@@ -122,6 +123,7 @@ void BGDialog::clear()
 	statesWidget->blockSignals(true);
 	layersWidget->blockSignals(true);
 	zWidget->blockSignals(true);
+	editorPage->blockSignals(true);
 
 	_field = nullptr;
 	allparams.clear();
@@ -138,6 +140,7 @@ void BGDialog::clear()
 	statesWidget->blockSignals(false);
 	layersWidget->blockSignals(false);
 	zWidget->blockSignals(false);
+	editorPage->blockSignals(false);
 }
 
 void BGDialog::fillWidgets()
@@ -146,7 +149,7 @@ void BGDialog::fillWidgets()
 		return;
 	}
 
-	QHash<quint8, quint8> usedParams;
+	QMap<quint8, quint8> usedParams;
 	bool layerExists[] = {false, false, false};
 	QSet<quint16> usedIDs;
 
@@ -162,7 +165,6 @@ void BGDialog::fillWidgets()
 	if (_field->background()->usedParams(usedParams, layerExists, &usedIDs)) {
 
 		QList<quint8> usedParamsList = usedParams.keys();
-		std::sort(usedParamsList.begin(), usedParamsList.end());
 		for (const quint8 param : qAsConst(usedParamsList)) {
 			parametersWidget->addItem(tr("Parameter %1").arg(param), param);
 		}
@@ -171,7 +173,7 @@ void BGDialog::fillWidgets()
 		QListWidgetItem *item;
 
 		QList<quint16> usedIDsList = usedIDs.values();
-		std::sort(usedIDsList.begin(), usedIDsList.end());
+		std::sort(usedIDsList.begin(), usedIDsList.end(), std::greater<>());
 		int sectionID = 0;
 		for (const quint16 ID : qAsConst(usedIDsList)) {
 			item = new QListWidgetItem(tr("Section %1").arg(sectionID++));
@@ -214,6 +216,7 @@ void BGDialog::fillWidgets()
 		_field->scriptsAndTexts()->bgParamAndBgMove(params, z, x, y);
 
 		editorPage->setSections(usedIDsList);
+		editorPage->setParams(usedParams);
 		editorPage->setBackgroundFile(_field->background());
 	}
 }
@@ -387,11 +390,11 @@ QImage BGDialog::background(bool *bgWarning)
 	}
 
 	if (tabBar->currentIndex() == 0) {
-		return _field->background()->openBackground(&params, z, layers, nullptr, bgWarning);
+		return _field->background()->openBackground(&params, z, layers, nullptr, false, bgWarning);
 	}
 
 	bool layers[4] = { false, true, false, false };
-	return _field->background()->openBackground(&params, z, layers, &sections, bgWarning);
+	return _field->background()->openBackground(&params, z, layers, &sections, false, bgWarning);
 }
 
 void BGDialog::updateBG()
@@ -404,10 +407,10 @@ void BGDialog::updateBG()
 	QImage img = background(&bgWarning);
 
 	if (tabBar->currentIndex() == 0) {
-		img = _field->background()->openBackground(&params, z, layers, nullptr, &bgWarning);
+		img = _field->background()->openBackground(&params, z, layers, nullptr, false, &bgWarning);
 	} else {
 		bool layers[4] = { false, true, false, false };
-		img = _field->background()->openBackground(&params, z, layers, &sections, &bgWarning);
+		img = _field->background()->openBackground(&params, z, layers, &sections, false, &bgWarning);
 	}
 
 	if (img.isNull()) {

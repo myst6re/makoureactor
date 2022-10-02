@@ -36,13 +36,13 @@ public:
 	using FieldPart::save;
 	virtual inline bool canSave() const override { return false; }
 	void clear() override;
-	QImage openBackground(bool *warning = nullptr);
+	QImage openBackground(bool transparent = false, bool *warning = nullptr);
 	QImage openBackground(const QHash<quint8, quint8> *paramActifs, const qint16 z[2],
 	                      const bool *layers = nullptr, const QSet<quint16> *IDs = nullptr,
-	                      bool *warning = nullptr);
+	                      bool transparent = false, bool *warning = nullptr);
 	// Draw background tiles with ID
-	QImage backgroundPart(quint16 ID, bool *warning = nullptr);
-	bool usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists, QSet<quint16> *usedIDs);
+	QImage backgroundPart(quint16 ID, bool transparent = false, bool *warning = nullptr);
+	bool usedParams(QMap<quint8, quint8> &usedParams, bool *layerExists, QSet<quint16> *usedIDs);
 	bool layerExists(int num);
 
 	bool exportTiles(const QString &fileName, const BackgroundTiles &tiles) const;
@@ -80,7 +80,7 @@ public:
 	void setZLayer1(quint16 oldZ, quint16 newZ);
 
 protected:
-	QImage drawBackground(const BackgroundTiles &tiles, bool *warning = nullptr) const;
+	QImage drawBackground(const BackgroundTiles &tiles, bool transparent = false, bool *warning = nullptr) const;
 	static QRgb blendColor(quint8 type, QRgb color0, QRgb color1);
 	inline BackgroundTiles &tilesRef() {
 		return _tiles;

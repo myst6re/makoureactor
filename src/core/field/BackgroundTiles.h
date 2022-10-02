@@ -49,7 +49,7 @@ public:
 	BackgroundTiles tiles(quint8 layerID, quint16 ID, qint16 dstX, qint16 dstY) const;
 	BackgroundTiles tiles(quint8 layerID, quint16 ID) const;
 	QMap<qint32, Tile> sortedTiles() const;
-	QHash<quint8, quint8> usedParams(bool *layerExists, QSet<quint16> *usedIDs = nullptr) const;
+	QMap<quint8, quint8> usedParams(bool *layerExists, QSet<quint16> *usedIDs = nullptr) const;
 	QSet<quint8> usedPalettes() const;
 	void area(quint16 &minWidth, quint16 &minHeight,
 	          int &width, int &height) const;
@@ -58,4 +58,4 @@ public:
 	void setZLayer1(quint16 oldZ, quint16 newZ);
 };
 
-int operator==(const Tile &tile, const Tile &other);
+//int operator==(const Tile &tile, const Tile &other);
