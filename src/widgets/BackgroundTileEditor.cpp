@@ -176,8 +176,8 @@ void BackgroundTileEditor::setTiles(const QList<Tile> &tiles)
 
 void BackgroundTileEditor::createTile()
 {
-	for (const Tile &tile: tiles) {
+	/* for (const Tile &tile: tiles) {
 		_backgroundFile->addTile(tile);
-	}
+	} */
 	setTiles(_tiles);
 }
