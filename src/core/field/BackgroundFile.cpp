@@ -287,8 +287,8 @@ bool BackgroundFile::addTile(Tile &tile, const QImage &image)
 {
 	Q_UNUSED(image)
 
-	_tiles.insert(tile);
 	tile.tileID = tiles().size();
+	_tiles.insert(tile);
 	setModified(field()->isPC());
 
 	return true;

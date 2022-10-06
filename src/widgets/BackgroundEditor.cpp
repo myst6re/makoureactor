@@ -26,6 +26,7 @@ BackgroundEditor::BackgroundEditor(QWidget *parent)
 	for (quint8 i = 0; i < 4; ++i) {
 		_layersComboBox->addItem(tr("Layer %1").arg(i + 1));
 	}
+	_layersComboBox->setFixedWidth(fontMetrics().horizontalAdvance("WWWWWWWWWWW"));
 	_sectionsList = new QListWidget(this);
 	_sectionsList->setUniformItemSizes(true);
 	_sectionsList->setFixedWidth(fontMetrics().horizontalAdvance("WWWWWWWWWWW"));
@@ -41,6 +42,14 @@ BackgroundEditor::BackgroundEditor(QWidget *parent)
 	_backgroundLayerScrollArea->setWidgetResizable(true);
 	_backgroundLayerScrollArea->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 
+	_backgroundTileEditor = new BackgroundTileEditor(this);
+
+	QWidget *topRow = new QWidget(this);
+	QHBoxLayout *topRowLayout = new QHBoxLayout(topRow);
+	topRowLayout->addWidget(_backgroundLayerScrollArea, 1);
+	topRowLayout->addWidget(_backgroundTileEditor);
+	topRowLayout->setContentsMargins(QMargins());
+
 	_texturesWidget = new ImageGridWidget(this);
 	_texturesWidget->setCellSize(16);
 	_texturesWidget->setSelectionMode(ImageGridWidget::NoSelection);
@@ -49,19 +58,19 @@ BackgroundEditor::BackgroundEditor(QWidget *parent)
 	texturesScrollArea->setWidgetResizable(true);
 	texturesScrollArea->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 
-	_backgroundTileEditor = new BackgroundTileEditor(this);
+	_topBottomSplitter = new QSplitter(Qt::Vertical, this);
+	_topBottomSplitter->addWidget(topRow);
+	_topBottomSplitter->addWidget(texturesScrollArea);
+	_topBottomSplitter->setStretchFactor(0, 10);
+	_topBottomSplitter->setStretchFactor(1, 2);
+	_topBottomSplitter->setCollapsible(0, false);
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(_layersComboBox, 0, 0);
 	layout->addWidget(_sectionsList, 1, 0);
 	layout->addWidget(_paramsList, 2, 0);
-	layout->addWidget(_backgroundLayerScrollArea, 0, 1, 2, 1);
-	layout->addWidget(_backgroundTileEditor, 0, 2, 2, 1);
-	layout->addWidget(texturesScrollArea, 2, 1, 1, 2);
-	layout->setColumnStretch(0, 1);
+	layout->addWidget(_topBottomSplitter, 0, 1, 3, 1);
 	layout->setColumnStretch(1, 2);
-	layout->setColumnStretch(2, 1);
-	layout->setRowStretch(1, 2);
 
 	connect(_layersComboBox, &QComboBox::currentIndexChanged, this, &BackgroundEditor::updateCurrentLayer);
 	connect(_sectionsList, &QListWidget::currentItemChanged, this, &BackgroundEditor::updateCurrentSection);
@@ -195,7 +204,7 @@ void BackgroundEditor::updateCurrentLayer(int layer)
 	bool hasSections = layer == 1,
 	        hasParams = layer > 0;
 
-	_sectionsList->setEnabled(hasSections);
+	_sectionsList->setVisible(hasSections);
 
 	if (hasSections && _sectionsList->currentItem() == nullptr) {
 		_sectionsList->blockSignals(true);
@@ -203,7 +212,7 @@ void BackgroundEditor::updateCurrentLayer(int layer)
 		_sectionsList->blockSignals(false);
 	}
 
-	_paramsList->setEnabled(hasParams);
+	_paramsList->setVisible(hasParams);
 
 	updateImageLabel(layer, hasSections ? currentSection() : -1, -1, -1);
 }
@@ -288,8 +297,9 @@ void BackgroundEditor::updateSelectedTiles(const QList<Cell> &cells)
 		quint8 layerID = quint8(currentLayer());
 		quint16 ID = quint16(currentSection());
 		QMultiHash<Cell, Tile> matches;
-
-		for (const Tile &tile : _backgroundFile->tiles().tiles(layerID, ID)) {
+		BackgroundTiles tiles = _backgroundFile->tiles().tiles(layerID, ID);
+		
+		for (const Tile &tile : tiles) {
 			for (const Cell &cell: cells) {
 				qint16 dstX = qint16(cell.x() * cellSize - MAX_TILE_DST),
 				        dstY = qint16(cell.y() * cellSize - MAX_TILE_DST);

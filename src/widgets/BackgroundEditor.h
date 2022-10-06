@@ -61,7 +61,8 @@ private:
 	void updateImageLabel(int layer, int section, int param, int state);
 	void refreshImage(int layer, int section, int param, int state);
 	void refreshTexture();
-
+	
+	QSplitter *_topBottomSplitter;
 	QComboBox *_layersComboBox;
 	QListWidget *_sectionsList;
 	QTreeWidget *_paramsList;
