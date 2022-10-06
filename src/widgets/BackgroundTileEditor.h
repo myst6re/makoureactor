@@ -31,6 +31,7 @@ public:
 	void setBackgroundFile(BackgroundFile *backgroundFile);
 	void clear();
 signals:
+	void changed(const QList<Tile> &tiles);
 public slots:
 	inline void setTile(const Tile &tile) {
 		setTiles(QList<Tile>() << tile);

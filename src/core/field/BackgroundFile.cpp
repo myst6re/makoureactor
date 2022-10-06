@@ -108,7 +108,7 @@ QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles, bool transpa
 	bool warned = false; // To prevent verbosity of warnings
 
 	for (const Tile &tile : tiles) {
-		QVector<uint> indexOrColorList = _textures->tile(tile);
+		QList<uint> indexOrColorList = _textures->tile(tile);
 
 		if (indexOrColorList.isEmpty()) {
 			if (!warned) {
@@ -281,4 +281,15 @@ void BackgroundFile::setZLayer1(quint16 oldZ, quint16 newZ)
 	
 		setModified(field()->isPC());
 	}
+}
+
+bool BackgroundFile::addTile(Tile &tile, const QImage &image)
+{
+	Q_UNUSED(image)
+
+	_tiles.insert(tile);
+	tile.tileID = tiles().size();
+	setModified(field()->isPC());
+
+	return true;
 }

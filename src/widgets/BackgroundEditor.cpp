@@ -65,8 +65,9 @@ BackgroundEditor::BackgroundEditor(QWidget *parent)
 
 	connect(_layersComboBox, &QComboBox::currentIndexChanged, this, &BackgroundEditor::updateCurrentLayer);
 	connect(_sectionsList, &QListWidget::currentItemChanged, this, &BackgroundEditor::updateCurrentSection);
-	// connect(_paramsList, &QListWidget::currentItemChanged, this, &BackgroundEditor::updateCurrentParam);
+	connect(_paramsList, &QTreeWidget::currentItemChanged, this, &BackgroundEditor::updateCurrentParam);
 	connect(_backgroundLayerWidget, &ImageGridWidget::currentSelectionChanged, this, &BackgroundEditor::updateSelectedTiles);
+	connect(_backgroundTileEditor, &BackgroundTileEditor::changed, this, &BackgroundEditor::updateTiles);
 }
 
 void BackgroundEditor::showEvent(QShowEvent *event)
@@ -110,6 +111,7 @@ void BackgroundEditor::setParams(const QMap<quint8, quint8> &params)
 			if (states & 1) {
 				QTreeWidgetItem *item = new QTreeWidgetItem(parent, QStringList(tr("State %1").arg(state)));
 				item->setData(0, Qt::UserRole, state);
+				parent->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
 			}
 			state++;
 			states >>= 1;
@@ -123,8 +125,19 @@ void BackgroundEditor::setBackgroundFile(BackgroundFile *backgroundFile)
 {
 	_backgroundFile = backgroundFile;
 
-	updateCurrentLayer(_layersComboBox->currentIndex());
+	_layersComboBox->blockSignals(true);
+	_layersComboBox->setCurrentIndex(0);
+	_layersComboBox->blockSignals(false);
+	// setCurrentIndex does not always trigger currentIndexChanged slot
+	updateCurrentLayer(0);
 
+	refreshTexture();
+
+	_backgroundTileEditor->setBackgroundFile(backgroundFile);
+}
+
+void BackgroundEditor::refreshTexture()
+{
 	QPixmap pix;
 
 	if (_backgroundFile != nullptr) {
@@ -133,8 +146,6 @@ void BackgroundEditor::setBackgroundFile(BackgroundFile *backgroundFile)
 
 	_texturesWidget->setPixmap(pix);
 	_texturesWidget->setMinimumSize(_texturesWidget->gridSize() * 16);
-
-	_backgroundTileEditor->setBackgroundFile(backgroundFile);
 }
 
 void BackgroundEditor::clear()
@@ -150,6 +161,11 @@ void BackgroundEditor::clear()
 	_backgroundLayerWidget->blockSignals(false);
 }
 
+int BackgroundEditor::currentLayer() const
+{
+	return _layersComboBox->currentIndex();
+}
+
 int BackgroundEditor::currentSection() const
 {
 	QListWidgetItem *item = _sectionsList->currentItem();
@@ -160,8 +176,22 @@ int BackgroundEditor::currentSection() const
 	return item->data(Qt::UserRole).toInt();
 }
 
+ParamState BackgroundEditor::currentParamState() const
+{
+	QTreeWidgetItem *item = _paramsList->currentItem();
+	if (item == nullptr) {
+		return ParamState();
+	}
+
+	int state = item->data(0, Qt::UserRole).toInt();
+	int param = item->parent()->data(0, Qt::UserRole).toInt();
+
+	return ParamState(quint8(param), quint8(state));
+}
+
 void BackgroundEditor::updateCurrentLayer(int layer)
 {
+	qDebug() << "BackgroundEditor::updateCurrentLayer" << layer;
 	bool hasSections = layer == 1,
 	        hasParams = layer > 0;
 
@@ -175,7 +205,7 @@ void BackgroundEditor::updateCurrentLayer(int layer)
 
 	_paramsList->setEnabled(hasParams);
 
-	updateImageLabelFromSection(layer, hasSections ? currentSection() : -1);
+	updateImageLabel(layer, hasSections ? currentSection() : -1, -1, -1);
 }
 
 void BackgroundEditor::updateCurrentSection(QListWidgetItem *current, QListWidgetItem *previous)
@@ -187,37 +217,41 @@ void BackgroundEditor::updateCurrentSection(QListWidgetItem *current, QListWidge
 
 void BackgroundEditor::updateCurrentSection2(int section)
 {
-	updateImageLabelFromSection(_layersComboBox->currentIndex(), section);
+	updateImageLabel(section < 0 ? -1 : currentLayer(), section, -1, -1);
 }
 
-void BackgroundEditor::updateCurrentParam(QListWidgetItem *current, QListWidgetItem *previous)
+void BackgroundEditor::updateCurrentParam(QTreeWidgetItem *current, QTreeWidgetItem *previous)
 {
 	Q_UNUSED(previous)
 
-	updateCurrentParam2(current != nullptr ? current->data(Qt::UserRole).toInt() : -1);
+	updateCurrentParam2(current != nullptr && current->parent() != nullptr ? current->parent()->data(0, Qt::UserRole).toInt() : -1,
+	                    current != nullptr ? current->data(0, Qt::UserRole).toInt() : -1);
 }
 
-void BackgroundEditor::updateCurrentParam2(int param)
+void BackgroundEditor::updateCurrentParam2(int param, int state)
 {
-	updateImageLabelFromParam(_layersComboBox->currentIndex(), param);
+	updateImageLabel(param <= 0 ? -1 : currentLayer(), -1, param, state);
 }
 
-void BackgroundEditor::updateImageLabelFromParam(int layer, int param)
+void BackgroundEditor::updateImageLabel(int layer, int section, int param, int state)
 {
-	updateImageLabel(layer, -1, param);
+	refreshImage(layer, section, param, state);
+
+	updateSelectedTiles(_backgroundLayerWidget->selectedCells());
 }
 
-void BackgroundEditor::updateImageLabelFromSection(int layer, int section)
+void BackgroundEditor::refreshImage(int layer, int section, int param, int state)
 {
-	updateImageLabel(layer, section, -1);
-}
-
-void BackgroundEditor::updateImageLabel(int layer, int section, int param)
-{
-	if (_backgroundFile == nullptr || !_backgroundFile->isOpen()) {
+	qDebug() << "BackgroundEditor::refreshImag" << layer << section << param << state;
+	if (_backgroundFile == nullptr || !_backgroundFile->isOpen() || layer < 0) {
+		_backgroundLayerWidget->setPixmap(QPixmap());
 		return;
 	}
 
+	QHash<quint8, quint8> paramsEnabled;
+	if (param > 0 && state >= 0) {
+		paramsEnabled.insert(param, state);
+	}
 	qint16 z[] = {-1, -1};
 	bool layers[4] = {false, false, false, false};
 	if (layer >= 0 && layer < 4) {
@@ -232,15 +266,13 @@ void BackgroundEditor::updateImageLabel(int layer, int section, int param)
 	int width, height;
 	_backgroundFile->tiles().area(currentOffsetX, currentOffsetY, width, height);
 
-	QImage background = _backgroundFile->openBackground(nullptr, z, layers, sections.isEmpty() ? nullptr : &sections, true);
+	QImage background = _backgroundFile->openBackground(param > 0 ? &paramsEnabled : nullptr, z, layers, section >= 0 ? &sections : nullptr, true);
 	_backgroundLayerWidget->setPixmap(QPoint(MAX_TILE_DST - currentOffsetX, MAX_TILE_DST - currentOffsetY), QPixmap::fromImage(background));
 
 	quint8 tileSize = layer > 1 ? 32 : 16;
 	_backgroundLayerWidget->setCellSize(tileSize);
 	_backgroundLayerWidget->setGridSize(QSize(MAX_TILE_DST * 2 / tileSize, MAX_TILE_DST * 2 / tileSize));
 	_backgroundLayerWidget->setMinimumSize(_backgroundLayerWidget->gridSize() * tileSize);
-
-	updateSelectedTiles(_backgroundLayerWidget->selectedCells());
 }
 
 void BackgroundEditor::updateSelectedTiles(const QList<Cell> &cells)
@@ -253,7 +285,7 @@ void BackgroundEditor::updateSelectedTiles(const QList<Cell> &cells)
 
 	if (!cells.isEmpty()) {
 		int cellSize = _backgroundLayerWidget->cellSize();
-		quint8 layerID = quint8(_layersComboBox->currentIndex());
+		quint8 layerID = quint8(currentLayer());
 		quint16 ID = quint16(currentSection());
 		QMultiHash<Cell, Tile> matches;
 
@@ -279,16 +311,19 @@ void BackgroundEditor::updateSelectedTiles(const QList<Cell> &cells)
 			if (!matches.contains(cell)) {
 				Tile tile = Tile();
 				tile.tileID = quint16(-1);
-				tile.layerID = _layersComboBox->currentIndex();
+				tile.layerID = quint8(currentLayer());
 				if (_sectionsList->isEnabled() && _sectionsList->currentItem() != nullptr) {
 					tile.ID = currentSection();
 				}
 				if (_paramsList->isEnabled() && _paramsList->currentItem() != nullptr) {
-					tile.param = _paramsList->currentItem()->parent()->data(0, Qt::UserRole).toInt();
-					tile.state = _paramsList->currentItem()->data(0, Qt::UserRole).toInt();
+					ParamState paramState = currentParamState();
+					tile.param = paramState.param;
+					tile.state = paramState.state;
 				}
 				tile.dstX = qint16(cell.x() * cellSize - MAX_TILE_DST);
 				tile.dstY = qint16(cell.y() * cellSize - MAX_TILE_DST);
+				tile.depth = 1;
+				tile.size = tile.layerID > 1 ? 32 : 16;
 				selectedTiles.append(tile);
 				matches.insert(cell, tile);
 			}
@@ -304,4 +339,14 @@ void BackgroundEditor::updateSelectedTiles(const QList<Cell> &cells)
 	_backgroundTileEditor->setTiles(selectedTiles);
 	_backgroundTileEditor->setEnabled(!selectedTiles.isEmpty());
 	_texturesWidget->setSelectedCells(texturesSelectedCells);
+}
+
+void BackgroundEditor::updateTiles(const QList<Tile> &tiles)
+{
+	Q_UNUSED(tiles)
+
+	ParamState paramState = currentParamState();
+
+	refreshImage(currentLayer(), currentSection(), paramState.param, paramState.state);
+	refreshTexture();
 }

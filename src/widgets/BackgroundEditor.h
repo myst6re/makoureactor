@@ -24,6 +24,15 @@
 
 class BackgroundFile;
 
+struct ParamState {
+	ParamState(): param(0), state(0) {}
+	ParamState(quint8 param, quint8 state) : param(param), state(state) {}
+	inline bool isValid() const {
+		return param > 0;
+	}
+	quint8 param, state;
+};
+
 class BackgroundEditor : public QWidget
 {
 	Q_OBJECT
@@ -40,15 +49,18 @@ protected:
 private slots:
 	void updateCurrentLayer(int layer);
 	void updateCurrentSection(QListWidgetItem *current, QListWidgetItem *previous);
-	void updateCurrentParam(QListWidgetItem *current, QListWidgetItem *previous);
+	void updateCurrentParam(QTreeWidgetItem *current, QTreeWidgetItem *previous);
 	void updateSelectedTiles(const QList<Cell> &cells);
+	void updateTiles(const QList<Tile> &tiles);
 private:
+	int currentLayer() const;
 	int currentSection() const;
+	ParamState currentParamState() const;
 	void updateCurrentSection2(int section);
-	void updateCurrentParam2(int param);
-	void updateImageLabelFromSection(int layer, int section);
-	void updateImageLabelFromParam(int layer, int param);
-	void updateImageLabel(int layer, int section, int param);
+	void updateCurrentParam2(int param, int state);
+	void updateImageLabel(int layer, int section, int param, int state);
+	void refreshImage(int layer, int section, int param, int state);
+	void refreshTexture();
 
 	QComboBox *_layersComboBox;
 	QListWidget *_sectionsList;

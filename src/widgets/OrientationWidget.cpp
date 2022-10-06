@@ -86,7 +86,7 @@ void OrientationWidget::paintEvent(QPaintEvent *)
 
 	p.rotate(_value);
 
-	p.drawLines(QVector<QLineF>()
+	p.drawLines(QList<QLineF>()
 				<< QLineF(QPointF(-radius, 0), QPointF(radius, 0))
 				<< QLineF(QPointF(0, -radius), QPointF(0, radius)));
 

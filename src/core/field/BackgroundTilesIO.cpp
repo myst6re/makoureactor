@@ -139,7 +139,7 @@ bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 				memcpy(&tile, data.constData() + i*52, sizeofTile);
 
 				if (qAbs(tile.dstX) < MAX_TILE_DST && qAbs(tile.dstY) < MAX_TILE_DST) {
-					tiles.insert(4096 - tile.ID, tilePC2Tile(tile, 1, i));
+					tiles.insert(tilePC2Tile(tile, 1, i));
 				} else {
 					qWarning() << "Tile destination overflow 1" << i << tile.dstX << tile.dstY;
 				}
@@ -413,6 +413,8 @@ Tile BackgroundTilesIOPC::tilePC2Tile(const TilePC &tile, quint8 layerID, quint1
 	ret.tileID = tileID;
 	ret.IDBig = tile.IDBig;
 
+	// qDebug() << "tile" << ret.srcX << "," << ret.srcY << ret.dstX << "," << ret.dstY << "textureID" << ret.textureID << "paletteID" << ret.paletteID << "blending" << ret.blending << "depth" << ret.depth << "size" << ret.size << "param" << ret.param << "layerID" << layerID << "Z" << ret.ID;
+
 	return ret;
 }
 
@@ -632,7 +634,7 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 				tile.IDBig = quint32((float(tile.ID) / 4096.0f) * 10000000.0f);
 			}
 
-			tiles.insert(4096 - tile.ID, tile);
+			tiles.insert(tile);
 		} else {
 			qWarning() << "Tile destination overflow 1" << tile1.dstX << tile1.dstY;
 		}
@@ -686,7 +688,7 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 			tile.tileID = j;
 			tile.IDBig = 0;
 
-			tiles.insert(4096 - tile.ID, tile);
+			tiles.insert(tile);
 		} else {
 			qWarning() << "Tile destination overflow 2/3" << tile1.dstX << tile1.dstY;
 		}
@@ -779,13 +781,13 @@ bool BackgroundTilesIOPS::writeData(const BackgroundTiles &tiles) const
 	device()->write((char *)&flag, 2);
 	device()->write((char *)&flag, 2);
 
-	QVector<quint32> positions(_demo ? 3 : 4);
+	QList<quint32> positions(_demo ? 3 : 4);
 
 	positions[0] = device()->pos();
 
 	QList<Tile> tilesLayers2And3 = tiles.tiles(2, true).values()
 	                             + tiles.tiles(3, true).values();
-	QVector<Tile> tiles2;
+	QList<Tile> tiles2;
 	qint16 dstY = 0;
 	bool firstTurn = true;
 	BackgroundTiles tiles0 = tiles.tiles(0, true);

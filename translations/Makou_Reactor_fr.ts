@@ -232,6 +232,14 @@
         <source>Create tile</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>No more space</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No more space available in the file for a new Tile</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CLI</name>

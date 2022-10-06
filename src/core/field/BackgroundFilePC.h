@@ -40,6 +40,7 @@ public:
 	}
 	BackgroundFilePS toPS(FieldPS *field) const;
 	bool repair() override;
+	bool addTile(Tile &tile, const QImage &image = QImage()) override;
 private:
 	using BackgroundFile::open;
 };

@@ -176,8 +176,19 @@ void BackgroundTileEditor::setTiles(const QList<Tile> &tiles)
 
 void BackgroundTileEditor::createTile()
 {
-	/* for (const Tile &tile: tiles) {
-		_backgroundFile->addTile(tile);
-	} */
+	QList<Tile> modifiedTiles;
+
+	for (Tile &tile: _tiles) {
+		if (tile.tileID == quint16(-1)) {
+			if (!_backgroundFile->addTile(tile)) {
+				QMessageBox::warning(this, tr("No more space"), tr("No more space available in the file for a new Tile"));
+			} else {
+				modifiedTiles.append(tile);
+			}
+		}
+	}
+
 	setTiles(_tiles);
+
+	emit changed(modifiedTiles);
 }

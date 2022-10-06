@@ -64,5 +64,5 @@ protected:
 private:
 	quint32 sectionPositions[7];
 	qint32 vramDiff;
-	QVector<FieldModelFilePS *> _models;
+	QList<FieldModelFilePS *> _models;
 };

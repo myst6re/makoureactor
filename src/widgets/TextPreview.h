@@ -91,7 +91,7 @@ private:
 	void word(int *x, int *y, const QByteArray &charIds, QPainter *painter, quint8 tableId = 0);
 	static QImage letterImage(quint8 tableId, quint8 charId);
 	static void setFontColor(int id, bool blink=false);
-	static QVector<QRgb> fontPalettes[8];
+	static QList<QRgb> fontPalettes[8];
 	static QTimer timer;
 	static quint16 posTable[7];
 	static QList<QByteArray> names;

@@ -81,7 +81,7 @@ void FieldModelLoaderPC::initEmpty()
 	                   << "ABIF"
 	                   << "ABJA");
 
-	QList<quint16> animUnknown = QVector<quint16>(3, 1).toList();
+	QList<quint16> animUnknown = QList<quint16>(3, 1).toList();
 	model_anims_unknown.clear();
 	model_anims_unknown.append(animUnknown);
 	model_anims_unknown.append(animUnknown);
@@ -292,7 +292,7 @@ bool FieldModelLoaderPC::insertModel(int modelID, const QString &hrcName)
 		if (!colors.isEmpty()) {
 			color = colors.first();
 		} else {
-			color = QVector<FieldModelColorDir>(10, FieldModelColorDir()).toList();
+			color = QList<FieldModelColorDir>(10, FieldModelColorDir()).toList();
 		}
 		QRgb globalColor;
 		if (!model_global_color.isEmpty()) {

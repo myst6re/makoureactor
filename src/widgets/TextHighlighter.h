@@ -32,5 +32,5 @@ private:
 		QRegularExpression pattern;
 		QColor color;
 	};
-	QVector<HighlightingRule> highlightingRules;
+	QList<HighlightingRule> highlightingRules;
 };

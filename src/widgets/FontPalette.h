@@ -51,7 +51,7 @@ private:
 	quint8 colorCount;
 	int _currentColor;
 	WindowBinFile::FontColor _currentPalette;
-	QVector<QRgb> palette, copyPalette;
+	QList<QRgb> palette, copyPalette;
 	bool readOnly;
 	WindowBinFile *_windowBinFile;
 };

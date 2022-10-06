@@ -41,9 +41,9 @@ struct MIM {
 struct BackgroundConversionTexture
 {
 	BackgroundConversionTexture() : tile(Tile()) {}
-	BackgroundConversionTexture(const QVector<uint> &data, const Tile &tile) :
+	BackgroundConversionTexture(const QList<uint> &data, const Tile &tile) :
 	    data(data), tile(tile) {}
-	QVector<uint> data;
+	QList<uint> data;
 	Tile tile;
 };
 
@@ -61,7 +61,8 @@ public:
 	virtual void clear() {
 		_data.clear();
 	}
-	QVector<uint> tile(const Tile &tile) const;
+	QList<uint> tile(const Tile &tile) const;
+	bool setTile(const Tile &tile, const QList<uint> &indexOrColor);
 	virtual inline quint8 depth(const Tile &tile) const {
 		return tile.depth;
 	}
@@ -71,7 +72,11 @@ protected:
 	virtual quint16 textureWidth(const Tile &tile) const=0;
 	virtual int originInData(const Tile &tile) const=0;
 	virtual QRgb directColor(quint16 color) const=0;
+	virtual quint16 fromQRgb(QRgb color) const=0;
 	QRgb pixel(quint32 pos) const;
+	QByteArray &data() {
+		return _data;
+	}
 private:
 	QByteArray _data;
 };
@@ -79,11 +84,17 @@ private:
 class BackgroundTexturesPC;
 class BackgroundTexturesPS;
 
+struct UnusedSpaceInTexturePC {
+	quint8 texID;
+	quint8 x, y;
+	bool valid, needsToCreateTex;
+};
+
 class BackgroundTexturesPC : public BackgroundTextures
 {
 public:
 	BackgroundTexturesPC();
-	explicit BackgroundTexturesPC(const QHash<quint8, BackgroundTexturesPCInfos> &texInfos);
+	explicit BackgroundTexturesPC(const QMap<quint8, BackgroundTexturesPCInfos> &texInfos);
 	bool hasTex(quint8 texID) const;
 	quint32 texPos(quint8 texID) const;
 	quint8 texDepth(quint8 texID) const;
@@ -91,9 +102,10 @@ public:
 	BackgroundTexturesPCInfos texInfos(quint8 texID) const;
 	void addTexInfos(quint8 texID, const BackgroundTexturesPCInfos &infos);
 	void clear() override;
-	void setTexInfos(const QHash<quint8, BackgroundTexturesPCInfos> &texInfos);
+	void setTexInfos(const QMap<quint8, BackgroundTexturesPCInfos> &texInfos);
 	QList<uint> tex(quint8 texID) const;
 	void setTex(quint8 texID, const QList<uint> &indexOrRgbList, const BackgroundTexturesPCInfos &infos);
+	UnusedSpaceInTexturePC findFirstUnusedSpaceInTextures(const BackgroundTiles &tiles, quint8 depth, quint8 size);
 	QImage toImage(const BackgroundTiles &tiles, const Palettes &palettes) const override;
 	QImage toImage(quint8 texID) const;
 	QImage toImage(quint8 texID, const BackgroundTiles &tiles, const Palettes &palettes) const;
@@ -105,9 +117,9 @@ protected:
 	quint8 depth(const Tile &tile) const override;
 	int originInData(const Tile &tile) const override;
 	QRgb directColor(quint16 color) const override;
+	quint16 fromQRgb(QRgb color) const override;
 private:
-	static quint16 toPcColor(const QRgb &color);
-	QHash<quint8, BackgroundTexturesPCInfos> _texInfos;
+	QMap<quint8, BackgroundTexturesPCInfos> _texInfos;
 };
 
 class BackgroundTexturesPS : public BackgroundTextures
@@ -126,6 +138,7 @@ protected:
 	quint16 textureWidth(const Tile &tile) const override;
 	int originInData(const Tile &tile) const override;
 	QRgb directColor(quint16 color) const override;
+	quint16 fromQRgb(QRgb color) const override;
 private:
 	quint32 pageDataPos(quint8 pageID) const;
 	quint16 pageTexPos(quint8 pageID) const;

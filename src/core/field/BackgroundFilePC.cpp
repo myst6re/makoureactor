@@ -49,7 +49,7 @@ void BackgroundFilePC::initEmpty()
 	infos.size = 0; // 16x16 tiles
 	infos.depth = 2; // No palettes
 	// Black
-	textures->setTex(0, QVector<uint>(256 * 256, qRgb(0, 0, 0)).toList(), infos);
+	textures->setTex(0, QList<uint>(256 * 256, qRgb(0, 0, 0)).toList(), infos);
 	setTextures(textures);
 
 	quint16 tileID = 0;
@@ -211,4 +211,28 @@ bool BackgroundFilePC::repair()
 	}
 
 	return false;
+}
+
+bool BackgroundFilePC::addTile(Tile &tile, const QImage &image)
+{
+	Q_UNUSED(image)
+
+	UnusedSpaceInTexturePC unusedSpace = textures()->findFirstUnusedSpaceInTextures(tiles(), tile.depth, tile.size);
+	if (!unusedSpace.valid) {
+		qWarning() << "not valid";
+		return false;
+	}
+
+	if (unusedSpace.needsToCreateTex) {
+		BackgroundTexturesPCInfos texInfos;
+		texInfos.depth = tile.depth;
+		texInfos.size = tile.size;
+		textures()->setTex(unusedSpace.texID, QList<uint>(256 * 256), texInfos);
+	}
+
+	tile.textureID = unusedSpace.texID;
+	tile.srcX = unusedSpace.x;
+	tile.srcY = unusedSpace.y;
+
+	return BackgroundFile::addTile(tile, image);
 }
