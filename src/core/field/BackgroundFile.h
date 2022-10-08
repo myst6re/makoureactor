@@ -42,7 +42,7 @@ public:
 	                      bool transparent = false, bool *warning = nullptr);
 	// Draw background tiles with ID
 	QImage backgroundPart(quint16 ID, bool transparent = false, bool *warning = nullptr);
-	bool usedParams(QMap<quint8, quint8> &usedParams, bool *layerExists, QSet<quint16> *usedIDs);
+	bool usedParams(QMap<LayerParam, quint8> &usedParams, bool *layerExists, QSet<quint16> *usedIDs);
 	bool layerExists(int num);
 
 	bool exportTiles(const QString &fileName, const BackgroundTiles &tiles) const;

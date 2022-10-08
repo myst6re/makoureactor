@@ -173,7 +173,7 @@ QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles, bool transpa
 	return image;
 }
 
-bool BackgroundFile::usedParams(QMap<quint8, quint8> &usedParams, bool *layerExists, QSet<quint16> *usedIDs)
+bool BackgroundFile::usedParams(QMap<LayerParam, quint8> &usedParams, bool *layerExists, QSet<quint16> *usedIDs)
 {
 	if (!isOpen() && !open()) {
 		return false;

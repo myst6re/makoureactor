@@ -17,6 +17,16 @@
  ****************************************************************************/
 #include "BackgroundTiles.h"
 
+int operator==(const LayerParam &layerParam, const LayerParam &other)
+{
+	return memcmp(&layerParam, &other, sizeof(layerParam));
+}
+
+bool operator<(const LayerParam &layerParam, const LayerParam &other)
+{
+	return memcmp(&layerParam, &other, sizeof(layerParam)) < 0;
+}
+
 BackgroundTiles::BackgroundTiles() :
       QMultiMap<qint16, Tile>()
 {
@@ -113,6 +123,20 @@ BackgroundTiles BackgroundTiles::tiles(quint8 layerID, quint16 ID) const
 	return ret;
 }
 
+BackgroundTiles BackgroundTiles::tiles(quint8 layerID, ParamState paramState) const
+{
+	BackgroundTiles ret;
+
+	for (const Tile &tile : *this) {
+		if (tile.layerID == layerID &&
+		        layerID >= 1 && tile.param == paramState.param && tile.state == paramState.state) {
+			ret.insert(tile);
+		}
+	}
+
+	return ret;
+}
+
 BackgroundTiles BackgroundTiles::tiles(quint8 layerID, quint16 ID, qint16 dstX, qint16 dstY) const
 {
 	BackgroundTiles ret;
@@ -159,19 +183,24 @@ QMap<qint32, Tile> BackgroundTiles::sortedTiles() const
 	return ret;
 }
 
-QMap<quint8, quint8> BackgroundTiles::usedParams(bool *layerExists, QSet<quint16> *usedIDs) const
+QMap<LayerParam, quint8> BackgroundTiles::usedParams(bool *layerExists, QSet<quint16> *usedIDs) const
 {
-	QMap<quint8, quint8> ret;
+	QMap<LayerParam, quint8> ret;
 	layerExists[0] = layerExists[1] = layerExists[2] = false;
 	
 	for (const Tile &tile : *this) {
+		LayerParam layerParam;
+		layerParam.layer = tile.layerID;
+		layerParam.param = tile.param;
+
 		switch (tile.layerID) {
 		case 0:
 			break;
 		case 1:
 			layerExists[0] = true;
 			if (tile.param) {
-				ret.insert(tile.param, ret.value(tile.param) | tile.state);
+				quint8 state =  ret.value(layerParam);
+				ret.insert(layerParam, state | tile.state);
 			}
 			if (usedIDs) {
 				usedIDs->insert(tile.ID);
@@ -180,13 +209,13 @@ QMap<quint8, quint8> BackgroundTiles::usedParams(bool *layerExists, QSet<quint16
 		case 2:
 			layerExists[1] = true;
 			if (tile.param) {
-				ret.insert(tile.param, ret.value(tile.param) | tile.state);
+				ret.insert(layerParam, ret.value(layerParam) | tile.state);
 			}
 			break;
 		case 3:
 			layerExists[2] = true;
 			if (tile.param) {
-				ret.insert(tile.param, ret.value(tile.param) | tile.state);
+				ret.insert(layerParam, ret.value(layerParam) | tile.state);
 			}
 			break;
 		}

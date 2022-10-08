@@ -149,7 +149,7 @@ void BGDialog::fillWidgets()
 		return;
 	}
 
-	QMap<quint8, quint8> usedParams;
+	QMap<LayerParam, quint8> usedParams;
 	bool layerExists[] = {false, false, false};
 	QSet<quint16> usedIDs;
 
@@ -164,11 +164,14 @@ void BGDialog::fillWidgets()
 
 	if (_field->background()->usedParams(usedParams, layerExists, &usedIDs)) {
 
-		QList<quint8> usedParamsList = usedParams.keys();
-		for (const quint8 param : qAsConst(usedParamsList)) {
-			parametersWidget->addItem(tr("Parameter %1").arg(param), param);
+		QList<LayerParam> usedParamsList = usedParams.keys();
+		int index = 0;
+		for (const LayerParam &param : qAsConst(usedParamsList)) {
+			parametersWidget->addItem(tr("Parameter %1").arg(param.param), param.param);
+			parametersWidget->setItemData(index, param.layer, Qt::UserRole + 1);
+			++index;
 		}
-		parametersWidget->setEnabled(parametersWidget->count());
+		parametersWidget->setEnabled(index > 0);
 
 		QListWidgetItem *item;
 
@@ -236,8 +239,10 @@ void BGDialog::showLayersPage(int index)
 
 void BGDialog::parameterChanged(int index)
 {
-	quint8 parameter = quint8(parametersWidget->itemData(index).toInt());
-	quint8 states = allparams.value(parameter);
+	LayerParam layerParam;
+	layerParam.param = quint8(parametersWidget->itemData(index).toInt());
+	layerParam.layer = quint8(parametersWidget->itemData(index, Qt::UserRole + 1).toInt());
+	quint8 states = allparams.value(layerParam);
 	QListWidgetItem *item;
 	statesWidget->clear();
 	for (int i=0; i<8; ++i) {
@@ -245,7 +250,7 @@ void BGDialog::parameterChanged(int index)
 			item = new QListWidgetItem(tr("State %1").arg(i));
 			item->setData(Qt::UserRole, 1 << i);
 			item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
-			item->setCheckState(((params.value(parameter) >> i) & 1) ? Qt::Checked : Qt::Unchecked);
+			item->setCheckState(((params.value(layerParam.param) >> i) & 1) ? Qt::Checked : Qt::Unchecked);
 			statesWidget->addItem(item);
 		}
 	}

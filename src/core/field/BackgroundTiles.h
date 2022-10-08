@@ -35,6 +35,22 @@ struct Tile {
 	quint32 IDBig; // Only on PC
 };
 
+struct LayerParam {
+	quint8 layer, param;
+};
+
+int operator==(const LayerParam &layerParam, const LayerParam &other);
+bool operator<(const LayerParam &layerParam, const LayerParam &other);
+
+struct ParamState {
+	ParamState(): param(0), state(0) {}
+	ParamState(quint8 param, quint8 state) : param(param), state(state) {}
+	inline bool isValid() const {
+		return param > 0;
+	}
+	quint8 param, state;
+};
+
 class BackgroundTiles : public QMultiMap<qint16, Tile>
 {
 public:
@@ -47,9 +63,10 @@ public:
 	BackgroundTiles tiles(quint8 layerID, bool orderedForSaving = false) const;
 	BackgroundTiles tilesByID(quint16 ID, bool orderedForSaving = false) const;
 	BackgroundTiles tiles(quint8 layerID, quint16 ID, qint16 dstX, qint16 dstY) const;
+	BackgroundTiles tiles(quint8 layerID, ParamState paramState) const;
 	BackgroundTiles tiles(quint8 layerID, quint16 ID) const;
 	QMap<qint32, Tile> sortedTiles() const;
-	QMap<quint8, quint8> usedParams(bool *layerExists, QSet<quint16> *usedIDs = nullptr) const;
+	QMap<LayerParam, quint8> usedParams(bool *layerExists, QSet<quint16> *usedIDs = nullptr) const;
 	QSet<quint8> usedPalettes() const;
 	void area(quint16 &minWidth, quint16 &minHeight,
 	          int &width, int &height) const;

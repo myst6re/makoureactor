@@ -100,26 +100,31 @@ void BackgroundEditor::setSections(const QList<quint16> &sections)
 	_sectionsList->blockSignals(false);
 }
 
-void BackgroundEditor::setParams(const QMap<quint8, quint8> &params)
+void BackgroundEditor::setParams(const QMap<LayerParam, quint8> &params)
 {
 	_paramsList->blockSignals(true);
 	_paramsList->clear();
 
-	QMapIterator<quint8, quint8> it(params);
+	int layer = currentLayer();
+
+	QMapIterator<LayerParam, quint8> it(params);
 
 	while (it.hasNext()) {
 		it.next();
-		quint8 param = it.key(), states = it.value();
-		QTreeWidgetItem *parent = new QTreeWidgetItem(_paramsList, QStringList(tr("Param %1").arg(param)));
-		parent->setData(0, Qt::UserRole, param);
+		LayerParam layerAndParam = it.key();
+		quint8 states = it.value();
+		QTreeWidgetItem *parent = new QTreeWidgetItem(_paramsList, QStringList(tr("Param %1").arg(layerAndParam.param)));
+		parent->setData(0, Qt::UserRole, layerAndParam.param);
+		parent->setData(0, Qt::UserRole + 1, layerAndParam.layer);
 		parent->setExpanded(true);
 		parent->setFlags(Qt::ItemIsEnabled);
+		parent->setHidden(layer != layerAndParam.layer);
 
 		int state = 0;
 		while (states) {
 			if (states & 1) {
 				QTreeWidgetItem *item = new QTreeWidgetItem(parent, QStringList(tr("State %1").arg(state)));
-				item->setData(0, Qt::UserRole, state);
+				item->setData(0, Qt::UserRole, 1 << state);
 				parent->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
 			}
 			state++;
@@ -213,6 +218,15 @@ void BackgroundEditor::updateCurrentLayer(int layer)
 	}
 
 	_paramsList->setVisible(hasParams);
+	if (hasParams) {
+		for (int i = 0; i < _paramsList->topLevelItemCount(); ++i) {
+			QTreeWidgetItem *item = _paramsList->topLevelItem(i);
+			if (item != nullptr) {
+				item->setHidden(item->data(0, Qt::UserRole + 1).toInt() != layer);
+			}
+			
+		}
+	}
 
 	updateImageLabel(layer, hasSections ? currentSection() : -1, -1, -1);
 }
@@ -251,7 +265,6 @@ void BackgroundEditor::updateImageLabel(int layer, int section, int param, int s
 
 void BackgroundEditor::refreshImage(int layer, int section, int param, int state)
 {
-	qDebug() << "BackgroundEditor::refreshImag" << layer << section << param << state;
 	if (_backgroundFile == nullptr || !_backgroundFile->isOpen() || layer < 0) {
 		_backgroundLayerWidget->setPixmap(QPixmap());
 		return;
@@ -260,6 +273,7 @@ void BackgroundEditor::refreshImage(int layer, int section, int param, int state
 	QHash<quint8, quint8> paramsEnabled;
 	if (param > 0 && state >= 0) {
 		paramsEnabled.insert(param, state);
+		_isParamMode = true;
 	}
 	qint16 z[] = {-1, -1};
 	bool layers[4] = {false, false, false, false};
@@ -269,6 +283,7 @@ void BackgroundEditor::refreshImage(int layer, int section, int param, int state
 	QSet<quint16> sections;
 	if (section >= 0) {
 		sections.insert(quint16(section));
+		_isParamMode = false;
 	}
 
 	quint16 currentOffsetX, currentOffsetY;
@@ -296,9 +311,10 @@ void BackgroundEditor::updateSelectedTiles(const QList<Cell> &cells)
 		int cellSize = _backgroundLayerWidget->cellSize();
 		quint8 layerID = quint8(currentLayer());
 		quint16 ID = quint16(currentSection());
+		ParamState paramState = currentParamState();
 		QMultiHash<Cell, Tile> matches;
-		BackgroundTiles tiles = _backgroundFile->tiles().tiles(layerID, ID);
-		
+		BackgroundTiles tiles = _isParamMode ? _backgroundFile->tiles().tiles(layerID, paramState) : _backgroundFile->tiles().tiles(layerID, ID);
+
 		for (const Tile &tile : tiles) {
 			for (const Cell &cell: cells) {
 				qint16 dstX = qint16(cell.x() * cellSize - MAX_TILE_DST),

@@ -24,22 +24,13 @@
 
 class BackgroundFile;
 
-struct ParamState {
-	ParamState(): param(0), state(0) {}
-	ParamState(quint8 param, quint8 state) : param(param), state(state) {}
-	inline bool isValid() const {
-		return param > 0;
-	}
-	quint8 param, state;
-};
-
 class BackgroundEditor : public QWidget
 {
 	Q_OBJECT
 public:
 	explicit BackgroundEditor(QWidget *parent = nullptr);
 	void setSections(const QList<quint16> &sections);
-	void setParams(const QMap<quint8, quint8> &params);
+	void setParams(const QMap<LayerParam, quint8> &params);
 	void setBackgroundFile(BackgroundFile *backgroundFile);
 	void clear();
 signals:
@@ -69,6 +60,7 @@ private:
 	QScrollArea *_backgroundLayerScrollArea;
 	ImageGridWidget *_backgroundLayerWidget, *_texturesWidget;
 	BackgroundTileEditor *_backgroundTileEditor;
+	bool _isParamMode;
 
 	BackgroundFile *_backgroundFile;
 };

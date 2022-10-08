@@ -33,7 +33,7 @@ BackgroundTileEditor::BackgroundTileEditor(QWidget *parent)
 	_bgParamInput = new QSpinBox(_bgParamGroup);
 	_bgParamInput->setRange(1, 255);
 	_bgParamStateInput = new QSpinBox(_bgParamGroup);
-	_bgParamStateInput->setRange(0, 255);
+	_bgParamStateInput->setRange(1, 8);
 
 	QFormLayout *tileParameterEditorLayout = new QFormLayout(_bgParamGroup);
 	tileParameterEditorLayout->addRow(tr("Param ID"), _bgParamInput);

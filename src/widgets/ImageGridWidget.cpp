@@ -124,8 +124,6 @@ void ImageGridWidget::updateGrid()
 
 	_scaledRatio = gridS.width() == 0 ? 0.0 : (gridS * _cellSize).scaled(size(), Qt::KeepAspectRatio).width() / double(gridS.width() * _cellSize);
 
-	qDebug() << "updateGrid" << _scaledRatio << lineCountV << lineCountH << gridS << _pixmap.size() << _gridSize << size();
-
 	for (int i = 0; i < lineCountV; ++i) {
 		_gridLines.append(QLine(scaledPoint(QPoint(i * _cellSize, 0)), scaledPoint(QPoint(i, gridS.height()) * _cellSize)));
 	}
