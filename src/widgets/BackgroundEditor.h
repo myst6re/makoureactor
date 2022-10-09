@@ -44,6 +44,7 @@ private slots:
 	void updateSelectedTiles(const QList<Cell> &cells);
 	void updateTiles(const QList<Tile> &tiles);
 private:
+	void fillSectionList();
 	int currentLayer() const;
 	int currentSection() const;
 	ParamState currentParamState() const;
@@ -52,15 +53,15 @@ private:
 	void updateImageLabel(int layer, int section, int param, int state);
 	void refreshImage(int layer, int section, int param, int state);
 	void refreshTexture();
-	
-	QSplitter *_topBottomSplitter;
+
 	QComboBox *_layersComboBox;
 	QListWidget *_sectionsList;
 	QTreeWidget *_paramsList;
 	QScrollArea *_backgroundLayerScrollArea;
-	ImageGridWidget *_backgroundLayerWidget, *_texturesWidget;
+	ImageGridWidget *_backgroundLayerWidget, *_texturesWidget, *_palettesWidget;
 	BackgroundTileEditor *_backgroundTileEditor;
 	bool _isParamMode;
 
 	BackgroundFile *_backgroundFile;
+	QList<quint16> _sections;
 };

@@ -69,7 +69,6 @@ QList<uint> BackgroundTextures::tile(const Tile &tile) const
 
 bool BackgroundTextures::setTile(const Tile &tile, const QList<uint> &indexOrColor)
 {
-	QList<uint> indexOrRgbList;
 	quint8 depth = this->depth(tile), x = 0;
 	quint8 multiplicator = depth == 0 ? 1 : depth * 2;
 
@@ -378,29 +377,27 @@ UnusedSpaceInTexturePC BackgroundTexturesPC::findFirstUnusedSpaceInTextures(cons
 
 QImage BackgroundTexturesPC::toImage(const BackgroundTiles &tiles, const Palettes &palettes) const
 {
-	qint16 maxTexId = -1, maxTexIdLine = -1;
+	QMap<quint8, bool> texIds;
 	for (const Tile &tile: tiles) {
-		maxTexId = std::max(qint16(tile.textureID), maxTexId);
-		maxTexIdLine = std::max(qint16(tile.textureID % 15), maxTexIdLine);
+		texIds.insert(tile.textureID, true);
 	}
 
-	if (maxTexId == -1) {
+	if (texIds.isEmpty()) {
 		return QImage();
 	}
 	
-	qDebug() << "BackgroundTexturesPC::toImage" << maxTexId << maxTexIdLine;
+	QList<quint8> texIdKeys = texIds.keys();
 
-	QImage img(256 * (maxTexIdLine + 1), 256 * ((maxTexId / 15) + 1), QImage::Format_ARGB32);
+	qDebug() << "BackgroundTexturesPC::toImage" << texIdKeys;
+
+	QImage img(256 * texIdKeys.size(), 256, QImage::Format_ARGB32);
 	img.fill(Qt::black);
 	QPainter p(&img);
-	
+
 	qDebug() << "BackgroundTexturesPC::toImage" << img.size();
 
-	for (quint8 texID = 0; texID < BACKGROUND_TEXTURE_PC_MAX_COUNT; ++texID) {
-		if (!hasTex(texID)) {
-			continue;
-		}
-		p.drawImage(QPoint((texID % 15) * 256, (texID / 15) * 256), toImage(texID, tiles, palettes));
+	for (quint8 texID: texIdKeys) {
+		p.drawImage(QPoint(texIdKeys.indexOf(texID) * 256, 0), toImage(texID, tiles, palettes));
 	}
 
 	p.end();

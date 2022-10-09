@@ -40,6 +40,7 @@ public:
 	void fromData(const char *data);
 	QByteArray toByteArray() const;
 	QImage toImage() const;
+	QImage toHorizontalImage() const;
 private:
 	inline void addColor(QRgb color, bool mask, bool isZero) {
 		_colors.append(color);
@@ -71,7 +72,11 @@ typedef Palette PalettePS;
 class PalettesPS;
 class PalettesPC;
 
-typedef QList<Palette *> Palettes;
+class Palettes : public QList<Palette *>
+{
+public:
+	QImage toImage() const;
+};
 
 class PalettesPS : public Palettes
 {

@@ -58,7 +58,7 @@ BackgroundTiles::BackgroundTiles(const QMultiMap<qint16, Tile> &tiles) :
 }
 
 BackgroundTiles BackgroundTiles::filter(const QHash<quint8, quint8> *paramActifs, const qint16 *z,
-                                        const bool *layers, const QSet<quint16> *IDs) const
+                                        const bool *layers, const QSet<quint16> *IDs, bool onlyParams) const
 {
 	BackgroundTiles ret;
 	
@@ -70,19 +70,19 @@ BackgroundTiles BackgroundTiles::filter(const QHash<quint8, quint8> *paramActifs
 			}
 			break;
 		case 1:
-			if ((tile.state == 0 || (paramActifs == nullptr || paramActifs->value(tile.param, 0) & tile.state))
+			if (((!onlyParams && tile.state == 0) || (paramActifs == nullptr || paramActifs->value(tile.param, 0) & tile.state))
 			    && (layers == nullptr || layers[1]) && (IDs == nullptr || IDs->contains(tile.ID))) {
 				ret.insert(tile);
 			}
 			break;
 		case 2:
-			if ((tile.state == 0 || (paramActifs == nullptr || paramActifs->value(tile.param, 0) & tile.state))
+			if (((!onlyParams && tile.state == 0) || (paramActifs == nullptr || paramActifs->value(tile.param, 0) & tile.state))
 			    && (layers == nullptr || layers[2]) && (IDs == nullptr || IDs->contains(tile.ID))) {
 				ret.insert(4096 - ((z && z[0] != -1) ? z[0] : tile.ID), tile);
 			}
 			break;
 		case 3:
-			if ((tile.state == 0 || (paramActifs == nullptr || paramActifs->value(tile.param, 0) & tile.state))
+			if (((!onlyParams && tile.state == 0) || (paramActifs == nullptr || paramActifs->value(tile.param, 0) & tile.state))
 			    && (layers == nullptr || layers[3]) && (IDs == nullptr || IDs->contains(tile.ID))) {
 				ret.insert(4096 - ((z && z[1] != -1) ? z[1] : tile.ID), tile);
 			}

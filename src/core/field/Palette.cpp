@@ -17,6 +17,8 @@
  ****************************************************************************/
 #include "Palette.h"
 #include <PsColor>
+#include <QImage>
+#include <QPainter>
 
 Palette::Palette()
 {
@@ -73,6 +75,17 @@ QImage Palette::toImage() const
 	return image;
 }
 
+QImage Palette::toHorizontalImage() const
+{
+	QImage image(256, 1, QImage::Format_ARGB32);
+
+	for (int x = 0; x < 256; ++x) {
+		image.setPixel(x, 0, color(x));
+	}
+
+	return image;
+}
+
 PalettePC::PalettePC() :
 	Palette(), _transparency(false)
 {
@@ -109,6 +122,20 @@ bool PalettePC::transparency() const
 void PalettePC::setTransparency(bool transparency)
 {
 	_transparency = transparency;
+}
+
+QImage Palettes::toImage() const
+{
+	QImage image(256, int(size()), QImage::Format_ARGB32_Premultiplied);
+	QPainter p(&image);
+
+	int y = 0;
+	for (const Palette *palette: *this) {
+		p.drawImage(QPoint(0, y), palette->toHorizontalImage());
+		++y;
+	}
+
+	return image;
 }
 
 PalettesPC::PalettesPC()

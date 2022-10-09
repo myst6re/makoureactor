@@ -23,9 +23,9 @@ BackgroundEditor::BackgroundEditor(QWidget *parent)
     : QWidget(parent), _backgroundFile(nullptr)
 {
 	_layersComboBox = new QComboBox(this);
-	for (quint8 i = 0; i < 4; ++i) {
-		_layersComboBox->addItem(tr("Layer %1").arg(i + 1));
-	}
+	_layersComboBox->addItem(tr("Layers 0-1"));
+	_layersComboBox->addItem(tr("Layer 2"));
+	_layersComboBox->addItem(tr("Layer 3"));
 	_layersComboBox->setFixedWidth(fontMetrics().horizontalAdvance("WWWWWWWWWWW"));
 	_sectionsList = new QListWidget(this);
 	_sectionsList->setUniformItemSizes(true);
@@ -51,25 +51,34 @@ BackgroundEditor::BackgroundEditor(QWidget *parent)
 	topRowLayout->setContentsMargins(QMargins());
 
 	_texturesWidget = new ImageGridWidget(this);
-	_texturesWidget->setCellSize(16);
 	_texturesWidget->setSelectionMode(ImageGridWidget::NoSelection);
+	_texturesWidget->setGroupedCellSize(256);
 	QScrollArea *texturesScrollArea = new QScrollArea(this);
 	texturesScrollArea->setWidget(_texturesWidget);
 	texturesScrollArea->setWidgetResizable(true);
 	texturesScrollArea->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 
-	_topBottomSplitter = new QSplitter(Qt::Vertical, this);
-	_topBottomSplitter->addWidget(topRow);
-	_topBottomSplitter->addWidget(texturesScrollArea);
-	_topBottomSplitter->setStretchFactor(0, 10);
-	_topBottomSplitter->setStretchFactor(1, 2);
-	_topBottomSplitter->setCollapsible(0, false);
+	_palettesWidget = new ImageGridWidget(this);
+	_palettesWidget->setSelectionMode(ImageGridWidget::NoSelection);
+
+	QWidget *bottomRow = new QWidget(this);
+	QHBoxLayout *bottomRowLayout = new QHBoxLayout(bottomRow);
+	bottomRowLayout->addWidget(texturesScrollArea, 1);
+	bottomRowLayout->addWidget(_palettesWidget);
+	bottomRowLayout->setContentsMargins(QMargins());
+
+	QSplitter *topBottomSplitter = new QSplitter(Qt::Vertical, this);
+	topBottomSplitter->addWidget(topRow);
+	topBottomSplitter->addWidget(bottomRow);
+	topBottomSplitter->setStretchFactor(0, 10);
+	topBottomSplitter->setStretchFactor(1, 2);
+	topBottomSplitter->setCollapsible(0, false);
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(_layersComboBox, 0, 0);
 	layout->addWidget(_sectionsList, 1, 0);
 	layout->addWidget(_paramsList, 2, 0);
-	layout->addWidget(_topBottomSplitter, 0, 1, 3, 1);
+	layout->addWidget(topBottomSplitter, 0, 1, 3, 1);
 	layout->setColumnStretch(1, 2);
 
 	connect(_layersComboBox, &QComboBox::currentIndexChanged, this, &BackgroundEditor::updateCurrentLayer);
@@ -89,13 +98,28 @@ void BackgroundEditor::showEvent(QShowEvent *event)
 
 void BackgroundEditor::setSections(const QList<quint16> &sections)
 {
+	_sections = sections;
+}
+
+void BackgroundEditor::fillSectionList()
+{
 	_sectionsList->blockSignals(true);
 	_sectionsList->clear();
 
-	for (quint16 id: sections) {
-		QListWidgetItem *item = new QListWidgetItem(tr("Section %1").arg(id));
-		item->setData(Qt::UserRole, id);
+	int layer = currentLayer();
+
+	if (layer <= 1) {
+		QListWidgetItem *item = new QListWidgetItem(tr("Base Section"));
+		item->setData(Qt::UserRole, 4097);
 		_sectionsList->addItem(item);
+
+		for (quint16 id: _sections) {
+			QListWidgetItem *item = new QListWidgetItem(tr("Section %1").arg(id));
+			item->setData(Qt::UserRole, id);
+			_sectionsList->addItem(item);
+		}
+	} else if (layer > 1) {
+		_sectionsList->addItem(tr("Single Section"));
 	}
 	_sectionsList->blockSignals(false);
 }
@@ -145,21 +169,37 @@ void BackgroundEditor::setBackgroundFile(BackgroundFile *backgroundFile)
 	// setCurrentIndex does not always trigger currentIndexChanged slot
 	updateCurrentLayer(0);
 
-	refreshTexture();
-
 	_backgroundTileEditor->setBackgroundFile(backgroundFile);
+
+	if (backgroundFile != nullptr) {
+		_palettesWidget->setPixmap(QPixmap::fromImage(backgroundFile->palettes().toImage()));
+		_palettesWidget->setCellSize(1);
+		_palettesWidget->setMinimumSize(_palettesWidget->pixmap().size());
+	}
 }
 
 void BackgroundEditor::refreshTexture()
 {
 	QPixmap pix;
+	int layer = currentLayer();
+	
+	qDebug() << "BackgroundEditor::refreshTexture" << layer;
 
 	if (_backgroundFile != nullptr) {
-		pix = QPixmap::fromImage(_backgroundFile->textures()->toImage(_backgroundFile->tiles(), _backgroundFile->palettes()));
+		BackgroundTiles tiles;
+		for (const Tile &tile : _backgroundFile->tiles()) {
+			if ((layer > 1 && tile.layerID == layer) || (layer <= 1 && tile.layerID <= 1)) {
+				tiles.insert(tile);
+			}
+		}
+		pix = QPixmap::fromImage(_backgroundFile->textures()->toImage(tiles, _backgroundFile->palettes()));
 	}
 
+	int cellSize = layer > 1 ? 32 : 16;
+
+	_texturesWidget->setCellSize(cellSize);
 	_texturesWidget->setPixmap(pix);
-	_texturesWidget->setMinimumSize(_texturesWidget->gridSize() * 16);
+	_texturesWidget->setMinimumSize(_texturesWidget->gridSize() * cellSize);
 }
 
 void BackgroundEditor::clear()
@@ -169,15 +209,24 @@ void BackgroundEditor::clear()
 	_sectionsList->blockSignals(true);
 	_sectionsList->clear();
 	_sectionsList->blockSignals(false);
+	_paramsList->blockSignals(true);
+	_paramsList->clear();
+	_paramsList->blockSignals(false);
 	_backgroundLayerWidget->blockSignals(true);
 	_backgroundLayerWidget->setPixmap(QPixmap());
 	_backgroundLayerWidget->setSelectedCells(QList<Cell>());
 	_backgroundLayerWidget->blockSignals(false);
+	_texturesWidget->blockSignals(true);
+	_texturesWidget->setPixmap(QPixmap());
+	_texturesWidget->setSelectedCells(QList<Cell>());
+	_texturesWidget->blockSignals(false);
 }
 
 int BackgroundEditor::currentLayer() const
 {
-	return _layersComboBox->currentIndex();
+	int index = _layersComboBox->currentIndex();
+
+	return index == 0 && currentSection() == 4097 ? 0 : index + 1;
 }
 
 int BackgroundEditor::currentSection() const
@@ -193,7 +242,7 @@ int BackgroundEditor::currentSection() const
 ParamState BackgroundEditor::currentParamState() const
 {
 	QTreeWidgetItem *item = _paramsList->currentItem();
-	if (item == nullptr) {
+	if (item == nullptr || item->parent() == nullptr) {
 		return ParamState();
 	}
 
@@ -203,37 +252,42 @@ ParamState BackgroundEditor::currentParamState() const
 	return ParamState(quint8(param), quint8(state));
 }
 
-void BackgroundEditor::updateCurrentLayer(int layer)
+void BackgroundEditor::updateCurrentLayer(int index)
 {
-	qDebug() << "BackgroundEditor::updateCurrentLayer" << layer;
-	bool hasSections = layer == 1,
-	        hasParams = layer > 0;
+	Q_UNUSED(index)
 
-	_sectionsList->setVisible(hasSections);
+	fillSectionList();
 
-	if (hasSections && _sectionsList->currentItem() == nullptr) {
+	if (_sectionsList->currentItem() == nullptr) {
 		_sectionsList->blockSignals(true);
 		_sectionsList->setCurrentRow(0);
 		_sectionsList->blockSignals(false);
 	}
 
-	_paramsList->setVisible(hasParams);
-	if (hasParams) {
-		for (int i = 0; i < _paramsList->topLevelItemCount(); ++i) {
-			QTreeWidgetItem *item = _paramsList->topLevelItem(i);
-			if (item != nullptr) {
-				item->setHidden(item->data(0, Qt::UserRole + 1).toInt() != layer);
-			}
-			
+	int layer = currentLayer();
+
+	qDebug() << "BackgroundEditor::updateCurrentLayer" << layer;
+	int layerNotZero = layer == 0 ? 1 : layer;
+
+	for (int i = 0; i < _paramsList->topLevelItemCount(); ++i) {
+		QTreeWidgetItem *item = _paramsList->topLevelItem(i);
+		if (item != nullptr) {
+			item->setHidden(item->data(0, Qt::UserRole + 1).toInt() != layerNotZero);
 		}
 	}
 
-	updateImageLabel(layer, hasSections ? currentSection() : -1, -1, -1);
+	updateImageLabel(layer, currentSection(), -1, -1);
+
+	refreshTexture();
 }
 
 void BackgroundEditor::updateCurrentSection(QListWidgetItem *current, QListWidgetItem *previous)
 {
 	Q_UNUSED(previous)
+	
+	_paramsList->blockSignals(true);
+	_paramsList->setCurrentItem(nullptr);
+	_paramsList->blockSignals(false);
 
 	updateCurrentSection2(current != nullptr ? current->data(Qt::UserRole).toInt() : -1);
 }
@@ -246,6 +300,10 @@ void BackgroundEditor::updateCurrentSection2(int section)
 void BackgroundEditor::updateCurrentParam(QTreeWidgetItem *current, QTreeWidgetItem *previous)
 {
 	Q_UNUSED(previous)
+	
+	_sectionsList->blockSignals(true);
+	_sectionsList->setCurrentRow(-1);
+	_sectionsList->blockSignals(false);
 
 	updateCurrentParam2(current != nullptr && current->parent() != nullptr ? current->parent()->data(0, Qt::UserRole).toInt() : -1,
 	                    current != nullptr ? current->data(0, Qt::UserRole).toInt() : -1);
@@ -282,25 +340,30 @@ void BackgroundEditor::refreshImage(int layer, int section, int param, int state
 	}
 	QSet<quint16> sections;
 	if (section >= 0) {
-		sections.insert(quint16(section));
+		if (layer == 1) {
+			sections.insert(quint16(section));
+		}
 		_isParamMode = false;
 	}
+	qDebug() << "BackgroundEditor::refreshImage" << layer << section << param << state << paramsEnabled << sections;
 
 	quint16 currentOffsetX, currentOffsetY;
 	int width, height;
 	_backgroundFile->tiles().area(currentOffsetX, currentOffsetY, width, height);
 
-	QImage background = _backgroundFile->openBackground(param > 0 ? &paramsEnabled : nullptr, z, layers, section >= 0 ? &sections : nullptr, true);
+	QImage background = _backgroundFile->openBackground(!paramsEnabled.isEmpty() ? &paramsEnabled : nullptr, z, layers, !sections.isEmpty() ? &sections : nullptr, !paramsEnabled.isEmpty(), true);
 	_backgroundLayerWidget->setPixmap(QPoint(MAX_TILE_DST - currentOffsetX, MAX_TILE_DST - currentOffsetY), QPixmap::fromImage(background));
 
 	quint8 tileSize = layer > 1 ? 32 : 16;
 	_backgroundLayerWidget->setCellSize(tileSize);
 	_backgroundLayerWidget->setGridSize(QSize(MAX_TILE_DST * 2 / tileSize, MAX_TILE_DST * 2 / tileSize));
+	_backgroundLayerWidget->setGroupedCellSize(MAX_TILE_DST);
 	_backgroundLayerWidget->setMinimumSize(_backgroundLayerWidget->gridSize() * tileSize);
 }
 
 void BackgroundEditor::updateSelectedTiles(const QList<Cell> &cells)
 {
+	qDebug() << "updateSelectedTiles" << _isParamMode;
 	if (_backgroundFile == nullptr) {
 		return;
 	}
@@ -313,7 +376,9 @@ void BackgroundEditor::updateSelectedTiles(const QList<Cell> &cells)
 		quint16 ID = quint16(currentSection());
 		ParamState paramState = currentParamState();
 		QMultiHash<Cell, Tile> matches;
-		BackgroundTiles tiles = _isParamMode ? _backgroundFile->tiles().tiles(layerID, paramState) : _backgroundFile->tiles().tiles(layerID, ID);
+		BackgroundTiles tiles = _isParamMode && layerID >= 1 && paramState.isValid() ? _backgroundFile->tiles().tiles(layerID, paramState) : _backgroundFile->tiles().tiles(layerID, ID);
+		
+		qDebug() << "updateSelectedTiles" << _isParamMode << layerID << ID << paramState.param << paramState.state << tiles.size();
 
 		for (const Tile &tile : tiles) {
 			for (const Cell &cell: cells) {

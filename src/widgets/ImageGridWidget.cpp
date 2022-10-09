@@ -19,7 +19,7 @@
 
 ImageGridWidget::ImageGridWidget(QWidget *parent)
     : QWidget(parent), _hoverCell(-1, -1), _pixmapPoint(-1, -1), _scaledRatio(0.0),
-      _selectionMode(SingleSelection), _cellSize(0), _startMousePress(false)
+      _selectionMode(SingleSelection), _cellSize(0), _groupedCellSize(0), _startMousePress(false)
 {
 	setMouseTracking(_selectionMode != NoSelection);
 }
@@ -49,6 +49,13 @@ void ImageGridWidget::setPixmapPoint(const QPoint &point)
 void ImageGridWidget::setCellSize(int size)
 {
 	_cellSize = size;
+	updateGrid();
+	update();
+}
+
+void ImageGridWidget::setGroupedCellSize(int size)
+{
+	_groupedCellSize = size;
 	updateGrid();
 	update();
 }
@@ -110,30 +117,49 @@ bool ImageGridWidget::cellIsInRange(const Cell &point) const
 	return QRect(QPoint(0, 0), _gridSize).contains(point);
 }
 
+QList<QLine> ImageGridWidget::createGrid(const QSize &gridS, int cellSize)
+{
+	QList<QLine> ret;
+
+	if (cellSize == 0) {
+		return ret;
+	}
+
+	const int lineCountV = gridS.width() + 1,
+	        lineCountH = gridS.height() + 1;
+
+	for (int i = 0; i < lineCountV; ++i) {
+		ret.append(QLine(scaledPoint(QPoint(i * cellSize, 0)), scaledPoint(QPoint(i, gridS.height()) * cellSize)));
+	}
+
+	for (int i = 0; i < lineCountH; ++i) {
+		ret.append(QLine(scaledPoint(QPoint(0, i * cellSize)), scaledPoint(QPoint(gridS.width(), i) * cellSize)));
+	}
+	
+	return ret;
+}
+
 void ImageGridWidget::updateGrid()
 {
 	_gridLines.clear();
+	_groupedGridLines.clear();
 
 	if (_cellSize == 0) {
 		return;
 	}
 
 	const QSize gridS = gridSize();
-	const int lineCountV = gridS.width() + 1,
-	        lineCountH = gridS.height() + 1;
 
 	_scaledRatio = gridS.width() == 0 ? 0.0 : (gridS * _cellSize).scaled(size(), Qt::KeepAspectRatio).width() / double(gridS.width() * _cellSize);
 
-	for (int i = 0; i < lineCountV; ++i) {
-		_gridLines.append(QLine(scaledPoint(QPoint(i * _cellSize, 0)), scaledPoint(QPoint(i, gridS.height()) * _cellSize)));
-	}
-
-	for (int i = 0; i < lineCountH; ++i) {
-		_gridLines.append(QLine(scaledPoint(QPoint(0, i * _cellSize)), scaledPoint(QPoint(gridS.width(), i) * _cellSize)));
-	}
+	_gridLines = createGrid(gridS, _cellSize);
 
 	_scaledGridPoint = (QPoint(width(), height()) - scaledPoint(QPoint(gridS.width(), gridS.height()) * _cellSize)) / 2;
 	_scaledPixmapPoint = _pixmapPoint == QPoint(-1, -1) ? _scaledGridPoint : scaledPoint(_pixmapPoint);
+
+	if (_groupedCellSize != 0) {
+		_groupedGridLines = createGrid(gridS * _cellSize / _groupedCellSize, _groupedCellSize);
+	}
 }
 
 void ImageGridWidget::paintEvent(QPaintEvent *event)
@@ -153,6 +179,8 @@ void ImageGridWidget::paintEvent(QPaintEvent *event)
 		p.setPen(Qt::gray);
 		p.translate(_scaledGridPoint);
 		p.drawLines(_gridLines);
+		p.setPen(QPen(Qt::darkGray, 3, Qt::DashLine));
+		p.drawLines(_groupedGridLines);
 
 		QColor lightRed(0xff, 0x7f, 0x7f);
 
@@ -241,9 +269,9 @@ void ImageGridWidget::mouseReleaseEvent(QMouseEvent *event)
 
 void ImageGridWidget::keyPressEvent(QKeyEvent *event)
 {
-	QWidget::keyPressEvent(event);
-
 	if (_selectedCells.isEmpty()) {
+		QWidget::keyPressEvent(event);
+
 		return;
 	}
 
@@ -266,6 +294,8 @@ void ImageGridWidget::keyPressEvent(QKeyEvent *event)
 
 	if (cellIsInRange(cell)) {
 		setSelectedCell(cell);
+	} else {
+		QWidget::keyPressEvent(event);
 	}
 }
 

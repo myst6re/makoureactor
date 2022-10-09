@@ -44,6 +44,10 @@ public:
 		return _cellSize;
 	}
 	void setCellSize(int size);
+	inline int groupedCellSize() const {
+		return _groupedCellSize;
+	}
+	void setGroupedCellSize(int size);
 	inline QSize gridSize() const {
 		return _gridSize.isValid() ? _gridSize : _pixmap.size() / _cellSize;
 	}
@@ -78,6 +82,7 @@ protected:
 	virtual QSize minimumSizeHint() const override;
 	virtual QSize sizeHint() const override;
 private:
+	QList<QLine> createGrid(const QSize &gridS, int cellSize);
 	void drawSelection(QPainter &painter, QPoint selection);
 	inline QPoint scaledPoint(const Cell &cell) const {
 		return _scaledRatio * cell;
@@ -88,7 +93,7 @@ private:
 	void clearHover();
 
 	QPixmap _pixmap;
-	QList<QLine> _gridLines;
+	QList<QLine> _gridLines, _groupedGridLines;
 	Cell _hoverCell;
 	QList<Cell> _selectedCells;
 	QPoint _pixmapPoint, _scaledPixmapPoint, _scaledGridPoint;
@@ -96,7 +101,7 @@ private:
 	QSize _gridSize;
 	double _scaledRatio;
 	SelectionMode _selectionMode;
-	int _cellSize;
+	int _cellSize, _groupedCellSize;
 	bool _startMousePress;
 };
 

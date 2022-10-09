@@ -59,7 +59,7 @@ public:
 	explicit BackgroundTiles(const QMultiMap<qint16, Tile> &tiles);
 
 	BackgroundTiles filter(const QHash<quint8, quint8> *paramActifs, const qint16 *z,
-	                       const bool *layers, const QSet<quint16> *IDs) const;
+	                       const bool *layers, const QSet<quint16> *IDs, bool onlyParams = false) const;
 	BackgroundTiles tiles(quint8 layerID, bool orderedForSaving = false) const;
 	BackgroundTiles tilesByID(quint16 ID, bool orderedForSaving = false) const;
 	BackgroundTiles tiles(quint8 layerID, quint16 ID, qint16 dstX, qint16 dstY) const;

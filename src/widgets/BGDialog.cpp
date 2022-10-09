@@ -395,11 +395,11 @@ QImage BGDialog::background(bool *bgWarning)
 	}
 
 	if (tabBar->currentIndex() == 0) {
-		return _field->background()->openBackground(&params, z, layers, nullptr, false, bgWarning);
+		return _field->background()->openBackground(&params, z, layers, nullptr, false, false, bgWarning);
 	}
 
 	bool layers[4] = { false, true, false, false };
-	return _field->background()->openBackground(&params, z, layers, &sections, false, bgWarning);
+	return _field->background()->openBackground(&params, z, layers, &sections, false, false, bgWarning);
 }
 
 void BGDialog::updateBG()
@@ -412,10 +412,10 @@ void BGDialog::updateBG()
 	QImage img = background(&bgWarning);
 
 	if (tabBar->currentIndex() == 0) {
-		img = _field->background()->openBackground(&params, z, layers, nullptr, false, &bgWarning);
+		img = _field->background()->openBackground(&params, z, layers, nullptr, false, false, &bgWarning);
 	} else {
 		bool layers[4] = { false, true, false, false };
-		img = _field->background()->openBackground(&params, z, layers, &sections, false, &bgWarning);
+		img = _field->background()->openBackground(&params, z, layers, &sections, false, false, &bgWarning);
 	}
 
 	if (img.isNull()) {

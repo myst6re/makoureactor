@@ -144,7 +144,7 @@
     <name>BackgroundEditor</name>
     <message>
         <source>Layer %1</source>
-        <translation type="unfinished">レイヤー %1</translation>
+        <translation type="obsolete">レイヤー %1</translation>
     </message>
     <message>
         <source>Section %1</source>
@@ -164,6 +164,26 @@
     </message>
     <message>
         <source>Param %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Single Section</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layer 2</source>
+        <translation type="unfinished">レイヤー 2</translation>
+    </message>
+    <message>
+        <source>Layer 3</source>
+        <translation type="unfinished">レイヤー 3</translation>
+    </message>
+    <message>
+        <source>Base Section</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Layers 0-1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

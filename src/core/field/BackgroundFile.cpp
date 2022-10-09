@@ -59,11 +59,11 @@ QImage BackgroundFile::openBackground(bool transparent, bool *warning)
 	QHash<quint8, quint8> paramActifs;
 	qint16 z[] = {-1, -1};
 	field()->scriptsAndTexts()->bgParamAndBgMove(paramActifs, z);
-	return openBackground(&paramActifs, z, nullptr, nullptr, transparent, warning);
+	return openBackground(&paramActifs, z, nullptr, nullptr, false, transparent, warning);
 }
 
 QImage BackgroundFile::openBackground(const QHash<quint8, quint8> *paramActifs, const qint16 *z,
-                                      const bool *layers, const QSet<quint16> *IDs,
+                                      const bool *layers, const QSet<quint16> *IDs, bool onlyParams,
                                       bool transparent, bool *warning)
 {
 	if (!isOpen() && !open()) {
@@ -73,7 +73,7 @@ QImage BackgroundFile::openBackground(const QHash<quint8, quint8> *paramActifs, 
 		return QImage();
 	}
 
-	return drawBackground(tiles().filter(paramActifs, z, layers, IDs), transparent, warning);
+	return drawBackground(tiles().filter(paramActifs, z, layers, IDs, onlyParams), transparent, warning);
 }
 
 QImage BackgroundFile::backgroundPart(quint16 ID, bool transparent, bool *warning)
