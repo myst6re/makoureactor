@@ -18,8 +18,8 @@
 #include "ImageGridWidget.h"
 
 ImageGridWidget::ImageGridWidget(QWidget *parent)
-    : QWidget(parent), _hoverCell(-1, -1), _pixmapPoint(-1, -1), _scaledRatio(0.0),
-      _selectionMode(SingleSelection), _cellSize(0), _groupedCellSize(0), _startMousePress(false)
+    : QWidget(parent), _hoverCell(-1, -1), _startMousePress(-1, -1), _pixmapPoint(-1, -1), _scaledRatio(0.0),
+      _selectionMode(SingleSelection), _cellSize(0), _groupedCellSize(0)
 {
 	setMouseTracking(_selectionMode != NoSelection);
 }
@@ -223,14 +223,20 @@ void ImageGridWidget::mouseMoveEvent(QMouseEvent *event)
 
 	Cell newCell = getCell(event->pos());
 
-	if (_startMousePress) {
-		_selectedCells.append(newCell);
-		// Unique values
-		setSelectedCells(QSet<Cell>(_selectedCells.begin(), _selectedCells.end()).values());
-		return;
-	}
+	if (_startMousePress != Cell(-1, -1) && _startMousePress != newCell) {
+		QPoint diff = newCell - _startMousePress;
+		QList<Cell> selectedCells;
+		qDebug() << _startMousePress << newCell << diff;
+		for (int yp = 0; yp < std::abs(diff.y()); ++yp) {
+			for (int xp = 0; xp < std::abs(diff.x()); ++xp) {
+				int x = diff.x() >= 0 ? xp : -xp,
+				        y = diff.y() >= 0 ? yp : -yp;
+				selectedCells.append(_startMousePress + Cell(x, y));
+			}
+		}
 
-	if (newCell != _hoverCell) {
+		setSelectedCells(selectedCells);
+	} else if (newCell != _hoverCell) {
 		_hoverCell = newCell;
 		update();
 
@@ -252,9 +258,10 @@ void ImageGridWidget::leaveEvent(QEvent *event)
 void ImageGridWidget::mousePressEvent(QMouseEvent *event)
 {
 	if (_selectionMode != NoSelection) {
-		setSelectedCell(getCell(event->pos()));
+		Cell cell = getCell(event->pos());
+		setSelectedCell(cell);
 		setFocus();
-		_startMousePress = _selectionMode == MultiSelection;
+		_startMousePress = cell;
 	}
 
 	QWidget::mousePressEvent(event);
@@ -262,7 +269,7 @@ void ImageGridWidget::mousePressEvent(QMouseEvent *event)
 
 void ImageGridWidget::mouseReleaseEvent(QMouseEvent *event)
 {
-	_startMousePress = false;
+	_startMousePress = Cell(-1, -1);
 
 	QWidget::mouseReleaseEvent(event);
 }

@@ -94,7 +94,7 @@ private:
 
 	QPixmap _pixmap;
 	QList<QLine> _gridLines, _groupedGridLines;
-	Cell _hoverCell;
+	Cell _hoverCell, _startMousePress;
 	QList<Cell> _selectedCells;
 	QPoint _pixmapPoint, _scaledPixmapPoint, _scaledGridPoint;
 	QSize _scaledPixmapSize;
@@ -102,6 +102,5 @@ private:
 	double _scaledRatio;
 	SelectionMode _selectionMode;
 	int _cellSize, _groupedCellSize;
-	bool _startMousePress;
 };
 

@@ -363,7 +363,7 @@ void BackgroundEditor::refreshImage(int layer, int section, int param, int state
 
 void BackgroundEditor::updateSelectedTiles(const QList<Cell> &cells)
 {
-	qDebug() << "updateSelectedTiles" << _isParamMode;
+	qDebug() << "updateSelectedTiles" << _isParamMode << cells;
 	if (_backgroundFile == nullptr) {
 		return;
 	}
@@ -378,12 +378,13 @@ void BackgroundEditor::updateSelectedTiles(const QList<Cell> &cells)
 		QMultiHash<Cell, Tile> matches;
 		BackgroundTiles tiles = _isParamMode && layerID >= 1 && paramState.isValid() ? _backgroundFile->tiles().tiles(layerID, paramState) : _backgroundFile->tiles().tiles(layerID, ID);
 		
-		qDebug() << "updateSelectedTiles" << _isParamMode << layerID << ID << paramState.param << paramState.state << tiles.size();
+		qDebug() << "updateSelectedTiles" << cellSize << _isParamMode << layerID << ID << paramState.param << paramState.state << tiles.size();
 
 		for (const Tile &tile : tiles) {
 			for (const Cell &cell: cells) {
 				qint16 dstX = qint16(cell.x() * cellSize - MAX_TILE_DST),
 				        dstY = qint16(cell.y() * cellSize - MAX_TILE_DST);
+				qDebug() << dstX << dstY << tile.dstX << tile.dstY;
 
 				if (tile.dstX == dstX &&
 				        tile.dstY == dstY) {
@@ -392,11 +393,10 @@ void BackgroundEditor::updateSelectedTiles(const QList<Cell> &cells)
 						qWarning() << "Multi match!" << cell;
 					}
 					matches.insert(cell, tile);
-
-					break;
 				}
 			}
 		}
+		qDebug() << matches.keys();
 		
 		for (const Cell &cell: cells) {
 			if (!matches.contains(cell)) {
