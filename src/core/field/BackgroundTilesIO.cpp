@@ -281,10 +281,10 @@ bool BackgroundTilesIOPC::writeData(const BackgroundTiles &tiles) const
 
 	// Layer 1
 
-	QSize area = tiles.area();
+	QSize size = tiles.rect().size();
 
-	w = area.width() + 16;
-	h = area.height() + 16;
+	w = size.width() + 16;
+	h = size.height() + 16;
 
 	BackgroundTiles tiles1 = tiles.tiles(0, true);
 	nbTiles = tiles1.size();

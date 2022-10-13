@@ -17,7 +17,9 @@
  ****************************************************************************/
 #include "BackgroundEditor.h"
 #include "core/field/BackgroundFile.h"
+#include "core/field/BackgroundFilePC.h"
 #include "core/field/BackgroundTilesIO.h"
+#include "core/field/Field.h"
 
 BackgroundEditor::BackgroundEditor(QWidget *parent)
     : QWidget(parent), _backgroundFile(nullptr)
@@ -51,7 +53,6 @@ BackgroundEditor::BackgroundEditor(QWidget *parent)
 	topRowLayout->setContentsMargins(QMargins());
 
 	_texturesWidget = new ImageGridWidget(this);
-	_texturesWidget->setSelectionMode(ImageGridWidget::NoSelection);
 	_texturesWidget->setGroupedCellSize(256);
 	QScrollArea *texturesScrollArea = new QScrollArea(this);
 	texturesScrollArea->setWidget(_texturesWidget);
@@ -60,6 +61,7 @@ BackgroundEditor::BackgroundEditor(QWidget *parent)
 
 	_palettesWidget = new ImageGridWidget(this);
 	_palettesWidget->setSelectionMode(ImageGridWidget::NoSelection);
+	_palettesWidget->hide();
 
 	QWidget *bottomRow = new QWidget(this);
 	QHBoxLayout *bottomRowLayout = new QHBoxLayout(bottomRow);
@@ -85,6 +87,7 @@ BackgroundEditor::BackgroundEditor(QWidget *parent)
 	connect(_sectionsList, &QListWidget::currentItemChanged, this, &BackgroundEditor::updateCurrentSection);
 	connect(_paramsList, &QTreeWidget::currentItemChanged, this, &BackgroundEditor::updateCurrentParam);
 	connect(_backgroundLayerWidget, &ImageGridWidget::currentSelectionChanged, this, &BackgroundEditor::updateSelectedTiles);
+	connect(_texturesWidget, &ImageGridWidget::currentSelectionChanged, this, &BackgroundEditor::updateSelectedTilesTexture);
 	connect(_backgroundTileEditor, &BackgroundTileEditor::changed, this, &BackgroundEditor::updateTiles);
 }
 
@@ -192,7 +195,12 @@ void BackgroundEditor::refreshTexture()
 				tiles.insert(tile);
 			}
 		}
-		pix = QPixmap::fromImage(_backgroundFile->textures()->toImage(tiles, _backgroundFile->palettes()));
+		if (_backgroundFile->field()->isPC()) {
+			BackgroundFilePC *backgroundFilePC = static_cast<BackgroundFilePC *>(_backgroundFile);
+			pix = QPixmap::fromImage(backgroundFilePC->textures()->toImage(tiles, _backgroundFile->palettes(), _texIdKeys));
+		} else {
+			pix = QPixmap::fromImage(_backgroundFile->textures()->toImage(tiles, _backgroundFile->palettes()));
+		}
 	}
 
 	int cellSize = layer > 1 ? 32 : 16;
@@ -384,10 +392,10 @@ void BackgroundEditor::updateSelectedTiles(const QList<Cell> &cells)
 			for (const Cell &cell: cells) {
 				qint16 dstX = qint16(cell.x() * cellSize - MAX_TILE_DST),
 				        dstY = qint16(cell.y() * cellSize - MAX_TILE_DST);
-				qDebug() << dstX << dstY << tile.dstX << tile.dstY;
 
 				if (tile.dstX == dstX &&
 				        tile.dstY == dstY) {
+					qDebug() << tile.tileID << tile.dstX << tile.dstY;
 					selectedTiles.append(tile);
 					if (matches.contains(cell)) {
 						qWarning() << "Multi match!" << cell;
@@ -396,7 +404,6 @@ void BackgroundEditor::updateSelectedTiles(const QList<Cell> &cells)
 				}
 			}
 		}
-		qDebug() << matches.keys();
 		
 		for (const Cell &cell: cells) {
 			if (!matches.contains(cell)) {
@@ -424,12 +431,51 @@ void BackgroundEditor::updateSelectedTiles(const QList<Cell> &cells)
 	QList<Cell> texturesSelectedCells;
 
 	for (const Tile &tile: selectedTiles) {
-		texturesSelectedCells.append(Cell(((tile.textureID % 15) * 256 + tile.srcX) / 16, ((tile.textureID / 15) * 256 + tile.srcY) / 16));
+		int index = _texIdKeys.indexOf(tile.textureID);
+		if (index < 0) {
+			index = tile.textureID;
+		}
+		texturesSelectedCells.append(Cell((index * 256 + tile.srcX) / tile.size, tile.srcY / tile.size));
 	}
 
 	_backgroundTileEditor->setTiles(selectedTiles);
 	_backgroundTileEditor->setEnabled(!selectedTiles.isEmpty());
+	_texturesWidget->blockSignals(true);
 	_texturesWidget->setSelectedCells(texturesSelectedCells);
+	_texturesWidget->blockSignals(false);
+}
+
+void BackgroundEditor::updateSelectedTilesTexture(const QList<Cell> &cells)
+{
+	qDebug() << "updateSelectedTilesTexture" << cells;
+	QList<Tile> selectedTiles;
+
+	if (!cells.isEmpty()) {
+		quint8 layerID = quint8(currentLayer());
+		BackgroundTiles tiles = _backgroundFile->tiles().tiles(layerID <= 1 ? 0 : layerID);
+		if (layerID <= 1) {
+			tiles.insert(_backgroundFile->tiles().tiles(1));
+		}
+
+		for (const Tile &tile : tiles) {
+			for (const Cell &cell: cells) {
+				quint8 tileCount = 256 / tile.size;
+				qint16 srcX = qint16((cell.x() % tileCount) * tile.size),
+				    srcY = qint16(cell.y() * tile.size);
+				quint8 textureID = _texIdKeys.value(cell.x() / tileCount, 0);
+				
+				if (tile.srcX == srcX &&
+				    tile.srcY == srcY &&
+				    tile.textureID == textureID) {
+					qDebug() << tile.tileID << tile.srcX << tile.srcY;
+					selectedTiles.append(tile);
+				}
+			}
+		}
+	}
+
+	_backgroundTileEditor->setTiles(selectedTiles);
+	_backgroundTileEditor->setEnabled(!selectedTiles.isEmpty());
 }
 
 void BackgroundEditor::updateTiles(const QList<Tile> &tiles)

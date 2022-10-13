@@ -107,6 +107,7 @@ public:
 	void setTex(quint8 texID, const QList<uint> &indexOrRgbList, const BackgroundTexturesPCInfos &infos);
 	UnusedSpaceInTexturePC findFirstUnusedSpaceInTextures(const BackgroundTiles &tiles, quint8 depth, quint8 size);
 	QImage toImage(const BackgroundTiles &tiles, const Palettes &palettes) const override;
+	QImage toImage(const BackgroundTiles &tiles, const Palettes &palettes, QList<quint8> &texIdKeys) const;
 	QImage toImage(quint8 texID) const;
 	QImage toImage(quint8 texID, const BackgroundTiles &tiles, const Palettes &palettes) const;
 	BackgroundTexturesPS toPS(const BackgroundTiles &pcTiles,

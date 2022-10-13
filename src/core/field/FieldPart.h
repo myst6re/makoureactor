@@ -39,7 +39,6 @@ public:
 	void setOpen(bool open);
 	virtual bool isModified() const;
 	void setModified(bool modified);
-protected:
 	Field *field() const;
 private:
 	bool modified, opened;

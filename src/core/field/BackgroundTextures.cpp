@@ -377,31 +377,37 @@ UnusedSpaceInTexturePC BackgroundTexturesPC::findFirstUnusedSpaceInTextures(cons
 
 QImage BackgroundTexturesPC::toImage(const BackgroundTiles &tiles, const Palettes &palettes) const
 {
+	QList<quint8> texIdKeys;
+	return toImage(tiles, palettes, texIdKeys);
+}
+
+QImage BackgroundTexturesPC::toImage(const BackgroundTiles &tiles, const Palettes &palettes, QList<quint8> &texIdKeys) const
+{
 	QMap<quint8, bool> texIds;
 	for (const Tile &tile: tiles) {
 		texIds.insert(tile.textureID, true);
 	}
-
+	
 	if (texIds.isEmpty()) {
 		return QImage();
 	}
 	
-	QList<quint8> texIdKeys = texIds.keys();
-
+	texIdKeys = texIds.keys();
+	
 	qDebug() << "BackgroundTexturesPC::toImage" << texIdKeys;
-
+	
 	QImage img(256 * texIdKeys.size(), 256, QImage::Format_ARGB32);
 	img.fill(Qt::black);
 	QPainter p(&img);
-
+	
 	qDebug() << "BackgroundTexturesPC::toImage" << img.size();
-
+	
 	for (quint8 texID: texIdKeys) {
 		p.drawImage(QPoint(texIdKeys.indexOf(texID) * 256, 0), toImage(texID, tiles, palettes));
 	}
-
+	
 	p.end();
-
+	
 	return img;
 }
 

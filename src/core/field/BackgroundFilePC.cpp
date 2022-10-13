@@ -102,6 +102,8 @@ bool BackgroundFilePC::open(const QByteArray &data, const QByteArray &palData)
 	}
 
 	setOpen(true);
+	
+	tiles().checkOrdering();
 
 	return true;
 }

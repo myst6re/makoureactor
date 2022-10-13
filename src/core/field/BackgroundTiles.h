@@ -70,13 +70,14 @@ public:
 	QSet<quint8> usedPalettes() const;
 	void area(quint16 &minWidth, quint16 &minHeight,
 	          int &width, int &height) const;
-	QSize area() const;
+	QRect rect() const;
 	Tile search(quint8 textureID1, quint8 textureID2, quint8 srcX, quint8 srcY) const;
 	void setZLayer1(quint16 oldZ, quint16 newZ);
 	inline void insert(const Tile &tile) {
 		QMultiMap<qint16, Tile>::insert(qint16(4096 - tile.ID), tile);
 	}
 	using QMultiMap<qint16, Tile>::insert;
+	bool checkOrdering() const;
 };
 
 int operator==(const Tile &tile, const Tile &other);

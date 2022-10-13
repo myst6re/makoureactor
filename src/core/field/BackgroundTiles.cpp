@@ -259,14 +259,14 @@ void BackgroundTiles::area(quint16 &minWidth, quint16 &minHeight,
 	height = minHeight + maxHeight + 16;
 }
 
-QSize BackgroundTiles::area() const
+QRect BackgroundTiles::rect() const
 {
 	quint16 minWidth, minHeight;
 	int width, height;
-	
+
 	area(minWidth, minHeight, width, height);
-	
-	return QSize(width, height);
+
+	return QRect(minWidth, minHeight, width, height);
 }
 
 Tile BackgroundTiles::search(quint8 textureID1, quint8 textureID2,
@@ -297,6 +297,51 @@ void BackgroundTiles::setZLayer1(quint16 oldZ, quint16 newZ)
 			tile.ID = newZ;
 		}
 	}
+}
+
+bool BackgroundTiles::checkOrdering() const
+{
+	const QMap<qint32, Tile> &tiles = sortedTiles();
+	int x = 0, y = 0;
+	QSet<quint8> textureIds, layerIds;
+	qint16 lastTextureId = -1, lastLayerId = -1;
+
+	for (const Tile &tile : tiles) {
+		if (!layerIds.contains(tile.layerID)) {
+			qDebug() << "layer" << tile.layerID;
+			if (tile.layerID <= lastLayerId) {
+				qDebug() << "BackgroundTiles::checkOrdering wrong layerID ordering" << tile.layerID << tile.textureID << tile.srcX << tile.srcY << x << y;
+				return false;
+			}
+			layerIds.insert(tile.layerID);
+			//x = 0;
+			//y = 0;
+		}
+		if (!textureIds.contains(tile.textureID)) {
+			qDebug() << "texture" << tile.textureID;
+			if (tile.textureID <= lastTextureId) {
+				qDebug() << "BackgroundTiles::checkOrdering wrong textureId ordering" << tile.layerID << tile.textureID << tile.srcX << tile.srcY << x << y;
+				return false;
+			}
+			textureIds.insert(tile.textureID);
+			x = 0;
+			y = 0;
+		}
+		if (tile.srcX != x || tile.srcY != y) {
+			qDebug() << "BackgroundTiles::checkOrdering wrong ordering" << tile.layerID << tile.textureID << tile.srcX << tile.srcY << x << y;
+			return false;
+		}
+		lastTextureId = tile.textureID;
+		lastLayerId = tile.layerID;
+		x += tile.size;
+
+		if (x >= 256) {
+			x = 0;
+			y += tile.size;
+		}
+	}
+	
+	return true;
 }
 
 int operator==(const Tile &tile, const Tile &other)

@@ -114,7 +114,7 @@ Cell ImageGridWidget::getCell(const QPoint &pos) const
 
 bool ImageGridWidget::cellIsInRange(const Cell &point) const
 {
-	return QRect(QPoint(0, 0), _gridSize).contains(point);
+	return QRect(QPoint(0, 0), gridSize()).contains(point);
 }
 
 QList<QLine> ImageGridWidget::createGrid(const QSize &gridS, int cellSize)
@@ -223,7 +223,7 @@ void ImageGridWidget::mouseMoveEvent(QMouseEvent *event)
 
 	Cell newCell = getCell(event->pos());
 
-	if (_startMousePress != Cell(-1, -1) && _startMousePress != newCell) {
+	if (_selectionMode == MultiSelection && _startMousePress != Cell(-1, -1) && _startMousePress != newCell) {
 		QPoint diff = newCell - _startMousePress;
 		QList<Cell> selectedCells;
 		qDebug() << _startMousePress << newCell << diff;
@@ -237,6 +237,7 @@ void ImageGridWidget::mouseMoveEvent(QMouseEvent *event)
 
 		setSelectedCells(selectedCells);
 	} else if (newCell != _hoverCell) {
+		
 		_hoverCell = newCell;
 		update();
 
@@ -261,7 +262,9 @@ void ImageGridWidget::mousePressEvent(QMouseEvent *event)
 		Cell cell = getCell(event->pos());
 		setSelectedCell(cell);
 		setFocus();
-		_startMousePress = cell;
+		if (_selectionMode == MultiSelection) {
+			_startMousePress = cell;
+		}
 	}
 
 	QWidget::mousePressEvent(event);
