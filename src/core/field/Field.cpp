@@ -383,6 +383,9 @@ QByteArray Field::saveSection(FieldSection fieldSection, bool &ok)
 
 	if (fieldPart && fieldPart->canSave() &&
 			fieldPart->isOpen() && fieldPart->isModified()) {
+		if (fieldSection == Field::Background && isPC()) {
+			static_cast<BackgroundFilePC *>(fieldPart)->compile();
+		}
 		// FIXME: EXCEPTION NEEDS TO BE REMOVED IN THE FUTURE
 		QByteArray section = fieldSection == Field::PalettePC ? static_cast<BackgroundFilePC *>(fieldPart)->savePal() : fieldPart->save();
 		if (section.isEmpty()) {

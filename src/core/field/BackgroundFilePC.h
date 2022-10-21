@@ -41,6 +41,8 @@ public:
 	BackgroundFilePS toPS(FieldPS *field) const;
 	bool repair() override;
 	bool addTile(Tile &tile, const QImage &image = QImage()) override;
+	// Ensure consistency between tile list, textures, and palettes
+	bool compile();
 private:
 	using BackgroundFile::open;
 };

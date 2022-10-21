@@ -39,6 +39,10 @@ struct LayerParam {
 	quint8 layer, param;
 };
 
+struct Hole {
+	quint8 srcX, srcY;
+};
+
 int operator==(const LayerParam &layerParam, const LayerParam &other);
 bool operator<(const LayerParam &layerParam, const LayerParam &other);
 
@@ -60,6 +64,7 @@ public:
 
 	BackgroundTiles filter(const QHash<quint8, quint8> *paramActifs, const qint16 *z,
 	                       const bool *layers, const QSet<quint16> *IDs, bool onlyParams = false) const;
+	BackgroundTiles orderedTiles() const;
 	BackgroundTiles tiles(quint8 layerID, bool orderedForSaving = false) const;
 	BackgroundTiles tilesByID(quint16 ID, bool orderedForSaving = false) const;
 	BackgroundTiles tiles(quint8 layerID, quint16 ID, qint16 dstX, qint16 dstY) const;
@@ -78,6 +83,7 @@ public:
 	}
 	using QMultiMap<qint16, Tile>::insert;
 	bool checkOrdering() const;
+	QList<Hole> detectHoles() const;
 };
 
 int operator==(const Tile &tile, const Tile &other);

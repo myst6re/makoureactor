@@ -93,6 +93,23 @@ struct UnusedSpaceInTexturePC {
 class BackgroundTexturesPC : public BackgroundTextures
 {
 public:
+	enum TextureGroups {
+		Paletted = 0,
+		Layer2Paletted = 1,
+		Layer3Paletted = 3,
+		PalettedBlended = 15,
+		Layer2PalettedBlended = 16,
+		Layer3PalettedBlended = 17,
+		PalettedBlendedAverage = 24,
+		DirectColor = 26,
+		Layer2DirectColor = 27,
+		Layer3DirectColor = 28,
+		DirectColorBlended = 33,
+		Layer2DirectColorBlended = 34,
+		Layer3DirectColorBlended = 35,
+		DirectColorBlendedAverage = 40,
+	};
+
 	BackgroundTexturesPC();
 	explicit BackgroundTexturesPC(const QMap<quint8, BackgroundTexturesPCInfos> &texInfos);
 	bool hasTex(quint8 texID) const;
@@ -113,6 +130,7 @@ public:
 	BackgroundTexturesPS toPS(const BackgroundTiles &pcTiles,
 	                          BackgroundTiles &psTiles,
 	                          const PalettesPS &palettesPS) const;
+	static TextureGroups textureGroup(const Tile &tile);
 protected:
 	quint16 textureWidth(const Tile &tile) const override;
 	quint8 depth(const Tile &tile) const override;
