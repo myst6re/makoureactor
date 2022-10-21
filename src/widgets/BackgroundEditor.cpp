@@ -89,6 +89,7 @@ BackgroundEditor::BackgroundEditor(QWidget *parent)
 	connect(_backgroundLayerWidget, &ImageGridWidget::currentSelectionChanged, this, &BackgroundEditor::updateSelectedTiles);
 	connect(_texturesWidget, &ImageGridWidget::currentSelectionChanged, this, &BackgroundEditor::updateSelectedTilesTexture);
 	connect(_backgroundTileEditor, &BackgroundTileEditor::changed, this, &BackgroundEditor::updateTiles);
+	connect(_backgroundTileEditor, &BackgroundTileEditor::changed, this, &BackgroundEditor::modified);
 }
 
 void BackgroundEditor::showEvent(QShowEvent *event)
