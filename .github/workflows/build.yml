@@ -108,7 +108,7 @@ jobs:
     - name: Cache Zlib
       id: cache-zlib
       if: runner.os == 'Windows'
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: ${{ env.zlib_installation_path }}
         key: ${{ runner.os }}${{ matrix.win_arch }}-zlib
@@ -211,7 +211,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Download Files
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
 
     - name: Deploy Package
       uses: "marvinpinto/action-automatic-releases@latest"
@@ -232,7 +232,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Download Files
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
 
     - name: Prepare Upload
       shell: bash
