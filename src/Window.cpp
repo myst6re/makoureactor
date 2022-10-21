@@ -766,6 +766,14 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 	for (const QSet<QString> aNames : aNamesByBoneCount) {
 		qDebug() << aNames;
 	} */
+	
+	FieldArchiveIterator it(*fieldArchive);
+	while (it.hasNext()) {
+		Field *f = it.next();
+		if (f && f->isOpen()) {
+			f->background();
+		}
+	}
 
 #ifdef DEBUG_FUNCTIONS
 	//fieldArchive->printScriptsDirs("final_parody_scripts");

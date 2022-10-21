@@ -16,6 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "BackgroundTiles.h"
+#include "BackgroundTextures.h"
 
 int operator==(const LayerParam &layerParam, const LayerParam &other)
 {
@@ -90,6 +91,17 @@ BackgroundTiles BackgroundTiles::filter(const QHash<quint8, quint8> *paramActifs
 		}
 	}
 	
+	return ret;
+}
+
+BackgroundTiles BackgroundTiles::orderedTiles() const
+{
+	BackgroundTiles ret;
+
+	for (const Tile &tile : *this) {
+		ret.insert(tile.tileID, tile);
+	}
+
 	return ret;
 }
 
@@ -299,49 +311,164 @@ void BackgroundTiles::setZLayer1(quint16 oldZ, quint16 newZ)
 	}
 }
 
+struct TextureCursor {
+	TextureCursor() : x(0), y(0), firstTextureId(-1), lastTextureId(-1) {}
+	QSet<quint8> textureIds;
+	int x, y;
+	qint16 firstTextureId, lastTextureId;
+};
+
 bool BackgroundTiles::checkOrdering() const
 {
 	const QMap<qint32, Tile> &tiles = sortedTiles();
-	int x = 0, y = 0;
-	QSet<quint8> textureIds, layerIds;
-	qint16 lastTextureId = -1, lastLayerId = -1;
+	QMap<BackgroundTexturesPC::TextureGroups, TextureCursor> textureCursors;
+	QSet<quint8> layerIds;
+	qint16 lastLayerId = -1;
+
+	textureCursors[BackgroundTexturesPC::Paletted] = TextureCursor();
+	textureCursors[BackgroundTexturesPC::BlendedPlusMinus] = TextureCursor();
+	textureCursors[BackgroundTexturesPC::BlendedAverage] = TextureCursor();
+	textureCursors[BackgroundTexturesPC::DirectColor] = TextureCursor();
+
+	QList<Hole> holes = detectHoles();
+
+	if (!holes.isEmpty()) {
+		qWarning() << "BackgroundTiles::checkOrdering" << holes.size() << "holes detected";
+	}
 
 	for (const Tile &tile : tiles) {
 		if (!layerIds.contains(tile.layerID)) {
-			qDebug() << "layer" << tile.layerID;
+			//qDebug() << "layer" << tile.layerID;
 			if (tile.layerID <= lastLayerId) {
-				qDebug() << "BackgroundTiles::checkOrdering wrong layerID ordering" << tile.layerID << tile.textureID << tile.srcX << tile.srcY << x << y;
+				qWarning() << "BackgroundTiles::checkOrdering wrong layerID ordering" << tile.layerID << tile.textureID << tile.srcX << tile.srcY;
 				return false;
 			}
 			layerIds.insert(tile.layerID);
-			//x = 0;
-			//y = 0;
 		}
-		if (!textureIds.contains(tile.textureID)) {
-			qDebug() << "texture" << tile.textureID;
-			if (tile.textureID <= lastTextureId) {
-				qDebug() << "BackgroundTiles::checkOrdering wrong textureId ordering" << tile.layerID << tile.textureID << tile.srcX << tile.srcY << x << y;
+
+		lastLayerId = tile.layerID;
+		BackgroundTexturesPC::TextureGroups group = BackgroundTexturesPC::textureGroup(tile);
+		TextureCursor &cur = textureCursors[group];
+		//qDebug() << "BackgroundTiles::checkOrdering" << tile.layerID << tile.textureID << tile.tileID << tile.size << tile.depth << tile.blending << tile.typeTrans;
+
+		if (cur.firstTextureId == -1) {
+			cur.firstTextureId = tile.textureID;
+		}
+
+		if (!cur.textureIds.contains(tile.textureID)) {
+			//qDebug() << "texture alpha" << tile.textureID;
+			if (tile.textureID <= cur.lastTextureId) {
+				qWarning() << "BackgroundTiles::checkOrdering wrong textureId ordering" << group << cur.lastTextureId << tile.layerID << tile.textureID << tile.srcX << tile.srcY << cur.x << cur.y << cur.textureIds;
 				return false;
 			}
-			textureIds.insert(tile.textureID);
-			x = 0;
-			y = 0;
+			cur.textureIds.insert(tile.textureID);
+			cur.x = 0;
+			cur.y = 0;
+			//qDebug() << "reset x,y";
 		}
-		if (tile.srcX != x || tile.srcY != y) {
-			qDebug() << "BackgroundTiles::checkOrdering wrong ordering" << tile.layerID << tile.textureID << tile.srcX << tile.srcY << x << y;
+		if (cur.y >= 256) {
+			qWarning() << "BackgroundTiles::checkOrdering wrong y" << group << cur.lastTextureId << tile.layerID << tile.textureID << tile.srcX << tile.srcY << cur.x << cur.y << cur.textureIds;
 			return false;
 		}
-		lastTextureId = tile.textureID;
-		lastLayerId = tile.layerID;
-		x += tile.size;
 
-		if (x >= 256) {
-			x = 0;
-			y += tile.size;
+		if (tile.srcX != cur.x || tile.srcY != cur.y) {
+			bool foundHole = false;
+			while (tile.srcX > cur.x || tile.srcY > cur.y) {
+				for (const Hole &hole: holes) {
+					if (cur.x == hole.srcX && cur.y == hole.srcY) {
+						foundHole = true;
+						break;
+					}
+				}
+
+				if (!foundHole) {
+					break;
+				}
+
+				cur.x += tile.size;
+
+				if (cur.x >= 256) {
+					cur.x = 0;
+					cur.y += tile.size;
+				}
+			}
+			if (!foundHole) {
+				qWarning() << "BackgroundTiles::checkOrdering wrong pos ordering" << group << tile.layerID << tile.textureID << tile.tileID << tile.srcX << tile.srcY << cur.x << cur.y << cur.textureIds;
+				return false;
+			}
+		}
+		cur.lastTextureId = tile.textureID;
+		cur.x += tile.size;
+
+		if (cur.x >= 256) {
+			cur.x = 0;
+			cur.y += tile.size;
 		}
 	}
-	
+
+	QList<int> firstTextureIds;
+	for (const TextureCursor &cur: textureCursors) {
+		firstTextureIds.append(cur.firstTextureId);
+	}
+
+	QList<int> lastTextureIds;
+	for (const TextureCursor &cur: textureCursors) {
+		int last = lastTextureIds.isEmpty() ? -1 : lastTextureIds.last();
+		lastTextureIds.append(cur.lastTextureId);
+		
+		if (last != -1 && cur.lastTextureId != -1 && last >= cur.lastTextureId) {
+			qWarning() << "BackgroundTiles::checkOrdering wrong texture ordering" << lastTextureIds;
+			return false;
+		}
+	}
+
+	qDebug() << "BackgroundTiles::checkOrdering OK" << firstTextureIds << lastTextureIds;
+
 	return true;
+}
+
+QList<Hole> BackgroundTiles::detectHoles() const
+{
+	QSet<quint16> uniqueHoles;
+	QList<Hole> holes;
+	QMultiMap<quint8, quint16> usedTextureTiles;
+	QMap<quint8, quint8> textureSizes;
+
+	for (const Tile &tile: *this) {
+		textureSizes.insert(tile.textureID, tile.size);
+		quint8 textureWidth = tile.size == 16 ? 16 : 8;
+		quint16 t = tile.srcY / tile.size * textureWidth + tile.srcX / tile.size;
+		if (!usedTextureTiles.values(tile.textureID).contains(t)) {
+			usedTextureTiles.insert(tile.textureID, t);
+		}
+	}
+
+	QList<quint8> textureIds = usedTextureTiles.keys();
+	for (quint8 textureId: textureIds) {
+		QList<quint16> tiles = usedTextureTiles.values(textureId);
+		std::sort(tiles.begin(), tiles.end());
+		quint8 tileSize = textureSizes.value(textureId);
+		quint8 textureWidth = tileSize == 16 ? 16 : 8;
+		int i = 0;
+		for (quint16 tileId: tiles) {
+			if (i != tileId) {
+				Tile tile = Tile();
+				tile.srcX = (i % textureWidth) * tileSize;
+				tile.srcY = (i / textureWidth) * tileSize;
+				if (!uniqueHoles.contains(tile.srcX | (tile.srcY << 8))) {
+					uniqueHoles.insert(tile.srcX | (tile.srcY << 8));
+					Hole hole;
+					hole.srcX = tile.srcX;
+					hole.srcY = tile.srcY;
+					holes.append(hole);
+				}
+				i = tileId;
+			}
+			++i;
+		}
+	}
+
+	return holes;
 }
 
 int operator==(const Tile &tile, const Tile &other)

@@ -16,6 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "BackgroundFilePC.h"
+#include "BackgroundTextures.h"
 #include "BackgroundIO.h"
 #include "Palette.h"
 #include "PaletteIO.h"
@@ -102,7 +103,8 @@ bool BackgroundFilePC::open(const QByteArray &data, const QByteArray &palData)
 	}
 
 	setOpen(true);
-	
+
+	qDebug() << field()->name();
 	tiles().checkOrdering();
 
 	return true;
@@ -237,4 +239,87 @@ bool BackgroundFilePC::addTile(Tile &tile, const QImage &image)
 	tile.srcY = unusedSpace.y;
 
 	return BackgroundFile::addTile(tile, image);
+}
+
+struct BackgroundTexturePCInfosAndColors
+{
+	BackgroundTexturePCInfosAndColors(quint32 pos, quint8 depth, quint8 size) :
+	    indexesOrColors(256 * 256), pos(pos), srcX(0), srcY(0), depth(depth), size(size) {}
+	BackgroundTexturesPCInfos infos() const {
+		BackgroundTexturesPCInfos ret;
+		ret.pos = pos;
+		ret.depth = depth;
+		ret.size = size;
+		return ret;
+	}
+	QList<uint> indexesOrColors;
+	quint32 pos;
+	quint16 srcX, srcY;
+	quint8 depth, size;
+};
+
+void BackgroundFilePC::compile()
+{
+	QMap<BackgroundTexturesPC::TextureGroups, QList<BackgroundTexturePCInfosAndColors> > texs;
+	quint32 textureDataPos = 0;
+
+	BackgroundTiles t = tiles().orderedTiles();
+	for (Tile &tile: t) {
+		QList<uint> indexOrRgbListTile = textures()->tile(tile);
+		BackgroundTexturesPC::TextureGroups group = BackgroundTexturesPC::textureGroup(tile);
+
+		if (texs[group].isEmpty() || texs[group].last().srcY >= 256) {
+			texs[group].append(BackgroundTexturePCInfosAndColors(textureDataPos, tile.depth, tile.size));
+			textureDataPos += (tile.depth <= 1 ? 1 : 2) * 256 * 256;
+		}
+
+		BackgroundTexturePCInfosAndColors &texInfosAndColors = texs[group].last();
+
+		tile.textureID = texs[group].size() - 1;
+		tile.textureY = quint8(group);
+		tile.srcX = texInfosAndColors.srcX;
+		tile.srcY = texInfosAndColors.srcY;
+
+		// Copy tile
+		for (quint8 y = 0; y < tile.size; ++y) {
+			for (quint8 x = 0; x < tile.size; ++x) {
+				texInfosAndColors.indexesOrColors[(texInfosAndColors.srcY + y) * 256 + texInfosAndColors.srcX + x] = indexOrRgbListTile[y * tile.size + x];
+			}
+		}
+
+		texInfosAndColors.srcX += tile.size;
+
+		if (texInfosAndColors.srcX >= 256) {
+			texInfosAndColors.srcX = 0;
+			texInfosAndColors.srcY += tile.size;
+		}
+	}
+
+	quint8 texID = 0;
+	QMutableMapIterator<BackgroundTexturesPC::TextureGroups, QList<BackgroundTexturePCInfosAndColors> > it(texs);
+	BackgroundTexturesPC *newTextures = new BackgroundTexturesPC();
+
+	while (it.hasNext()) {
+		it.next();
+		quint8 groupId = quint8(it.key());
+		QList<BackgroundTexturePCInfosAndColors> &list = it.value();
+
+		if (texID < groupId) {
+			texID = groupId;
+		}
+
+		for (BackgroundTexturePCInfosAndColors &textureInfAndCol: list) {
+			newTextures->setTex(texID, textureInfAndCol.indexesOrColors, textureInfAndCol.infos());
+			textureInfAndCol.pos = texID;
+			++texID;
+		}
+	}
+
+	for (Tile &tile: t) {
+		tile.textureID = texs[BackgroundTexturesPC::TextureGroups(tile.textureY)][tile.textureID].pos;
+	}
+
+	setTiles(t);
+	setTextures(newTextures);
+	setModified(true);
 }

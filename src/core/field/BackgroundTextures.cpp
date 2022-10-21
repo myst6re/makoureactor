@@ -496,6 +496,25 @@ BackgroundTexturesPS BackgroundTexturesPC::toPS(const BackgroundTiles &pcTiles,
 	return ret;
 }
 
+BackgroundTexturesPC::TextureGroups BackgroundTexturesPC::textureGroup(const Tile &tile)
+{
+	BackgroundTexturesPC::TextureGroups group = BackgroundTexturesPC::Paletted;
+	
+	if (tile.depth == 2) {
+		group = BackgroundTexturesPC::DirectColor;
+	} else if (tile.blending) {
+		if (tile.typeTrans == 0) {
+			group = BackgroundTexturesPC::BlendedAverage;
+		} else if (tile.typeTrans == 1 || tile.typeTrans == 2 || tile.typeTrans == 3) {
+			group = BackgroundTexturesPC::BlendedPlusMinus;
+		} else {
+			qWarning() << "textureGroup unknown blending type" << tile.layerID << tile.tileID << tile.srcX << tile.srcY << tile.typeTrans;
+		}
+	}
+
+	return group;
+}
+
 BackgroundTexturesPS::BackgroundTexturesPS() :
 	BackgroundTextures(),
 	_headerImg(MIM()), _headerEffect(MIM())

@@ -467,7 +467,7 @@ void BackgroundEditor::updateSelectedTilesTexture(const QList<Cell> &cells)
 				if (tile.srcX == srcX &&
 				    tile.srcY == srcY &&
 				    tile.textureID == textureID) {
-					qDebug() << tile.tileID << tile.srcX << tile.srcY;
+					qDebug() << tile.tileID << tile.textureID << tile.srcX << tile.srcY;
 					selectedTiles.append(tile);
 				}
 			}
