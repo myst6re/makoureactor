@@ -84,11 +84,15 @@ BackgroundTileEditor::BackgroundTileEditor(QWidget *parent)
 	connect(_bgParamInput, &QSpinBox::valueChanged, this, &BackgroundTileEditor::updateBgParam);
 	connect(_bgParamStateInput, &QSpinBox::valueChanged, this, &BackgroundTileEditor::updateBgState);
 	connect(_bgParamGroup, &QGroupBox::toggled, this, &BackgroundTileEditor::updateBgParamEnabled);
+	connect(_paletteIdInput, &QSpinBox::valueChanged, this, &BackgroundTileEditor::updatePaletteId);
 }
 
 void BackgroundTileEditor::setBackgroundFile(BackgroundFile *backgroundFile)
 {
 	_backgroundFile = backgroundFile;
+	if (_backgroundFile != nullptr) {
+		_paletteIdInput->setMaximum(_backgroundFile->palettes().size());
+	}
 }
 
 void BackgroundTileEditor::clear()
@@ -269,4 +273,24 @@ void BackgroundTileEditor::updateBgParamEnabled(bool enabled)
 {
 	updateBgParam(enabled ? _bgParamInput->value() : 0);
 	updateBgState(enabled ? _bgParamStateInput->value() : 0);
+}
+
+void BackgroundTileEditor::updatePaletteId(int value)
+{
+	quint8 paletteId = quint8(value);
+
+	for (Tile &tile: _tiles) {
+		tile.paletteID = paletteId;
+		
+		if (!_backgroundFile->setTile(tile)) {
+			qWarning() << "BackgroundTileEditor::updatePaletteId tile not found" << tile.tileID;
+		}
+	}
+
+	// Update tile preview
+	if (_backgroundFile != nullptr && _tiles.size() == 1) {
+		_tileWidget->setPixmap(QPixmap::fromImage(_backgroundFile->textures()->toImage(_tiles.first(), _backgroundFile->palettes())));
+	}
+
+	emit changed(_tiles);
 }
