@@ -311,6 +311,18 @@ void BackgroundTiles::setZLayer1(quint16 oldZ, quint16 newZ)
 	}
 }
 
+bool BackgroundTiles::replace(const Tile &tile)
+{
+	for (Tile &t : *this) {
+		if (t.tileID == tile.tileID) {
+			t = tile;
+			return true;
+		}
+	}
+
+	return false;
+}
+
 struct TextureCursor {
 	TextureCursor() : x(0), y(0), firstTextureId(-1), lastTextureId(-1) {}
 	QSet<quint8> textureIds;

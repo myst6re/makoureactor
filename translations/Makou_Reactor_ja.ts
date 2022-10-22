@@ -222,10 +222,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Paletted 4-bit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Paletted 8-bit</source>
         <translation type="unfinished"></translation>
     </message>
@@ -235,10 +231,6 @@
     </message>
     <message>
         <source>Blend type</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Depth</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -255,6 +247,10 @@
     </message>
     <message>
         <source>No more space available in the file for a new Tile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Color type</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

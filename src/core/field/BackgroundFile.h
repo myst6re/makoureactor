@@ -79,6 +79,7 @@ public:
 	
 	void setZLayer1(quint16 oldZ, quint16 newZ);
 	virtual bool addTile(Tile &tile, const QImage &image = QImage());
+	virtual bool setTile(Tile &tile, const QImage &image = QImage());
 
 protected:
 	QImage drawBackground(const BackgroundTiles &tiles, bool transparent = false, bool *warning = nullptr) const;

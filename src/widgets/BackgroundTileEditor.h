@@ -38,13 +38,17 @@ public slots:
 	}
 	void setTiles(const QList<Tile> &tiles);
 private slots:
+	void updateBlendType(int index);
 	void createTile();
+	void updateBgParam(int value);
+	void updateBgState(int value);
+	void updateBgParamEnabled(bool enabled);
 private:
 	ImageGridWidget *_tileWidget;
 	QGroupBox *_bgParamGroup;
 	QSpinBox *_bgParamInput, *_bgParamStateInput;
-	QComboBox *_blendTypeInput, *_depthInput;
-	QFormLayout *_tileEditorLayout;
+	QComboBox *_blendTypeInput, *_colorTypeInput;
+	QFormLayout *_tileEditorLayout, *_tileCreateLayout;
 	QSpinBox *_paletteIdInput;
 	QStackedLayout *_stackedLayout;
 	QWidget *_formPage;

@@ -78,6 +78,8 @@ public:
 	QRect rect() const;
 	Tile search(quint8 textureID1, quint8 textureID2, quint8 srcX, quint8 srcY) const;
 	void setZLayer1(quint16 oldZ, quint16 newZ);
+	bool replace(const Tile &tile);
+	using QMultiMap<qint16, Tile>::replace;
 	inline void insert(const Tile &tile) {
 		QMultiMap<qint16, Tile>::insert(qint16(4096 - tile.ID), tile);
 	}

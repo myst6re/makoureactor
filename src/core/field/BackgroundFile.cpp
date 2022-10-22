@@ -293,3 +293,15 @@ bool BackgroundFile::addTile(Tile &tile, const QImage &image)
 
 	return true;
 }
+
+bool BackgroundFile::setTile(Tile &tile, const QImage &image)
+{
+	Q_UNUSED(image)
+
+	if (_tiles.replace(tile)) {
+		setModified(field()->isPC());
+		return true;
+	}
+
+	return false;
+}
