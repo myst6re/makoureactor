@@ -83,7 +83,7 @@ BackgroundTileEditor::BackgroundTileEditor(QWidget *parent)
 	connect(createButton, &QPushButton::clicked, this, &BackgroundTileEditor::createTile);
 	connect(_bgParamInput, &QSpinBox::valueChanged, this, &BackgroundTileEditor::updateBgParam);
 	connect(_bgParamStateInput, &QSpinBox::valueChanged, this, &BackgroundTileEditor::updateBgState);
-	connect(_bgParamGroup, &QGroupBox::toggled, this, &BackgroundTileEditor::updateBgParamEnabled);
+	connect(_bgParamGroup, &QGroupBox::clicked, this, &BackgroundTileEditor::updateBgParamEnabled);
 	connect(_paletteIdInput, &QSpinBox::valueChanged, this, &BackgroundTileEditor::updatePaletteId);
 }
 
@@ -91,7 +91,7 @@ void BackgroundTileEditor::setBackgroundFile(BackgroundFile *backgroundFile)
 {
 	_backgroundFile = backgroundFile;
 	if (_backgroundFile != nullptr) {
-		_paletteIdInput->setMaximum(_backgroundFile->palettes().size());
+		_paletteIdInput->setMaximum(_backgroundFile->palettes().size() - 1);
 	}
 }
 
@@ -141,29 +141,33 @@ void BackgroundTileEditor::setTiles(const QList<Tile> &tiles)
 			_tileWidget->setEnabled(false);
 		}
 
-		_bgParamGroup->blockSignals(true);
-		_bgParamInput->blockSignals(true);
-		_bgParamStateInput->blockSignals(true);
-		if (params.size() == 1) {
+		if (params.size() == 1 && layerID > 0) {
+			_bgParamGroup->setEnabled(true);
 			_bgParamGroup->setChecked(*params.begin() > 0);
-			_bgParamGroup->setEnabled(layerID > 0);
+			_bgParamInput->blockSignals(true);
 			_bgParamInput->setValue(*params.begin());
+			_bgParamInput->blockSignals(false);
+			_bgParamInput->setEnabled(true);
 
 			if (states.size() == 1) {
+				_bgParamStateInput->blockSignals(true);
 				_bgParamStateInput->setValue(*states.begin());
+				_bgParamStateInput->blockSignals(false);
 				_bgParamStateInput->setEnabled(true);
 			} else {
+				_bgParamStateInput->blockSignals(true);
 				_bgParamStateInput->setValue(0);
+				_bgParamStateInput->blockSignals(false);
 				_bgParamStateInput->setEnabled(false);
 			}
 		} else {
-			_bgParamGroup->setChecked(false);
 			_bgParamGroup->setEnabled(false);
+			_bgParamGroup->setChecked(false);
+			_bgParamInput->blockSignals(true);
 			_bgParamInput->setValue(1);
+			_bgParamInput->blockSignals(false);
+			_bgParamInput->setEnabled(false);
 		}
-		_bgParamGroup->blockSignals(false);
-		_bgParamInput->blockSignals(false);
-		_bgParamStateInput->blockSignals(false);
 
 		_paletteIdInput->blockSignals(true);
 		_paletteIdInput->setVisible(!paletteIDs.isEmpty());
@@ -183,7 +187,7 @@ void BackgroundTileEditor::setTiles(const QList<Tile> &tiles)
 		if (blendings.size() == 1 && (typeTranss.size() == 1 || !*blendings.begin())) {
 			_blendTypeInput->setCurrentIndex(*blendings.begin() ? *typeTranss.begin() + 1 : 0);
 			_blendTypeInput->setEnabled(layerID > 0);
-			_tileEditorLayout->labelForField(_blendTypeInput)->setEnabled(true);
+			_tileEditorLayout->labelForField(_blendTypeInput)->setEnabled(layerID > 0);
 		} else {
 			_blendTypeInput->setCurrentIndex(-1);
 			_blendTypeInput->setEnabled(false);
@@ -271,7 +275,9 @@ void BackgroundTileEditor::updateBgState(int value)
 
 void BackgroundTileEditor::updateBgParamEnabled(bool enabled)
 {
+	blockSignals(true);
 	updateBgParam(enabled ? _bgParamInput->value() : 0);
+	blockSignals(false);
 	updateBgState(enabled ? _bgParamStateInput->value() : 0);
 }
 

@@ -260,12 +260,13 @@ bool BackgroundFilePC::compile()
 	QMap<BackgroundTexturesPC::TextureGroups, QList<BackgroundTexturePCInfosAndColors> > texs;
 	quint32 textureDataPos = 0;
 
-	BackgroundTiles t = tiles().orderedTiles();
+	BackgroundTiles t = tiles().orderedTiles(true);
 	for (Tile &tile: t) {
 		QList<uint> indexOrRgbListTile = textures()->tile(tile);
 		BackgroundTexturesPC::TextureGroups group = BackgroundTexturesPC::textureGroup(tile);
 
 		if (texs[group].isEmpty() || texs[group].last().srcY >= 256) {
+			qDebug() << "BackgroundFilePC::compile" << "create Texture for group" << group << textureDataPos << tile.depth << tile.size << tile.blending << tile.typeTrans;
 			texs[group].append(BackgroundTexturePCInfosAndColors(textureDataPos, tile.depth, tile.size));
 			textureDataPos += (tile.depth <= 1 ? 1 : 2) * 256 * 256;
 		}
@@ -276,6 +277,8 @@ bool BackgroundFilePC::compile()
 		tile.textureY = quint8(group);
 		tile.srcX = texInfosAndColors.srcX;
 		tile.srcY = texInfosAndColors.srcY;
+		
+		qDebug() << "BackgroundFilePC::compile" << "xy" << group << tile.srcX << tile.srcY << tile.size;
 
 		// Copy tile
 		for (quint8 y = 0; y < tile.size; ++y) {
@@ -317,6 +320,7 @@ bool BackgroundFilePC::compile()
 				// At this point we don't care if it is a good texture number, we use what's remain
 				texID = unusedTextureIds.takeFirst();
 			}
+			qDebug() << "BackgroundFilePC::compile" << "set tex" << texID << textureInfAndCol.infos().depth << textureInfAndCol.infos().size << textureInfAndCol.infos().pos;
 			newTextures->setTex(texID, textureInfAndCol.indexesOrColors, textureInfAndCol.infos());
 			textureInfAndCol.pos = texID;
 			++texID;
@@ -327,7 +331,7 @@ bool BackgroundFilePC::compile()
 		tile.textureID = texs[BackgroundTexturesPC::TextureGroups(tile.textureY)][tile.textureID].pos;
 	}
 
-	setTiles(t);
+	setTiles(t.orderedTiles(false));
 	setTextures(newTextures);
 	setModified(true);
 

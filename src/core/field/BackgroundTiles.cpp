@@ -18,6 +18,21 @@
 #include "BackgroundTiles.h"
 #include "BackgroundTextures.h"
 
+void Tile::calcIDBig()
+{
+	// Used for conversion to PC format 
+	if (ID == 0) {
+		IDBig = 999;
+	} else if (ID < 50) { // all: 50 (42480000h) | 466: 1 (3F800000h) | 138: 16 (41800000h) | 139: 30 (41F00000h) | 253: 56 (42600000h) | <= 55???: 512 (44000000h)
+		IDBig = 10000 * ID;
+	} else if (ID >= 4095) {
+		IDBig = 9998999;
+	} else {
+		// FIXME: approximation
+		IDBig = quint32((float(ID) / 4096.0f) * 10000000.0f);
+	}
+}
+
 int operator==(const LayerParam &layerParam, const LayerParam &other)
 {
 	return memcmp(&layerParam, &other, sizeof(layerParam));
@@ -29,7 +44,7 @@ bool operator<(const LayerParam &layerParam, const LayerParam &other)
 }
 
 BackgroundTiles::BackgroundTiles() :
-      QMultiMap<qint16, Tile>()
+      QMultiMap<qint32, Tile>()
 {
 }
 
@@ -53,8 +68,8 @@ BackgroundTiles::BackgroundTiles(const QList<Tile> &tiles)
 	}
 }
 
-BackgroundTiles::BackgroundTiles(const QMultiMap<qint16, Tile> &tiles) :
-      QMultiMap<qint16, Tile>(tiles)
+BackgroundTiles::BackgroundTiles(const QMultiMap<qint32, Tile> &tiles) :
+      QMultiMap<qint32, Tile>(tiles)
 {
 }
 
@@ -94,12 +109,14 @@ BackgroundTiles BackgroundTiles::filter(const QHash<quint8, quint8> *paramActifs
 	return ret;
 }
 
-BackgroundTiles BackgroundTiles::orderedTiles() const
+BackgroundTiles BackgroundTiles::orderedTiles(bool orderedForSaving) const
 {
 	BackgroundTiles ret;
 
 	for (const Tile &tile : *this) {
-		ret.insert(tile.tileID, tile);
+		ret.insert(orderedForSaving
+		           ? (tile.layerID << 28) | tile.tileID
+		           : qint32(4096 - tile.ID), tile);
 	}
 
 	return ret;
@@ -113,7 +130,7 @@ BackgroundTiles BackgroundTiles::tiles(quint8 layerID, bool orderedForSaving) co
 		if (tile.layerID == layerID) {
 			ret.insert(orderedForSaving
 			               ? tile.tileID
-			               : 4096 - tile.ID,
+			               : qint32(4096 - tile.ID),
 			           tile);
 		}
 	}
@@ -426,6 +443,35 @@ bool BackgroundTiles::checkOrdering() const
 		if (last != -1 && cur.lastTextureId != -1 && last >= cur.lastTextureId) {
 			qWarning() << "BackgroundTiles::checkOrdering wrong texture ordering" << lastTextureIds;
 			return false;
+		}
+	}
+	
+	// Check tileID
+	
+	QList<BackgroundTiles> reordered(4);
+
+	for (const Tile &tile : *this) {
+		qint32 ordering = 0;
+		if (tile.layerID == 0) {
+			ordering = (tile.paletteID << 20) | (tile.dstY << 10) | tile.dstX;
+		} else {
+			ordering = (tile.dstY << 20) | (tile.dstX << 10) | tile.param;
+		}
+		reordered[tile.layerID].insert(ordering, tile);
+	}
+
+	for (quint8 layerID = 0; layerID < 4; ++layerID) {
+		int tileID = 0;
+		for (const Tile &tile : reordered.at(layerID)) {
+			if (tile.layerID != layerID) {
+				continue;
+			}
+
+			if (tile.tileID != tileID) {
+				qDebug() << "BackgroundTiles::checkOrdering wrong tile order" << layerID << tile.tileID << tileID << tile.textureID << tile.srcX << tile.srcY;
+				break;
+			}
+			++tileID;
 		}
 	}
 

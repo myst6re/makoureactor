@@ -98,6 +98,7 @@ BGDialog::BGDialog(QWidget *parent) :
 	connect(buttonRepair, &QPushButton::clicked, this, &BGDialog::tryToRepairBG);
 	connect(tabBar, &QTabBar::currentChanged, this, &BGDialog::updateBG);
 	connect(tabBar, &QTabBar::currentChanged, this, &BGDialog::showLayersPage);
+	connect(editorPage, &BackgroundEditor::modified, this, &BGDialog::updateBG);
 	connect(editorPage, &BackgroundEditor::modified, this, &BGDialog::modified);
 }
 

@@ -622,17 +622,7 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 			tile.size = 16;
 			tile.layerID = 1;
 			tile.tileID = i;
-			// Used for conversion to PC format 
-			if (tile.ID == 0) {
-				tile.IDBig = 999;
-			} else if (tile.ID < 50) { // all: 50 (42480000h) | 466: 1 (3F800000h) | 138: 16 (41800000h) | 139: 30 (41F00000h) | 253: 56 (42600000h) | <= 55???: 512 (44000000h)
-				tile.IDBig = 10000 * tile.ID;
-			} else if (tile.ID >= 4095) {
-				tile.IDBig = 9998999;
-			} else {
-				// FIXME: approximation
-				tile.IDBig = quint32((float(tile.ID) / 4096.0f) * 10000000.0f);
-			}
+			tile.calcIDBig();
 
 			tiles.insert(tile);
 		} else {

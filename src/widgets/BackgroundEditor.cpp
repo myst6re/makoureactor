@@ -204,6 +204,8 @@ void BackgroundEditor::refreshTexture()
 		}
 	}
 
+	qDebug() << "/BackgroundEditor::refreshTexture" << layer;
+
 	int cellSize = layer > 1 ? 32 : 16;
 
 	_texturesWidget->setCellSize(cellSize);
@@ -413,6 +415,11 @@ void BackgroundEditor::updateSelectedTiles(const QList<Cell> &cells)
 				tile.layerID = quint8(currentLayer());
 				if (_sectionsList->isEnabled() && _sectionsList->currentItem() != nullptr) {
 					tile.ID = currentSection();
+				} else {
+					switch (tile.layerID) {
+					case 0: tile.ID = 4095; break;
+					case 2: tile.ID = 4096; break;
+					}
 				}
 				if (_paramsList->isEnabled() && _paramsList->currentItem() != nullptr) {
 					ParamState paramState = currentParamState();
@@ -421,8 +428,8 @@ void BackgroundEditor::updateSelectedTiles(const QList<Cell> &cells)
 				}
 				tile.dstX = qint16(cell.x() * cellSize - MAX_TILE_DST);
 				tile.dstY = qint16(cell.y() * cellSize - MAX_TILE_DST);
-				tile.depth = 1;
 				tile.size = tile.layerID > 1 ? 32 : 16;
+				tile.calcIDBig();
 				selectedTiles.append(tile);
 				matches.insert(cell, tile);
 			}

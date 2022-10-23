@@ -288,6 +288,7 @@ bool BackgroundFile::addTile(Tile &tile, const QImage &image)
 	Q_UNUSED(image)
 
 	tile.tileID = tiles().size();
+	qDebug() << "addTile" << tile.layerID << tile.tileID << tile.textureID << tile.srcX << tile.srcY << tile.depth << tile.size << tile.dstX << tile.dstY << tile.ID << tile.IDBig << tile.blending << tile.typeTrans;
 	_tiles.insert(tile);
 	setModified(field()->isPC());
 

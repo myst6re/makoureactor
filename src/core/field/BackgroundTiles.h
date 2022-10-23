@@ -33,6 +33,7 @@ struct Tile {
 	quint8 layerID;
 	quint16 tileID;
 	quint32 IDBig; // Only on PC
+	void calcIDBig();
 };
 
 struct LayerParam {
@@ -55,16 +56,16 @@ struct ParamState {
 	quint8 param, state;
 };
 
-class BackgroundTiles : public QMultiMap<qint16, Tile>
+class BackgroundTiles : public QMultiMap<qint32, Tile>
 {
 public:
 	BackgroundTiles();
 	explicit BackgroundTiles(const QList<Tile> &tiles);
-	explicit BackgroundTiles(const QMultiMap<qint16, Tile> &tiles);
+	explicit BackgroundTiles(const QMultiMap<qint32, Tile> &tiles);
 
 	BackgroundTiles filter(const QHash<quint8, quint8> *paramActifs, const qint16 *z,
 	                       const bool *layers, const QSet<quint16> *IDs, bool onlyParams = false) const;
-	BackgroundTiles orderedTiles() const;
+	BackgroundTiles orderedTiles(bool orderedForSaving) const;
 	BackgroundTiles tiles(quint8 layerID, bool orderedForSaving = false) const;
 	BackgroundTiles tilesByID(quint16 ID, bool orderedForSaving = false) const;
 	BackgroundTiles tiles(quint8 layerID, quint16 ID, qint16 dstX, qint16 dstY) const;
@@ -79,11 +80,11 @@ public:
 	Tile search(quint8 textureID1, quint8 textureID2, quint8 srcX, quint8 srcY) const;
 	void setZLayer1(quint16 oldZ, quint16 newZ);
 	bool replace(const Tile &tile);
-	using QMultiMap<qint16, Tile>::replace;
+	using QMultiMap<qint32, Tile>::replace;
 	inline void insert(const Tile &tile) {
-		QMultiMap<qint16, Tile>::insert(qint16(4096 - tile.ID), tile);
+		QMultiMap<qint32, Tile>::insert(qint32(4096 - tile.ID), tile);
 	}
-	using QMultiMap<qint16, Tile>::insert;
+	using QMultiMap<qint32, Tile>::insert;
 	bool checkOrdering() const;
 	QList<Hole> detectHoles() const;
 };

@@ -316,7 +316,7 @@ quint16 BackgroundTexturesPC::fromQRgb(QRgb color) const
 	// alpha ignored!
 	return ((qRound(qRed(color) / COEFF_COLOR) & 31) << 11) |
 			((qRound(qGreen(color) / COEFF_COLOR) & 31) << 6) |
-			(qRound(qBlue(color) / COEFF_COLOR) & 31); // special PC RGB16 color
+			(qRound(qBlue(color) / COEFF_COLOR) & 31) | (1 << 5); // special PC RGB16 color
 }
 
 UnusedSpaceInTexturePC BackgroundTexturesPC::findFirstUnusedSpaceInTextures(const BackgroundTiles &tiles, quint8 depth, quint8 size)
@@ -413,6 +413,7 @@ QImage BackgroundTexturesPC::toImage(const BackgroundTiles &tiles, const Palette
 
 QImage BackgroundTexturesPC::toImage(quint8 texID) const
 {
+	qDebug() << "BackgroundTexturesPC::toImage" << texID;
 	QList<uint> indexOrRgbList = tex(texID);
 	const BackgroundTexturesPCInfos &infos = texInfos(texID);
 	QImage img(256, 256, QImage::Format_ARGB32);
@@ -453,6 +454,10 @@ QImage BackgroundTexturesPC::toImage(quint8 texID, const BackgroundTiles &tiles,
 			Palette *palette = nullptr;
 			quint16 pos = tile.srcY * 256 + tile.srcX;
 			quint8 x = 0, y = 0;
+			if (tile.srcX + tile.size > 256 || tile.srcY + tile.size > 256) {
+				qWarning() << "BackgroundTexturesPC::toImage error tile is too big for position" << tile.srcX << tile.srcY << tile.size;
+				continue;
+			}
 
 			if (tile.paletteID < palettes.size()) {
 				palette = palettes.at(tile.paletteID);
@@ -464,7 +469,7 @@ QImage BackgroundTexturesPC::toImage(quint8 texID, const BackgroundTiles &tiles,
 //				} else if (tile.depth == 1) {
 //					bits[pos + y * 256 + x] = qRgb(0, 0, 255);
 //				}
-				if (palette) {
+				if (palette != nullptr) {
 					bits[pos + y * 256 + x] = palette->color(indexOrRgb);
 				} else {
 					bits[pos + y * 256 + x] = qRgb(indexOrRgb, indexOrRgb, indexOrRgb);

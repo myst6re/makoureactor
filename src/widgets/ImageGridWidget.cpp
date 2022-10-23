@@ -226,9 +226,8 @@ void ImageGridWidget::mouseMoveEvent(QMouseEvent *event)
 	if (_selectionMode == MultiSelection && _startMousePress != Cell(-1, -1) && _startMousePress != newCell) {
 		QPoint diff = newCell - _startMousePress;
 		QList<Cell> selectedCells;
-		qDebug() << _startMousePress << newCell << diff;
-		for (int yp = 0; yp < std::abs(diff.y()); ++yp) {
-			for (int xp = 0; xp < std::abs(diff.x()); ++xp) {
+		for (int yp = 0; yp < std::abs(std::max(diff.y(), 1)); ++yp) {
+			for (int xp = 0; xp < std::abs(std::max(diff.x(), 1)); ++xp) {
 				int x = diff.x() >= 0 ? xp : -xp,
 				        y = diff.y() >= 0 ? yp : -yp;
 				selectedCells.append(_startMousePress + Cell(x, y));
@@ -237,7 +236,6 @@ void ImageGridWidget::mouseMoveEvent(QMouseEvent *event)
 
 		setSelectedCells(selectedCells);
 	} else if (newCell != _hoverCell) {
-		
 		_hoverCell = newCell;
 		update();
 
