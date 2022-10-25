@@ -278,7 +278,7 @@ bool BackgroundFilePC::compile()
 		tile.srcX = texInfosAndColors.srcX;
 		tile.srcY = texInfosAndColors.srcY;
 		
-		qDebug() << "BackgroundFilePC::compile" << "xy" << group << tile.srcX << tile.srcY << tile.size;
+		qDebug() << "BackgroundFilePC::compile" << "xy" << group << tile.srcX << tile.srcY << tile.size << tile.layerID;
 
 		// Copy tile
 		for (quint8 y = 0; y < tile.size; ++y) {

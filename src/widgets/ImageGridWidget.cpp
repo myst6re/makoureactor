@@ -60,6 +60,12 @@ void ImageGridWidget::setGroupedCellSize(int size)
 	update();
 }
 
+void  ImageGridWidget::setCustomLines(const QList<QLine> &lines)
+{
+	_customLines = lines;
+	update();
+}
+
 void ImageGridWidget::setGridSize(const QSize &gridSize)
 {
 	_gridSize = gridSize;
@@ -181,6 +187,7 @@ void ImageGridWidget::paintEvent(QPaintEvent *event)
 		p.drawLines(_gridLines);
 		p.setPen(QPen(Qt::darkGray, 3, Qt::DashLine));
 		p.drawLines(_groupedGridLines);
+		p.drawLines(_customLines);
 
 		QColor lightRed(0xff, 0x7f, 0x7f);
 
@@ -226,8 +233,8 @@ void ImageGridWidget::mouseMoveEvent(QMouseEvent *event)
 	if (_selectionMode == MultiSelection && _startMousePress != Cell(-1, -1) && _startMousePress != newCell) {
 		QPoint diff = newCell - _startMousePress;
 		QList<Cell> selectedCells;
-		for (int yp = 0; yp < std::abs(std::max(diff.y(), 1)); ++yp) {
-			for (int xp = 0; xp < std::abs(std::max(diff.x(), 1)); ++xp) {
+		for (int yp = 0; yp < std::max(std::abs(diff.y()), 1); ++yp) {
+			for (int xp = 0; xp < std::max(std::abs(diff.x()), 1); ++xp) {
 				int x = diff.x() >= 0 ? xp : -xp,
 				        y = diff.y() >= 0 ? yp : -yp;
 				selectedCells.append(_startMousePress + Cell(x, y));

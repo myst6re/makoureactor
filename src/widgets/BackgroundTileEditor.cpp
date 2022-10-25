@@ -57,6 +57,7 @@ BackgroundTileEditor::BackgroundTileEditor(QWidget *parent)
 	layout->addWidget(_tileWidget);
 	layout->addLayout(_tileEditorLayout);
 	layout->addWidget(_bgParamGroup);
+	layout->addStretch(1);
 	layout->setContentsMargins(QMargins());
 
 	_createPage = new QWidget(this);

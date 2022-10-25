@@ -54,10 +54,13 @@ private:
 	void updateImageLabel(int layer, int section, int param, int state);
 	void refreshImage(int layer, int section, int param, int state);
 	void refreshTexture();
+	static QPoint backgroundPositionFromTile(const QPoint &cell, quint8 cellSize);
+	static QPoint tilePositionFromCell(const QPoint &cell, quint8 cellSize, const QPoint &shift);
 
 	QComboBox *_layersComboBox;
 	QListWidget *_sectionsList;
 	QTreeWidget *_paramsList;
+	QSpinBox *_shiftX, *_shiftY;
 	QScrollArea *_backgroundLayerScrollArea;
 	ImageGridWidget *_backgroundLayerWidget, *_texturesWidget, *_palettesWidget;
 	BackgroundTileEditor *_backgroundTileEditor;

@@ -514,6 +514,11 @@ BackgroundTexturesPC::TextureGroups BackgroundTexturesPC::textureGroup(const Til
 			}
 			return BackgroundTexturesPC::DirectColorBlended;
 		}
+		if (tile.layerID == 2) {
+			return BackgroundTexturesPC::Layer2DirectColor;
+		} else if (tile.layerID == 3) {
+			return BackgroundTexturesPC::Layer3DirectColor;
+		}
 		return BackgroundTexturesPC::DirectColor;
 	} else if (tile.blending) {
 		if (tile.layerID == 2) {
@@ -524,6 +529,11 @@ BackgroundTexturesPC::TextureGroups BackgroundTexturesPC::textureGroup(const Til
 			return BackgroundTexturesPC::PalettedBlendedAverage;
 		}
 		return BackgroundTexturesPC::PalettedBlended;
+	}
+	if (tile.layerID == 2) {
+		return BackgroundTexturesPC::Layer2Paletted;
+	} else if (tile.layerID == 3) {
+		return BackgroundTexturesPC::Layer3Paletted;
 	}
 	return BackgroundTexturesPC::Paletted;
 }

@@ -48,6 +48,7 @@ public:
 		return _groupedCellSize;
 	}
 	void setGroupedCellSize(int size);
+	void setCustomLines(const QList<QLine> &lines);
 	inline QSize gridSize() const {
 		return _gridSize.isValid() ? _gridSize : _pixmap.size() / _cellSize;
 	}
@@ -93,7 +94,7 @@ private:
 	void clearHover();
 
 	QPixmap _pixmap;
-	QList<QLine> _gridLines, _groupedGridLines;
+	QList<QLine> _gridLines, _groupedGridLines, _customLines;
 	Cell _hoverCell, _startMousePress;
 	QList<Cell> _selectedCells;
 	QPoint _pixmapPoint, _scaledPixmapPoint, _scaledGridPoint;

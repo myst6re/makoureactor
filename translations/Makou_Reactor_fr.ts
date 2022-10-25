@@ -193,6 +193,14 @@
         <source>Layers 0-1</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Shift X:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shift Y:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>BackgroundTileEditor</name>

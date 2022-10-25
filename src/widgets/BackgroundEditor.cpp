@@ -37,6 +37,14 @@ BackgroundEditor::BackgroundEditor(QWidget *parent)
 	_paramsList->setItemsExpandable(false);
 	_paramsList->setHeaderHidden(true);
 	_paramsList->setFixedWidth(fontMetrics().horizontalAdvance("WWWWWWWWWWW"));
+
+	_shiftX = new QSpinBox(this);
+	_shiftX->setRange(0, 8);
+	_shiftY = new QSpinBox(this);
+	_shiftY->setRange(0, 8);
+	_shiftX->setEnabled(false);
+	_shiftY->setEnabled(false);
+
 	_backgroundLayerWidget = new ImageGridWidget(this);
 	_backgroundLayerWidget->setSelectionMode(ImageGridWidget::MultiSelection);
 	_backgroundLayerScrollArea = new QScrollArea(this);
@@ -47,10 +55,16 @@ BackgroundEditor::BackgroundEditor(QWidget *parent)
 	_backgroundTileEditor = new BackgroundTileEditor(this);
 
 	QWidget *topRow = new QWidget(this);
-	QHBoxLayout *topRowLayout = new QHBoxLayout(topRow);
-	topRowLayout->addWidget(_backgroundLayerScrollArea, 1);
-	topRowLayout->addWidget(_backgroundTileEditor);
-	topRowLayout->setContentsMargins(QMargins());
+	QGridLayout *topRowLayout = new QGridLayout(topRow);
+	topRowLayout->addWidget(new QLabel(tr("Shift X:"), this), 0, 0);
+	topRowLayout->addWidget(_shiftX, 0, 1);
+	topRowLayout->addWidget(new QLabel(tr("Shift Y:"), this), 0, 2);
+	topRowLayout->addWidget(_shiftY, 0, 3);
+	topRowLayout->addWidget(_backgroundLayerScrollArea, 1, 0, 1, 6);
+	topRowLayout->addWidget(_backgroundTileEditor, 0, 6, 2, 1);
+	topRowLayout->setColumnStretch(4, 1);
+	topRowLayout->setRowStretch(1, 1);
+	topRowLayout->setContentsMargins(QMargins(0, 0, 0, topRowLayout->contentsMargins().bottom()));
 
 	_texturesWidget = new ImageGridWidget(this);
 	_texturesWidget->setGroupedCellSize(256);
@@ -67,7 +81,7 @@ BackgroundEditor::BackgroundEditor(QWidget *parent)
 	QHBoxLayout *bottomRowLayout = new QHBoxLayout(bottomRow);
 	bottomRowLayout->addWidget(texturesScrollArea, 1);
 	bottomRowLayout->addWidget(_palettesWidget);
-	bottomRowLayout->setContentsMargins(QMargins());
+	bottomRowLayout->setContentsMargins(QMargins(0, bottomRowLayout->contentsMargins().top(), 0, 0));
 
 	QSplitter *topBottomSplitter = new QSplitter(Qt::Vertical, this);
 	topBottomSplitter->addWidget(topRow);
@@ -231,6 +245,8 @@ void BackgroundEditor::clear()
 	_texturesWidget->setPixmap(QPixmap());
 	_texturesWidget->setSelectedCells(QList<Cell>());
 	_texturesWidget->blockSignals(false);
+	_shiftX->setEnabled(false);
+	_shiftY->setEnabled(false);
 }
 
 int BackgroundEditor::currentLayer() const
@@ -332,6 +348,16 @@ void BackgroundEditor::updateImageLabel(int layer, int section, int param, int s
 	updateSelectedTiles(_backgroundLayerWidget->selectedCells());
 }
 
+QPoint BackgroundEditor::backgroundPositionFromTile(const QPoint &tile, quint8 cellSize)
+{
+	return QPoint(MAX_TILE_DST, MAX_TILE_DST) - tile - QPoint(tile.x() % cellSize, tile.y() % cellSize);
+}
+
+QPoint BackgroundEditor::tilePositionFromCell(const QPoint &cell, quint8 cellSize, const QPoint &shift)
+{
+	return cell * cellSize - QPoint(MAX_TILE_DST, MAX_TILE_DST) + shift;
+}
+
 void BackgroundEditor::refreshImage(int layer, int section, int param, int state)
 {
 	if (_backgroundFile == nullptr || !_backgroundFile->isOpen() || layer < 0) {
@@ -362,13 +388,28 @@ void BackgroundEditor::refreshImage(int layer, int section, int param, int state
 	int width, height;
 	_backgroundFile->tiles().area(currentOffsetX, currentOffsetY, width, height);
 
-	QImage background = _backgroundFile->openBackground(!paramsEnabled.isEmpty() ? &paramsEnabled : nullptr, z, layers, !sections.isEmpty() ? &sections : nullptr, !paramsEnabled.isEmpty(), true);
-	_backgroundLayerWidget->setPixmap(QPoint(MAX_TILE_DST - currentOffsetX, MAX_TILE_DST - currentOffsetY), QPixmap::fromImage(background));
+	qDebug() << "BackgroundEditor::refreshImage" << currentOffsetX << currentOffsetY;
 
 	quint8 tileSize = layer > 1 ? 32 : 16;
+	int shiftX = currentOffsetX % tileSize, shiftY = currentOffsetY % tileSize;
+
+	_shiftX->setMaximum(tileSize / 2);
+	_shiftY->setMaximum(tileSize / 2);
+	_shiftX->setValue(shiftX);
+	_shiftY->setValue(shiftY);
+	_shiftX->setEnabled(true);
+	_shiftY->setEnabled(true);
+
+	QImage background = _backgroundFile->openBackground(!paramsEnabled.isEmpty() ? &paramsEnabled : nullptr, z, layers, !sections.isEmpty() ? &sections : nullptr, !paramsEnabled.isEmpty(), true);
+	_backgroundLayerWidget->setPixmap(backgroundPositionFromTile(QPoint(currentOffsetX, currentOffsetY), tileSize), QPixmap::fromImage(background));
+
 	_backgroundLayerWidget->setCellSize(tileSize);
-	_backgroundLayerWidget->setGridSize(QSize(MAX_TILE_DST * 2 / tileSize, MAX_TILE_DST * 2 / tileSize));
-	_backgroundLayerWidget->setGroupedCellSize(MAX_TILE_DST);
+	QSize gridSize((MAX_TILE_DST - currentOffsetX % tileSize) * 2, (MAX_TILE_DST - currentOffsetY % tileSize) * 2);
+	_backgroundLayerWidget->setGridSize(gridSize / tileSize);
+	QList<QLine> axis;
+	axis.append(QLine(0, gridSize.height() / 2, gridSize.width(), gridSize.height() / 2)); // x
+	axis.append(QLine(gridSize.width() / 2, 0, gridSize.width() / 2, gridSize.height())); // y
+	_backgroundLayerWidget->setCustomLines(axis);
 	_backgroundLayerWidget->setMinimumSize(_backgroundLayerWidget->gridSize() * tileSize);
 }
 
@@ -390,11 +431,13 @@ void BackgroundEditor::updateSelectedTiles(const QList<Cell> &cells)
 		BackgroundTiles tiles = _isParamMode && layerID >= 1 && paramState.isValid() ? _backgroundFile->tiles().tiles(layerID, paramState) : _backgroundFile->tiles().tiles(layerID, ID);
 		
 		qDebug() << "updateSelectedTiles" << cellSize << _isParamMode << layerID << ID << paramState.param << paramState.state << tiles.size();
+		QPoint shift(_shiftX->value(), _shiftY->value());
 
 		for (const Tile &tile : tiles) {
 			for (const Cell &cell: cells) {
-				qint16 dstX = qint16(cell.x() * cellSize - MAX_TILE_DST),
-				        dstY = qint16(cell.y() * cellSize - MAX_TILE_DST);
+				QPoint dst = tilePositionFromCell(cell, cellSize, shift);
+				qint16 dstX = qint16(dst.x()),
+				        dstY = qint16(dst.y());
 
 				if (tile.dstX == dstX &&
 				        tile.dstY == dstY) {
@@ -426,8 +469,9 @@ void BackgroundEditor::updateSelectedTiles(const QList<Cell> &cells)
 					tile.param = paramState.param;
 					tile.state = paramState.state;
 				}
-				tile.dstX = qint16(cell.x() * cellSize - MAX_TILE_DST);
-				tile.dstY = qint16(cell.y() * cellSize - MAX_TILE_DST);
+				QPoint dst = tilePositionFromCell(cell, cellSize, shift);
+				tile.dstX = qint16(dst.x());
+				tile.dstY = qint16(dst.y());
 				tile.size = tile.layerID > 1 ? 32 : 16;
 				tile.calcIDBig();
 				selectedTiles.append(tile);
