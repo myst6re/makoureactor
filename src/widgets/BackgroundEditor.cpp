@@ -429,7 +429,7 @@ void BackgroundEditor::refreshImage(int layer, int section, int param, int state
 	} else {
 		pix.fill(Qt::transparent);
 		QPainter p(&pix);
-		p.setOpacity(0.5);
+		p.setOpacity(0.2);
 		p.drawImage(0, 0, backgroundBelow);
 		p.setOpacity(1.0);
 		p.drawImage(0, 0, background);
