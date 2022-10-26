@@ -400,8 +400,43 @@ void BackgroundEditor::refreshImage(int layer, int section, int param, int state
 	_shiftX->setEnabled(true);
 	_shiftY->setEnabled(true);
 
+	QImage backgroundBelow;
+
+	if (section >= 0 && layer == 1) {
+		QSet<quint16> sectionsBelow;
+
+		for (int row = 0; row < _sectionsList->count(); ++row) {
+			int sectionId = _sectionsList->item(row)->data(Qt::UserRole).toInt();
+			if (sectionId == section) {
+				break;
+			}
+			sectionsBelow.insert(sectionId == 4097 ? 1 : sectionId);
+		}
+
+		qDebug() << "BackgroundEditor::refreshImage sectionsBelow" << sectionsBelow;
+
+		if (!sectionsBelow.isEmpty()) {
+			bool layers[4] = {true, true, false, false};
+			backgroundBelow = _backgroundFile->openBackground(!paramsEnabled.isEmpty() ? &paramsEnabled : nullptr, z, layers, &sectionsBelow, !paramsEnabled.isEmpty(), true);
+		}
+	}
+
 	QImage background = _backgroundFile->openBackground(!paramsEnabled.isEmpty() ? &paramsEnabled : nullptr, z, layers, !sections.isEmpty() ? &sections : nullptr, !paramsEnabled.isEmpty(), true);
-	_backgroundLayerWidget->setPixmap(backgroundPositionFromTile(QPoint(currentOffsetX, currentOffsetY), tileSize), QPixmap::fromImage(background));
+	QPixmap pix(background.size());
+
+	if (backgroundBelow.isNull()) {
+		pix = QPixmap::fromImage(background);
+	} else {
+		pix.fill(Qt::transparent);
+		QPainter p(&pix);
+		p.setOpacity(0.5);
+		p.drawImage(0, 0, backgroundBelow);
+		p.setOpacity(1.0);
+		p.drawImage(0, 0, background);
+		p.end();
+	}
+
+	_backgroundLayerWidget->setPixmap(backgroundPositionFromTile(QPoint(currentOffsetX, currentOffsetY), tileSize), pix);
 
 	_backgroundLayerWidget->setCellSize(tileSize);
 	QSize gridSize((MAX_TILE_DST - currentOffsetX % tileSize) * 2, (MAX_TILE_DST - currentOffsetY % tileSize) * 2);

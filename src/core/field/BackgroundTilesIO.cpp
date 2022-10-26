@@ -389,7 +389,6 @@ Tile BackgroundTilesIOPC::tilePC2Tile(const TilePC &tile, quint8 layerID, quint1
 		ret.srcY = tile.srcY;
 		ret.textureID = tile.textureID;
 	}
-	qDebug() << "tilePC2Tile" << ret.dstX << ret.dstY;
 	ret.dstX = tile.dstX;
 	ret.dstY = tile.dstY;
 	ret.paletteID = tile.paletteID;
