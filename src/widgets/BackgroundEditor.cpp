@@ -29,8 +29,10 @@ BackgroundEditor::BackgroundEditor(QWidget *parent)
 	_layersComboBox->addItem(tr("Layer 2"));
 	_layersComboBox->addItem(tr("Layer 3"));
 	_layersComboBox->setFixedWidth(fontMetrics().horizontalAdvance("WWWWWWWWWWW"));
-	_sectionsList = new QListWidget(this);
-	_sectionsList->setUniformItemSizes(true);
+	_sectionsList = new QTreeWidget(this);
+	_sectionsList->setUniformRowHeights(true);
+	_sectionsList->setItemsExpandable(true);
+	_sectionsList->setHeaderHidden(true);
 	_sectionsList->setFixedWidth(fontMetrics().horizontalAdvance("WWWWWWWWWWW"));
 	_paramsList = new QTreeWidget(this);
 	_paramsList->setUniformRowHeights(true);
@@ -98,7 +100,7 @@ BackgroundEditor::BackgroundEditor(QWidget *parent)
 	layout->setColumnStretch(1, 2);
 
 	connect(_layersComboBox, &QComboBox::currentIndexChanged, this, &BackgroundEditor::updateCurrentLayer);
-	connect(_sectionsList, &QListWidget::currentItemChanged, this, &BackgroundEditor::updateCurrentSection);
+	connect(_sectionsList, &QTreeWidget::currentItemChanged, this, &BackgroundEditor::updateCurrentSection);
 	connect(_paramsList, &QTreeWidget::currentItemChanged, this, &BackgroundEditor::updateCurrentParam);
 	connect(_backgroundLayerWidget, &ImageGridWidget::currentSelectionChanged, this, &BackgroundEditor::updateSelectedTiles);
 	connect(_texturesWidget, &ImageGridWidget::currentSelectionChanged, this, &BackgroundEditor::updateSelectedTilesTexture);
@@ -125,20 +127,26 @@ void BackgroundEditor::fillSectionList()
 	_sectionsList->clear();
 
 	int layer = currentLayer();
+	QList<QTreeWidgetItem *> topLevelItems;
+
+	QTreeWidgetItem *item = new QTreeWidgetItem(QStringList(layer <= 1 ? tr("Base Section") : tr("Single Section")));
+	item->setExpanded(false);
+	item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+	topLevelItems.append(item);
 
 	if (layer <= 1) {
-		QListWidgetItem *item = new QListWidgetItem(tr("Base Section"));
-		item->setData(Qt::UserRole, 4097);
-		_sectionsList->addItem(item);
+		item->setData(0, Qt::UserRole, 4097);
 
 		for (quint16 id: _sections) {
-			QListWidgetItem *item = new QListWidgetItem(tr("Section %1").arg(id));
-			item->setData(Qt::UserRole, id);
-			_sectionsList->addItem(item);
+			item = new QTreeWidgetItem(QStringList(tr("Section %1").arg(id)));
+			item->setExpanded(false);
+			item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+			item->setData(0, Qt::UserRole, id);
+			topLevelItems.append(item);
 		}
-	} else if (layer > 1) {
-		_sectionsList->addItem(tr("Single Section"));
 	}
+
+	_sectionsList->addTopLevelItems(topLevelItems);
 	_sectionsList->blockSignals(false);
 }
 
@@ -258,12 +266,12 @@ int BackgroundEditor::currentLayer() const
 
 int BackgroundEditor::currentSection() const
 {
-	QListWidgetItem *item = _sectionsList->currentItem();
+	QTreeWidgetItem *item = _sectionsList->currentItem();
 	if (item == nullptr) {
 		return -1;
 	}
 
-	return item->data(Qt::UserRole).toInt();
+	return item->data(0, Qt::UserRole).toInt();
 }
 
 ParamState BackgroundEditor::currentParamState() const
@@ -287,7 +295,7 @@ void BackgroundEditor::updateCurrentLayer(int index)
 
 	if (_sectionsList->currentItem() == nullptr) {
 		_sectionsList->blockSignals(true);
-		_sectionsList->setCurrentRow(0);
+		_sectionsList->setCurrentItem(_sectionsList->topLevelItem(0));
 		_sectionsList->blockSignals(false);
 	}
 
@@ -308,7 +316,7 @@ void BackgroundEditor::updateCurrentLayer(int index)
 	refreshTexture();
 }
 
-void BackgroundEditor::updateCurrentSection(QListWidgetItem *current, QListWidgetItem *previous)
+void BackgroundEditor::updateCurrentSection(QTreeWidgetItem *current, QTreeWidgetItem *previous)
 {
 	Q_UNUSED(previous)
 	
@@ -316,7 +324,7 @@ void BackgroundEditor::updateCurrentSection(QListWidgetItem *current, QListWidge
 	_paramsList->setCurrentItem(nullptr);
 	_paramsList->blockSignals(false);
 
-	updateCurrentSection2(current != nullptr ? current->data(Qt::UserRole).toInt() : -1);
+	updateCurrentSection2(current != nullptr ? current->data(0, Qt::UserRole).toInt() : -1);
 }
 
 void BackgroundEditor::updateCurrentSection2(int section)
@@ -329,7 +337,7 @@ void BackgroundEditor::updateCurrentParam(QTreeWidgetItem *current, QTreeWidgetI
 	Q_UNUSED(previous)
 	
 	_sectionsList->blockSignals(true);
-	_sectionsList->setCurrentRow(-1);
+	_sectionsList->setCurrentItem(nullptr);
 	_sectionsList->blockSignals(false);
 
 	updateCurrentParam2(current != nullptr && current->parent() != nullptr ? current->parent()->data(0, Qt::UserRole).toInt() : -1,
@@ -405,8 +413,8 @@ void BackgroundEditor::refreshImage(int layer, int section, int param, int state
 	if (section >= 0 && layer == 1) {
 		QSet<quint16> sectionsBelow;
 
-		for (int row = 0; row < _sectionsList->count(); ++row) {
-			int sectionId = _sectionsList->item(row)->data(Qt::UserRole).toInt();
+		for (int row = 0; row < _sectionsList->topLevelItemCount(); ++row) {
+			int sectionId = _sectionsList->topLevelItem(row)->data(0, Qt::UserRole).toInt();
 			if (sectionId == section) {
 				break;
 			}

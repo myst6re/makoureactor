@@ -39,7 +39,7 @@ protected:
 	void showEvent(QShowEvent *event) override;
 private slots:
 	void updateCurrentLayer(int layer);
-	void updateCurrentSection(QListWidgetItem *current, QListWidgetItem *previous);
+	void updateCurrentSection(QTreeWidgetItem *current, QTreeWidgetItem *previous);
 	void updateCurrentParam(QTreeWidgetItem *current, QTreeWidgetItem *previous);
 	void updateSelectedTiles(const QList<Cell> &cells);
 	void updateSelectedTilesTexture(const QList<Cell> &cells);
@@ -58,7 +58,7 @@ private:
 	static QPoint tilePositionFromCell(const QPoint &cell, quint8 cellSize, const QPoint &shift);
 
 	QComboBox *_layersComboBox;
-	QListWidget *_sectionsList;
+	QTreeWidget *_sectionsList;
 	QTreeWidget *_paramsList;
 	QSpinBox *_shiftX, *_shiftY;
 	QScrollArea *_backgroundLayerScrollArea;
