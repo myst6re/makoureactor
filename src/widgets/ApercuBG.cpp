@@ -28,7 +28,7 @@ ApercuBG::ApercuBG(QWidget *parent) :
 	QPalette pal = palette();
 	pal.setColor(QPalette::Active, QPalette::Dark, Qt::black);
 	pal.setColor(QPalette::Inactive, QPalette::Dark, Qt::black);
-	pal.setColor(QPalette::Disabled, QPalette::Dark, pal.color(QPalette::Mid));
+	pal.setColor(QPalette::Disabled, QPalette::Dark, qRgb(50, 50, 50));
 	setPalette(pal);
 }
 

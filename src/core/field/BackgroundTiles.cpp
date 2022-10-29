@@ -94,13 +94,13 @@ BackgroundTiles BackgroundTiles::filter(const QHash<quint8, quint8> *paramActifs
 		case 2:
 			if (((!onlyParams && tile.state == 0) || (paramActifs == nullptr || paramActifs->value(tile.param, 0) & tile.state))
 			    && (layers == nullptr || layers[2]) && (IDs == nullptr || IDs->contains(tile.ID))) {
-				ret.insert(4096 - ((z && z[0] != -1) ? z[0] : tile.ID), tile);
+				ret.insert(4096 - ((z != nullptr && z[0] != -1) ? z[0] : tile.ID), tile);
 			}
 			break;
 		case 3:
 			if (((!onlyParams && tile.state == 0) || (paramActifs == nullptr || paramActifs->value(tile.param, 0) & tile.state))
 			    && (layers == nullptr || layers[3]) && (IDs == nullptr || IDs->contains(tile.ID))) {
-				ret.insert(4096 - ((z && z[1] != -1) ? z[1] : tile.ID), tile);
+				ret.insert(4096 - ((z != nullptr && z[1] != -1) ? z[1] : tile.ID), tile);
 			}
 			break;
 		}
@@ -275,11 +275,11 @@ void BackgroundTiles::area(quint16 &minWidth, quint16 &minHeight,
 	for (const Tile &tile : *this) {
 		quint8 toAdd = tile.size - 16;
 		if (tile.dstX >= 0 && tile.dstX+toAdd > maxWidth)
-			maxWidth = tile.dstX+toAdd;
+			maxWidth = tile.dstX + toAdd;
 		else if (tile.dstX < 0 && -tile.dstX > minWidth)
 			minWidth = -tile.dstX;
 		if (tile.dstY >= 0 && tile.dstY+toAdd > maxHeight)
-			maxHeight = tile.dstY+toAdd;
+			maxHeight = tile.dstY + toAdd;
 		else if (tile.dstY < 0 && -tile.dstY > minHeight)
 			minHeight = -tile.dstY;
 	}

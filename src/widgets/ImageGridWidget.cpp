@@ -33,6 +33,7 @@ void ImageGridWidget::setPixmap(const QPixmap &pixmap)
 
 void ImageGridWidget::setPixmap(const QPoint &point, const QPixmap &pixmap)
 {
+	qDebug() << "ImageGridWidget::setPixmap" << point << pixmap.size();
 	_pixmapPoint = point;
 	_pixmap = pixmap;
 	updateGrid();
@@ -41,6 +42,7 @@ void ImageGridWidget::setPixmap(const QPoint &point, const QPixmap &pixmap)
 
 void ImageGridWidget::setPixmapPoint(const QPoint &point)
 {
+	qDebug() << "ImageGridWidget::setPixmapPoint" << point;
 	_pixmapPoint = point;
 	updateGrid();
 	update();
@@ -48,6 +50,7 @@ void ImageGridWidget::setPixmapPoint(const QPoint &point)
 
 void ImageGridWidget::setCellSize(int size)
 {
+	qDebug() << "ImageGridWidget::setCellSize" << size;
 	_cellSize = size;
 	updateGrid();
 	update();
@@ -68,6 +71,7 @@ void  ImageGridWidget::setCustomLines(const QList<QLine> &lines)
 
 void ImageGridWidget::setGridSize(const QSize &gridSize)
 {
+	qDebug() << "ImageGridWidget::setGridSize" << gridSize;
 	_gridSize = gridSize;
 	updateGrid();
 	update();
@@ -162,6 +166,7 @@ void ImageGridWidget::updateGrid()
 
 	_scaledGridPoint = (QPoint(width(), height()) - scaledPoint(QPoint(gridS.width(), gridS.height()) * _cellSize)) / 2;
 	_scaledPixmapPoint = _pixmapPoint == QPoint(-1, -1) ? _scaledGridPoint : scaledPoint(_pixmapPoint);
+	qDebug() << "ImageGridWidget::updateGrid" << gridS * _cellSize;
 
 	if (_groupedCellSize != 0) {
 		_groupedGridLines = createGrid(gridS * _cellSize / _groupedCellSize, _groupedCellSize);
@@ -263,14 +268,17 @@ void ImageGridWidget::leaveEvent(QEvent *event)
 
 void ImageGridWidget::mousePressEvent(QMouseEvent *event)
 {
+	Cell cell = getCell(event->pos());
+
 	if (_selectionMode != NoSelection) {
-		Cell cell = getCell(event->pos());
 		setSelectedCell(cell);
 		setFocus();
 		if (_selectionMode == MultiSelection) {
 			_startMousePress = cell;
 		}
 	}
+
+	emit clicked(cell);
 
 	QWidget::mousePressEvent(event);
 }

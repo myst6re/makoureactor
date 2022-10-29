@@ -42,7 +42,7 @@ private slots:
 	void updateCurrentSection(QTreeWidgetItem *current, QTreeWidgetItem *previous);
 	void updateCurrentParam(QTreeWidgetItem *current, QTreeWidgetItem *previous);
 	void updateSelectedTiles(const QList<Cell> &cells);
-	void updateSelectedTilesTexture(const QList<Cell> &cells);
+	void updateSelectedTileTexture(const Cell &cell);
 	void updateTiles(const QList<Tile> &tiles);
 private:
 	void fillSectionList();

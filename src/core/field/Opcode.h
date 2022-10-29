@@ -20,12 +20,12 @@
 #include <QtCore>
 
 #ifdef _MSC_VER
-#	define PACK(...)            \
+#	define STRUCTPACK(...)      \
 		__pragma(pack(push, 1)) \
 		__VA_ARGS__             \
 		__pragma(pack(pop))
 #else
-#	define PACK(...) __VA_ARGS__ Q_PACKED
+#	define STRUCTPACK(...) __VA_ARGS__ Q_PACKED
 #endif
 
 #define B1(v)             ((v >> 4) & 0xF)
@@ -318,39 +318,39 @@ enum BadJumpError : quint8 {
 	ImpossibleLong
 };
 
-PACK(struct OpcodeBase {
+STRUCTPACK(struct OpcodeBase {
 	OpcodeKey id;
 });
 
-PACK(struct OpcodeRET : public OpcodeBase {});
+STRUCTPACK(struct OpcodeRET : public OpcodeBase {});
 
-PACK(struct OpcodeExec : public OpcodeBase {
+STRUCTPACK(struct OpcodeExec : public OpcodeBase {
 	quint8 groupID;
 	quint8 scriptIDAndPriority; // scriptID = scriptIDAndPriority & 0x1F, priority = (scriptIDAndPriority >> 5) & 7
 });
 
-PACK(struct OpcodeREQ : public OpcodeExec {});
-PACK(struct OpcodeREQSW : public OpcodeExec {});
-PACK(struct OpcodeREQEW : public OpcodeExec {});
+STRUCTPACK(struct OpcodeREQ : public OpcodeExec {});
+STRUCTPACK(struct OpcodeREQSW : public OpcodeExec {});
+STRUCTPACK(struct OpcodeREQEW : public OpcodeExec {});
 
-PACK(struct OpcodeExecChar : public OpcodeBase {
+STRUCTPACK(struct OpcodeExecChar : public OpcodeBase {
 	quint8 partyID;
 	quint8 scriptIDAndPriority; // scriptID = scriptIDAndPriority & 0x1F, priority = (scriptIDAndPriority >> 5) & 7
 });
 
-PACK(struct OpcodePREQ : public OpcodeExecChar {});
-PACK(struct OpcodePRQSW : public OpcodeExecChar {});
-PACK(struct OpcodePRQEW : public OpcodeExecChar {});
+STRUCTPACK(struct OpcodePREQ : public OpcodeExecChar {});
+STRUCTPACK(struct OpcodePRQSW : public OpcodeExecChar {});
+STRUCTPACK(struct OpcodePRQEW : public OpcodeExecChar {});
 
-PACK(struct OpcodeRETTO : public OpcodeBase {
+STRUCTPACK(struct OpcodeRETTO : public OpcodeBase {
 	quint8 scriptIDAndPriority; // scriptID = scriptIDAndPriority & 0x1F, priority = (scriptIDAndPriority >> 5) & 7
 });
 
-PACK(struct OpcodeJOIN : public OpcodeBase {
+STRUCTPACK(struct OpcodeJOIN : public OpcodeBase {
 	quint8 speed;
 });
 
-PACK(struct OpcodeSPLIT : public OpcodeBase {
+STRUCTPACK(struct OpcodeSPLIT : public OpcodeBase {
 	quint8 banks[3];
 	qint16 targetX1; // bank 1 16-bit
 	qint16 targetY1; // bank 2 16-bit
@@ -361,37 +361,37 @@ PACK(struct OpcodeSPLIT : public OpcodeBase {
 	quint8 speed;
 });
 
-PACK(struct OpcodeSPTYE : public OpcodeBase {
+STRUCTPACK(struct OpcodeSPTYE : public OpcodeBase {
 	quint8 banks[2];
 	quint8 charID1; // bank 1 8-bit
 	quint8 charID2; // bank 2 8-bit
 	quint8 charID3; // bank 3 8-bit
 });
 
-PACK(struct OpcodeGTPYE : public OpcodeBase {
+STRUCTPACK(struct OpcodeGTPYE : public OpcodeBase {
 	quint8 banks[2];
 	quint8 varCharID1; // bank 1 8-bit
 	quint8 varCharID2; // bank 2 8-bit
 	quint8 varCharID3; // bank 3 8-bit
 });
 
-PACK(struct OpcodeUnused0C : public OpcodeBase {});
-PACK(struct OpcodeUnused0D : public OpcodeBase {});
+STRUCTPACK(struct OpcodeUnused0C : public OpcodeBase {});
+STRUCTPACK(struct OpcodeUnused0D : public OpcodeBase {});
 
-PACK(struct OpcodeDSKCG : public OpcodeBase {
+STRUCTPACK(struct OpcodeDSKCG : public OpcodeBase {
 	quint8 diskID;
 });
 
-PACK(struct OpcodeSPECIAL : public OpcodeBase {
+STRUCTPACK(struct OpcodeSPECIAL : public OpcodeBase {
 	quint8 subKey;
 });
 
-PACK(struct OpcodeSPECIALARROW : public OpcodeSPECIAL {
+STRUCTPACK(struct OpcodeSPECIALARROW : public OpcodeSPECIAL {
 	quint8 disabled;
 });
 
 // FIXME: 4 parameters, not 1
-PACK(struct OpcodeSPECIALPNAME : public OpcodeSPECIAL {
+STRUCTPACK(struct OpcodeSPECIALPNAME : public OpcodeSPECIAL {
 	quint8 banks; // bank 2
 	quint8 varOrValue; // bank 1 8-bit
 	quint8 unused;
@@ -399,53 +399,53 @@ PACK(struct OpcodeSPECIALPNAME : public OpcodeSPECIAL {
 });
 
 // FIXME
-PACK(struct OpcodeSPECIALGMSPD : public OpcodeSPECIAL {
+STRUCTPACK(struct OpcodeSPECIALGMSPD : public OpcodeSPECIAL {
 	quint8 banks;
 	quint8 varSpeed; // bank 2 8-bit
 });
 
 // FIXME
-PACK(struct OpcodeSPECIALSMSPD : public OpcodeSPECIAL {
+STRUCTPACK(struct OpcodeSPECIALSMSPD : public OpcodeSPECIAL {
 	quint8 banks;
 	quint8 speed; // bank 2 8-bit
 });
 
-PACK(struct OpcodeSPECIALFLMAT : public OpcodeSPECIAL {});
-PACK(struct OpcodeSPECIALFLITM : public OpcodeSPECIAL {});
+STRUCTPACK(struct OpcodeSPECIALFLMAT : public OpcodeSPECIAL {});
+STRUCTPACK(struct OpcodeSPECIALFLITM : public OpcodeSPECIAL {});
 
-PACK(struct OpcodeSpecialLock : public OpcodeSPECIAL {
+STRUCTPACK(struct OpcodeSpecialLock : public OpcodeSPECIAL {
 	quint8 lock;
 });
 
-PACK(struct OpcodeSPECIALBTLCK : public OpcodeSpecialLock {});
-PACK(struct OpcodeSPECIALMVLCK : public OpcodeSpecialLock {});
+STRUCTPACK(struct OpcodeSPECIALBTLCK : public OpcodeSpecialLock {});
+STRUCTPACK(struct OpcodeSPECIALMVLCK : public OpcodeSpecialLock {});
 
-PACK(struct OpcodeSPECIALSPCNM : public OpcodeSPECIAL {
+STRUCTPACK(struct OpcodeSPECIALSPCNM : public OpcodeSPECIAL {
 	quint8 charID;
 	quint8 textID;
 });
 
-PACK(struct OpcodeSPECIALRSGLB : public OpcodeSPECIAL {});
-PACK(struct OpcodeSPECIALCLITM : public OpcodeSPECIAL {});
+STRUCTPACK(struct OpcodeSPECIALRSGLB : public OpcodeSPECIAL {});
+STRUCTPACK(struct OpcodeSPECIALCLITM : public OpcodeSPECIAL {});
 
-PACK(struct OpcodeShortJump : public OpcodeBase {
+STRUCTPACK(struct OpcodeShortJump : public OpcodeBase {
 	quint8 jump;
 	quint16 _label;
 	quint8 _badJump;
 });
 
-PACK(struct OpcodeLongJump : public OpcodeBase {
+STRUCTPACK(struct OpcodeLongJump : public OpcodeBase {
 	quint16 jump;
 	quint16 _label;
 	quint8 _badJump;
 });
 
-PACK(struct OpcodeJMPF : public OpcodeShortJump {});
-PACK(struct OpcodeJMPFL : public OpcodeLongJump {});
-PACK(struct OpcodeJMPB : public OpcodeShortJump {});
-PACK(struct OpcodeJMPBL : public OpcodeLongJump {});
+STRUCTPACK(struct OpcodeJMPF : public OpcodeShortJump {});
+STRUCTPACK(struct OpcodeJMPFL : public OpcodeLongJump {});
+STRUCTPACK(struct OpcodeJMPB : public OpcodeShortJump {});
+STRUCTPACK(struct OpcodeJMPBL : public OpcodeLongJump {});
 
-PACK(struct OpcodeIFUB : public OpcodeBase {
+STRUCTPACK(struct OpcodeIFUB : public OpcodeBase {
 	quint8 banks;
 	quint8 value1; // bank 1
 	quint8 value2; // bank 2
@@ -455,7 +455,7 @@ PACK(struct OpcodeIFUB : public OpcodeBase {
 	quint8 _badJump;
 });
 
-PACK(struct OpcodeIFUBL : public OpcodeBase {
+STRUCTPACK(struct OpcodeIFUBL : public OpcodeBase {
 	quint8 banks;
 	quint8 value1; // bank 1
 	quint8 value2; // bank 2
@@ -465,7 +465,7 @@ PACK(struct OpcodeIFUBL : public OpcodeBase {
 	quint8 _badJump;
 });
 
-PACK(struct OpcodeIFSW : public OpcodeBase {
+STRUCTPACK(struct OpcodeIFSW : public OpcodeBase {
 	quint8 banks;
 	qint16 value1; // bank 1
 	qint16 value2; // bank 2
@@ -475,7 +475,7 @@ PACK(struct OpcodeIFSW : public OpcodeBase {
 	quint8 _badJump;
 });
 
-PACK(struct OpcodeIFSWL : public OpcodeBase {
+STRUCTPACK(struct OpcodeIFSWL : public OpcodeBase {
 	quint8 banks;
 	qint16 value1; // bank 1
 	qint16 value2; // bank 2
@@ -485,7 +485,7 @@ PACK(struct OpcodeIFSWL : public OpcodeBase {
 	quint8 _badJump;
 });
 
-PACK(struct OpcodeIFUW : public OpcodeBase {
+STRUCTPACK(struct OpcodeIFUW : public OpcodeBase {
 	quint8 banks;
 	quint16 value1; // bank 1
 	quint16 value2; // bank 2
@@ -495,7 +495,7 @@ PACK(struct OpcodeIFUW : public OpcodeBase {
 	quint8 _badJump;
 });
 
-PACK(struct OpcodeIFUWL : public OpcodeBase {
+STRUCTPACK(struct OpcodeIFUWL : public OpcodeBase {
 	quint8 banks;
 	quint16 value1; // bank 1
 	quint16 value2; // bank 2
@@ -505,25 +505,25 @@ PACK(struct OpcodeIFUWL : public OpcodeBase {
 	quint8 _badJump;
 });
 
-PACK(struct OpcodeUnused1A : public OpcodeBase {
+STRUCTPACK(struct OpcodeUnused1A : public OpcodeBase {
 	quint16 from;
 	quint16 to;
 	quint32 absValue;
 	quint8 flag;
 });
 
-PACK(struct OpcodeUnused1B : public OpcodeLongJump {});
-PACK(struct OpcodeUnused1C : public OpcodeBase {
+STRUCTPACK(struct OpcodeUnused1B : public OpcodeLongJump {});
+STRUCTPACK(struct OpcodeUnused1C : public OpcodeBase {
 	quint32 address;
 	quint8 subSize;
 	QByteArray *_data;
 });
 
-PACK(struct OpcodeUnused1D : public OpcodeBase {});
-PACK(struct OpcodeUnused1E : public OpcodeBase {});
-PACK(struct OpcodeUnused1F : public OpcodeBase {});
+STRUCTPACK(struct OpcodeUnused1D : public OpcodeBase {});
+STRUCTPACK(struct OpcodeUnused1E : public OpcodeBase {});
+STRUCTPACK(struct OpcodeUnused1F : public OpcodeBase {});
 
-PACK(struct OpcodeMINIGAME : public OpcodeBase {
+STRUCTPACK(struct OpcodeMINIGAME : public OpcodeBase {
 	quint16 mapID;
 	qint16 targetX;
 	qint16 targetY;
@@ -532,25 +532,25 @@ PACK(struct OpcodeMINIGAME : public OpcodeBase {
 	quint8 minigameID;
 });
 
-PACK(struct OpcodeTUTOR : public OpcodeBase {
+STRUCTPACK(struct OpcodeTUTOR : public OpcodeBase {
 	quint8 tutoID;
 });
 
-PACK(struct OpcodeBTMD2 : public OpcodeBase {
+STRUCTPACK(struct OpcodeBTMD2 : public OpcodeBase {
 	quint32 battleMode;
 });
 
-PACK(struct OpcodeBTRLD : public OpcodeBase {
+STRUCTPACK(struct OpcodeBTRLD : public OpcodeBase {
 	quint8 banks;
 	quint8 var; // bank 2
 });
 
-PACK(struct OpcodeWAIT : public OpcodeBase {
+STRUCTPACK(struct OpcodeWAIT : public OpcodeBase {
 	quint16 frameCount;
 });
 
 // FIXME: speed is 16 bits
-PACK(struct OpcodeNFADE : public OpcodeBase {
+STRUCTPACK(struct OpcodeNFADE : public OpcodeBase {
 	quint8 banks[2];
 	quint8 type;
 	quint8 r; // bank 1
@@ -559,41 +559,41 @@ PACK(struct OpcodeNFADE : public OpcodeBase {
 	quint16 speed; // bank 4
 });
 
-PACK(struct OpcodeBLINK : public OpcodeBase {
+STRUCTPACK(struct OpcodeBLINK : public OpcodeBase {
 	quint8 closed;
 });
 
-PACK(struct OpcodeDisable : public OpcodeBase {
+STRUCTPACK(struct OpcodeDisable : public OpcodeBase {
 	quint8 disabled;
 });
 
-PACK(struct OpcodeEnable : public OpcodeBase {
+STRUCTPACK(struct OpcodeEnable : public OpcodeBase {
 	quint8 enabled;
 });
 
-PACK(struct OpcodeBGMOVIE : public OpcodeDisable {});
+STRUCTPACK(struct OpcodeBGMOVIE : public OpcodeDisable {});
 
-PACK(struct OpcodeKawai : public OpcodeBase {
+STRUCTPACK(struct OpcodeKawai : public OpcodeBase {
 	quint8 opcodeSize;
 	quint8 subKey;
 });
 
-PACK(struct OpcodeKAWAI : public OpcodeKawai {
+STRUCTPACK(struct OpcodeKAWAI : public OpcodeKawai {
 	QByteArray *_data;
 });
 
-PACK(struct OpcodeKAWAIEYETX {
+STRUCTPACK(struct OpcodeKAWAIEYETX {
 	quint8 eyeID1;
 	quint8 eyeID2;
 	quint8 mouthID;
 	quint8 objectID;
 });
 
-PACK(struct OpcodeKAWAITRNSP {
+STRUCTPACK(struct OpcodeKAWAITRNSP {
 	quint8 enableTransparency;
 });
 
-PACK(struct OpcodeKAWAIAMBNT {
+STRUCTPACK(struct OpcodeKAWAIAMBNT {
 	quint8 r1;
 	quint8 r2;
 	quint8 g1;
@@ -603,82 +603,82 @@ PACK(struct OpcodeKAWAIAMBNT {
 	quint8 flags;
 });
 
-PACK(struct OpcodeKAWAILIGHT {});
-PACK(struct OpcodeKAWAISBOBJ {});
-PACK(struct OpcodeKAWAISHINE {});
-PACK(struct OpcodeKAWAIRESET {});
+STRUCTPACK(struct OpcodeKAWAILIGHT {});
+STRUCTPACK(struct OpcodeKAWAISBOBJ {});
+STRUCTPACK(struct OpcodeKAWAISHINE {});
+STRUCTPACK(struct OpcodeKAWAIRESET {});
 
-PACK(struct OpcodeKAWAIUNKNOWN4 {});
-PACK(struct OpcodeKAWAIUNKNOWN7 {});
-PACK(struct OpcodeKAWAIUNKNOWN8 {});
-PACK(struct OpcodeKAWAIUNKNOWN9 {});
-PACK(struct OpcodeKAWAIUNKNOWNB {});
-PACK(struct OpcodeKAWAIUNKNOWNC {});
-PACK(struct OpcodeKAWAIUNKNOWN {});
+STRUCTPACK(struct OpcodeKAWAIUNKNOWN4 {});
+STRUCTPACK(struct OpcodeKAWAIUNKNOWN7 {});
+STRUCTPACK(struct OpcodeKAWAIUNKNOWN8 {});
+STRUCTPACK(struct OpcodeKAWAIUNKNOWN9 {});
+STRUCTPACK(struct OpcodeKAWAIUNKNOWNB {});
+STRUCTPACK(struct OpcodeKAWAIUNKNOWNC {});
+STRUCTPACK(struct OpcodeKAWAIUNKNOWN {});
 
-PACK(struct OpcodeKAWIW : public OpcodeBase {});
+STRUCTPACK(struct OpcodeKAWIW : public OpcodeBase {});
 
-PACK(struct OpcodeParty : public OpcodeBase {
+STRUCTPACK(struct OpcodeParty : public OpcodeBase {
 	quint8 partyID;
 });
 
-PACK(struct OpcodePMOVA : public OpcodeParty {});
-PACK(struct OpcodeSLIP : public OpcodeDisable {});
+STRUCTPACK(struct OpcodePMOVA : public OpcodeParty {});
+STRUCTPACK(struct OpcodeSLIP : public OpcodeDisable {});
 
 // FIXME: change bank
-PACK(struct OpcodeBGPDH : public OpcodeBase {
+STRUCTPACK(struct OpcodeBGPDH : public OpcodeBase {
 	quint8 banks;
 	quint8 layerID;
 	qint16 targetZ; // bank 1
 });
 
-PACK(struct OpcodeBGSCR : public OpcodeBase {
+STRUCTPACK(struct OpcodeBGSCR : public OpcodeBase {
 	quint8 banks;
 	quint8 layerID;
 	qint16 targetX; // bank 1
 	qint16 targetY; // bank 2
 });
 
-PACK(struct OpcodeWindowGet : public OpcodeBase {
+STRUCTPACK(struct OpcodeWindowGet : public OpcodeBase {
 	quint8 windowID;
 });
 
-PACK(struct OpcodeWindowEdit : public OpcodeWindowGet {
+STRUCTPACK(struct OpcodeWindowEdit : public OpcodeWindowGet {
 	qint16 targetX;
 	qint16 targetY;
 	quint16 width;
 	quint16 height;
 });
 
-PACK(struct OpcodeWCLS : public OpcodeWindowGet {});
-PACK(struct OpcodeWSIZW : public OpcodeWindowEdit {});
+STRUCTPACK(struct OpcodeWCLS : public OpcodeWindowGet {});
+STRUCTPACK(struct OpcodeWSIZW : public OpcodeWindowEdit {});
 
-PACK(struct OpcodeIfKey : public OpcodeBase {
+STRUCTPACK(struct OpcodeIfKey : public OpcodeBase {
 	quint16 keys;
 	quint8 jump;
 	quint16 _label;
 	quint8 _badJump;
 });
 
-PACK(struct OpcodeIFKEY : public OpcodeIfKey {});
-PACK(struct OpcodeIFKEYON : public OpcodeIfKey {});
-PACK(struct OpcodeIFKEYOFF : public OpcodeIfKey {});
-PACK(struct OpcodeUC : public OpcodeDisable {});
+STRUCTPACK(struct OpcodeIFKEY : public OpcodeIfKey {});
+STRUCTPACK(struct OpcodeIFKEYON : public OpcodeIfKey {});
+STRUCTPACK(struct OpcodeIFKEYOFF : public OpcodeIfKey {});
+STRUCTPACK(struct OpcodeUC : public OpcodeDisable {});
 // TODO: check if really partyID
-PACK(struct OpcodePDIRA : public OpcodeParty {});
+STRUCTPACK(struct OpcodePDIRA : public OpcodeParty {});
 
-PACK(struct OpcodePTURA : public OpcodeParty {
+STRUCTPACK(struct OpcodePTURA : public OpcodeParty {
 	quint8 speed;
 	quint8 directionRotation;
 });
 
-PACK(struct OpcodeWSPCL : public OpcodeWindowGet {
+STRUCTPACK(struct OpcodeWSPCL : public OpcodeWindowGet {
 	quint8 displayType;
 	quint8 marginLeft;
 	quint8 marginTop;
 });
 
-PACK(struct OpcodeWNUMB : public OpcodeBase {
+STRUCTPACK(struct OpcodeWNUMB : public OpcodeBase {
 	quint8 banks;
 	quint8 windowID;
 	qint32 value; // bank 1 and 2
@@ -686,37 +686,37 @@ PACK(struct OpcodeWNUMB : public OpcodeBase {
 });
 
 // FIXME: change bank for "s"
-PACK(struct OpcodeSTTIM : public OpcodeBase {
+STRUCTPACK(struct OpcodeSTTIM : public OpcodeBase {
 	quint8 banks[2];
 	quint8 h; // bank 1
 	quint8 m; // bank 2
 	quint8 s; // bank 4
 });
 
-PACK(struct OpcodeGold : public OpcodeBase {
+STRUCTPACK(struct OpcodeGold : public OpcodeBase {
 	quint8 banks;
 	qint32 value; // bank 1 and 2
 });
 
-PACK(struct OpcodeGOLDu : public OpcodeGold {});
-PACK(struct OpcodeGOLDd : public OpcodeGold {});
+STRUCTPACK(struct OpcodeGOLDu : public OpcodeGold {});
+STRUCTPACK(struct OpcodeGOLDd : public OpcodeGold {});
 
-PACK(struct OpcodeCHGLD : public OpcodeBase {
+STRUCTPACK(struct OpcodeCHGLD : public OpcodeBase {
 	quint8 banks;
 	quint8 var1; // bank 1 16-bit
 	quint8 var2; // bank 2 16-bit
 });
 
-PACK(struct OpcodeHMPMAX1 : public OpcodeBase {});
-PACK(struct OpcodeHMPMAX2 : public OpcodeBase {});
-PACK(struct OpcodeMHMMX : public OpcodeBase {});
-PACK(struct OpcodeHMPMAX3 : public OpcodeBase {});
+STRUCTPACK(struct OpcodeHMPMAX1 : public OpcodeBase {});
+STRUCTPACK(struct OpcodeHMPMAX2 : public OpcodeBase {});
+STRUCTPACK(struct OpcodeMHMMX : public OpcodeBase {});
+STRUCTPACK(struct OpcodeHMPMAX3 : public OpcodeBase {});
 
-PACK(struct OpcodeMESSAGE : public OpcodeWindowGet {
+STRUCTPACK(struct OpcodeMESSAGE : public OpcodeWindowGet {
 	quint8 textID;
 });
 
-PACK(struct OpcodeMPARA : public OpcodeBase {
+STRUCTPACK(struct OpcodeMPARA : public OpcodeBase {
 	quint8 banks;
 	quint8 windowID;
 	quint8 windowVarID;
@@ -724,29 +724,29 @@ PACK(struct OpcodeMPARA : public OpcodeBase {
 });
 
 // FIXME: signed?
-PACK(struct OpcodeMPRA2 : public OpcodeBase {
+STRUCTPACK(struct OpcodeMPRA2 : public OpcodeBase {
 	quint8 banks;
 	quint8 windowID;
 	quint8 windowVarID;
 	quint16 value; // bank 2 16-bit
 });
 
-PACK(struct OpcodeMPNAM : public OpcodeBase {
+STRUCTPACK(struct OpcodeMPNAM : public OpcodeBase {
 	quint8 textID;
 });
 
-PACK(struct OpcodeHpMp : public OpcodeBase {
+STRUCTPACK(struct OpcodeHpMp : public OpcodeBase {
 	quint8 banks;
 	quint8 partyID;
 	quint16 value; // bank 2 16-bit
 });
 
-PACK(struct OpcodeUnused44 : public OpcodeBase {});
-PACK(struct OpcodeMPu : public OpcodeHpMp {});
-PACK(struct OpcodeUnused46 : public OpcodeBase {});
-PACK(struct OpcodeMPd : public OpcodeHpMp {});
+STRUCTPACK(struct OpcodeUnused44 : public OpcodeBase {});
+STRUCTPACK(struct OpcodeMPu : public OpcodeHpMp {});
+STRUCTPACK(struct OpcodeUnused46 : public OpcodeBase {});
+STRUCTPACK(struct OpcodeMPd : public OpcodeHpMp {});
 
-PACK(struct OpcodeASK : public OpcodeBase {
+STRUCTPACK(struct OpcodeASK : public OpcodeBase {
 	quint8 banks;
 	quint8 windowID;
 	quint8 textID;
@@ -755,42 +755,42 @@ PACK(struct OpcodeASK : public OpcodeBase {
 	quint8 varAnswer; // bank 2 8-bit
 });
 
-PACK(struct OpcodeMENU : public OpcodeBase {
+STRUCTPACK(struct OpcodeMENU : public OpcodeBase {
 	quint8 banks;
 	quint8 menuID;
 	quint8 param; // bank 2
 });
 
-PACK(struct OpcodeMENU2 : public OpcodeDisable {});
+STRUCTPACK(struct OpcodeMENU2 : public OpcodeDisable {});
 
-PACK(struct OpcodeBTLTB : public OpcodeBase {
+STRUCTPACK(struct OpcodeBTLTB : public OpcodeBase {
 	quint8 battleTableID;
 });
 
-PACK(struct OpcodeUnused4C : public OpcodeBase {});
-PACK(struct OpcodeHPu : public OpcodeHpMp {});
-PACK(struct OpcodeUnused4E : public OpcodeBase {});
-PACK(struct OpcodeHPd : public OpcodeHpMp {});
-PACK(struct OpcodeWINDOW : public OpcodeWindowEdit {});
+STRUCTPACK(struct OpcodeUnused4C : public OpcodeBase {});
+STRUCTPACK(struct OpcodeHPu : public OpcodeHpMp {});
+STRUCTPACK(struct OpcodeUnused4E : public OpcodeBase {});
+STRUCTPACK(struct OpcodeHPd : public OpcodeHpMp {});
+STRUCTPACK(struct OpcodeWINDOW : public OpcodeWindowEdit {});
 
-PACK(struct OpcodeWMOVE : public OpcodeWindowGet {
+STRUCTPACK(struct OpcodeWMOVE : public OpcodeWindowGet {
 	qint16 relativeX;
 	qint16 relativeY;
 });
 
-PACK(struct OpcodeWMODE : public OpcodeWindowGet {
+STRUCTPACK(struct OpcodeWMODE : public OpcodeWindowGet {
 	quint8 mode;
 	quint8 preventClose;
 });
 
-PACK(struct OpcodeWREST : public OpcodeWindowGet {});
-PACK(struct OpcodeWCLSE : public OpcodeWindowGet {});
+STRUCTPACK(struct OpcodeWREST : public OpcodeWindowGet {});
+STRUCTPACK(struct OpcodeWCLSE : public OpcodeWindowGet {});
 
-PACK(struct OpcodeWROW : public OpcodeWindowGet {
+STRUCTPACK(struct OpcodeWROW : public OpcodeWindowGet {
 	quint8 rowCount;
 });
 
-PACK(struct OpcodeGWCOL : public OpcodeBase {
+STRUCTPACK(struct OpcodeGWCOL : public OpcodeBase {
 	quint8 banks[2];
 	quint8 corner; // bank 1
 	quint8 varR; // bank 2
@@ -798,7 +798,7 @@ PACK(struct OpcodeGWCOL : public OpcodeBase {
 	quint8 varB; // bank 4
 });
 
-PACK(struct OpcodeSWCOL : public OpcodeBase {
+STRUCTPACK(struct OpcodeSWCOL : public OpcodeBase {
 	quint8 banks[2];
 	quint8 corner; // bank 1
 	quint8 r; // bank 2
@@ -806,30 +806,30 @@ PACK(struct OpcodeSWCOL : public OpcodeBase {
 	quint8 b; // bank 4
 });
 
-PACK(struct OpcodeItem : public OpcodeBase {
+STRUCTPACK(struct OpcodeItem : public OpcodeBase {
 	quint8 banks;
 	quint16 itemID; // bank 1
 	quint8 quantity; // bank 2
 });
 
-PACK(struct OpcodeSTITM : public OpcodeItem {});
-PACK(struct OpcodeDLITM : public OpcodeItem {});
-PACK(struct OpcodeCKITM : public OpcodeItem {});
+STRUCTPACK(struct OpcodeSTITM : public OpcodeItem {});
+STRUCTPACK(struct OpcodeDLITM : public OpcodeItem {});
+STRUCTPACK(struct OpcodeCKITM : public OpcodeItem {});
 
-PACK(struct OpcodeMateria : public OpcodeBase {
+STRUCTPACK(struct OpcodeMateria : public OpcodeBase {
 	quint8 banks[2];
 	quint8 materiaID; // bank 1
 	quint8 APCount[3]; // bank 2, bank 3, bank 4
 });
 
-PACK(struct OpcodeSMTRA : public OpcodeMateria {});
+STRUCTPACK(struct OpcodeSMTRA : public OpcodeMateria {});
 
-PACK(struct OpcodeDMTRA : public OpcodeMateria {
+STRUCTPACK(struct OpcodeDMTRA : public OpcodeMateria {
 	quint8 quantity;
 });
 
 // FIXME: all reorganized, APCount + 1 byte, - 1 unknown, bank of var is 6, not 5
-PACK(struct OpcodeCMTRA : public OpcodeBase {
+STRUCTPACK(struct OpcodeCMTRA : public OpcodeBase {
 	quint8 banks[3];
 	quint8 APCount[4]; // bank 1, bank 2, bank 3, bank 4
 	quint8 materiaID;
@@ -837,7 +837,7 @@ PACK(struct OpcodeCMTRA : public OpcodeBase {
 });
 
 // FIXME: add var
-PACK(struct OpcodeSHAKE : public OpcodeBase {
+STRUCTPACK(struct OpcodeSHAKE : public OpcodeBase {
 	quint8 banks[2];
 	quint8 type;
 	quint8 xAmplitude; // bank 1
@@ -846,9 +846,9 @@ PACK(struct OpcodeSHAKE : public OpcodeBase {
 	quint8 yFrames; // bank 4
 });
 
-PACK(struct OpcodeNOP : public OpcodeBase {});
+STRUCTPACK(struct OpcodeNOP : public OpcodeBase {});
 
-PACK(struct OpcodeMAPJUMP : public OpcodeBase {
+STRUCTPACK(struct OpcodeMAPJUMP : public OpcodeBase {
 	quint16 mapID;
 	qint16 targetX;
 	qint16 targetY;
@@ -856,55 +856,55 @@ PACK(struct OpcodeMAPJUMP : public OpcodeBase {
 	quint8 direction;
 });
 
-PACK(struct OpcodeSCRLO : public OpcodeBase {
+STRUCTPACK(struct OpcodeSCRLO : public OpcodeBase {
 	quint8 unknown;
 });
 
 // FIXME: new variable detected
-PACK(struct OpcodeSCRLC : public OpcodeBase {
+STRUCTPACK(struct OpcodeSCRLC : public OpcodeBase {
 	quint8 banks;
 	quint16 speed; // bank 2
 	quint8 unknown; // Related to Scroll Wait
 });
 
-PACK(struct OpcodeSCRLA : public OpcodeBase {
+STRUCTPACK(struct OpcodeSCRLA : public OpcodeBase {
 	quint8 banks;
 	quint16 speed; // bank 2
 	quint8 groupID;
 	quint8 scrollType;
 });
 
-PACK(struct OpcodeSCR2D : public OpcodeBase {
+STRUCTPACK(struct OpcodeSCR2D : public OpcodeBase {
 	quint8 banks;
 	qint16 targetX; // bank 1
 	qint16 targetY; // bank 2
 });
 
-PACK(struct OpcodeSCRCC : public OpcodeBase {});
+STRUCTPACK(struct OpcodeSCRCC : public OpcodeBase {});
 
-PACK(struct OpcodeScrollWithSpeed : public OpcodeBase {
+STRUCTPACK(struct OpcodeScrollWithSpeed : public OpcodeBase {
 	quint8 banks[2];
 	qint16 targetX; // bank 1
 	qint16 targetY; // bank 2
 	quint16 speed; // bank 4
 });
-PACK(struct OpcodeSCR2DC : public OpcodeScrollWithSpeed {});
-PACK(struct OpcodeSCRLW : public OpcodeBase {});
-PACK(struct OpcodeSCR2DL : public OpcodeScrollWithSpeed {});
+STRUCTPACK(struct OpcodeSCR2DC : public OpcodeScrollWithSpeed {});
+STRUCTPACK(struct OpcodeSCRLW : public OpcodeBase {});
+STRUCTPACK(struct OpcodeSCR2DL : public OpcodeScrollWithSpeed {});
 
-PACK(struct OpcodeMPDSP : public OpcodeBase {
+STRUCTPACK(struct OpcodeMPDSP : public OpcodeBase {
 	quint8 unknown;
 });
 
 // FIXME: last parameter has more sense
-PACK(struct OpcodeVWOFT : public OpcodeBase {
+STRUCTPACK(struct OpcodeVWOFT : public OpcodeBase {
 	quint8 banks;
 	quint16 unknown1; // bank 1
 	quint16 unknown2; // bank 2
 	quint8 enable;
 });
 
-PACK(struct OpcodeFADE : public OpcodeBase {
+STRUCTPACK(struct OpcodeFADE : public OpcodeBase {
 	quint8 banks[2];
 	quint8 r; // bank 1
 	quint8 g; // bank 2
@@ -914,49 +914,49 @@ PACK(struct OpcodeFADE : public OpcodeBase {
 	quint8 adjust;
 });
 
-PACK(struct OpcodeFADEW : public OpcodeBase {});
+STRUCTPACK(struct OpcodeFADEW : public OpcodeBase {});
 
-PACK(struct OpcodeIDLCK : public OpcodeBase {
+STRUCTPACK(struct OpcodeIDLCK : public OpcodeBase {
 	quint16 triangleID;
 	quint8 locked;
 });
 
-PACK(struct OpcodeLSTMP : public OpcodeBase {
+STRUCTPACK(struct OpcodeLSTMP : public OpcodeBase {
 	quint8 banks;
 	quint8 var; // bank 2 16-bit
 });
 
-PACK(struct OpcodeSCRLP : public OpcodeBase {
+STRUCTPACK(struct OpcodeSCRLP : public OpcodeBase {
 	quint8 banks;
 	quint16 speed; // bank 2
 	quint8 partyID;
 	quint8 scrollType;
 });
 
-PACK(struct OpcodeBATTLE : public OpcodeBase {
+STRUCTPACK(struct OpcodeBATTLE : public OpcodeBase {
 	quint8 banks;
 	quint16 battleID; // bank 2
 });
 
-PACK(struct OpcodeBTLON : public OpcodeDisable {});
+STRUCTPACK(struct OpcodeBTLON : public OpcodeDisable {});
 
-PACK(struct OpcodeBTLMD : public OpcodeBase {
+STRUCTPACK(struct OpcodeBTLMD : public OpcodeBase {
 	quint16 battleMode;
 });
 
-PACK(struct OpcodePGTDR : public OpcodeBase {
+STRUCTPACK(struct OpcodePGTDR : public OpcodeBase {
 	quint8 banks;
 	quint8 partyID;
 	quint8 varDir; // bank 2
 });
 
-PACK(struct OpcodeGETPC : public OpcodeBase {
+STRUCTPACK(struct OpcodeGETPC : public OpcodeBase {
 	quint8 banks;
 	quint8 partyID;
 	quint8 varPC; // bank 2
 });
 
-PACK(struct OpcodePXYZI : public OpcodeBase {
+STRUCTPACK(struct OpcodePXYZI : public OpcodeBase {
 	quint8 banks[2];
 	quint8 partyID;
 	quint8 varX; // bank 1
@@ -965,74 +965,74 @@ PACK(struct OpcodePXYZI : public OpcodeBase {
 	quint8 varI; // bank 4
 });
 
-PACK(struct OpcodeBinaryOperation : public OpcodeBase {
+STRUCTPACK(struct OpcodeBinaryOperation : public OpcodeBase {
 	quint8 banks;
 	quint8 var; // bank 1
 	quint8 value; // bank 2
 });
 
-PACK(struct OpcodeBinaryOperation2 : public OpcodeBase {
+STRUCTPACK(struct OpcodeBinaryOperation2 : public OpcodeBase {
 	quint8 banks;
 	quint8 var; // bank 1
 	quint16 value; // bank 2
 });
 
-PACK(struct OpcodeUnaryOperation : public OpcodeBase {
+STRUCTPACK(struct OpcodeUnaryOperation : public OpcodeBase {
 	quint8 banks;
 	quint8 var; // bank 2 8-bit or 16-bit (8-bit for RANDOM)
 });
 
-PACK(struct OpcodeBitOperation : public OpcodeBase {
+STRUCTPACK(struct OpcodeBitOperation : public OpcodeBase {
 	quint8 banks;
 	quint8 var; // bank 1 1-bit
 	quint8 position; // bank 2
 });
 
-PACK(struct OpcodePLUSX : public OpcodeBinaryOperation {});
-PACK(struct OpcodePLUS2X : public OpcodeBinaryOperation2 {});
-PACK(struct OpcodeMINUSX : public OpcodeBinaryOperation {});
-PACK(struct OpcodeMINUS2X : public OpcodeBinaryOperation2 {});
-PACK(struct OpcodeINCX : public OpcodeUnaryOperation {});
-PACK(struct OpcodeINC2X : public OpcodeUnaryOperation {});
-PACK(struct OpcodeDECX : public OpcodeUnaryOperation {});
-PACK(struct OpcodeDEC2X : public OpcodeUnaryOperation {});
-PACK(struct OpcodeTLKON : public OpcodeDisable {});
+STRUCTPACK(struct OpcodePLUSX : public OpcodeBinaryOperation {});
+STRUCTPACK(struct OpcodePLUS2X : public OpcodeBinaryOperation2 {});
+STRUCTPACK(struct OpcodeMINUSX : public OpcodeBinaryOperation {});
+STRUCTPACK(struct OpcodeMINUS2X : public OpcodeBinaryOperation2 {});
+STRUCTPACK(struct OpcodeINCX : public OpcodeUnaryOperation {});
+STRUCTPACK(struct OpcodeINC2X : public OpcodeUnaryOperation {});
+STRUCTPACK(struct OpcodeDECX : public OpcodeUnaryOperation {});
+STRUCTPACK(struct OpcodeDEC2X : public OpcodeUnaryOperation {});
+STRUCTPACK(struct OpcodeTLKON : public OpcodeDisable {});
 
-PACK(struct OpcodeRDMSD : public OpcodeBase {
+STRUCTPACK(struct OpcodeRDMSD : public OpcodeBase {
 	quint8 banks;
 	quint8 value; // bank 2 8-bit
 });
 
-PACK(struct OpcodeSETBYTE : public OpcodeBinaryOperation {});
-PACK(struct OpcodeSETWORD : public OpcodeBinaryOperation2 {});
-PACK(struct OpcodeBITON : public OpcodeBitOperation {});
-PACK(struct OpcodeBITOFF : public OpcodeBitOperation {});
-PACK(struct OpcodeBITXOR : public OpcodeBitOperation {});
-PACK(struct OpcodePLUS : public OpcodeBinaryOperation {});
-PACK(struct OpcodePLUS2 : public OpcodeBinaryOperation2 {});
-PACK(struct OpcodeMINUS : public OpcodeBinaryOperation {});
-PACK(struct OpcodeMINUS2 : public OpcodeBinaryOperation2 {});
-PACK(struct OpcodeMUL : public OpcodeBinaryOperation {});
-PACK(struct OpcodeMUL2 : public OpcodeBinaryOperation2 {});
-PACK(struct OpcodeDIV : public OpcodeBinaryOperation {});
-PACK(struct OpcodeDIV2 : public OpcodeBinaryOperation2 {});
-PACK(struct OpcodeMOD : public OpcodeBinaryOperation {});
-PACK(struct OpcodeMOD2 : public OpcodeBinaryOperation2 {});
-PACK(struct OpcodeAND : public OpcodeBinaryOperation {});
-PACK(struct OpcodeAND2 : public OpcodeBinaryOperation2 {});
-PACK(struct OpcodeOR : public OpcodeBinaryOperation {});
-PACK(struct OpcodeOR2 : public OpcodeBinaryOperation2 {});
-PACK(struct OpcodeXOR : public OpcodeBinaryOperation {});
-PACK(struct OpcodeXOR2 : public OpcodeBinaryOperation2 {});
-PACK(struct OpcodeINC : public OpcodeUnaryOperation {});
-PACK(struct OpcodeINC2 : public OpcodeUnaryOperation {});
-PACK(struct OpcodeDEC : public OpcodeUnaryOperation {});
-PACK(struct OpcodeDEC2 : public OpcodeUnaryOperation {});
-PACK(struct OpcodeRANDOM : public OpcodeUnaryOperation {});
-PACK(struct OpcodeLBYTE : public OpcodeBinaryOperation {});
-PACK(struct OpcodeHBYTE : public OpcodeBinaryOperation2 {});
+STRUCTPACK(struct OpcodeSETBYTE : public OpcodeBinaryOperation {});
+STRUCTPACK(struct OpcodeSETWORD : public OpcodeBinaryOperation2 {});
+STRUCTPACK(struct OpcodeBITON : public OpcodeBitOperation {});
+STRUCTPACK(struct OpcodeBITOFF : public OpcodeBitOperation {});
+STRUCTPACK(struct OpcodeBITXOR : public OpcodeBitOperation {});
+STRUCTPACK(struct OpcodePLUS : public OpcodeBinaryOperation {});
+STRUCTPACK(struct OpcodePLUS2 : public OpcodeBinaryOperation2 {});
+STRUCTPACK(struct OpcodeMINUS : public OpcodeBinaryOperation {});
+STRUCTPACK(struct OpcodeMINUS2 : public OpcodeBinaryOperation2 {});
+STRUCTPACK(struct OpcodeMUL : public OpcodeBinaryOperation {});
+STRUCTPACK(struct OpcodeMUL2 : public OpcodeBinaryOperation2 {});
+STRUCTPACK(struct OpcodeDIV : public OpcodeBinaryOperation {});
+STRUCTPACK(struct OpcodeDIV2 : public OpcodeBinaryOperation2 {});
+STRUCTPACK(struct OpcodeMOD : public OpcodeBinaryOperation {});
+STRUCTPACK(struct OpcodeMOD2 : public OpcodeBinaryOperation2 {});
+STRUCTPACK(struct OpcodeAND : public OpcodeBinaryOperation {});
+STRUCTPACK(struct OpcodeAND2 : public OpcodeBinaryOperation2 {});
+STRUCTPACK(struct OpcodeOR : public OpcodeBinaryOperation {});
+STRUCTPACK(struct OpcodeOR2 : public OpcodeBinaryOperation2 {});
+STRUCTPACK(struct OpcodeXOR : public OpcodeBinaryOperation {});
+STRUCTPACK(struct OpcodeXOR2 : public OpcodeBinaryOperation2 {});
+STRUCTPACK(struct OpcodeINC : public OpcodeUnaryOperation {});
+STRUCTPACK(struct OpcodeINC2 : public OpcodeUnaryOperation {});
+STRUCTPACK(struct OpcodeDEC : public OpcodeUnaryOperation {});
+STRUCTPACK(struct OpcodeDEC2 : public OpcodeUnaryOperation {});
+STRUCTPACK(struct OpcodeRANDOM : public OpcodeUnaryOperation {});
+STRUCTPACK(struct OpcodeLBYTE : public OpcodeBinaryOperation {});
+STRUCTPACK(struct OpcodeHBYTE : public OpcodeBinaryOperation2 {});
 
-PACK(struct OpcodeTOBYTE : public OpcodeBase {
+STRUCTPACK(struct OpcodeTOBYTE : public OpcodeBase {
 	quint8 banks[2];
 	quint8 var; // bank 1
 	quint8 value1; // bank 2
@@ -1040,7 +1040,7 @@ PACK(struct OpcodeTOBYTE : public OpcodeBase {
 });
 
 // FIXME: set[value + varOrValue1] = varOrValue2
-PACK(struct OpcodeSETX : public OpcodeBase {
+STRUCTPACK(struct OpcodeSETX : public OpcodeBase {
 	quint8 banks[2]; // bank 1
 	quint8 value;
 	quint16 varOrValue1; // bank 2
@@ -1048,7 +1048,7 @@ PACK(struct OpcodeSETX : public OpcodeBase {
 });
 
 // FIXME: var = get[value + varOrValue1]
-PACK(struct OpcodeGETX : public OpcodeBase {
+STRUCTPACK(struct OpcodeGETX : public OpcodeBase {
 	quint8 banks[2]; // bank 1
 	quint8 value;
 	quint16 varOrValue1; // bank 2
@@ -1056,7 +1056,7 @@ PACK(struct OpcodeGETX : public OpcodeBase {
 });
 
 // FIXME: varResult is 16-bit
-PACK(struct OpcodeSEARCHX : public OpcodeBase {
+STRUCTPACK(struct OpcodeSEARCHX : public OpcodeBase {
 	quint8 banks[3]; // bank 1
 	quint8 searchStart;
 	quint16 start; // bank 2
@@ -1065,36 +1065,36 @@ PACK(struct OpcodeSEARCHX : public OpcodeBase {
 	quint8 varResult; // bank 6 16-bit
 });
 
-PACK(struct OpcodeChar : public OpcodeBase {
+STRUCTPACK(struct OpcodeChar : public OpcodeBase {
 	quint8 charID;
 });
 
-PACK(struct OpcodePC : public OpcodeChar {});
+STRUCTPACK(struct OpcodePC : public OpcodeChar {});
 
-PACK(struct OpcodeCHAR_ : public OpcodeBase {
+STRUCTPACK(struct OpcodeCHAR_ : public OpcodeBase {
 	quint8 object3DID;
 });
 
-PACK(struct OpcodeAnimation : public OpcodeBase {
+STRUCTPACK(struct OpcodeAnimation : public OpcodeBase {
 	quint8 animID;
 	quint8 speed;
 });
 
-PACK(struct OpcodeDFANM : public OpcodeAnimation {});
-PACK(struct OpcodeANIME1 : public OpcodeAnimation {});
+STRUCTPACK(struct OpcodeDFANM : public OpcodeAnimation {});
+STRUCTPACK(struct OpcodeANIME1 : public OpcodeAnimation {});
 
-PACK(struct OpcodeVISI : public OpcodeBase {
+STRUCTPACK(struct OpcodeVISI : public OpcodeBase {
 	quint8 show;
 });
 
-PACK(struct OpcodeXYZ : public OpcodeBase {
+STRUCTPACK(struct OpcodeXYZ : public OpcodeBase {
 	quint8 banks[2];
 	qint16 targetX; // bank 1
 	qint16 targetY; // bank 2
 	qint16 targetZ; // bank 3 (OK)
 });
 
-PACK(struct OpcodeXYZI : public OpcodeBase {
+STRUCTPACK(struct OpcodeXYZI : public OpcodeBase {
 	quint8 banks[2];
 	qint16 targetX; // bank 1
 	qint16 targetY; // bank 2
@@ -1102,61 +1102,61 @@ PACK(struct OpcodeXYZI : public OpcodeBase {
 	quint16 targetI; // bank 4
 });
 
-PACK(struct OpcodeXYI : public OpcodeBase {
+STRUCTPACK(struct OpcodeXYI : public OpcodeBase {
 	quint8 banks[2];
 	qint16 targetX; // bank 1
 	qint16 targetY; // bank 2
 	quint16 targetI; // bank 3
 });
 
-PACK(struct OpcodeMove : public OpcodeBase {
+STRUCTPACK(struct OpcodeMove : public OpcodeBase {
 	quint8 banks;
 	qint16 targetX; // bank 1
 	qint16 targetY; // bank 2
 });
 
-PACK(struct OpcodeMOVE : public OpcodeMove {});
-PACK(struct OpcodeCMOVE : public OpcodeMove {});
+STRUCTPACK(struct OpcodeMOVE : public OpcodeMove {});
+STRUCTPACK(struct OpcodeCMOVE : public OpcodeMove {});
 
-PACK(struct OpcodeToGroup : public OpcodeBase {
+STRUCTPACK(struct OpcodeToGroup : public OpcodeBase {
 	quint8 groupID;
 });
 
-PACK(struct OpcodeMOVA : public OpcodeToGroup {});
+STRUCTPACK(struct OpcodeMOVA : public OpcodeToGroup {});
 
-PACK(struct OpcodeTURA : public OpcodeToGroup {
+STRUCTPACK(struct OpcodeTURA : public OpcodeToGroup {
 	quint8 directionRotation;
 	quint8 speed;
 });
 
-PACK(struct OpcodeANIMW : public OpcodeBase {});
-PACK(struct OpcodeFMOVE : public OpcodeMove {});
-PACK(struct OpcodeANIME2: public OpcodeAnimation {});
-PACK(struct OpcodeANIMX1 : public OpcodeAnimation {});
+STRUCTPACK(struct OpcodeANIMW : public OpcodeBase {});
+STRUCTPACK(struct OpcodeFMOVE : public OpcodeMove {});
+STRUCTPACK(struct OpcodeANIME2: public OpcodeAnimation {});
+STRUCTPACK(struct OpcodeANIMX1 : public OpcodeAnimation {});
 
-PACK(struct OpcodeCAnimation : public OpcodeBase {
+STRUCTPACK(struct OpcodeCAnimation : public OpcodeBase {
 	quint8 animID;
 	quint8 firstFrame;
 	quint8 lastFrame;
 	quint8 speed;
 });
 
-PACK(struct OpcodeCANIM1: public OpcodeCAnimation {});
-PACK(struct OpcodeCANMX1 : public OpcodeCAnimation {});
+STRUCTPACK(struct OpcodeCANIM1: public OpcodeCAnimation {});
+STRUCTPACK(struct OpcodeCANMX1 : public OpcodeCAnimation {});
 
-PACK(struct OpcodeSpeed : public OpcodeBase {
+STRUCTPACK(struct OpcodeSpeed : public OpcodeBase {
 	quint8 banks;
 	quint16 speed; // bank 2
 });
 
-PACK(struct OpcodeMSPED : public OpcodeSpeed {});
+STRUCTPACK(struct OpcodeMSPED : public OpcodeSpeed {});
 
-PACK(struct OpcodeDIR : public OpcodeBase {
+STRUCTPACK(struct OpcodeDIR : public OpcodeBase {
 	quint8 banks;
 	quint8 direction; // bank 2
 });
 
-PACK(struct OpcodeTurn : public OpcodeBase {
+STRUCTPACK(struct OpcodeTurn : public OpcodeBase {
 	quint8 banks;
 	quint8 direction; // bank 2
 	quint8 turnCount;
@@ -1164,37 +1164,37 @@ PACK(struct OpcodeTurn : public OpcodeBase {
 	quint8 unknown;
 });
 
-PACK(struct OpcodeTURNGEN : public OpcodeTurn {});
-PACK(struct OpcodeTURN : public OpcodeTurn {});
-PACK(struct OpcodeDIRA : public OpcodeToGroup {});
+STRUCTPACK(struct OpcodeTURNGEN : public OpcodeTurn {});
+STRUCTPACK(struct OpcodeTURN : public OpcodeTurn {});
+STRUCTPACK(struct OpcodeDIRA : public OpcodeToGroup {});
 
-PACK(struct OpcodeGETDIR : public OpcodeBase {
+STRUCTPACK(struct OpcodeGETDIR : public OpcodeBase {
 	quint8 banks;
 	quint8 groupID;
 	quint8 varDir; // bank 2
 });
 
-PACK(struct OpcodeGETAXY : public OpcodeBase {
+STRUCTPACK(struct OpcodeGETAXY : public OpcodeBase {
 	quint8 banks;
 	quint8 groupID;
 	quint8 varX; // bank 1 16-bit
 	quint8 varY; // bank 2 16-bit
 });
 
-PACK(struct OpcodeGETAI : public OpcodeBase {
+STRUCTPACK(struct OpcodeGETAI : public OpcodeBase {
 	quint8 banks;
 	quint8 groupID;
 	quint8 varI; // bank 2 16-bit
 });
 
-PACK(struct OpcodeANIMX2 : public OpcodeAnimation {});
-PACK(struct OpcodeCANIM2 : public OpcodeCAnimation {});
-PACK(struct OpcodeCANMX2 : public OpcodeCAnimation {});
-PACK(struct OpcodeASPED : public OpcodeSpeed {});
-PACK(struct OpcodeUnusedBE : public OpcodeBase {});
-PACK(struct OpcodeCC : public OpcodeToGroup {});
+STRUCTPACK(struct OpcodeANIMX2 : public OpcodeAnimation {});
+STRUCTPACK(struct OpcodeCANIM2 : public OpcodeCAnimation {});
+STRUCTPACK(struct OpcodeCANMX2 : public OpcodeCAnimation {});
+STRUCTPACK(struct OpcodeASPED : public OpcodeSpeed {});
+STRUCTPACK(struct OpcodeUnusedBE : public OpcodeBase {});
+STRUCTPACK(struct OpcodeCC : public OpcodeToGroup {});
 
-PACK(struct OpcodeJUMP : public OpcodeBase {
+STRUCTPACK(struct OpcodeJUMP : public OpcodeBase {
 	quint8 banks[2];
 	qint16 targetX; // bank 1
 	qint16 targetY; // bank 2
@@ -1202,7 +1202,7 @@ PACK(struct OpcodeJUMP : public OpcodeBase {
 	qint16 height; // bank 4
 });
 
-PACK(struct OpcodeAXYZI : public OpcodeBase {
+STRUCTPACK(struct OpcodeAXYZI : public OpcodeBase {
 	quint8 banks[2];
 	quint8 groupID;
 	quint8 varX; // bank 1
@@ -1211,7 +1211,7 @@ PACK(struct OpcodeAXYZI : public OpcodeBase {
 	quint8 varI; // bank 4
 });
 
-PACK(struct OpcodeLADER : public OpcodeBase {
+STRUCTPACK(struct OpcodeLADER : public OpcodeBase {
 	quint8 banks[2];
 	qint16 targetX; // bank 1
 	qint16 targetY; // bank 2
@@ -1223,7 +1223,7 @@ PACK(struct OpcodeLADER : public OpcodeBase {
 	quint8 speed;
 });
 
-PACK(struct OpcodeOFST : public OpcodeBase {
+STRUCTPACK(struct OpcodeOFST : public OpcodeBase {
 	quint8 banks[2];
 	quint8 moveType;
 	qint16 targetX; // bank 1
@@ -1232,47 +1232,47 @@ PACK(struct OpcodeOFST : public OpcodeBase {
 	quint16 speed; // bank 4
 });
 
-PACK(struct OpcodeOFSTW : public OpcodeBase {});
+STRUCTPACK(struct OpcodeOFSTW : public OpcodeBase {});
 
-PACK(struct OpcodeRange : public OpcodeBase {
+STRUCTPACK(struct OpcodeRange : public OpcodeBase {
 	quint8 banks;
 	quint8 range; // bank 2
 });
 
-PACK(struct OpcodeRange2 : public OpcodeBase {
+STRUCTPACK(struct OpcodeRange2 : public OpcodeBase {
 	quint8 banks;
 	quint16 range; // bank 2
 });
 
-PACK(struct OpcodeTALKR : public OpcodeRange {});
-PACK(struct OpcodeSLIDR : public OpcodeRange {});
-PACK(struct OpcodeSOLID : public OpcodeDisable {});
-PACK(struct OpcodePRTYP : public OpcodeChar {});
-PACK(struct OpcodePRTYM : public OpcodeChar {});
+STRUCTPACK(struct OpcodeTALKR : public OpcodeRange {});
+STRUCTPACK(struct OpcodeSLIDR : public OpcodeRange {});
+STRUCTPACK(struct OpcodeSOLID : public OpcodeDisable {});
+STRUCTPACK(struct OpcodePRTYP : public OpcodeChar {});
+STRUCTPACK(struct OpcodePRTYM : public OpcodeChar {});
 
-PACK(struct OpcodePRTYE : public OpcodeBase {
+STRUCTPACK(struct OpcodePRTYE : public OpcodeBase {
 	quint8 charID[3];
 });
 
-PACK(struct OpcodeIfQ : public OpcodeBase {
+STRUCTPACK(struct OpcodeIfQ : public OpcodeBase {
 	quint8 charID;
 	quint8 jump;
 	quint16 _label;
 	quint8 _badJump;
 });
 
-PACK(struct OpcodeIFPRTYQ : public OpcodeIfQ {});
-PACK(struct OpcodeIFMEMBQ : public OpcodeIfQ {});
+STRUCTPACK(struct OpcodeIFPRTYQ : public OpcodeIfQ {});
+STRUCTPACK(struct OpcodeIFMEMBQ : public OpcodeIfQ {});
 
-PACK(struct OpcodeMMBud : public OpcodeBase {
+STRUCTPACK(struct OpcodeMMBud : public OpcodeBase {
 	quint8 exists;
 	quint8 charID;
 });
 
-PACK(struct OpcodeMMBLK : public OpcodeChar {});
-PACK(struct OpcodeMMBUK : public OpcodeChar {});
+STRUCTPACK(struct OpcodeMMBLK : public OpcodeChar {});
+STRUCTPACK(struct OpcodeMMBUK : public OpcodeChar {});
 
-PACK(struct OpcodeLINE : public OpcodeBase {
+STRUCTPACK(struct OpcodeLINE : public OpcodeBase {
 	qint16 targetX1;
 	qint16 targetY1;
 	qint16 targetZ1;
@@ -1281,10 +1281,10 @@ PACK(struct OpcodeLINE : public OpcodeBase {
 	qint16 targetZ2;
 });
 
-PACK(struct OpcodeLINON : public OpcodeEnable {});
-PACK(struct OpcodeMPJPO : public OpcodeDisable {});
+STRUCTPACK(struct OpcodeLINON : public OpcodeEnable {});
+STRUCTPACK(struct OpcodeMPJPO : public OpcodeDisable {});
 
-PACK(struct OpcodeSLINE : public OpcodeBase {
+STRUCTPACK(struct OpcodeSLINE : public OpcodeBase {
 	quint8 banks[3];
 	qint16 targetX1; // bank 1
 	qint16 targetY1; // bank 2
@@ -1294,7 +1294,7 @@ PACK(struct OpcodeSLINE : public OpcodeBase {
 	qint16 targetZ2; // bank 6
 });
 
-PACK(struct OpcodeSinCos : public OpcodeBase {
+STRUCTPACK(struct OpcodeSinCos : public OpcodeBase {
 	quint8 banks[2];
 	qint16 value1; // bank 1
 	qint16 value2; // bank 2
@@ -1302,18 +1302,18 @@ PACK(struct OpcodeSinCos : public OpcodeBase {
 	quint8 var; // bank 4
 });
 
-PACK(struct OpcodeSIN : public OpcodeSinCos {});
-PACK(struct OpcodeCOS : public OpcodeSinCos {});
-PACK(struct OpcodeTLKR2 : public OpcodeRange2 {});
-PACK(struct OpcodeSLDR2 : public OpcodeRange2 {});
+STRUCTPACK(struct OpcodeSIN : public OpcodeSinCos {});
+STRUCTPACK(struct OpcodeCOS : public OpcodeSinCos {});
+STRUCTPACK(struct OpcodeTLKR2 : public OpcodeRange2 {});
+STRUCTPACK(struct OpcodeSLDR2 : public OpcodeRange2 {});
 
-PACK(struct OpcodePMJMP : public OpcodeBase {
+STRUCTPACK(struct OpcodePMJMP : public OpcodeBase {
 	quint16 mapID;
 });
 
-PACK(struct OpcodePMJMP2 : public OpcodeBase {});
+STRUCTPACK(struct OpcodePMJMP2 : public OpcodeBase {});
 
-PACK(struct OpcodeAKAO2 : public OpcodeBase {
+STRUCTPACK(struct OpcodeAKAO2 : public OpcodeBase {
 	quint8 banks[3];
 	quint8 opcode;
 	quint16 param1; // bank 1
@@ -1323,16 +1323,16 @@ PACK(struct OpcodeAKAO2 : public OpcodeBase {
 	quint16 param5; // bank 6
 });
 
-PACK(struct OpcodeFCFIX : public OpcodeDisable {});
+STRUCTPACK(struct OpcodeFCFIX : public OpcodeDisable {});
 
-PACK(struct OpcodeCCANM : public OpcodeAnimation {
+STRUCTPACK(struct OpcodeCCANM : public OpcodeAnimation {
 	quint8 standWalkRun;
 });
 
-PACK(struct OpcodeANIMB : public OpcodeBase {});
-PACK(struct OpcodeTURNW : public OpcodeBase {});
+STRUCTPACK(struct OpcodeANIMB : public OpcodeBase {});
+STRUCTPACK(struct OpcodeTURNW : public OpcodeBase {});
 
-PACK(struct OpcodeMPPAL : public OpcodeBase {
+STRUCTPACK(struct OpcodeMPPAL : public OpcodeBase {
 	quint8 banks[3];
 	quint8 posSrc;
 	quint8 posDst;
@@ -1343,46 +1343,46 @@ PACK(struct OpcodeMPPAL : public OpcodeBase {
 	quint8 colorCount; // bank 6
 });
 
-PACK(struct OpcodeBackgroundState : public OpcodeBase {
+STRUCTPACK(struct OpcodeBackgroundState : public OpcodeBase {
 	quint8 banks;
 	quint8 bgParamID; // bank 1
 	quint8 bgStateID; // bank 2
 });
 
-PACK(struct OpcodeBGON : public OpcodeBackgroundState {});
-PACK(struct OpcodeBGOFF : public OpcodeBackgroundState {});
+STRUCTPACK(struct OpcodeBGON : public OpcodeBackgroundState {});
+STRUCTPACK(struct OpcodeBGOFF : public OpcodeBackgroundState {});
 
-PACK(struct OpcodeBackgroundRoll : public OpcodeBase {
+STRUCTPACK(struct OpcodeBackgroundRoll : public OpcodeBase {
 	quint8 banks;
 	quint8 bgParamID; // bank 2
 });
 
-PACK(struct OpcodeBGROL : public OpcodeBackgroundRoll {});
-PACK(struct OpcodeBGROL2 : public OpcodeBackgroundRoll {});
-PACK(struct OpcodeBGCLR : public OpcodeBackgroundRoll {});
+STRUCTPACK(struct OpcodeBGROL : public OpcodeBackgroundRoll {});
+STRUCTPACK(struct OpcodeBGROL2 : public OpcodeBackgroundRoll {});
+STRUCTPACK(struct OpcodeBGCLR : public OpcodeBackgroundRoll {});
 
-PACK(struct OpcodeSTPAL : public OpcodeBase {
+STRUCTPACK(struct OpcodeSTPAL : public OpcodeBase {
 	quint8 banks;
 	quint8 palID; // bank 1
 	quint8 position; // bank 2
 	quint8 colorCount;
 });
 
-PACK(struct OpcodeLDPAL : public OpcodeBase {
+STRUCTPACK(struct OpcodeLDPAL : public OpcodeBase {
 	quint8 banks;
 	quint8 position; // bank 1
 	quint8 palID; // bank 2
 	quint8 colorCount;
 });
 
-PACK(struct OpcodeCPPAL : public OpcodeBase {
+STRUCTPACK(struct OpcodeCPPAL : public OpcodeBase {
 	quint8 banks;
 	quint8 posSrc; // bank 1
 	quint8 posDst; // bank 2
 	quint8 colorCount;
 });
 
-PACK(struct OpcodeRTPAL : public OpcodeBase {
+STRUCTPACK(struct OpcodeRTPAL : public OpcodeBase {
 	quint8 banks[2];
 	quint8 posSrc; // bank 1
 	quint8 posDst; // bank 2
@@ -1390,7 +1390,7 @@ PACK(struct OpcodeRTPAL : public OpcodeBase {
 	quint8 end;
 });
 
-PACK(struct OpcodeADPAL : public OpcodeBase {
+STRUCTPACK(struct OpcodeADPAL : public OpcodeBase {
 	quint8 banks[3];
 	quint8 posSrc; // bank 1
 	quint8 posDst; // bank 2
@@ -1400,7 +1400,7 @@ PACK(struct OpcodeADPAL : public OpcodeBase {
 	quint8 colorCount;
 });
 
-PACK(struct OpcodeMPPAL2 : public OpcodeBase {
+STRUCTPACK(struct OpcodeMPPAL2 : public OpcodeBase {
 	quint8 banks[3];
 	quint8 posSrc; // bank 1
 	quint8 posDst; // bank 2
@@ -1410,14 +1410,14 @@ PACK(struct OpcodeMPPAL2 : public OpcodeBase {
 	quint8 colorCount;
 });
 
-PACK(struct OpcodeSTPLS : public OpcodeBase {
+STRUCTPACK(struct OpcodeSTPLS : public OpcodeBase {
 	quint8 palID;
 	quint8 posSrc;
 	quint8 start;
 	quint8 colorCount;
 });
 
-PACK(struct OpcodeLDPLS : public OpcodeBase {
+STRUCTPACK(struct OpcodeLDPLS : public OpcodeBase {
 	quint8 posSrc;
 	quint8 palID;
 	quint8 start;
@@ -1425,7 +1425,7 @@ PACK(struct OpcodeLDPLS : public OpcodeBase {
 });
 
 // FIXME
-PACK(struct OpcodeCPPAL2 : public OpcodeBase {
+STRUCTPACK(struct OpcodeCPPAL2 : public OpcodeBase {
 	quint8 banks[2];
 	quint8 posTileSrc;
 	quint8 posTileDst;
@@ -1435,7 +1435,7 @@ PACK(struct OpcodeCPPAL2 : public OpcodeBase {
 });
 
 // FIXME
-PACK(struct OpcodeRTPAL2 : public OpcodeBase {
+STRUCTPACK(struct OpcodeRTPAL2 : public OpcodeBase {
 	quint8 banks[2];
 	quint8 posTileSrc;
 	quint8 posTileDst;
@@ -1444,7 +1444,7 @@ PACK(struct OpcodeRTPAL2 : public OpcodeBase {
 	quint8 start; // bank 4
 });
 
-PACK(struct OpcodeADPAL2 : public OpcodeBase {
+STRUCTPACK(struct OpcodeADPAL2 : public OpcodeBase {
 	quint8 banks[3];
 	quint8 posTileSrc;
 	quint8 posTileDst;
@@ -1455,19 +1455,19 @@ PACK(struct OpcodeADPAL2 : public OpcodeBase {
 	quint8 colorCount; // bank 6
 });
 
-PACK(struct OpcodeMusic : public OpcodeBase {
+STRUCTPACK(struct OpcodeMusic : public OpcodeBase {
 	quint8 musicID;
 });
 
-PACK(struct OpcodeMUSIC : public OpcodeMusic {});
+STRUCTPACK(struct OpcodeMUSIC : public OpcodeMusic {});
 
-PACK(struct OpcodeSOUND : public OpcodeBase {
+STRUCTPACK(struct OpcodeSOUND : public OpcodeBase {
 	quint8 banks;
 	quint16 soundID; // bank 1
 	quint8 position; // bank 2
 });
 
-PACK(struct OpcodeAKAO : public OpcodeBase {
+STRUCTPACK(struct OpcodeAKAO : public OpcodeBase {
 	quint8 banks[3];
 	quint8 opcode;
 	quint8 param1; // bank 1
@@ -1477,51 +1477,51 @@ PACK(struct OpcodeAKAO : public OpcodeBase {
 	quint16 param5; // bank 6
 });
 
-PACK(struct OpcodeMUSVT : public OpcodeMusic {});
-PACK(struct OpcodeMUSVM : public OpcodeMusic {});
-PACK(struct OpcodeMULCK : public OpcodeDisable {});
-PACK(struct OpcodeBMUSC : public OpcodeMusic {});
+STRUCTPACK(struct OpcodeMUSVT : public OpcodeMusic {});
+STRUCTPACK(struct OpcodeMUSVM : public OpcodeMusic {});
+STRUCTPACK(struct OpcodeMULCK : public OpcodeDisable {});
+STRUCTPACK(struct OpcodeBMUSC : public OpcodeMusic {});
 
 // FIXME: reverse this
-PACK(struct OpcodeCHMPH : public OpcodeBase {
+STRUCTPACK(struct OpcodeCHMPH : public OpcodeBase {
 	quint8 banks;
 	quint8 var1; // bank 1 8-bit??
 	quint8 var2; // bank 2 8-bit??
 });
 
-PACK(struct OpcodeMovie : public OpcodeBase {
+STRUCTPACK(struct OpcodeMovie : public OpcodeBase {
 	quint8 movieID;
 });
 
-PACK(struct OpcodePMVIE : public OpcodeMovie {});
-PACK(struct OpcodeMOVIE : public OpcodeBase {});
+STRUCTPACK(struct OpcodePMVIE : public OpcodeMovie {});
+STRUCTPACK(struct OpcodeMOVIE : public OpcodeBase {});
 
-PACK(struct OpcodeMVIEF : public OpcodeBase {
+STRUCTPACK(struct OpcodeMVIEF : public OpcodeBase {
 	quint8 banks;
 	quint8 varCurMovieFrame; // bank 2
 });
 
-PACK(struct OpcodeMVCAM : public OpcodeBase {
+STRUCTPACK(struct OpcodeMVCAM : public OpcodeBase {
 	quint8 movieCamID;
 });
 
-PACK(struct OpcodeFMUSC : public OpcodeMusic {});
+STRUCTPACK(struct OpcodeFMUSC : public OpcodeMusic {});
 
-PACK(struct OpcodeCMUSC : public OpcodeMusic {
+STRUCTPACK(struct OpcodeCMUSC : public OpcodeMusic {
 	quint8 banks;
 	quint8 opcode;
 	quint16 param1; // bank 1
 	quint16 param2; // bank 2
 });
 
-PACK(struct OpcodeCHMST : public OpcodeBase {
+STRUCTPACK(struct OpcodeCHMST : public OpcodeBase {
 	quint8 banks;
 	quint8 var; // bank 2 8-bit
 });
 
-PACK(struct OpcodeGAMEOVER : public OpcodeBase {});
+STRUCTPACK(struct OpcodeGAMEOVER : public OpcodeBase {});
 
-PACK(struct OpcodeLABEL : public OpcodeBase {
+STRUCTPACK(struct OpcodeLABEL : public OpcodeBase {
 	quint16 _label;
 });
 

@@ -66,17 +66,10 @@ QImage BackgroundFile::openBackground(const QHash<quint8, quint8> *paramActifs, 
                                       const bool *layers, const QSet<quint16> *IDs, bool onlyParams,
                                       bool transparent, bool *warning)
 {
-	if (!isOpen() && !open()) {
-		if (warning) {
-			*warning = false;
-		}
-		return QImage();
-	}
-
-	return drawBackground(tiles().filter(paramActifs, z, layers, IDs, onlyParams), transparent, warning);
+	return openBackground(tiles().filter(paramActifs, z, layers, IDs, onlyParams), _tiles.rect(), transparent, warning);
 }
 
-QImage BackgroundFile::backgroundPart(quint16 ID, bool transparent, bool *warning)
+QImage BackgroundFile::openBackground(const BackgroundTiles &tiles, const QRect &area, bool transparent, bool *warning)
 {
 	if (!isOpen() && !open()) {
 		if (warning) {
@@ -85,10 +78,10 @@ QImage BackgroundFile::backgroundPart(quint16 ID, bool transparent, bool *warnin
 		return QImage();
 	}
 
-	return drawBackground(tiles().tilesByID(ID, false), transparent, warning);
+	return drawBackground(tiles, area, transparent, warning);
 }
 
-QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles, bool transparent, bool *warning) const
+QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles, const QRect &area, bool transparent, bool *warning) const
 {
 	if (tiles.isEmpty() || _textures == nullptr) {
 		if (warning) {
@@ -97,11 +90,7 @@ QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles, bool transpa
 		return QImage();
 	}
 
-	quint16 minWidth, minHeight;
-	int width, height;
-	_tiles.area(minWidth, minHeight, width, height);
-
-	QImage image(width, height, QImage::Format_ARGB32);
+	QImage image(area.size(), QImage::Format_ARGB32);
 	image.fill(transparent ? 0 : 0xFF000000);
 
 	QRgb *pixels = reinterpret_cast<QRgb *>(image.bits());
@@ -139,8 +128,8 @@ QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles, bool transpa
 		}
 
 		quint8 right = 0;
-		qint32 top = (minHeight + tile.dstY) * width;
-		qint32 baseX = minWidth + tile.dstX;
+		qint32 top = (area.y() + tile.dstY) * area.width();
+		qint32 baseX = area.x() + tile.dstX;
 
 		for (uint indexOrColor : qAsConst(indexOrColorList)) {
 			if (palette == nullptr) {
@@ -161,7 +150,7 @@ QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles, bool transpa
 
 			if (++right == tile.size) {
 				right = 0;
-				top += width;
+				top += area.width();
 			}
 		}
 	}
@@ -241,7 +230,7 @@ QRgb BackgroundFile::blendColor(quint8 type, QRgb color0, QRgb color1)
 
 bool BackgroundFile::exportTiles(const QString &fileName, const BackgroundTiles &tiles) const
 {
-	return drawBackground(tiles).save(fileName);
+	return drawBackground(tiles, _tiles.rect()).save(fileName);
 }
 
 bool BackgroundFile::exportLayers(const QString &dirPath, const QString &extension) const

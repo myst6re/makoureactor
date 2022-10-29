@@ -67,6 +67,7 @@ public:
 signals:
 	void currentSelectionChanged(const QList<Cell> &cells);
 	void highlighted(const Cell &cell);
+	void clicked(const Cell &cell);
 public slots:
 	inline void setSelectedCell(const Cell &cell) {
 		setSelectedCells(QList<Cell>() << cell);

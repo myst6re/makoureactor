@@ -37,11 +37,10 @@ public:
 	virtual inline bool canSave() const override { return false; }
 	void clear() override;
 	QImage openBackground(bool transparent = false, bool *warning = nullptr);
+	QImage openBackground(const BackgroundTiles &tiles, const QRect &area, bool transparent = false, bool *warning = nullptr);
 	QImage openBackground(const QHash<quint8, quint8> *paramActifs, const qint16 z[2],
 	                      const bool *layers = nullptr, const QSet<quint16> *IDs = nullptr,
 	                      bool onlyParams = false, bool transparent = false, bool *warning = nullptr);
-	// Draw background tiles with ID
-	QImage backgroundPart(quint16 ID, bool transparent = false, bool *warning = nullptr);
 	bool usedParams(QMap<LayerParam, quint8> &usedParams, bool *layerExists, QSet<quint16> *usedIDs);
 	bool layerExists(int num);
 
@@ -82,7 +81,7 @@ public:
 	virtual bool setTile(Tile &tile, const QImage &image = QImage());
 
 protected:
-	QImage drawBackground(const BackgroundTiles &tiles, bool transparent = false, bool *warning = nullptr) const;
+	QImage drawBackground(const BackgroundTiles &tiles, const QRect &area, bool transparent = false, bool *warning = nullptr) const;
 	static QRgb blendColor(quint8 type, QRgb color0, QRgb color1);
 	inline BackgroundTiles &tilesRef() {
 		return _tiles;

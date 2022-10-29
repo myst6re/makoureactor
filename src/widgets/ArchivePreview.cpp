@@ -22,13 +22,7 @@ ArchivePreview::ArchivePreview(QWidget *parent) :
       QStackedWidget(parent)
 {
 	setAutoFillBackground(true);
-	QPalette pal = palette();
-	pal.setColor(QPalette::Active, QPalette::Dark, pal.color(QPalette::Mid));
-	pal.setColor(QPalette::Inactive, QPalette::Dark, pal.color(QPalette::Mid));
-	pal.setColor(QPalette::Disabled, QPalette::Dark, pal.color(QPalette::Midlight));
-
 	setBackgroundRole(QPalette::Dark);
-	setPalette(pal);
 
 	addWidget(new QWidget(this));
 	addWidget(imageWidget());

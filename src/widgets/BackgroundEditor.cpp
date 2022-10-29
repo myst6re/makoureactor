@@ -103,7 +103,7 @@ BackgroundEditor::BackgroundEditor(QWidget *parent)
 	connect(_sectionsList, &QTreeWidget::currentItemChanged, this, &BackgroundEditor::updateCurrentSection);
 	connect(_paramsList, &QTreeWidget::currentItemChanged, this, &BackgroundEditor::updateCurrentParam);
 	connect(_backgroundLayerWidget, &ImageGridWidget::currentSelectionChanged, this, &BackgroundEditor::updateSelectedTiles);
-	connect(_texturesWidget, &ImageGridWidget::currentSelectionChanged, this, &BackgroundEditor::updateSelectedTilesTexture);
+	connect(_texturesWidget, &ImageGridWidget::clicked, this, &BackgroundEditor::updateSelectedTileTexture);
 	connect(_backgroundTileEditor, &BackgroundTileEditor::changed, this, &BackgroundEditor::updateTiles);
 	connect(_backgroundTileEditor, &BackgroundTileEditor::changed, this, &BackgroundEditor::modified);
 }
@@ -352,6 +352,7 @@ void BackgroundEditor::updateCurrentParam2(int param, int state)
 void BackgroundEditor::updateImageLabel(int layer, int section, int param, int state)
 {
 	refreshImage(layer, section, param, state);
+	qDebug() << "BackgroundEditor::updateImageLabel";
 
 	updateSelectedTiles(_backgroundLayerWidget->selectedCells());
 }
@@ -378,10 +379,14 @@ void BackgroundEditor::refreshImage(int layer, int section, int param, int state
 		paramsEnabled.insert(param, state);
 		_isParamMode = true;
 	}
-	qint16 z[] = {-1, -1};
 	bool layers[4] = {false, false, false, false};
 	if (layer >= 0 && layer < 4) {
-		layers[layer] = true;
+		if (layer < 2) {
+			layers[0] = true;
+			layers[1] = true;
+		} else {
+			layers[layer] = true;
+		}
 	}
 	QSet<quint16> sections;
 	if (section >= 0) {
@@ -390,16 +395,12 @@ void BackgroundEditor::refreshImage(int layer, int section, int param, int state
 		}
 		_isParamMode = false;
 	}
-	qDebug() << "BackgroundEditor::refreshImage" << layer << section << param << state << paramsEnabled << sections;
 
-	quint16 currentOffsetX, currentOffsetY;
-	int width, height;
-	_backgroundFile->tiles().area(currentOffsetX, currentOffsetY, width, height);
-
-	qDebug() << "BackgroundEditor::refreshImage" << currentOffsetX << currentOffsetY;
-
+	BackgroundTiles layerTiles = _backgroundFile->tiles().filter(nullptr, nullptr, layers, nullptr);
 	quint8 tileSize = layer > 1 ? 32 : 16;
-	int shiftX = currentOffsetX % tileSize, shiftY = currentOffsetY % tileSize;
+	QRect area = layerTiles.rect();
+
+	int shiftX = area.x() % tileSize, shiftY = area.y() % tileSize;
 
 	_shiftX->setMaximum(tileSize / 2);
 	_shiftY->setMaximum(tileSize / 2);
@@ -421,15 +422,12 @@ void BackgroundEditor::refreshImage(int layer, int section, int param, int state
 			sectionsBelow.insert(sectionId == 4097 ? 1 : sectionId);
 		}
 
-		qDebug() << "BackgroundEditor::refreshImage sectionsBelow" << sectionsBelow;
-
 		if (!sectionsBelow.isEmpty()) {
-			bool layers[4] = {true, true, false, false};
-			backgroundBelow = _backgroundFile->openBackground(!paramsEnabled.isEmpty() ? &paramsEnabled : nullptr, z, layers, &sectionsBelow, !paramsEnabled.isEmpty(), true);
+			backgroundBelow = _backgroundFile->openBackground(layerTiles.filter(nullptr, nullptr, nullptr, &sectionsBelow), area, true);
 		}
 	}
 
-	QImage background = _backgroundFile->openBackground(!paramsEnabled.isEmpty() ? &paramsEnabled : nullptr, z, layers, !sections.isEmpty() ? &sections : nullptr, !paramsEnabled.isEmpty(), true);
+	QImage background = _backgroundFile->openBackground(layerTiles.tiles(layer).filter(!paramsEnabled.isEmpty() ? &paramsEnabled : nullptr, nullptr, nullptr, !sections.isEmpty() ? &sections : nullptr, !paramsEnabled.isEmpty()), area, true);
 	QPixmap pix(background.size());
 
 	if (backgroundBelow.isNull()) {
@@ -444,15 +442,17 @@ void BackgroundEditor::refreshImage(int layer, int section, int param, int state
 		p.end();
 	}
 
-	_backgroundLayerWidget->setPixmap(backgroundPositionFromTile(QPoint(currentOffsetX, currentOffsetY), tileSize), pix);
-
 	_backgroundLayerWidget->setCellSize(tileSize);
-	QSize gridSize((MAX_TILE_DST - currentOffsetX % tileSize) * 2, (MAX_TILE_DST - currentOffsetY % tileSize) * 2);
+	QSize gridSize((MAX_TILE_DST - shiftX) * 2, (MAX_TILE_DST - shiftY) * 2);
 	_backgroundLayerWidget->setGridSize(gridSize / tileSize);
+
+	_backgroundLayerWidget->setPixmap(backgroundPositionFromTile(area.topLeft(), tileSize), pix);
+
 	QList<QLine> axis;
 	axis.append(QLine(0, gridSize.height() / 2, gridSize.width(), gridSize.height() / 2)); // x
 	axis.append(QLine(gridSize.width() / 2, 0, gridSize.width() / 2, gridSize.height())); // y
 	_backgroundLayerWidget->setCustomLines(axis);
+
 	_backgroundLayerWidget->setMinimumSize(_backgroundLayerWidget->gridSize() * tileSize);
 }
 
@@ -540,37 +540,35 @@ void BackgroundEditor::updateSelectedTiles(const QList<Cell> &cells)
 	_texturesWidget->blockSignals(false);
 }
 
-void BackgroundEditor::updateSelectedTilesTexture(const QList<Cell> &cells)
+void BackgroundEditor::updateSelectedTileTexture(const Cell &cell)
 {
-	qDebug() << "updateSelectedTilesTexture" << cells;
-	QList<Tile> selectedTiles;
+	qDebug() << "updateSelectedTileTexture" << cell;
+	Tile selectedTile = Tile();
+	selectedTile.tileID = quint16(-1);
 
-	if (!cells.isEmpty()) {
-		quint8 layerID = quint8(currentLayer());
-		BackgroundTiles tiles = _backgroundFile->tiles().tiles(layerID <= 1 ? 0 : layerID);
-		if (layerID <= 1) {
-			tiles.insert(_backgroundFile->tiles().tiles(1));
-		}
+	quint8 layerID = quint8(currentLayer());
+	BackgroundTiles tiles = _backgroundFile->tiles().tiles(layerID <= 1 ? 0 : layerID);
+	if (layerID <= 1) {
+		tiles.insert(_backgroundFile->tiles().tiles(1));
+	}
 
-		for (const Tile &tile : tiles) {
-			for (const Cell &cell: cells) {
-				quint8 tileCount = 256 / tile.size;
-				qint16 srcX = qint16((cell.x() % tileCount) * tile.size),
-				    srcY = qint16(cell.y() * tile.size);
-				quint8 textureID = _texIdKeys.value(cell.x() / tileCount, 0);
-				
-				if (tile.srcX == srcX &&
-				    tile.srcY == srcY &&
-				    tile.textureID == textureID) {
-					qDebug() << tile.tileID << tile.textureID << tile.srcX << tile.srcY;
-					selectedTiles.append(tile);
-				}
-			}
+	for (const Tile &tile : tiles) {
+		quint8 tileCount = 256 / tile.size;
+		qint16 srcX = qint16((cell.x() % tileCount) * tile.size),
+			srcY = qint16(cell.y() * tile.size);
+		quint8 textureID = _texIdKeys.value(cell.x() / tileCount, 0);
+		
+		if (tile.srcX == srcX &&
+			tile.srcY == srcY &&
+			tile.textureID == textureID) {
+			qDebug() << "tileID" << tile.tileID << "texID" << tile.textureID << "src" << tile.srcX << tile.srcY << "dst" << tile.dstX << tile.dstY;
+			selectedTile = tile;
+			break;
 		}
 	}
 
-	_backgroundTileEditor->setTiles(selectedTiles);
-	_backgroundTileEditor->setEnabled(!selectedTiles.isEmpty());
+	_backgroundTileEditor->setTiles(QList<Tile>() << selectedTile);
+	_backgroundTileEditor->setEnabled(selectedTile.tileID != quint16(-1));
 }
 
 void BackgroundEditor::updateTiles(const QList<Tile> &tiles)
