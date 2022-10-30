@@ -43,6 +43,16 @@ bool operator<(const LayerParam &layerParam, const LayerParam &other)
 	return memcmp(&layerParam, &other, sizeof(layerParam)) < 0;
 }
 
+int operator==(const LayerDstTex &layerDstTex, const LayerDstTex &other)
+{
+	return memcmp(&layerDstTex, &other, sizeof(LayerDstTex));
+}
+
+bool operator<(const LayerDstTex &layerDstTex, const LayerDstTex &other)
+{
+	return memcmp(&layerDstTex, &other, sizeof(LayerDstTex)) < 0;
+}
+
 BackgroundTiles::BackgroundTiles() :
       QMultiMap<qint32, Tile>()
 {
@@ -74,38 +84,25 @@ BackgroundTiles::BackgroundTiles(const QMultiMap<qint32, Tile> &tiles) :
 }
 
 BackgroundTiles BackgroundTiles::filter(const QHash<quint8, quint8> *paramActifs, const qint16 *z,
-                                        const bool *layers, const QSet<quint16> *IDs, bool onlyParams) const
+                                        const bool *layers, const QSet<quint16> *IDs, const QList<quint16> *tileIds, bool onlyParams) const
 {
 	BackgroundTiles ret;
-	
+
 	for (const Tile &tile : *this) {
-		switch (tile.layerID) {
-		case 0:
-			if ((layers == nullptr || layers[0]) && (IDs == nullptr || IDs->contains(1))) {
-				ret.insert(1, tile);
-			}
-			break;
-		case 1:
-			if (((!onlyParams && tile.state == 0) || (paramActifs == nullptr || paramActifs->value(tile.param, 0) & tile.state))
-			    && (layers == nullptr || layers[1]) && (IDs == nullptr || IDs->contains(tile.ID))) {
+		if ((layers == nullptr || layers[tile.layerID]) && (IDs == nullptr || IDs->contains(tile.ID))) {
+			if (tile.layerID == 0) {
 				ret.insert(tile);
+			} else if (((!onlyParams && tile.state == 0) || (paramActifs == nullptr || (paramActifs->value(tile.param, 0) & tile.state)))
+			           && (tileIds == nullptr || tileIds->contains(tile.tileID))) {
+				if (tile.layerID == 1) {
+					ret.insert(tile);
+				} else {
+					ret.insert(4096 - ((z != nullptr && z[tile.layerID - 2] != -1) ? z[tile.layerID - 2] : tile.ID), tile);
+				}
 			}
-			break;
-		case 2:
-			if (((!onlyParams && tile.state == 0) || (paramActifs == nullptr || paramActifs->value(tile.param, 0) & tile.state))
-			    && (layers == nullptr || layers[2]) && (IDs == nullptr || IDs->contains(tile.ID))) {
-				ret.insert(4096 - ((z != nullptr && z[0] != -1) ? z[0] : tile.ID), tile);
-			}
-			break;
-		case 3:
-			if (((!onlyParams && tile.state == 0) || (paramActifs == nullptr || paramActifs->value(tile.param, 0) & tile.state))
-			    && (layers == nullptr || layers[3]) && (IDs == nullptr || IDs->contains(tile.ID))) {
-				ret.insert(4096 - ((z != nullptr && z[1] != -1) ? z[1] : tile.ID), tile);
-			}
-			break;
 		}
 	}
-	
+
 	return ret;
 }
 
@@ -212,44 +209,52 @@ QMap<qint32, Tile> BackgroundTiles::sortedTiles() const
 	return ret;
 }
 
-QMap<LayerParam, quint8> BackgroundTiles::usedParams(bool *layerExists, QSet<quint16> *usedIDs) const
+QMap<LayerParam, quint8> BackgroundTiles::usedParams(bool *layerExists, QSet<quint16> *usedIDs, QList< QList<quint16> > *effectLayers) const
 {
 	QMap<LayerParam, quint8> ret;
+	QMap<LayerDstTex, qsizetype> collectEffectLayerTexPos;
 	layerExists[0] = layerExists[1] = layerExists[2] = false;
-	
-	for (const Tile &tile : *this) {
-		LayerParam layerParam;
-		layerParam.layer = tile.layerID;
-		layerParam.param = tile.param;
 
-		switch (tile.layerID) {
-		case 0:
-			break;
-		case 1:
-			layerExists[0] = true;
-			if (tile.param) {
-				quint8 state =  ret.value(layerParam);
-				ret.insert(layerParam, state | tile.state);
-			}
-			if (usedIDs) {
+	if (effectLayers != nullptr) {
+		effectLayers[0] = effectLayers[1] = effectLayers[2] = QList< QList<quint16> >();
+	}
+
+	for (const Tile &tile : *this) {
+		if (tile.layerID > 0) {
+			layerExists[tile.layerID - 1] = true;
+
+			if (usedIDs != nullptr && tile.layerID == 1) {
 				usedIDs->insert(tile.ID);
 			}
-			break;
-		case 2:
-			layerExists[1] = true;
+
 			if (tile.param) {
+				LayerParam layerParam;
+				layerParam.layer = tile.layerID;
+				layerParam.param = tile.param;
 				ret.insert(layerParam, ret.value(layerParam) | tile.state);
 			}
-			break;
-		case 3:
-			layerExists[2] = true;
-			if (tile.param) {
-				ret.insert(layerParam, ret.value(layerParam) | tile.state);
+
+			if (effectLayers != nullptr && tile.blending) {
+				LayerDstTex layerDst;
+				layerDst.layer = tile.layerID;
+				layerDst.dstX = tile.dstX;
+				layerDst.dstY = tile.dstY;
+				qsizetype index = collectEffectLayerTexPos.value(layerDst, -1) + 1;
+
+				LayerParam layerParam;
+				layerParam.layer = tile.layerID;
+				layerParam.param = tile.param;
+
+				if (index >= effectLayers[tile.layerID - 1].size()) {
+					effectLayers[tile.layerID - 1].append(QList<quint16>());
+				}
+
+				effectLayers[tile.layerID - 1][index].append(tile.tileID);
+				collectEffectLayerTexPos.insert(layerDst, index);
 			}
-			break;
 		}
 	}
-	
+
 	return ret;
 }
 
@@ -353,7 +358,7 @@ bool BackgroundTiles::checkOrdering() const
 	QMap<BackgroundTexturesPC::TextureGroups, TextureCursor> textureCursors;
 	QSet<quint8> layerIds;
 	qint16 lastLayerId = -1, previousTextureId = -1;
-	QList<Hole> holes = detectHoles();
+	QList<SrcTex> holes = detectHoles();
 
 	if (!holes.isEmpty()) {
 		qWarning() << "BackgroundTiles::checkOrdering" << holes.size() << "holes detected";
@@ -402,7 +407,7 @@ bool BackgroundTiles::checkOrdering() const
 		if (tile.srcX != cur.x || tile.srcY != cur.y) {
 			bool foundHole = false;
 			while (tile.srcX > cur.x || tile.srcY > cur.y) {
-				for (const Hole &hole: holes) {
+				for (const SrcTex &hole: holes) {
 					if (cur.x == hole.srcX && cur.y == hole.srcY) {
 						foundHole = true;
 						break;
@@ -480,10 +485,10 @@ bool BackgroundTiles::checkOrdering() const
 	return true;
 }
 
-QList<Hole> BackgroundTiles::detectHoles() const
+QList<SrcTex> BackgroundTiles::detectHoles() const
 {
 	QSet<quint16> uniqueHoles;
-	QList<Hole> holes;
+	QList<SrcTex> holes;
 	QMultiMap<quint8, quint16> usedTextureTiles;
 	QMap<quint8, quint8> textureSizes;
 
@@ -510,7 +515,7 @@ QList<Hole> BackgroundTiles::detectHoles() const
 				tile.srcY = (i / textureWidth) * tileSize;
 				if (!uniqueHoles.contains(tile.srcX | (tile.srcY << 8))) {
 					uniqueHoles.insert(tile.srcX | (tile.srcY << 8));
-					Hole hole;
+					SrcTex hole;
 					hole.srcX = tile.srcX;
 					hole.srcY = tile.srcY;
 					holes.append(hole);

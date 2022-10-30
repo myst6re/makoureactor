@@ -66,7 +66,7 @@ QImage BackgroundFile::openBackground(const QHash<quint8, quint8> *paramActifs, 
                                       const bool *layers, const QSet<quint16> *IDs, bool onlyParams,
                                       bool transparent, bool *warning)
 {
-	return openBackground(tiles().filter(paramActifs, z, layers, IDs, onlyParams), _tiles.rect(), transparent, warning);
+	return openBackground(tiles().filter(paramActifs, z, layers, IDs, nullptr, onlyParams), _tiles.rect(), transparent, warning);
 }
 
 QImage BackgroundFile::openBackground(const BackgroundTiles &tiles, const QRect &area, bool transparent, bool *warning)
@@ -162,13 +162,13 @@ QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles, const QRect 
 	return image;
 }
 
-bool BackgroundFile::usedParams(QMap<LayerParam, quint8> &usedParams, bool *layerExists, QSet<quint16> *usedIDs)
+bool BackgroundFile::usedParams(QMap<LayerParam, quint8> &usedParams, bool *layerExists, QSet<quint16> *usedIDs, QList<QList<quint16> > *effectLayers)
 {
 	if (!isOpen() && !open()) {
 		return false;
 	}
 
-	usedParams = tiles().usedParams(layerExists, usedIDs);
+	usedParams = tiles().usedParams(layerExists, usedIDs, effectLayers);
 
 	return true;
 }

@@ -219,8 +219,6 @@ void BGDialog::fillWidgets()
 		z[1] = -1;
 		_field->scriptsAndTexts()->bgParamAndBgMove(params, z, x, y);
 
-		editorPage->setSections(usedIDsList);
-		editorPage->setParams(usedParams);
 		editorPage->setBackgroundFile(_field->background());
 	}
 }

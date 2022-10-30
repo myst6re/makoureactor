@@ -49,9 +49,17 @@ BackgroundTileEditor::BackgroundTileEditor(QWidget *parent)
 	_paletteIdInput = new QSpinBox(_formPage);
 	_paletteIdInput->setRange(0, 255);
 
+	_depthInput = new QSpinBox(_formPage);
+	_depthInput->setRange(0, 4096);
+
+	_depthTuningInput = new QSpinBox(_formPage);
+	_depthTuningInput->setRange(-10000, 100000);
+
 	_tileEditorLayout = new QFormLayout();
 	_tileEditorLayout->addRow(tr("Blend type"), _blendTypeInput);
 	_tileEditorLayout->addRow(tr("Palette ID"), _paletteIdInput);
+	_tileEditorLayout->addRow(tr("Depth (Z)"), _depthInput);
+	_tileEditorLayout->addRow(tr("Depth fine tune"), _depthTuningInput);
 
 	QVBoxLayout *layout = new QVBoxLayout(_formPage);
 	layout->addWidget(_tileWidget);
@@ -66,10 +74,14 @@ BackgroundTileEditor::BackgroundTileEditor(QWidget *parent)
 	_colorTypeInput->addItem(tr("Paletted 8-bit"), 1);
 	_colorTypeInput->addItem(tr("Direct color 16-bit"), 2);
 
+	_createDepthInput = new QSpinBox(_createPage);
+	_createDepthInput->setRange(0, 4096);
+
 	QPushButton *createButton = new QPushButton(tr("Create tile"), _createPage);
 
 	_tileCreateLayout = new QFormLayout();
 	_tileCreateLayout->addRow(tr("Color type"), _colorTypeInput);
+	_tileCreateLayout->addRow(tr("Depth (Z)"), _createDepthInput);
 
 	QVBoxLayout *createPageLayout = new QVBoxLayout(_createPage);
 	createPageLayout->addLayout(_tileCreateLayout);
@@ -86,6 +98,7 @@ BackgroundTileEditor::BackgroundTileEditor(QWidget *parent)
 	connect(_bgParamStateInput, &QSpinBox::valueChanged, this, &BackgroundTileEditor::updateBgState);
 	connect(_bgParamGroup, &QGroupBox::clicked, this, &BackgroundTileEditor::updateBgParamEnabled);
 	connect(_paletteIdInput, &QSpinBox::valueChanged, this, &BackgroundTileEditor::updatePaletteId);
+	connect(_depthInput, &QSpinBox::valueChanged, this, &BackgroundTileEditor::updateDepth);
 }
 
 void BackgroundTileEditor::setBackgroundFile(BackgroundFile *backgroundFile)
@@ -108,14 +121,10 @@ void BackgroundTileEditor::setTiles(const QList<Tile> &tiles)
 
 	bool isInvalid = false;
 	int layerID = 0;
-	QSet<int> params, states, paletteIDs, blendings, typeTranss;
+	QSet<int> params, states, paletteIDs, blendings, typeTranss, depths, depthBigs;
 
 	for (const Tile &tile: tiles) {
 		layerID = tile.layerID;
-		if (tile.tileID == quint16(-1)) {
-			isInvalid = true;
-			continue;
-		}
 		params.insert(tile.param);
 		states.insert(tile.state);
 		if (tile.depth < 2) {
@@ -123,6 +132,11 @@ void BackgroundTileEditor::setTiles(const QList<Tile> &tiles)
 		}
 		blendings.insert(tile.blending);
 		typeTranss.insert(tile.typeTrans);
+		depths.insert(tile.ID);
+		depthBigs.insert(tile.IDBig);
+		if (tile.tileID == quint16(-1)) {
+			isInvalid = true;
+		}
 	}
 
 	if (isInvalid) {
@@ -131,6 +145,15 @@ void BackgroundTileEditor::setTiles(const QList<Tile> &tiles)
 		_colorTypeInput->setCurrentIndex(_colorTypeInput->findData(2));
 		_colorTypeInput->setEnabled(true);
 		_tileCreateLayout->labelForField(_colorTypeInput)->setEnabled(true);
+		if (layerID == 1) {
+			_createDepthInput->setValue(!depths.isEmpty() ? *depths.begin() : 0);
+			_createDepthInput->setVisible(true);
+			_tileCreateLayout->labelForField(_createDepthInput)->setVisible(true);
+		} else {
+			_createDepthInput->setVisible(false);
+			_tileCreateLayout->labelForField(_createDepthInput)->setVisible(false);
+		}
+		
 	} else {
 		_stackedLayout->setCurrentWidget(_formPage);
 
@@ -195,6 +218,30 @@ void BackgroundTileEditor::setTiles(const QList<Tile> &tiles)
 			_tileEditorLayout->labelForField(_blendTypeInput)->setEnabled(false);
 		}
 		_blendTypeInput->blockSignals(false);
+		
+		_depthInput->blockSignals(true);
+		if (depths.size() == 1) {
+			_depthInput->setValue(*depths.begin());
+			_depthInput->setEnabled(layerID == 1);
+			_tileEditorLayout->labelForField(_depthInput)->setEnabled(layerID == 1);
+		} else {
+			_depthInput->setValue(0);
+			_depthInput->setEnabled(false);
+			_tileEditorLayout->labelForField(_depthInput)->setEnabled(false);
+		}
+		_depthInput->blockSignals(false);
+		
+		_depthTuningInput->blockSignals(true);
+		if (depthBigs.size() == 1) {
+			_depthTuningInput->setValue(*depthBigs.begin());
+			_depthTuningInput->setEnabled(layerID == 1);
+			_tileEditorLayout->labelForField(_depthTuningInput)->setEnabled(layerID == 1);
+		} else {
+			_depthTuningInput->setValue(0);
+			_depthTuningInput->setEnabled(false);
+			_tileEditorLayout->labelForField(_depthTuningInput)->setEnabled(false);
+		}
+		_depthInput->blockSignals(false);
 	}
 }
 
@@ -231,6 +278,9 @@ void BackgroundTileEditor::createTile()
 	for (Tile &tile: _tiles) {
 		if (tile.tileID == quint16(-1)) {
 			tile.depth = quint8(_colorTypeInput->currentData().toInt());
+			if (tile.layerID == 1) {
+				tile.ID = quint16(_createDepthInput->value());
+			}
 			if (!_backgroundFile->addTile(tile)) {
 				QMessageBox::warning(this, tr("No more space"), tr("No more space available in the file for a new Tile"));
 			} else {
@@ -297,6 +347,21 @@ void BackgroundTileEditor::updatePaletteId(int value)
 	// Update tile preview
 	if (_backgroundFile != nullptr && _tiles.size() == 1) {
 		_tileWidget->setPixmap(QPixmap::fromImage(_backgroundFile->textures()->toImage(_tiles.first(), _backgroundFile->palettes())));
+	}
+
+	emit changed(_tiles);
+}
+
+void BackgroundTileEditor::updateDepth(int value)
+{
+	quint16 depth = quint16(value);
+
+	for (Tile &tile: _tiles) {
+		tile.ID = depth;
+
+		if (!_backgroundFile->setTile(tile)) {
+			qWarning() << "BackgroundTileEditor::updateDepth tile not found" << tile.tileID;
+		}
 	}
 
 	emit changed(_tiles);

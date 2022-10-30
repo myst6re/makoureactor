@@ -194,6 +194,22 @@
         <source>Shift Y:</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>By Depth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>By Param</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>By Effect</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Effect %1</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>BackgroundTileEditor</name>
@@ -259,6 +275,14 @@
     </message>
     <message>
         <source>Color type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Depth (Z)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Depth fine tune</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -44,16 +44,19 @@ private slots:
 	void updateBgState(int value);
 	void updateBgParamEnabled(bool enabled);
 	void updatePaletteId(int value);
+	void updateDepth(int value);
 private:
 	ImageGridWidget *_tileWidget;
 	QGroupBox *_bgParamGroup;
 	QSpinBox *_bgParamInput, *_bgParamStateInput;
 	QComboBox *_blendTypeInput, *_colorTypeInput;
+	QSpinBox *_depthInput, *_depthTuningInput;
 	QFormLayout *_tileEditorLayout, *_tileCreateLayout;
 	QSpinBox *_paletteIdInput;
 	QStackedLayout *_stackedLayout;
 	QWidget *_formPage;
 	QWidget *_createPage;
+	QSpinBox *_createDepthInput;
 
 	BackgroundFile *_backgroundFile;
 	QList<Tile> _tiles;

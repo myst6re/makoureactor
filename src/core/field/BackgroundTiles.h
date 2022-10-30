@@ -40,12 +40,20 @@ struct LayerParam {
 	quint8 layer, param;
 };
 
-struct Hole {
+int operator==(const LayerParam &layerParam, const LayerParam &other);
+bool operator<(const LayerParam &layerParam, const LayerParam &other);
+
+struct SrcTex {
 	quint8 srcX, srcY;
 };
 
-int operator==(const LayerParam &layerParam, const LayerParam &other);
-bool operator<(const LayerParam &layerParam, const LayerParam &other);
+struct LayerDstTex {
+	quint8 layer;
+	qint16 dstX, dstY;
+};
+
+int operator==(const LayerDstTex &layerSrcTex, const LayerDstTex &other);
+bool operator<(const LayerDstTex &layerSrcTex, const LayerDstTex &other);
 
 struct ParamState {
 	ParamState(): param(0), state(0) {}
@@ -64,7 +72,7 @@ public:
 	explicit BackgroundTiles(const QMultiMap<qint32, Tile> &tiles);
 
 	BackgroundTiles filter(const QHash<quint8, quint8> *paramActifs, const qint16 *z,
-	                       const bool *layers, const QSet<quint16> *IDs, bool onlyParams = false) const;
+	                       const bool *layers, const QSet<quint16> *IDs, const QList<quint16> *tileIds = nullptr, bool onlyParams = false) const;
 	BackgroundTiles orderedTiles(bool orderedForSaving) const;
 	BackgroundTiles tiles(quint8 layerID, bool orderedForSaving = false) const;
 	BackgroundTiles tilesByID(quint16 ID, bool orderedForSaving = false) const;
@@ -72,7 +80,7 @@ public:
 	BackgroundTiles tiles(quint8 layerID, ParamState paramState) const;
 	BackgroundTiles tiles(quint8 layerID, quint16 ID) const;
 	QMap<qint32, Tile> sortedTiles() const;
-	QMap<LayerParam, quint8> usedParams(bool *layerExists, QSet<quint16> *usedIDs = nullptr) const;
+	QMap<LayerParam, quint8> usedParams(bool *layerExists, QSet<quint16> *usedIDs = nullptr, QList<QList<quint16> > *effectLayers = nullptr) const;
 	QSet<quint8> usedPalettes() const;
 	void area(quint16 &minWidth, quint16 &minHeight,
 	          int &width, int &height) const;
@@ -86,7 +94,7 @@ public:
 	}
 	using QMultiMap<qint32, Tile>::insert;
 	bool checkOrdering() const;
-	QList<Hole> detectHoles() const;
+	QList<SrcTex> detectHoles() const;
 };
 
 int operator==(const Tile &tile, const Tile &other);

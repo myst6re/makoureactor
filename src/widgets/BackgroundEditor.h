@@ -29,8 +29,6 @@ class BackgroundEditor : public QWidget
 	Q_OBJECT
 public:
 	explicit BackgroundEditor(QWidget *parent = nullptr);
-	void setSections(const QList<quint16> &sections);
-	void setParams(const QMap<LayerParam, quint8> &params);
 	void setBackgroundFile(BackgroundFile *backgroundFile);
 	void clear();
 signals:
@@ -40,33 +38,34 @@ protected:
 private slots:
 	void updateCurrentLayer(int layer);
 	void updateCurrentSection(QTreeWidgetItem *current, QTreeWidgetItem *previous);
-	void updateCurrentParam(QTreeWidgetItem *current, QTreeWidgetItem *previous);
 	void updateSelectedTiles(const QList<Cell> &cells);
 	void updateSelectedTileTexture(const Cell &cell);
 	void updateTiles(const QList<Tile> &tiles);
 private:
-	void fillSectionList();
+	enum LayerSubType {
+		SubLayer = QTreeWidgetItem::UserType,
+		BackgroundParameter,
+		Effect
+	};
+	void addTopLevelItem(const QString &name, LayerSubType subType);
 	int currentLayer() const;
 	int currentSection() const;
 	ParamState currentParamState() const;
-	void updateCurrentSection2(int section);
-	void updateCurrentParam2(int param, int state);
-	void updateImageLabel(int layer, int section, int param, int state);
-	void refreshImage(int layer, int section, int param, int state);
+	QList<quint16> currentEffect() const;
+	void updateImageLabel(int layer, int section, ParamState paramState, const QList<quint16> &effectTileIds);
+	void refreshList(int layer);
+	void refreshImage(int layer, int section, ParamState paramState, const QList<quint16> &effectTileIds);
 	void refreshTexture();
 	static QPoint backgroundPositionFromTile(const QPoint &cell, quint8 cellSize);
 	static QPoint tilePositionFromCell(const QPoint &cell, quint8 cellSize, const QPoint &shift);
 
 	QComboBox *_layersComboBox;
 	QTreeWidget *_sectionsList;
-	QTreeWidget *_paramsList;
 	QSpinBox *_shiftX, *_shiftY;
 	QScrollArea *_backgroundLayerScrollArea;
 	ImageGridWidget *_backgroundLayerWidget, *_texturesWidget, *_palettesWidget;
 	BackgroundTileEditor *_backgroundTileEditor;
-	bool _isParamMode;
 
 	BackgroundFile *_backgroundFile;
-	QList<quint16> _sections;
 	QList<quint8> _texIdKeys;
 };
