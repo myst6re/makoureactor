@@ -45,6 +45,7 @@ private slots:
 	void updateBgParamEnabled(bool enabled);
 	void updatePaletteId(int value);
 	void updateDepth(int value);
+	void removeTiles();
 private:
 	ImageGridWidget *_tileWidget;
 	QGroupBox *_bgParamGroup;

@@ -62,15 +62,23 @@ struct InfData {
 	quint8 control;
 	qint16 cameraFocusHeight;
 	Range camera_range; // 8 bytes
-	quint8 bg_layer1_flag;
-	quint8 bg_layer2_flag;
-	quint8 bg_layer3_flag;
-	quint8 bg_layer4_flag;
+	quint8 bg_layer1_flag; // 1: normal, 2: vertical axis reversed
+	quint8 bg_layer2_flag; // Unused
+	quint8 bg_layer3_flag; // Unused
+	quint8 bg_layer4_flag; // Unused
 	qint16 bg_layer3_width;
 	qint16 bg_layer3_height;
 	qint16 bg_layer4_width;
 	qint16 bg_layer4_height;
-	quint8 unknown[24];
+	qint16 bg_layer3_x_related;
+	qint16 bg_layer3_y_related;
+	qint16 bg_layer4_x_related;
+	qint16 bg_layer4_y_related;
+	qint16 bg_layer3_x_multiplier_related;
+	qint16 bg_layer3_y_multiplier_related;
+	qint16 bg_layer4_x_multiplier_related;
+	qint16 bg_layer4_y_multiplier_related;
+	quint8 unused[8];
 	Exit doors[12]; // 24 * 12 bytes
 	Trigger triggers[12]; // 16 * 12 bytes
 	// Only in occidental/international version
@@ -112,6 +120,14 @@ public:
 	void setBgLayer4Width(qint16 width);
 	qint16 bgLayer4Height() const;
 	void setBgLayer4Height(qint16 height);
+	qint16 bgLayer3XRelated() const;
+	void setBgLayer3XRelated(qint16 x);
+	qint16 bgLayer3YRelated() const;
+	void setBgLayer3YRelated(qint16 y);
+	qint16 bgLayer4XRelated() const;
+	void setBgLayer4XRelated(qint16 x);
+	qint16 bgLayer4YRelated() const;
+	void setBgLayer4YRelated(qint16 y);
 	QList<Exit> exitLines() const;
 	Exit exitLine(quint8 id) const;
 	void setExitLine(quint8 id, const Exit &line);
@@ -123,8 +139,6 @@ public:
 	QList<Arrow> arrows() const;
 	const Arrow &arrow(quint8 id) const;
 	void setArrow(quint8 id, const Arrow &arrow);
-	QByteArray unknown() const;
-	void setUnknown(const QByteArray &u);
 private:
 	InfData data;
 };

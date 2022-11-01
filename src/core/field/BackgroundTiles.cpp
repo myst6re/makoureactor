@@ -276,7 +276,7 @@ void BackgroundTiles::area(quint16 &minWidth, quint16 &minHeight,
 {
 	quint16 maxWidth=0, maxHeight=0;
 	minWidth = minHeight = 0;
-	
+
 	for (const Tile &tile : *this) {
 		quint8 toAdd = tile.size - 16;
 		if (tile.dstX >= 0 && tile.dstX+toAdd > maxWidth)
@@ -288,9 +288,27 @@ void BackgroundTiles::area(quint16 &minWidth, quint16 &minHeight,
 		else if (tile.dstY < 0 && -tile.dstY > minHeight)
 			minHeight = -tile.dstY;
 	}
-	
+	qDebug() << "area2" << minWidth << minHeight;
+
 	width = minWidth + maxWidth + 16;
 	height = minHeight + maxHeight + 16;
+}
+
+QPoint BackgroundTiles::minTopLeft() const
+{
+	qint16 minDstX = 1024, minDstY = 1024;
+
+	for (const Tile &tile : *this) {
+		if (tile.dstX < minDstX) {
+			minDstX = tile.dstX;
+		}
+		if (tile.dstY < minDstY) {
+			minDstY = tile.dstY;
+		}
+	}
+	qDebug() << "BackgroundTiles::minTopLeft" << QPoint(minDstX, minDstY);
+
+	return QPoint(minDstX, minDstY);
 }
 
 QRect BackgroundTiles::rect() const
@@ -301,6 +319,34 @@ QRect BackgroundTiles::rect() const
 	area(minWidth, minHeight, width, height);
 
 	return QRect(minWidth, minHeight, width, height);
+}
+
+QPoint BackgroundTiles::dstShift(int tileSize) const
+{
+	int shiftX = 0, shiftY = 0;
+	bool shiftXComputed = false, shiftYComputed = false;
+
+	for (const Tile &tile : *this) {
+		if (tile.size != tileSize) {
+			continue;
+		}
+
+		if (!shiftXComputed && tile.dstX != 0) {
+			shiftX = std::abs(tile.dstX) % tile.size;
+			shiftXComputed = true;
+		}
+
+		if (!shiftYComputed && tile.dstY != 0) {
+			shiftY = std::abs(tile.dstY) % tile.size;
+			shiftYComputed = true;
+		}
+
+		if (shiftXComputed && shiftYComputed) {
+			break;
+		}
+	}
+
+	return QPoint(shiftX, shiftY);
 }
 
 Tile BackgroundTiles::search(quint8 textureID1, quint8 textureID2,
@@ -338,6 +384,24 @@ bool BackgroundTiles::replace(const Tile &tile)
 	for (Tile &t : *this) {
 		if (t.tileID == tile.tileID) {
 			t = tile;
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool BackgroundTiles::remove(const Tile &tile)
+{
+	QMutableMultiMapIterator it(*this);
+
+	while (it.hasNext()) {
+		it.next();
+		const Tile &t = it.value();
+
+		if (t.tileID == tile.tileID) {
+			it.remove();
+
 			return true;
 		}
 	}

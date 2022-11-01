@@ -227,6 +227,50 @@ void InfFile::setBgLayer4Height(qint16 height)
 	setModified(true);
 }
 
+qint16 InfFile::bgLayer3XRelated() const
+{
+	return data.bg_layer3_x_related;
+}
+
+void InfFile::setBgLayer3XRelated(qint16 x)
+{
+	data.bg_layer3_x_related = x;
+	setModified(true);
+}
+
+qint16 InfFile::bgLayer3YRelated() const
+{
+	return data.bg_layer3_y_related;
+}
+
+void InfFile::setBgLayer3YRelated(qint16 y)
+{
+	data.bg_layer3_y_related = y;
+	setModified(true);
+}
+
+qint16 InfFile::bgLayer4XRelated() const
+{
+	return data.bg_layer4_x_related;
+}
+
+void InfFile::setBgLayer4XRelated(qint16 x)
+{
+	data.bg_layer4_x_related = x;
+	setModified(true);
+}
+
+qint16 InfFile::bgLayer4YRelated() const
+{
+	return data.bg_layer4_y_related;
+}
+
+void InfFile::setBgLayer4YRelated(qint16 y)
+{
+	data.bg_layer4_y_related = y;
+	setModified(true);
+}
+
 QList<Exit> InfFile::exitLines() const
 {
 	QList<Exit> exit;
@@ -295,16 +339,5 @@ const Arrow &InfFile::arrow(quint8 id) const
 void InfFile::setArrow(quint8 id, const Arrow &arrow)
 {
 	data.arrows[id] = arrow;
-	setModified(true);
-}
-
-QByteArray InfFile::unknown() const
-{
-	return QByteArray((char *)data.unknown, 24);
-}
-
-void InfFile::setUnknown(const QByteArray &u)
-{
-	memcpy(data.unknown, u.leftJustified(24, '\0', true).constData(), 24);
 	setModified(true);
 }
