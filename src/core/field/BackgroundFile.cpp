@@ -78,6 +78,8 @@ QImage BackgroundFile::openBackground(const BackgroundTiles &tiles, const QRect 
 		return QImage();
 	}
 
+	qDebug() << "BackgroundFile::openBackground" << area;
+
 	return drawBackground(tiles, area, transparent, warning);
 }
 
@@ -289,6 +291,16 @@ bool BackgroundFile::setTile(Tile &tile, const QImage &image)
 	Q_UNUSED(image)
 
 	if (_tiles.replace(tile)) {
+		setModified(field()->isPC());
+		return true;
+	}
+
+	return false;
+}
+
+bool BackgroundFile::removeTile(const Tile &tile)
+{
+	if (_tiles.remove(tile)) {
 		setModified(field()->isPC());
 		return true;
 	}

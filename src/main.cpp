@@ -80,8 +80,6 @@ int main(int argc, char *argv[])
 		                     QApplication::translate("main", "The file 'var.cfg' could not be loaded.\n"
 		                                                     "Make sure it is valid or delete it."));
 	}
-	int ID = 999;
-	qDebug() << *((double *)&ID) << *((float *)&ID);
 
 	if (!Data::load()) {
 		qWarning() << "Error loading data!";

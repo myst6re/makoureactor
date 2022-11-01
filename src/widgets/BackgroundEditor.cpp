@@ -247,7 +247,7 @@ void BackgroundEditor::updateCurrentLayer(int index)
 
 	refreshList(layer);
 
-	if (_sectionsList->currentItem() == nullptr) {
+	if (_sectionsList->currentItem() == nullptr || _sectionsList->currentItem()->parent() == nullptr) {
 		_sectionsList->blockSignals(true);
 		_sectionsList->setCurrentItem(_sectionsList->topLevelItem(0)->child(0));
 		_sectionsList->blockSignals(false);
@@ -384,7 +384,7 @@ void BackgroundEditor::updateImageLabel(int layer, int section, ParamState param
 
 QPoint BackgroundEditor::backgroundPositionFromTile(const QPoint &tile, quint8 cellSize)
 {
-	return QPoint(MAX_TILE_DST, MAX_TILE_DST) - tile - QPoint(tile.x() % cellSize, tile.y() % cellSize);
+	return tile + QPoint(MAX_TILE_DST, MAX_TILE_DST) - QPoint(tile.x() % cellSize, tile.y() % cellSize);
 }
 
 QPoint BackgroundEditor::tilePositionFromCell(const QPoint &cell, quint8 cellSize, const QPoint &shift)
@@ -422,13 +422,14 @@ void BackgroundEditor::refreshImage(int layer, int section, ParamState paramStat
 	BackgroundTiles layerTiles = _backgroundFile->tiles().filter(nullptr, nullptr, layers, nullptr, nullptr);
 	quint8 tileSize = layer > 1 ? 32 : 16;
 	QRect area = layerTiles.rect();
+	QPoint shift = layerTiles.dstShift(tileSize);
 
-	int shiftX = area.x() % tileSize, shiftY = area.y() % tileSize;
+	qDebug() << "BackgroundEditor::refreshImage" << "area" << area;
 
 	_shiftX->setMaximum(tileSize / 2);
 	_shiftY->setMaximum(tileSize / 2);
-	_shiftX->setValue(shiftX);
-	_shiftY->setValue(shiftY);
+	_shiftX->setValue(shift.x());
+	_shiftY->setValue(shift.y());
 	_shiftX->setEnabled(true);
 	_shiftY->setEnabled(true);
 
@@ -454,12 +455,15 @@ void BackgroundEditor::refreshImage(int layer, int section, ParamState paramStat
 		}
 	}
 
-	QImage background = _backgroundFile->openBackground(layerTiles.tiles(layer).filter(!paramsEnabled.isEmpty() ? &paramsEnabled : nullptr, nullptr, nullptr, !sections.isEmpty() ? &sections : nullptr, !effectTileIds.isEmpty() ? &effectTileIds : nullptr, !paramsEnabled.isEmpty()), area, true);
-	QPixmap pix(background.size());
+	QImage background = _backgroundFile->openBackground(
+	            layerTiles.tiles(layer).filter(!paramsEnabled.isEmpty() ? &paramsEnabled : nullptr, nullptr, nullptr, !sections.isEmpty() ? &sections : nullptr, !effectTileIds.isEmpty() ? &effectTileIds : nullptr, !paramsEnabled.isEmpty()),
+	            area, true);
+	QPixmap pix;
 
 	if (backgroundBelow.isNull()) {
 		pix = QPixmap::fromImage(background);
 	} else {
+		pix = QPixmap(background.size());
 		pix.fill(Qt::transparent);
 		QPainter p(&pix);
 		p.setOpacity(0.2);
@@ -470,10 +474,10 @@ void BackgroundEditor::refreshImage(int layer, int section, ParamState paramStat
 	}
 
 	_backgroundLayerWidget->setCellSize(tileSize);
-	QSize gridSize((MAX_TILE_DST - shiftX) * 2, (MAX_TILE_DST - shiftY) * 2);
+	QSize gridSize((MAX_TILE_DST - shift.x()) * 2, (MAX_TILE_DST - shift.y()) * 2);
 	_backgroundLayerWidget->setGridSize(gridSize / tileSize);
 
-	_backgroundLayerWidget->setPixmap(backgroundPositionFromTile(area.topLeft(), tileSize), pix);
+	_backgroundLayerWidget->setPixmap(backgroundPositionFromTile(layerTiles.minTopLeft(), tileSize), pix);
 
 	QList<QLine> axis;
 	axis.append(QLine(0, gridSize.height() / 2, gridSize.width(), gridSize.height() / 2)); // x

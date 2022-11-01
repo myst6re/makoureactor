@@ -285,6 +285,10 @@
         <source>Depth fine tune</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Delete selected tiles</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CLI</name>

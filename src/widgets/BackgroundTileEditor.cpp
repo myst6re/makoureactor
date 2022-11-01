@@ -61,10 +61,13 @@ BackgroundTileEditor::BackgroundTileEditor(QWidget *parent)
 	_tileEditorLayout->addRow(tr("Depth (Z)"), _depthInput);
 	_tileEditorLayout->addRow(tr("Depth fine tune"), _depthTuningInput);
 
+	QPushButton *removeButton = new QPushButton(tr("Delete selected tiles"), _formPage);
+
 	QVBoxLayout *layout = new QVBoxLayout(_formPage);
 	layout->addWidget(_tileWidget);
 	layout->addLayout(_tileEditorLayout);
 	layout->addWidget(_bgParamGroup);
+	layout->addWidget(removeButton, 0, Qt::AlignRight);
 	layout->addStretch(1);
 	layout->setContentsMargins(QMargins());
 
@@ -99,6 +102,7 @@ BackgroundTileEditor::BackgroundTileEditor(QWidget *parent)
 	connect(_bgParamGroup, &QGroupBox::clicked, this, &BackgroundTileEditor::updateBgParamEnabled);
 	connect(_paletteIdInput, &QSpinBox::valueChanged, this, &BackgroundTileEditor::updatePaletteId);
 	connect(_depthInput, &QSpinBox::valueChanged, this, &BackgroundTileEditor::updateDepth);
+	connect(removeButton, &QPushButton::clicked, this, &BackgroundTileEditor::removeTiles);
 }
 
 void BackgroundTileEditor::setBackgroundFile(BackgroundFile *backgroundFile)
@@ -365,4 +369,18 @@ void BackgroundTileEditor::updateDepth(int value)
 	}
 
 	emit changed(_tiles);
+}
+
+void BackgroundTileEditor::removeTiles()
+{
+	for (Tile &tile: _tiles) {
+		if (!_backgroundFile->removeTile(tile)) {
+			qWarning() << "BackgroundTileEditor::updateDepth tile not found" << tile.tileID;
+		}
+		tile.tileID = quint16(-1);
+	}
+
+	emit changed(_tiles);
+
+	setTiles(_tiles);
 }

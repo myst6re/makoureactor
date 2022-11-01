@@ -84,7 +84,9 @@ public:
 	QSet<quint8> usedPalettes() const;
 	void area(quint16 &minWidth, quint16 &minHeight,
 	          int &width, int &height) const;
+	QPoint minTopLeft() const;
 	QRect rect() const;
+	QPoint dstShift(int tileSize) const;
 	Tile search(quint8 textureID1, quint8 textureID2, quint8 srcX, quint8 srcY) const;
 	void setZLayer1(quint16 oldZ, quint16 newZ);
 	bool replace(const Tile &tile);
@@ -93,6 +95,8 @@ public:
 		QMultiMap<qint32, Tile>::insert(qint32(4096 - tile.ID), tile);
 	}
 	using QMultiMap<qint32, Tile>::insert;
+	bool remove(const Tile &tile);
+	using QMultiMap<qint32, Tile>::remove;
 	bool checkOrdering() const;
 	QList<SrcTex> detectHoles() const;
 };
