@@ -103,6 +103,7 @@ void InfFile::setMapName(const QString &name)
 {
 	memcpy(data.name, name.toLatin1().leftJustified(9, '\0', true).constData(), 9);
 	data.name[8] = '\0';
+	qDebug() << "InfFile::setMapName" << name;
 	setModified(true);
 }
 
@@ -114,6 +115,7 @@ quint8 InfFile::control() const
 void InfFile::setControl(quint8 control)
 {
 	data.control = control;
+	qDebug() << "InfFile::setControl" << control;
 	setModified(true);
 }
 
@@ -125,6 +127,7 @@ qint16 InfFile::cameraFocusHeight() const
 void InfFile::setCameraFocusHeight(qint16 cameraFocusHeight)
 {
 	data.cameraFocusHeight = cameraFocusHeight;
+	qDebug() << "InfFile::setCameraFocusHeight" << cameraFocusHeight;
 	setModified(true);
 }
 
@@ -136,6 +139,7 @@ const Range &InfFile::cameraRange() const
 void InfFile::setCameraRange(const Range &range)
 {
 	data.camera_range = range;
+	qDebug() << "InfFile::setCameraRange";
 	setModified(true);
 }
 
@@ -147,6 +151,7 @@ quint8 InfFile::bgLayer1Flag() const
 void InfFile::setBgLayer1Flag(quint8 flag)
 {
 	data.bg_layer1_flag = flag;
+	qDebug() << "InfFile::setBgLayer1Flag" << flag;
 	setModified(true);
 }
 
@@ -158,6 +163,7 @@ quint8 InfFile::bgLayer2Flag() const
 void InfFile::setBgLayer2Flag(quint8 flag)
 {
 	data.bg_layer2_flag = flag;
+	qDebug() << "InfFile::setBgLayer2Flag" << flag;
 	setModified(true);
 }
 
@@ -169,6 +175,7 @@ quint8 InfFile::bgLayer3Flag() const
 void InfFile::setBgLayer3Flag(quint8 flag)
 {
 	data.bg_layer3_flag = flag;
+	qDebug() << "InfFile::setBgLayer3Flag" << flag;
 	setModified(true);
 }
 
@@ -180,6 +187,7 @@ quint8 InfFile::bgLayer4Flag() const
 void InfFile::setBgLayer4Flag(quint8 flag)
 {
 	data.bg_layer4_flag = flag;
+	qDebug() << "InfFile::setBgLayer4Flag" << flag;
 	setModified(true);
 }
 
@@ -271,6 +279,50 @@ void InfFile::setBgLayer4YRelated(qint16 y)
 	setModified(true);
 }
 
+qint16 InfFile::bgLayer3XMultiplierRelated() const
+{
+	return data.bg_layer3_x_multiplier_related;
+}
+
+void InfFile::setBgLayer3XMultiplierRelated(qint16 x)
+{
+	data.bg_layer3_x_multiplier_related = x;
+	setModified(true);
+}
+
+qint16 InfFile::bgLayer3YMultiplierRelated() const
+{
+	return data.bg_layer3_y_multiplier_related;
+}
+
+void InfFile::setBgLayer3YMultiplierRelated(qint16 y)
+{
+	data.bg_layer3_y_multiplier_related = y;
+	setModified(true);
+}
+
+qint16 InfFile::bgLayer4XMultiplierRelated() const
+{
+	return data.bg_layer4_x_multiplier_related;
+}
+
+void InfFile::setBgLayer4XMultiplierRelated(qint16 x)
+{
+	data.bg_layer4_x_multiplier_related = x;
+	setModified(true);
+}
+
+qint16 InfFile::bgLayer4YMultiplierRelated() const
+{
+	return data.bg_layer4_y_multiplier_related;
+}
+
+void InfFile::setBgLayer4YMultiplierRelated(qint16 y)
+{
+	data.bg_layer4_y_multiplier_related = y;
+	setModified(true);
+}
+
 QList<Exit> InfFile::exitLines() const
 {
 	QList<Exit> exit;
@@ -288,6 +340,7 @@ Exit InfFile::exitLine(quint8 id) const
 void InfFile::setExitLine(quint8 id, const Exit &line)
 {
 	data.doors[id] = line;
+	qDebug() << "InfFile::setExitLine" << id;
 	setModified(true);
 }
 
@@ -308,6 +361,7 @@ const Trigger &InfFile::trigger(quint8 id) const
 void InfFile::setTrigger(quint8 id, const Trigger &trigger)
 {
 	data.triggers[id] = trigger;
+	qDebug() << "InfFile::setTrigger" << id;
 	setModified(true);
 }
 
@@ -319,6 +373,7 @@ bool InfFile::arrowIsDisplayed(quint8 id) const
 void InfFile::setArrowDiplay(quint8 id, bool display)
 {
 	data.display_arrow[id] = (data.display_arrow[id] & 0xFE) | quint8(display);
+	qDebug() << "InfFile::setArrowDiplay" << id << display;
 	setModified(true);
 }
 
@@ -339,5 +394,6 @@ const Arrow &InfFile::arrow(quint8 id) const
 void InfFile::setArrow(quint8 id, const Arrow &arrow)
 {
 	data.arrows[id] = arrow;
+	qDebug() << "InfFile::setArrow" << id;
 	setModified(true);
 }

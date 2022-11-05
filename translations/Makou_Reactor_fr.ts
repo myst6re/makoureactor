@@ -7538,7 +7538,7 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
     </message>
     <message>
         <source>Unknown:</source>
-        <translation>Inconnu :</translation>
+        <translation type="vanished">Inconnu :</translation>
     </message>
     <message>
         <source>Field map scale:</source>
@@ -7657,7 +7657,7 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
     </message>
     <message>
         <source>Background layer sizes (for layer animations)</source>
-        <translation>Tailles des couches du décor (pour les animations de couche)</translation>
+        <translation type="vanished">Tailles des couches du décor (pour les animations de couche)</translation>
     </message>
     <message>
         <source>Background layer flags</source>
@@ -7665,19 +7665,39 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
     </message>
     <message>
         <source>Layer 3 width</source>
-        <translation>Largeur couche 3</translation>
+        <translation type="vanished">Largeur couche 3</translation>
     </message>
     <message>
         <source>Layer 3 height</source>
-        <translation>Hauteur couche 3</translation>
+        <translation type="vanished">Hauteur couche 3</translation>
     </message>
     <message>
         <source>Layer 4 width</source>
-        <translation>Largeur couche 4</translation>
+        <translation type="vanished">Largeur couche 4</translation>
     </message>
     <message>
         <source>Layer 4 height</source>
-        <translation>Hauteur couche 4</translation>
+        <translation type="vanished">Hauteur couche 4</translation>
+    </message>
+    <message>
+        <source>BG layers alignment</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Width</source>
+        <translation type="unfinished">Largeur</translation>
+    </message>
+    <message>
+        <source>Height</source>
+        <translation type="unfinished">Hauteur</translation>
+    </message>
+    <message>
+        <source>X Multiplier</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y Multiplier</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

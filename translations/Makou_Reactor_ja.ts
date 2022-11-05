@@ -6908,10 +6908,6 @@ Are you sure you want to continue?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Unknown:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Field map scale:</source>
         <oldsource>Field scale:</oldsource>
         <translation type="unfinished">フィールド スケール :</translation>
@@ -6978,27 +6974,27 @@ Are you sure you want to continue?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Background layer sizes (for layer animations)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Background layer flags</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Layer 3 width</source>
+        <source>BG layers alignment</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Layer 3 height</source>
+        <source>Width</source>
+        <translation type="unfinished">幅</translation>
+    </message>
+    <message>
+        <source>Height</source>
+        <translation type="unfinished">高さ</translation>
+    </message>
+    <message>
+        <source>X Multiplier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Layer 4 width</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Layer 4 height</source>
+        <source>Y Multiplier</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
