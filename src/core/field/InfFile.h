@@ -128,6 +128,14 @@ public:
 	void setBgLayer4XRelated(qint16 x);
 	qint16 bgLayer4YRelated() const;
 	void setBgLayer4YRelated(qint16 y);
+	qint16 bgLayer3XMultiplierRelated() const;
+	void setBgLayer3XMultiplierRelated(qint16 x);
+	qint16 bgLayer3YMultiplierRelated() const;
+	void setBgLayer3YMultiplierRelated(qint16 y);
+	qint16 bgLayer4XMultiplierRelated() const;
+	void setBgLayer4XMultiplierRelated(qint16 x);
+	qint16 bgLayer4YMultiplierRelated() const;
+	void setBgLayer4YMultiplierRelated(qint16 y);
 	QList<Exit> exitLines() const;
 	Exit exitLine(quint8 id) const;
 	void setExitLine(quint8 id, const Exit &line);

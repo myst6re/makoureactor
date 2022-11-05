@@ -18,7 +18,6 @@
 #pragma once
 
 #include <QtWidgets>
-#include <HexLineEdit>
 #include "3d/WalkmeshWidget.h"
 #include "VertexWidget.h"
 #include "OrientationWidget.h"
@@ -54,6 +53,7 @@ private slots:
 	void setCurrentGateway(int id);
 	void setCurrentDoor(int id);
 	void setCurrentArrow(int id);
+	void setCurrentBgLayer(int id);
 	void editExitPoint(const Vertex_s &values);
 	void editEntryPoint(const Vertex_s &values);
 	void editDoorPoint(const Vertex_s &values);
@@ -74,8 +74,13 @@ private slots:
 	void editRange(int v);
 	void editExitDirection(int dir);
 	void editNavigation(int v);
+	void editBgWidth(int width);
+	void editBgHeight(int height);
+	void editBgOffsetX(int x);
+	void editBgOffsetY(int y);
+	void editBgMultiplierX(int x);
+	void editBgMultiplierY(int y);
 	void editCameraFocusHeight(int value);
-	void editUnknown(const QByteArray &data);
 	void editMapScale(int scale);
 protected:
 	virtual void focusInEvent(QFocusEvent *e) override;
@@ -87,6 +92,7 @@ private:
 	QWidget *buildDoorsPage();
 	QWidget *buildArrowPage();
 	QWidget *buildCameraRangePage();
+	QWidget *buildBackgroundPage();
 	QWidget *buildMiscPage();
 	void editCaVector(int id, const Vertex_s &values);
 	void editCaPos(int id, double value);
@@ -95,7 +101,6 @@ private:
 	void editExitPoint(int id, const Vertex_s &values);
 	void editDoorPoint(int id, const Vertex_s &values);
 	void editRange(int id, int v);
-	void editBgSize(int id, int v);
 	void editBgFlag(int id, int v);
 
 	IdFile *idFile;
@@ -134,12 +139,13 @@ private:
 	QSpinBox *bgParamId, *bgStateId, *doorBehavior, *doorSoundId;
 	VertexWidget *doorPosition[2];
 	//CameraRangePage
-	QSpinBox *rangeEdit[4], *bgSizeEdit[4], *bgFlagEdit[4];
+	QSpinBox *rangeEdit[4], *bgFlagEdit[4];
+	//BackgroundLayersPage
+	QListWidget *layerList;
+	QSpinBox *bgWidthEdit, *bgHeightEdit, *bgOffsetXEdit, *bgOffsetYEdit, *bgMultiplierXEdit, *bgMultiplierYEdit;
 	//MiscPage
 	OrientationWidget *navigation;
-	QSpinBox *navigation2, *cameraFocusHeight;
-	HexLineEdit *unknown;
-	QSpinBox *mapScale;
+	QSpinBox *navigation2, *cameraFocusHeight, *mapScale;
 
 	FieldArchive *_fieldArchive;
 };

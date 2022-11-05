@@ -63,6 +63,7 @@ WalkmeshManager::WalkmeshManager(QWidget *parent) :
 	tabWidget->addTab(buildDoorsPage(), tr("Doors"));
 	tabWidget->addTab(buildArrowPage(), tr("Arrows"));
 	tabWidget->addTab(buildCameraRangePage(), tr("Camera range"));
+	tabWidget->addTab(buildBackgroundPage(), tr("BG layers alignment"));
 	tabWidget->addTab(buildMiscPage(), tr("Miscellaneous"));
 
 	QGridLayout *layout = new QGridLayout(this);
@@ -389,14 +390,11 @@ QWidget *WalkmeshManager::buildCameraRangePage()
 	QWidget *ret = new QWidget(this);
 
 	QGroupBox *group1 = new QGroupBox(tr("Camera range"), ret);
-	QGroupBox *group2 = new QGroupBox(tr("Background layer sizes (for layer animations)"), ret);
 	QGroupBox *group3 = new QGroupBox(tr("Background layer flags"), ret);
 
 	for (int i=0; i<4; ++i) {
 		rangeEdit[i] = new QSpinBox(group1);
 		rangeEdit[i]->setRange(-32768, 32767);
-		bgSizeEdit[i] = new QSpinBox(group2);
-		bgSizeEdit[i]->setRange(-32768, 32767);
 		bgFlagEdit[i] = new QSpinBox(group3);
 		bgFlagEdit[i]->setRange(0, 255);
 	}
@@ -411,17 +409,6 @@ QWidget *WalkmeshManager::buildCameraRangePage()
 	layout1->addWidget(rangeEdit[3], 0, 7);
 	layout1->setRowStretch(1, 1);
 
-	QGridLayout *layout2 = new QGridLayout(group2);
-	layout2->addWidget(new QLabel(tr("Layer 3 width")), 0, 0);
-	layout2->addWidget(bgSizeEdit[0], 0, 1);
-	layout2->addWidget(new QLabel(tr("Layer 3 height")), 0, 2);
-	layout2->addWidget(bgSizeEdit[1], 0, 3);
-	layout2->addWidget(new QLabel(tr("Layer 4 width")), 0, 4);
-	layout2->addWidget(bgSizeEdit[2], 0, 5);
-	layout2->addWidget(new QLabel(tr("Layer 4 height")), 0, 6);
-	layout2->addWidget(bgSizeEdit[3], 0, 7);
-	layout2->setRowStretch(1, 1);
-
 	QGridLayout *layout3 = new QGridLayout(group3);
 	layout3->addWidget(new QLabel(tr("Layer 1")), 0, 0);
 	layout3->addWidget(bgFlagEdit[0], 0, 1);
@@ -435,15 +422,66 @@ QWidget *WalkmeshManager::buildCameraRangePage()
 
 	QVBoxLayout *layout = new QVBoxLayout(ret);
 	layout->addWidget(group1);
-	layout->addWidget(group2);
 	layout->addWidget(group3);
-	//layout->addStretch();
+	layout->addStretch();
 
 	for (int i=0; i<4; ++i) {
 		connect(rangeEdit[i], &QSpinBox::valueChanged, this, qOverload<int>(&WalkmeshManager::editRange));
-		connect(bgSizeEdit[i], &QSpinBox::valueChanged, this, qOverload<int>(&WalkmeshManager::editRange));
 		connect(bgFlagEdit[i], &QSpinBox::valueChanged, this, qOverload<int>(&WalkmeshManager::editRange));
 	}
+
+	return ret;
+}
+
+QWidget *WalkmeshManager::buildBackgroundPage()
+{
+	QWidget *ret = new QWidget(this);
+	
+	layerList = new QListWidget(ret);
+	layerList->setFixedWidth(125);
+	layerList->addItems(QStringList() << tr("Layer 3") << tr("Layer 4"));
+
+	bgWidthEdit = new QSpinBox(ret);
+	bgWidthEdit->setRange(-32767, 32767);
+
+	bgHeightEdit = new QSpinBox(ret);
+	bgHeightEdit->setRange(-32767, 32767);
+
+	bgOffsetXEdit = new QSpinBox(ret);
+	bgOffsetXEdit->setRange(-32767, 32767);
+
+	bgOffsetYEdit = new QSpinBox(ret);
+	bgOffsetYEdit->setRange(-32767, 32767);
+
+	bgMultiplierXEdit = new QSpinBox(ret);
+	bgMultiplierXEdit->setRange(-32767, 32767);
+
+	bgMultiplierYEdit = new QSpinBox(ret);
+	bgMultiplierYEdit->setRange(-32767, 32767);
+
+	QGridLayout *layout = new QGridLayout(ret);
+	layout->addWidget(layerList, 0, 0, 6, 1, Qt::AlignLeft);
+	layout->addWidget(new QLabel(tr("Width")), 0, 1, 1, 1);
+	layout->addWidget(bgWidthEdit, 0, 2, 1, 1);
+	layout->addWidget(new QLabel(tr("Height")), 0, 3, 1, 1);
+	layout->addWidget(bgHeightEdit, 0, 4, 1, 1);
+	layout->addWidget(new QLabel(tr("X")), 1, 1, 1, 1);
+	layout->addWidget(bgOffsetXEdit, 1, 2, 1, 1);
+	layout->addWidget(new QLabel(tr("Y")), 1, 3, 1, 1);
+	layout->addWidget(bgOffsetYEdit, 1, 4, 1, 1);
+	layout->addWidget(new QLabel(tr("X Multiplier")), 2, 1, 1, 1);
+	layout->addWidget(bgMultiplierXEdit, 2, 2, 1, 1);
+	layout->addWidget(new QLabel(tr("Y Multiplier")), 2, 3, 1, 1);
+	layout->addWidget(bgMultiplierYEdit, 2, 4, 1, 1);
+	layout->setRowStretch(3, 1);
+
+	connect(layerList, &QListWidget::currentRowChanged, this, &WalkmeshManager::setCurrentBgLayer);
+	connect(bgWidthEdit, &QSpinBox::valueChanged, this, &WalkmeshManager::editBgWidth);
+	connect(bgHeightEdit, &QSpinBox::valueChanged, this, &WalkmeshManager::editBgHeight);
+	connect(bgOffsetXEdit, &QSpinBox::valueChanged, this, &WalkmeshManager::editBgOffsetX);
+	connect(bgOffsetYEdit, &QSpinBox::valueChanged, this, &WalkmeshManager::editBgOffsetY);
+	connect(bgMultiplierXEdit, &QSpinBox::valueChanged, this, &WalkmeshManager::editBgMultiplierX);
+	connect(bgMultiplierYEdit, &QSpinBox::valueChanged, this, &WalkmeshManager::editBgMultiplierY);
 
 	return ret;
 }
@@ -460,8 +498,6 @@ QWidget *WalkmeshManager::buildMiscPage()
 	cameraFocusHeight = new QSpinBox(ret);
 	cameraFocusHeight->setRange(-32768, 32767);
 
-	unknown = new HexLineEdit(ret);
-
 	mapScale = new QSpinBox(this);
 	mapScale->setRange(0, 65535);
 
@@ -471,16 +507,13 @@ QWidget *WalkmeshManager::buildMiscPage()
 	layout->addWidget(navigation2, 0, 2);
 	layout->addWidget(new QLabel(tr("Camera Focus Height on the playable character:")), 1, 0);
 	layout->addWidget(cameraFocusHeight, 1, 1, 1, 2);
-	layout->addWidget(new QLabel(tr("Unknown:")), 2, 0);
-	layout->addWidget(unknown, 2, 1, 1, 2);
-	layout->addWidget(new QLabel(tr("Field map scale:")), 3, 0);
-	layout->addWidget(mapScale, 3, 1, 1, 2);
-	layout->setRowStretch(4, 1);
+	layout->addWidget(new QLabel(tr("Field map scale:")), 2, 0);
+	layout->addWidget(mapScale, 2, 1, 1, 2);
+	layout->setRowStretch(3, 1);
 
 	connect(navigation, &OrientationWidget::valueEdited, navigation2, &QSpinBox::setValue);
 	connect(navigation2, &QSpinBox::valueChanged, this, &WalkmeshManager::editNavigation);
 	connect(cameraFocusHeight, &QSpinBox::valueChanged, this, &WalkmeshManager::editCameraFocusHeight);
-	connect(unknown, &HexLineEdit::dataEdited, this, &WalkmeshManager::editUnknown);
 	connect(mapScale, &QSpinBox::valueChanged, this, &WalkmeshManager::editMapScale);
 
 	return ret;
@@ -605,26 +638,22 @@ void WalkmeshManager::fill(FieldArchive *fieldArchive, Field *field, bool reload
 		rangeEdit[2]->setValue(range1.right);
 		rangeEdit[3]->setValue(range1.left);
 
-		bgSizeEdit[0]->setValue(infFile->bgLayer3Width());
-		bgSizeEdit[1]->setValue(infFile->bgLayer3Height());
-		bgSizeEdit[2]->setValue(infFile->bgLayer4Width());
-		bgSizeEdit[3]->setValue(infFile->bgLayer4Height());
-
 		bgFlagEdit[0]->setValue(infFile->bgLayer1Flag());
 		bgFlagEdit[1]->setValue(infFile->bgLayer2Flag());
 		bgFlagEdit[2]->setValue(infFile->bgLayer3Flag());
 		bgFlagEdit[3]->setValue(infFile->bgLayer4Flag());
 
+		layerList->setCurrentRow(0);
+		setCurrentBgLayer(0);
+
 		navigation->setValue(infFile->control());
 		navigation2->setValue(infFile->control());
 
 		cameraFocusHeight->setValue(infFile->cameraFocusHeight());
-		unknown->setData(infFile->unknown());
 	}
 	navigation->setEnabled(infFile->isOpen());
 	navigation2->setEnabled(infFile->isOpen());
 	cameraFocusHeight->setEnabled(infFile->isOpen());
-	unknown->setEnabled(infFile->isOpen());
 
 	if (scriptsAndTexts->isOpen()) {
 		mapScale->setValue(scriptsAndTexts->scale());
@@ -1071,6 +1100,20 @@ void WalkmeshManager::setCurrentArrow(int id)
 	}
 }
 
+void WalkmeshManager::setCurrentBgLayer(int id)
+{
+	if (!infFile->isOpen() || id < 0 || id >= 2) {
+		return;
+	}
+
+	bgWidthEdit->setValue(id ? infFile->bgLayer4Width() : infFile->bgLayer3Width());
+	bgHeightEdit->setValue(id ? infFile->bgLayer4Height() : infFile->bgLayer3Height());
+	bgOffsetXEdit->setValue(id ? infFile->bgLayer4XRelated() : infFile->bgLayer3XRelated());
+	bgOffsetYEdit->setValue(id ? infFile->bgLayer4YRelated() : infFile->bgLayer3YRelated());
+	bgMultiplierXEdit->setValue(id ? infFile->bgLayer4XMultiplierRelated() : infFile->bgLayer3XMultiplierRelated());
+	bgMultiplierYEdit->setValue(id ? infFile->bgLayer4YMultiplierRelated() : infFile->bgLayer3YMultiplierRelated());
+}
+
 void WalkmeshManager::editExitPoint(const Vertex_s &values)
 {
 	QObject *s = sender();
@@ -1406,14 +1449,6 @@ void WalkmeshManager::editRange(int v)
 		editRange(2, v);
 	} else if (s == rangeEdit[3]) {
 		editRange(3, v);
-	} else if (s == bgSizeEdit[0]) {
-		editBgSize(0, v);
-	} else if (s == bgSizeEdit[1]) {
-		editBgSize(1, v);
-	} else if (s == bgSizeEdit[2]) {
-		editBgSize(2, v);
-	} else if (s == bgSizeEdit[3]) {
-		editBgSize(3, v);
 	} else if (s == bgFlagEdit[0]) {
 		editBgFlag(0, v);
 	} else if (s == bgFlagEdit[1]) {
@@ -1468,46 +1503,6 @@ void WalkmeshManager::editRange(int id, int v)
 	}
 }
 
-void WalkmeshManager::editBgSize(int id, int v)
-{
-	if (infFile->isOpen()) {
-		qint16 oldv = 0;
-
-		switch (id) {
-		case 0:
-			oldv = infFile->bgLayer3Width();
-			break;
-		case 1:
-			oldv = infFile->bgLayer3Height();
-			break;
-		case 2:
-			oldv = infFile->bgLayer4Width();
-			break;
-		case 3:
-			oldv = infFile->bgLayer4Height();
-			break;
-		}
-
-		if (oldv != v) {
-			switch (id) {
-			case 0:
-				infFile->setBgLayer3Width(qint16(v));
-				break;
-			case 1:
-				infFile->setBgLayer3Height(qint16(v));
-				break;
-			case 2:
-				infFile->setBgLayer4Width(qint16(v));
-				break;
-			case 3:
-				infFile->setBgLayer4Height(qint16(v));
-				break;
-			}
-
-			emit modified();
-		}
-	}
-}
 
 void WalkmeshManager::editBgFlag(int id, int v)
 {
@@ -1563,24 +1558,120 @@ void WalkmeshManager::editNavigation(int v)
 	}
 }
 
-void WalkmeshManager::editCameraFocusHeight(int value)
+void WalkmeshManager::editBgWidth(int width)
 {
+	int id = layerList->currentRow();
+
 	if (infFile->isOpen()) {
-		int old = infFile->cameraFocusHeight();
-		if (old != value) {
-			infFile->setCameraFocusHeight(qint16(value));
+		int old = id ? infFile->bgLayer4Width() : infFile->bgLayer3Width();
+		if (old != width) {
+			if (id) {
+				infFile->setBgLayer4Width(qint16(width));
+			} else {
+				infFile->setBgLayer3Width(qint16(width));
+			}
 
 			emit modified();
 		}
 	}
 }
 
-void WalkmeshManager::editUnknown(const QByteArray &data)
+void WalkmeshManager::editBgHeight(int height)
+{
+	int id = layerList->currentRow();
+
+	if (infFile->isOpen()) {
+		int old = id ? infFile->bgLayer4Height() : infFile->bgLayer3Height();
+		if (old != height) {
+			if (id) {
+				infFile->setBgLayer4Height(qint16(height));
+			} else {
+				infFile->setBgLayer3Height(qint16(height));
+			}
+
+			emit modified();
+		}
+	}
+}
+
+void WalkmeshManager::editBgOffsetX(int x)
+{
+	int id = layerList->currentRow();
+
+	if (infFile->isOpen()) {
+		int old = id ? infFile->bgLayer4XRelated() : infFile->bgLayer3XRelated();
+		if (old != x) {
+			if (id) {
+				infFile->setBgLayer4XRelated(qint16(x));
+			} else {
+				infFile->setBgLayer3XRelated(qint16(x));
+			}
+
+			emit modified();
+		}
+	}
+}
+
+void WalkmeshManager::editBgOffsetY(int y)
+{
+	int id = layerList->currentRow();
+
+	if (infFile->isOpen()) {
+		int old = id ? infFile->bgLayer4YRelated() : infFile->bgLayer3YRelated();
+		if (old != y) {
+			if (id) {
+				infFile->setBgLayer4YRelated(qint16(y));
+			} else {
+				infFile->setBgLayer3YRelated(qint16(y));
+			}
+
+			emit modified();
+		}
+	}
+}
+
+void WalkmeshManager::editBgMultiplierX(int x)
+{
+	int id = layerList->currentRow();
+
+	if (infFile->isOpen()) {
+		int old = id ? infFile->bgLayer4XMultiplierRelated() : infFile->bgLayer3XMultiplierRelated();
+		if (old != x) {
+			if (id) {
+				infFile->setBgLayer4XMultiplierRelated(qint16(x));
+			} else {
+				infFile->setBgLayer3XMultiplierRelated(qint16(x));
+			}
+
+			emit modified();
+		}
+	}
+}
+
+void WalkmeshManager::editBgMultiplierY(int y)
+{
+	int id = layerList->currentRow();
+
+	if (infFile->isOpen()) {
+		int old = id ? infFile->bgLayer4YMultiplierRelated() : infFile->bgLayer3YMultiplierRelated();
+		if (old != y) {
+			if (id) {
+				infFile->setBgLayer4YMultiplierRelated(qint16(y));
+			} else {
+				infFile->setBgLayer3YMultiplierRelated(qint16(y));
+			}
+
+			emit modified();
+		}
+	}
+}
+
+void WalkmeshManager::editCameraFocusHeight(int value)
 {
 	if (infFile->isOpen()) {
-		QByteArray old = infFile->unknown();
-		if (old != data) {
-			infFile->setUnknown(data);
+		int old = infFile->cameraFocusHeight();
+		if (old != value) {
+			infFile->setCameraFocusHeight(qint16(value));
 
 			emit modified();
 		}
