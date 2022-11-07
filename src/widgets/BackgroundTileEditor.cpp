@@ -300,6 +300,10 @@ void BackgroundTileEditor::createTile()
 
 void BackgroundTileEditor::updateBgParam(int value)
 {
+	if (value < 0) {
+		return;
+	}
+
 	quint8 bgParam = quint8(value);
 
 	for (Tile &tile: _tiles) {
@@ -315,6 +319,10 @@ void BackgroundTileEditor::updateBgParam(int value)
 
 void BackgroundTileEditor::updateBgState(int value)
 {
+	if (value < 0) {
+		return;
+	}
+
 	quint8 bgState = quint8(value);
 
 	for (Tile &tile: _tiles) {
@@ -338,6 +346,10 @@ void BackgroundTileEditor::updateBgParamEnabled(bool enabled)
 
 void BackgroundTileEditor::updatePaletteId(int value)
 {
+	if (value < 0) {
+		return;
+	}
+
 	quint8 paletteId = quint8(value);
 
 	for (Tile &tile: _tiles) {
@@ -358,6 +370,10 @@ void BackgroundTileEditor::updatePaletteId(int value)
 
 void BackgroundTileEditor::updateDepth(int value)
 {
+	if (value < 0) {
+		return;
+	}
+
 	quint16 depth = quint16(value);
 
 	for (Tile &tile: _tiles) {

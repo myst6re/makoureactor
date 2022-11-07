@@ -316,6 +316,9 @@ void Window::closeEvent(QCloseEvent *event)
 		if (_walkmeshManager) {
 			_walkmeshManager->saveConfig();
 		}
+		if (_backgroundManager) {
+			_backgroundManager->saveConfig();
+		}
 		Config::flush();
 		event->accept();
 	}

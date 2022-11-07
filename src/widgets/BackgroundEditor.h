@@ -31,6 +31,7 @@ public:
 	explicit BackgroundEditor(QWidget *parent = nullptr);
 	void setBackgroundFile(BackgroundFile *backgroundFile);
 	void clear();
+	void saveConfig();
 signals:
 	void modified();
 protected:
@@ -59,6 +60,7 @@ private:
 	static QPoint backgroundPositionFromTile(const QPoint &cell, quint8 cellSize);
 	static QPoint tilePositionFromCell(const QPoint &cell, quint8 cellSize, const QPoint &shift);
 
+	QSplitter *_topBottomSplitter;
 	QComboBox *_layersComboBox;
 	QTreeWidget *_sectionsList;
 	QSpinBox *_shiftX, *_shiftY;

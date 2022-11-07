@@ -30,6 +30,7 @@ public:
 	explicit BGDialog(QWidget *parent);
 	void fill(Field *field, bool reload = false);
 	void clear();
+	void saveConfig();
 signals:
 	void modified();
 private slots:
@@ -67,6 +68,7 @@ private:
 	bool layers[4];
 	qint16 x[3], y[3], z[3];
 protected:
+	void showEvent(QShowEvent *event) override;
 	bool eventFilter(QObject *, QEvent *) override;
 	void resizeEvent(QResizeEvent*) override;
 };

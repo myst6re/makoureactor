@@ -100,6 +100,16 @@ BGDialog::BGDialog(QWidget *parent) :
 	connect(tabBar, &QTabBar::currentChanged, this, &BGDialog::showLayersPage);
 	connect(editorPage, &BackgroundEditor::modified, this, &BGDialog::updateBG);
 	connect(editorPage, &BackgroundEditor::modified, this, &BGDialog::modified);
+
+	if (Config::value("backgroundEditorSize").toSize() != QSize(0, 0)) {
+		resize(Config::value("backgroundEditorSize").toSize());
+	}
+}
+
+void BGDialog::saveConfig()
+{
+	Config::setValue("backgroundEditorSize", size());
+	editorPage->saveConfig();
 }
 
 void BGDialog::fill(Field *field, bool reload)
@@ -428,6 +438,13 @@ void BGDialog::updateBG()
 	}
 
 	buttonRepair->setVisible(bgWarning);
+}
+
+void BGDialog::showEvent(QShowEvent *event)
+{
+	QDialog::showEvent(event);
+
+	updateBG();
 }
 
 void BGDialog::resizeEvent(QResizeEvent *event)

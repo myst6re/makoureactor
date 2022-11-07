@@ -20,6 +20,7 @@
 #include "core/field/BackgroundFilePC.h"
 #include "core/field/BackgroundTilesIO.h"
 #include "core/field/Field.h"
+#include "core/Config.h"
 
 BackgroundEditor::BackgroundEditor(QWidget *parent)
     : QWidget(parent), _backgroundFile(nullptr)
@@ -87,17 +88,18 @@ BackgroundEditor::BackgroundEditor(QWidget *parent)
 	bottomRowLayout->addWidget(_palettesWidget);
 	bottomRowLayout->setContentsMargins(QMargins(0, bottomRowLayout->contentsMargins().top(), 0, 0));
 
-	QSplitter *topBottomSplitter = new QSplitter(Qt::Vertical, this);
-	topBottomSplitter->addWidget(topRow);
-	topBottomSplitter->addWidget(bottomRow);
-	topBottomSplitter->setStretchFactor(0, 10);
-	topBottomSplitter->setStretchFactor(1, 2);
-	topBottomSplitter->setCollapsible(0, false);
+	_topBottomSplitter = new QSplitter(Qt::Vertical, this);
+	_topBottomSplitter->addWidget(topRow);
+	_topBottomSplitter->addWidget(bottomRow);
+	_topBottomSplitter->setStretchFactor(0, 10);
+	_topBottomSplitter->setStretchFactor(1, 2);
+	_topBottomSplitter->setCollapsible(0, false);
+	_topBottomSplitter->restoreState(Config::value("backgroundEditorHorizontalSplitterState").toByteArray());
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(_layersComboBox, 0, 0);
 	layout->addWidget(_sectionsList, 1, 0);
-	layout->addWidget(topBottomSplitter, 0, 1, 2, 1);
+	layout->addWidget(_topBottomSplitter, 0, 1, 2, 1);
 	layout->setColumnStretch(1, 2);
 
 	connect(_layersComboBox, &QComboBox::currentIndexChanged, this, &BackgroundEditor::updateCurrentLayer);
@@ -106,6 +108,11 @@ BackgroundEditor::BackgroundEditor(QWidget *parent)
 	connect(_texturesWidget, &ImageGridWidget::clicked, this, &BackgroundEditor::updateSelectedTileTexture);
 	connect(_backgroundTileEditor, &BackgroundTileEditor::changed, this, &BackgroundEditor::updateTiles);
 	connect(_backgroundTileEditor, &BackgroundTileEditor::changed, this, &BackgroundEditor::modified);
+}
+
+void BackgroundEditor::saveConfig()
+{
+	Config::setValue("backgroundEditorHorizontalSplitterState", _topBottomSplitter->saveState());
 }
 
 void BackgroundEditor::addTopLevelItem(const QString &name, LayerSubType subType)
@@ -389,7 +396,7 @@ QPoint BackgroundEditor::backgroundPositionFromTile(const QPoint &tile, quint8 c
 
 QPoint BackgroundEditor::tilePositionFromCell(const QPoint &cell, quint8 cellSize, const QPoint &shift)
 {
-	return cell * cellSize - QPoint(MAX_TILE_DST, MAX_TILE_DST) + shift;
+	return cell * cellSize - QPoint(MAX_TILE_DST, MAX_TILE_DST) - shift;
 }
 
 void BackgroundEditor::refreshImage(int layer, int section, ParamState paramState, const QList<quint16> &effectTileIds)
