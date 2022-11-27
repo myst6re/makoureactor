@@ -45,6 +45,26 @@ struct TilePC {
 	quint32 IDBig;
 };
 
+//Sizeof : 16
+struct HeaderLayer2TilePC {
+	quint16 firstPalettedTextureId;
+	quint16 nextPalettedTextureId;
+	quint16 firstPalettedBlendingTypeTrans;
+	quint16 nextPalettedBlendingTypeTrans;
+	quint16 firstDirectColorTextureId;
+	quint16 nextDirectColorTextureId;
+	quint16 firstDirectColorBlendingTypeTrans;
+	quint16 nextDirectColorBlendingTypeTrans;
+};
+
+//Sizeof : 10
+struct HeaderLayer4TilePC {
+	quint16 firstPalettedBlending;
+	quint16 nextPalettedBlending;
+	quint16 firstDirectColorBlending;
+	quint16 nextDirectColorBlending;
+};
+
 //Sizeof : 8
 struct layer1Tile {
 	qint16 dstX, dstY;

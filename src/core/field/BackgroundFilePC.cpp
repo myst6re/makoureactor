@@ -224,16 +224,19 @@ bool BackgroundFilePC::addTile(Tile &tile, const QImage &image)
 		return false;
 	}
 
+	tile.textureID = unusedSpace.texID;
+	tile.srcX = unusedSpace.x;
+	tile.srcY = unusedSpace.y;
+
 	if (unusedSpace.needsToCreateTex) {
 		BackgroundTexturesPCInfos texInfos;
 		texInfos.depth = tile.depth;
 		texInfos.size = tile.size;
 		textures()->setTex(unusedSpace.texID, QList<uint>(256 * 256), texInfos);
+	} else {
+		// Ensure black or first palette index
+		textures()->setTile(tile, QList<uint>(tile.size * tile.size));
 	}
-
-	tile.textureID = unusedSpace.texID;
-	tile.srcX = unusedSpace.x;
-	tile.srcY = unusedSpace.y;
 
 	return BackgroundFile::addTile(tile, image);
 }

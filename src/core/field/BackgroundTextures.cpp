@@ -366,10 +366,8 @@ UnusedSpaceInTexturePC BackgroundTexturesPC::findFirstUnusedSpaceInTextures(cons
 		}
 	}
 
-	if (ret.texID == 0) {
-		if (!_texInfos.isEmpty()) {
-			ret.texID = _texInfos.lastKey() + 1;
-		}
+	if (ret.texID == 0 && !_texInfos.isEmpty()) {
+		ret.texID = _texInfos.lastKey() + 1;
 	}
 
 	return ret;
