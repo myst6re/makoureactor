@@ -21,6 +21,8 @@
 #include <IO>
 #include "BackgroundFile.h"
 
+class InfFile;
+
 class BackgroundIO : public IO
 {
 public:
@@ -34,7 +36,7 @@ public:
 class BackgroundIOPC : public BackgroundIO
 {
 public:
-	explicit BackgroundIOPC(QIODevice *device, QIODevice *devicePal);
+	explicit BackgroundIOPC(QIODevice *device, QIODevice *devicePal, InfFile *infFile);
 
 	inline void setDevicePal(QIODevice *device) {
 		_devicePal = device;
@@ -54,6 +56,7 @@ private:
 	bool openTiles(BackgroundTiles &tiles) const;
 	bool openTextures(BackgroundTexturesPC &textures) const;
 	QIODevice *_devicePal;
+	InfFile *_infFile;
 };
 
 class BackgroundIOPS : public BackgroundIO

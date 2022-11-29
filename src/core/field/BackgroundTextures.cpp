@@ -185,9 +185,9 @@ quint8 BackgroundTexturesPC::texDepth(quint8 texID) const
 	return _texInfos.value(texID).depth;
 }
 
-quint8 BackgroundTexturesPC::texTileSize(quint8 texID) const
+quint8 BackgroundTexturesPC::texTileIsBig(quint8 texID) const
 {
-	return _texInfos.value(texID).size;
+	return _texInfos.value(texID).isBigTile;
 }
 
 BackgroundTexturesPCInfos BackgroundTexturesPC::texInfos(quint8 texID) const
@@ -719,7 +719,7 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 		const Tile &representativeTile = texture.first().tile;
 
 		info.depth = qMin(representativeTile.depth, quint8(1));
-		info.size = representativeTile.size == 32; // 0 = 16, 1 = 32
+		info.isBigTile = representativeTile.size == 32; // 0 = 16, 1 = 32
 
 		if (info.depth < 2) {
 

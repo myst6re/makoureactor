@@ -21,6 +21,9 @@
 #include <IO>
 #include "BackgroundTiles.h"
 
+class InfFile;
+class Palette;
+
 #define MAX_TILE_DST 1024
 
 //Sizeof : 36
@@ -37,7 +40,7 @@ struct TilePC {
 	quint8 param;
 	quint8 state;
 	quint8 blending; // boolean
-	quint8 unused7;
+	quint8 unknown7;
 	quint8 typeTrans, unused8;
 	quint8 textureID, unused9;
 	quint8 textureID2, unused10; // if blending > 0, textureID2 is used instead of textureID except for layer 0
@@ -47,22 +50,22 @@ struct TilePC {
 
 //Sizeof : 16
 struct HeaderLayer2TilePC {
-	quint16 firstPalettedTextureId;
-	quint16 nextPalettedTextureId;
+	quint16 firstPalettedTextureId; // Unused
+	quint16 nextPalettedTextureId; // Unused
 	quint16 firstPalettedBlendingTypeTrans;
 	quint16 nextPalettedBlendingTypeTrans;
-	quint16 firstDirectColorTextureId;
-	quint16 nextDirectColorTextureId;
-	quint16 firstDirectColorBlendingTypeTrans;
-	quint16 nextDirectColorBlendingTypeTrans;
+	quint16 firstDirectColorTextureId; // Unused
+	quint16 nextDirectColorTextureId; // Unused
+	quint16 firstDirectColorBlendingTypeTrans; // Unused
+	quint16 nextDirectColorBlendingTypeTrans; // Unused
 };
 
 //Sizeof : 10
 struct HeaderLayer4TilePC {
 	quint16 firstPalettedBlending;
 	quint16 nextPalettedBlending;
-	quint16 firstDirectColorBlending;
-	quint16 nextDirectColorBlending;
+	quint16 firstDirectColorBlending; // Unused
+	quint16 nextDirectColorBlending; // Unused
 };
 
 //Sizeof : 8
@@ -110,7 +113,7 @@ protected:
 class BackgroundTilesIOPC : public BackgroundTilesIO
 {
 public:
-	explicit BackgroundTilesIOPC(QIODevice *device);
+	explicit BackgroundTilesIOPC(QIODevice *device, InfFile *inf, const QList<Palette *> &palettes);
 protected:
 	bool readData(BackgroundTiles &tiles) const override;
 	bool writeData(const BackgroundTiles &tiles) const override;
@@ -118,6 +121,8 @@ private:
 	bool writeTile(const Tile &tile) const;
 	static Tile tilePC2Tile(const TilePC &tile, quint8 layerID, quint16 tileID);
 	static TilePC tile2TilePC(const Tile &tile);
+	InfFile *_inf;
+	const QList<Palette *> &_palettes;
 };
 
 class BackgroundTilesIOPS : public BackgroundTilesIO

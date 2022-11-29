@@ -79,6 +79,7 @@ private:
 	bool modelsVisible, backgroundVisible;
 	Renderer *gpuRenderer;
 	QMatrix4x4 mProjection;
+	QImage tex;
 
 protected:
 	virtual void initializeGL() override;

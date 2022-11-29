@@ -47,7 +47,7 @@ void BackgroundFilePC::initEmpty()
 	BackgroundTexturesPC *textures = new BackgroundTexturesPC();
 	BackgroundTexturesPCInfos infos;
 	infos.pos = 0;
-	infos.size = 0; // 16x16 tiles
+	infos.isBigTile = 0; // 16x16 tiles
 	infos.depth = 2; // No palettes
 	// Black
 	textures->setTex(0, QList<uint>(256 * 256, qRgb(0, 0, 0)).toList(), infos);
@@ -97,7 +97,7 @@ bool BackgroundFilePC::open(const QByteArray &data, const QByteArray &palData)
 	buff.setData(data);
 	palBuff.setData(palData);
 
-	BackgroundIOPC io(&buff, &palBuff);
+	BackgroundIOPC io(&buff, &palBuff, nullptr);
 	if (!io.read(*this)) {
 		return false;
 	}
@@ -111,7 +111,7 @@ QByteArray BackgroundFilePC::save() const
 {
 	QBuffer buff, palBuff;
 
-	BackgroundIOPC io(&buff, &palBuff);
+	BackgroundIOPC io(&buff, &palBuff, field()->inf());
 	if (!io.write(*this)) {
 		return QByteArray();
 	}
@@ -231,7 +231,7 @@ bool BackgroundFilePC::addTile(Tile &tile, const QImage &image)
 	if (unusedSpace.needsToCreateTex) {
 		BackgroundTexturesPCInfos texInfos;
 		texInfos.depth = tile.depth;
-		texInfos.size = tile.size;
+		texInfos.isBigTile = tile.size == 32;
 		textures()->setTex(unusedSpace.texID, QList<uint>(256 * 256), texInfos);
 	} else {
 		// Ensure black or first palette index
@@ -243,19 +243,19 @@ bool BackgroundFilePC::addTile(Tile &tile, const QImage &image)
 
 struct BackgroundTexturePCInfosAndColors
 {
-	BackgroundTexturePCInfosAndColors(quint32 pos, quint8 depth, quint8 size) :
-	    indexesOrColors(256 * 256), pos(pos), srcX(0), srcY(0), depth(depth), size(size) {}
+	BackgroundTexturePCInfosAndColors(quint32 pos, quint8 depth, quint8 isBigTile) :
+	    indexesOrColors(256 * 256), pos(pos), srcX(0), srcY(0), depth(depth), isBigTile(isBigTile) {}
 	BackgroundTexturesPCInfos infos() const {
 		BackgroundTexturesPCInfos ret;
 		ret.pos = pos;
 		ret.depth = depth;
-		ret.size = size;
+		ret.isBigTile = isBigTile;
 		return ret;
 	}
 	QList<uint> indexesOrColors;
 	quint32 pos;
 	quint16 srcX, srcY;
-	quint8 depth, size;
+	quint8 depth, isBigTile;
 };
 
 bool BackgroundFilePC::compile()
@@ -270,7 +270,7 @@ bool BackgroundFilePC::compile()
 
 		if (texs[group].isEmpty() || texs[group].last().srcY >= 256) {
 			qDebug() << "BackgroundFilePC::compile" << "create Texture for group" << group << textureDataPos << tile.depth << tile.size << tile.blending << tile.typeTrans;
-			texs[group].append(BackgroundTexturePCInfosAndColors(textureDataPos, tile.depth, tile.size));
+			texs[group].append(BackgroundTexturePCInfosAndColors(textureDataPos, tile.depth, tile.size == 32));
 			textureDataPos += (tile.depth <= 1 ? 1 : 2) * 256 * 256;
 		}
 
@@ -323,7 +323,7 @@ bool BackgroundFilePC::compile()
 				// At this point we don't care if it is a good texture number, we use what's remain
 				texID = unusedTextureIds.takeFirst();
 			}
-			qDebug() << "BackgroundFilePC::compile" << "set tex" << texID << textureInfAndCol.infos().depth << textureInfAndCol.infos().size << textureInfAndCol.infos().pos;
+			qDebug() << "BackgroundFilePC::compile" << "set tex" << texID << textureInfAndCol.infos().depth << textureInfAndCol.infos().isBigTile << textureInfAndCol.infos().pos;
 			newTextures->setTex(texID, textureInfAndCol.indexesOrColors, textureInfAndCol.infos());
 			textureInfAndCol.pos = texID;
 			++texID;

@@ -399,7 +399,7 @@ bool BackgroundTiles::remove(const Tile &tile)
 		it.next();
 		const Tile &t = it.value();
 
-		if (t.tileID == tile.tileID) {
+		if (t.layerID == tile.layerID && t.tileID == tile.tileID) {
 			it.remove();
 
 			return true;

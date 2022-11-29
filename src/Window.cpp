@@ -517,10 +517,10 @@ void Window::openFile(const QString &path)
 				filePath.append("/field");
 		}
 		QStringList filter;
-		filter.append(tr("Compatible Files (*.lgp *.DAT *.bin *.iso *.img)"));
+		filter.append(tr("Compatible Files (*.lgp *.DAT *.bin *.iso *.img *.lzs *.dec)"));
 		filter.append(tr("Lgp Files (*.lgp)"));
 		filter.append(tr("DAT File (*.DAT)"));
-		filter.append(tr("PC field File (*)"));
+		filter.append(tr("PC field File (* *.lzs *.dec)"));
 		filter.append(tr("Disc Image (*.bin *.iso *.img)"));
 
 		QString selectedFilter = filter.value(Config::value("open_path_selected_filter").toInt(), filter.first());
@@ -1237,7 +1237,7 @@ void Window::exportCurrentMap()
 	}
 
 	QString types, name, selectedFilter,
-			fieldLzs = tr("PC Field Map (*)"),
+			fieldLzs = tr("PC Field Map (* *.lzs)"),
 			dat = tr("Data DAT File (*.DAT)"),
 			mim = tr("Textures MIM File (*.MIM)"),
 			fieldDec = tr("Uncompressed PC Field Map (*.dec)");

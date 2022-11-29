@@ -16,6 +16,8 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "BackgroundTilesIO.h"
+#include "InfFile.h"
+#include "Palette.h"
 
 BackgroundTilesIO::BackgroundTilesIO(QIODevice *device) :
 	IO(device)
@@ -46,8 +48,8 @@ bool BackgroundTilesIO::write(const BackgroundTiles &tiles) const
 	return writeData(tiles);
 }
 
-BackgroundTilesIOPC::BackgroundTilesIOPC(QIODevice *device) :
-	BackgroundTilesIO(device)
+BackgroundTilesIOPC::BackgroundTilesIOPC(QIODevice *device, InfFile *inf, const QList<Palette *> &palettes) :
+      BackgroundTilesIO(device), _inf(inf), _palettes(palettes)
 {
 }
 
@@ -276,15 +278,12 @@ bool BackgroundTilesIOPC::writeTile(const Tile &tile) const
 
 bool BackgroundTilesIOPC::writeData(const BackgroundTiles &tiles) const
 {
-	quint16 nbTiles, depth = 1;
+	quint16 nbTiles, depth = _palettes.isEmpty() ? 2 : _palettes.first()->size() > 16;
 	int w, h;
 
 	// Layer 1
-
-	QSize size = tiles.rect().size();
-
-	w = size.width() + 16;
-	h = size.height() + 16;
+	w = _inf->cameraRange().right - _inf->cameraRange().left + 16;
+	h = _inf->cameraRange().bottom - _inf->cameraRange().top + 16;
 
 	BackgroundTiles tiles1 = tiles.tiles(0, true);
 	nbTiles = tiles1.size();
@@ -311,7 +310,7 @@ bool BackgroundTilesIOPC::writeData(const BackgroundTiles &tiles) const
 	if (!tiles2.isEmpty()) {
 		nbTiles = tiles2.size();
 
-		device()->putChar('\x01');
+		device()->putChar('\x01'); // Enabled
 		device()->write((char *)&w, 2);
 		device()->write((char *)&h, 2);
 		device()->write((char *)&nbTiles, 2);
@@ -324,7 +323,7 @@ bool BackgroundTilesIOPC::writeData(const BackgroundTiles &tiles) const
 
 		device()->write("\0\0", 2);
 	} else {
-		device()->putChar('\0');
+		device()->putChar('\0'); // Disabled
 	}
 
 	// Layer 3
@@ -334,7 +333,7 @@ bool BackgroundTilesIOPC::writeData(const BackgroundTiles &tiles) const
 	if (!tiles3.isEmpty()) {
 		nbTiles = tiles3.size();
 
-		device()->putChar('\x01');
+		device()->putChar('\x01'); // Enabled
 		device()->write((char *)&w, 2);
 		device()->write((char *)&h, 2);
 		device()->write((char *)&nbTiles, 2);
@@ -347,7 +346,7 @@ bool BackgroundTilesIOPC::writeData(const BackgroundTiles &tiles) const
 
 		device()->write("\0\0", 2);
 	} else {
-		device()->putChar('\0');
+		device()->putChar('\0'); // Disabled
 	}
 
 	// Layer 4
@@ -357,7 +356,7 @@ bool BackgroundTilesIOPC::writeData(const BackgroundTiles &tiles) const
 	if (!tiles4.isEmpty()) {
 		nbTiles = tiles4.size();
 
-		device()->putChar('\x01');
+		device()->putChar('\x01'); // Enabled
 		device()->write((char *)&w, 2);
 		device()->write((char *)&h, 2);
 		device()->write((char *)&nbTiles, 2);
@@ -370,7 +369,7 @@ bool BackgroundTilesIOPC::writeData(const BackgroundTiles &tiles) const
 
 		device()->write("\0\0", 2);
 	} else {
-		device()->putChar('\0');
+		device()->putChar('\0'); // Disabled
 	}
 
 	return true;
@@ -412,8 +411,9 @@ Tile BackgroundTilesIOPC::tilePC2Tile(const TilePC &tile, quint8 layerID, quint1
 	ret.layerID = layerID;
 	ret.tileID = tileID;
 	ret.IDBig = tile.IDBig;
+	ret.unknown7 = tile.unknown7;
 
-	// qDebug() << "tile" << ret.srcX << "," << ret.srcY << ret.dstX << "," << ret.dstY << "textureID" << ret.textureID << "paletteID" << ret.paletteID << "blending" << ret.blending << "depth" << ret.depth << "size" << ret.size << "param" << ret.param << "layerID" << layerID << "Z" << ret.ID;
+	// qDebug() << "tile" << tileID << "layerID" << layerID << QPoint(ret.srcX, ret.srcY) << QPoint(ret.dstX, ret.dstY) << tile.unused1 << "Z" << ret.ID << ret.IDBig << "texID" << ret.textureID << "palID" << ret.paletteID << "blend" << ret.blending << "depth" << ret.depth << "size" << ret.size << "param" << ret.param;
 
 	return ret;
 }
@@ -424,22 +424,28 @@ TilePC BackgroundTilesIOPC::tile2TilePC(const Tile &tile)
 
 	ret.dstX = tile.dstX;
 	ret.dstY = tile.dstY;
-	ret.srcX = tile.srcX;
-	ret.srcY = tile.srcY;
-	ret.srcX2 = tile.srcX;
-	ret.srcY2 = tile.srcY;
-	ret.width = tile.size;
-	ret.height = tile.size;
+	ret.srcX = tile.layerID > 0 && tile.blending ? 0 : tile.srcX;
+	ret.srcY = tile.layerID > 0 && tile.blending ? 0 : tile.srcY;
+	ret.srcX2 = tile.layerID > 0 && tile.blending ? tile.srcX : 0;
+	ret.srcY2 = tile.layerID > 0 && tile.blending ? tile.srcY : 0;
+	ret.width = tile.layerID == 0 ? 0 : tile.size;
+	ret.height = tile.layerID == 0 ? 0 : tile.size;
 	ret.paletteID = tile.paletteID;
-	ret.ID = tile.ID;
-	ret.param = tile.param;
-	ret.state = tile.state;
-	ret.blending = tile.blending;
-	ret.typeTrans = tile.typeTrans;
+	switch (tile.layerID) {
+	case 0:     ret.ID = 4095;       break;
+	case 2:     ret.ID = 4096;       break;
+	case 3:     ret.ID = 0;          break;
+	default:    ret.ID = tile.ID;    break;
+	}
+	ret.param = tile.layerID > 0 ? tile.param : 0;
+	ret.state = tile.layerID > 0 ? tile.state : 0;
+	ret.blending = tile.layerID > 0 ? tile.blending : 0;
+	ret.typeTrans = tile.layerID > 0 ? tile.typeTrans : 0;
 	ret.textureID = tile.layerID > 0 && tile.blending ? 0 : tile.textureID;
 	ret.textureID2 = tile.layerID > 0 && tile.blending ? tile.textureID : 0;
 	ret.depth = tile.depth;
 	ret.IDBig = tile.IDBig;
+	ret.unknown7 = tile.unknown7;
 
 	return ret;
 }

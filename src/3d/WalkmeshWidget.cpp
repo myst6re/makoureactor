@@ -66,6 +66,7 @@ void WalkmeshWidget::fill(Field *field)
 	if (modelsVisible) {
 		openModels();
 	}
+	tex = bgFile->openBackground();
 
 	updatePerspective();
 	resetCamera();
@@ -398,47 +399,45 @@ void WalkmeshWidget::paintGL()
 
 void WalkmeshWidget::drawBackground()
 {
-  if (bgFile)
-  {
-    RendererVertex vertices[] = {
-      {
-        {-1.0f, -1.0f, 1.0f, 1.0f},
-        {1.0f, 1.0f, 1.0f, 1.0f},
-        {0.0f, 1.0f},
-      },
-      {
-        {-1.0f, 1.0f, 1.0f, 1.0f},
-        {1.0f, 1.0f, 1.0f, 1.0f},
-        {0.0f, 0.0f},
-      },
-      {
-        {1.0f, -1.0f, 1.0f, 1.0f},
-        {1.0f, 1.0f, 1.0f, 1.0f},
-        {1.0f, 1.0f},
-      },
-      {
-        {1.0f, 1.0f, 1.0f, 1.0f},
-        {1.0f, 1.0f, 1.0f, 1.0f},
-        {1.0f, 0.0f},
-      }
-    };
-
-    uint32_t indices[] = {
-      0, 1, 2,
-      1, 3, 2
-    };
-
-    QMatrix4x4 mBG;
-
-    gpuRenderer->bindProjectionMatrix(mBG);
-    gpuRenderer->bindViewMatrix(mBG);
-    gpuRenderer->bindModelMatrix(mBG);
-
-    gpuRenderer->bindVertex(vertices, 4);
-    gpuRenderer->bindIndex(indices, 6);
-    QImage tex = bgFile->openBackground();
-    gpuRenderer->bindTexture(tex);
-    gpuRenderer->draw(RendererPrimitiveType::PT_TRIANGLES);
+	if (bgFile != nullptr) {
+		RendererVertex vertices[] = {
+			{
+			    {-1.0f, -1.0f, 1.0f, 1.0f},
+			    {1.0f, 1.0f, 1.0f, 1.0f},
+			    {0.0f, 1.0f},
+			    },
+			{
+			  {-1.0f, 1.0f, 1.0f, 1.0f},
+			  {1.0f, 1.0f, 1.0f, 1.0f},
+			  {0.0f, 0.0f},
+			  },
+			{
+			    {1.0f, -1.0f, 1.0f, 1.0f},
+			    {1.0f, 1.0f, 1.0f, 1.0f},
+			    {1.0f, 1.0f},
+			    },
+			{
+			  {1.0f, 1.0f, 1.0f, 1.0f},
+			  {1.0f, 1.0f, 1.0f, 1.0f},
+			  {1.0f, 0.0f},
+			  }
+		};
+		
+		uint32_t indices[] = {
+			0, 1, 2,
+			1, 3, 2
+		};
+		
+		QMatrix4x4 mBG;
+		
+		gpuRenderer->bindProjectionMatrix(mBG);
+		gpuRenderer->bindViewMatrix(mBG);
+		gpuRenderer->bindModelMatrix(mBG);
+		
+		gpuRenderer->bindVertex(vertices, 4);
+		gpuRenderer->bindIndex(indices, 6);
+		gpuRenderer->bindTexture(tex);
+		gpuRenderer->draw(RendererPrimitiveType::PT_TRIANGLES);
 	}
 }
 

@@ -19,6 +19,7 @@
 #include "PaletteIO.h"
 #include "BackgroundTilesIO.h"
 #include "BackgroundTexturesIO.h"
+#include "InfFile.h"
 
 BackgroundIO::BackgroundIO(QIODevice *device) :
 	IO(device)
@@ -29,8 +30,8 @@ BackgroundIO::~BackgroundIO()
 {
 }
 
-BackgroundIOPC::BackgroundIOPC(QIODevice *device, QIODevice *devicePal) :
-	BackgroundIO(device), _devicePal(devicePal)
+BackgroundIOPC::BackgroundIOPC(QIODevice *device, QIODevice *devicePal, InfFile *infFile) :
+      BackgroundIO(device), _devicePal(devicePal), _infFile(infFile)
 {
 }
 
@@ -77,7 +78,8 @@ bool BackgroundIOPC::openTiles(BackgroundTiles &tiles) const
 		return false;
 	}
 
-	BackgroundTilesIOPC io(device());
+	const QList<Palette *> palettes;
+	BackgroundTilesIOPC io(device(), nullptr, palettes);
 	if (!io.read(tiles)) {
 		return false;
 	}
@@ -152,7 +154,7 @@ bool BackgroundIOPC::write(const BackgroundFile &background) const
 		return false;
 	}
 
-	BackgroundTilesIOPC backgroundTiles(device());
+	BackgroundTilesIOPC backgroundTiles(device(), _infFile, background.palettes());
 
 	if (!backgroundTiles.write(background.tiles())) {
 		return false;

@@ -50,16 +50,16 @@ bool BackgroundTexturesIOPC::read(BackgroundTexturesPC *textures) const
 		}
 
 		if (bool(exists)) {
-			quint16 size, depth;
+			quint16 isBigTile, depth;
 
-			if (device()->read((char *)&size, 2) != 2 ||
+			if (device()->read((char *)&isBigTile, 2) != 2 ||
 					device()->read((char *)&depth, 2) != 2) {
-				qWarning() << "BackgroundTexturesIOPC::read cannot read size or depth" << texID;
+				qWarning() << "BackgroundTexturesIOPC::read cannot read isBigTile or depth" << texID;
 				return false;
 			}
 
 			BackgroundTexturesPCInfos infos;
-			infos.size = size;
+			infos.isBigTile = isBigTile;
 			infos.depth = depth;
 			infos.pos = device()->pos() - initPos;
 			textures->addTexInfos(texID, infos);
@@ -97,9 +97,9 @@ bool BackgroundTexturesIOPC::write(const BackgroundTexturesPC *textures) const
 		if (bool(exists)) {
 			BackgroundTexturesPCInfos infos = textures->texInfos(texID);
 
-			quint16 size = infos.size, depth = infos.depth;
+			quint16 isBigTile = infos.isBigTile, depth = infos.depth;
 
-			if (device()->write((char *)&size, 2) != 2 ||
+			if (device()->write((char *)&isBigTile, 2) != 2 ||
 					device()->write((char *)&depth, 2) != 2) {
 				return false;
 			}

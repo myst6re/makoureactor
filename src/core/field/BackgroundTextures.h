@@ -28,7 +28,7 @@
 struct BackgroundTexturesPCInfos
 {
 	quint32 pos;
-	quint8 depth, size;
+	quint8 depth, isBigTile;
 };
 
 //Sizeof : 12
@@ -115,7 +115,7 @@ public:
 	bool hasTex(quint8 texID) const;
 	quint32 texPos(quint8 texID) const;
 	quint8 texDepth(quint8 texID) const;
-	quint8 texTileSize(quint8 texID) const;
+	quint8 texTileIsBig(quint8 texID) const;
 	BackgroundTexturesPCInfos texInfos(quint8 texID) const;
 	void addTexInfos(quint8 texID, const BackgroundTexturesPCInfos &infos);
 	void clear() override;

@@ -37,6 +37,9 @@ public:
 	inline const QList<bool> &areZero() const {
 		return _isZero;
 	}
+	inline int size() const {
+		return _colors.size();
+	}
 	void fromData(const char *data);
 	QByteArray toByteArray() const;
 	QImage toImage() const;

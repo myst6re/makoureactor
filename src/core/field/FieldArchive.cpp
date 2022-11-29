@@ -1673,11 +1673,10 @@ bool FieldArchive::compileScripts(int &mapID, int &groupID, int &scriptID, int &
 	FieldArchiveIterator it(*this);
 
 	while (it.hasNext()) {
-		QCoreApplication::processEvents();
 		Field *field = it.next(false);
 		mapID = it.mapId();
 		if (field != nullptr && field->isOpen()) {
-			Section1File *section1 = field->scriptsAndTexts();
+			Section1File *section1 = field->scriptsAndTexts(false);
 			if (section1->isOpen() && section1->isModified() && !section1->compileScripts(groupID, scriptID, opcodeID, errorStr)) {
 				return false;
 			}
