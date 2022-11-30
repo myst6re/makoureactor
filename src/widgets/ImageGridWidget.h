@@ -50,7 +50,7 @@ public:
 	void setGroupedCellSize(int size);
 	void setCustomLines(const QList<QLine> &lines);
 	inline QSize gridSize() const {
-		return _gridSize.isValid() ? _gridSize : _pixmap.size() / _cellSize;
+		return _gridSize.isValid() ? _gridSize : (_cellSize == 0 ? QSize() : _pixmap.size() / _cellSize);
 	}
 	inline QSize gridSizePixel() const {
 		return _gridSize.isValid() ? _gridSize * _cellSize : _pixmap.size();
