@@ -31,6 +31,7 @@ OperationsManager::OperationsManager(bool isPC, QWidget *parent) :
 		addOperation(CleanModelLoaderPC, tr("Clean unused data in field model loaders"));
 		addOperation(RemoveUnusedSectionPC, tr("Clean unused data for field backgrounds"));
 		addOperation(RepairBackgroundsPC, tr("Repair broken backgrounds (lastmap, fr_e)"));
+		addOperation(ResizeBackgrounds, tr("Resize backgrounds to 16/9 ratio"));
 	}
 
 	QDialogButtonBox *buttonBox = new QDialogButtonBox;

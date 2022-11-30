@@ -135,6 +135,19 @@ BackgroundTiles BackgroundTiles::tiles(quint8 layerID, bool orderedForSaving) co
 	return ret;
 }
 
+BackgroundTiles BackgroundTiles::tiles(const QList<quint8> &layerIDs) const
+{
+	BackgroundTiles ret;
+	
+	for (const Tile &tile : *this) {
+		if (layerIDs.contains(tile.layerID)) {
+			ret.insert(qint32(4096 - tile.ID), tile);
+		}
+	}
+	
+	return ret;
+}
+
 BackgroundTiles BackgroundTiles::tiles(quint8 layerID, quint16 ID) const
 {
 	BackgroundTiles ret;
@@ -321,7 +334,7 @@ QRect BackgroundTiles::rect() const
 	return QRect(minWidth, minHeight, width, height);
 }
 
-QPoint BackgroundTiles::dstShift(int tileSize) const
+QPoint BackgroundTiles::dstShift(quint8 tileSize) const
 {
 	int shiftX = 0, shiftY = 0;
 	bool shiftXComputed = false, shiftYComputed = false;

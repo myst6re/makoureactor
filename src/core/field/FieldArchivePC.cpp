@@ -198,3 +198,25 @@ void FieldArchivePC::repairBackgroundsPC()
 		observer()->setObserverValue(i++);
 	}
 }
+
+void FieldArchivePC::resizeBackgrounds(const QSize &size)
+{
+	FieldArchiveIterator it(*this);
+	int i = 0;
+
+	observer()->setObserverMaximum(this->size());
+
+	while (it.hasNext()) {
+		if (observer()->observerWasCanceled()) {
+			return;
+		}
+		FieldPC *field = static_cast<FieldPC *>(it.next());
+		if (field != nullptr) {
+			BackgroundFilePC *bg = static_cast<BackgroundFilePC *>(field->background());
+			if (bg->isOpen() && bg->resize(size)) {
+				field->setModified(true);
+			}
+		}
+		observer()->setObserverValue(i++);
+	}
+}

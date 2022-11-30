@@ -30,7 +30,8 @@ public:
 		CleanModelLoaderPC = 0x08,
 		RemoveUnusedSectionPC = 0x10,
 		RepairBackgroundsPC = 0x20,
-		AutosizeTextWindows = 0x40
+		AutosizeTextWindows = 0x40,
+		ResizeBackgrounds = 0x80
 	};
 	Q_DECLARE_FLAGS(Operations, Operation)
 

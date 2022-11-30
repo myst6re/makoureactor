@@ -274,9 +274,9 @@ void BackgroundFile::setZLayer1(quint16 oldZ, quint16 newZ)
 	}
 }
 
-bool BackgroundFile::addTile(Tile &tile, const QImage &image)
+bool BackgroundFile::addTile(Tile &tile, uint colorOrIndex)
 {
-	Q_UNUSED(image)
+	Q_UNUSED(colorOrIndex)
 
 	tile.tileID = tiles().size();
 	qDebug() << "addTile" << tile.layerID << tile.tileID << tile.textureID << tile.srcX << tile.srcY << tile.depth << tile.size << tile.dstX << tile.dstY << tile.ID << tile.IDBig << tile.blending << tile.typeTrans;
@@ -286,10 +286,20 @@ bool BackgroundFile::addTile(Tile &tile, const QImage &image)
 	return true;
 }
 
-bool BackgroundFile::setTile(Tile &tile, const QImage &image)
+void BackgroundFile::createTiles(const QRect &rect, const Tile &model, uint colorOrIndex)
 {
-	Q_UNUSED(image)
+	for (int y = rect.top(); y <= rect.bottom(); y += model.size) {
+		for (int x = rect.left(); x <= rect.right(); x += model.size) {
+			Tile tile = model;
+			tile.dstX = x;
+			tile.dstY = y;
+			addTile(tile, colorOrIndex);
+		}
+	}
+}
 
+bool BackgroundFile::setTile(Tile &tile)
+{
 	if (_tiles.replace(tile)) {
 		setModified(field()->isPC());
 		return true;

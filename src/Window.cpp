@@ -1739,6 +1739,9 @@ void Window::miscOperations()
 				if (operations.testFlag(OperationsManager::RepairBackgroundsPC)) {
 					static_cast<FieldArchivePC *>(fieldArchive)->repairBackgroundsPC();
 				}
+				if (operations.testFlag(OperationsManager::ResizeBackgrounds)) {
+					static_cast<FieldArchivePC *>(fieldArchive)->resizeBackgrounds(QSize(448, 1));
+				}
 			}
 		}
 

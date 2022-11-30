@@ -3555,6 +3555,10 @@ Some scripts can refer to it!</source>
         <oldsource>Appliquer</oldsource>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Resize backgrounds to 16/9 ratio</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OrientationWidget</name>
@@ -7172,10 +7176,6 @@ Edited files:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Compatible Files (*.lgp *.DAT *.bin *.iso *.img)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Lgp Files (*.lgp)</source>
         <translation type="unfinished">Lgp ファイル (*.lgp)</translation>
     </message>
@@ -7269,10 +7269,6 @@ Edited files:</source>
     </message>
     <message>
         <source>Map List</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>PC field File (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -7453,6 +7449,18 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
     </message>
     <message>
         <source>Field Scripts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Compatible Files (*.lgp *.DAT *.bin *.iso *.img *.lzs *.dec)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PC field File (* *.lzs *.dec)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PC Field Map (* *.lzs)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

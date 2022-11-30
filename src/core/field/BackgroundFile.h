@@ -77,8 +77,8 @@ public:
 	}
 	
 	void setZLayer1(quint16 oldZ, quint16 newZ);
-	virtual bool addTile(Tile &tile, const QImage &image = QImage());
-	virtual bool setTile(Tile &tile, const QImage &image = QImage());
+	virtual bool addTile(Tile &tile, uint colorOrIndex = 0);
+	virtual bool setTile(Tile &tile);
 	virtual bool removeTile(const Tile &tile);
 
 protected:
@@ -91,6 +91,7 @@ protected:
 		Q_UNUSED(data)
 		return false;
 	}
+	void createTiles(const QRect &rect, const Tile &model, uint colorOrIndex = 0);
 
 private:
 	BackgroundTiles _tiles;

@@ -214,10 +214,8 @@ bool BackgroundFilePC::repair()
 	return false;
 }
 
-bool BackgroundFilePC::addTile(Tile &tile, const QImage &image)
+bool BackgroundFilePC::addTile(Tile &tile, uint colorOrIndex)
 {
-	Q_UNUSED(image)
-
 	UnusedSpaceInTexturePC unusedSpace = textures()->findFirstUnusedSpaceInTextures(tiles(), tile.depth, tile.size);
 	if (!unusedSpace.valid) {
 		qWarning() << "not valid";
@@ -232,13 +230,13 @@ bool BackgroundFilePC::addTile(Tile &tile, const QImage &image)
 		BackgroundTexturesPCInfos texInfos;
 		texInfos.depth = tile.depth;
 		texInfos.isBigTile = tile.size == 32;
-		textures()->setTex(unusedSpace.texID, QList<uint>(256 * 256), texInfos);
+		textures()->setTex(unusedSpace.texID, QList<uint>(256 * 256, colorOrIndex), texInfos);
 	} else {
 		// Ensure black or first palette index
-		textures()->setTile(tile, QList<uint>(tile.size * tile.size));
+		textures()->setTile(tile, QList<uint>(tile.size * tile.size, colorOrIndex));
 	}
 
-	return BackgroundFile::addTile(tile, image);
+	return BackgroundFile::addTile(tile, colorOrIndex);
 }
 
 struct BackgroundTexturePCInfosAndColors
@@ -339,4 +337,65 @@ bool BackgroundFilePC::compile()
 	setModified(true);
 
 	return true;
+}
+
+bool BackgroundFilePC::resize(const QSize &size)
+{
+	QRect rect = tiles().tiles(QList<quint8>() << 0 << 1).rect();
+	Tile tile = Tile();
+	tile.ID = 4095;
+	tile.layerID = 0;
+	tile.calcIDBig();
+	tile.paletteID = 0;
+	tile.size = 16;
+	tile.depth = 2;
+	uint indexOrColor = 0;
+
+	BackgroundTiles layer0Tiles = tiles().tiles(0);
+	for (const Tile &t : layer0Tiles) {
+		if (t.depth == 1) {
+			tile.depth = 1;
+			indexOrColor = 1; // Prevent transparent pixel by using the first index
+
+			break;
+		}
+	}
+
+	if (rect.width() < size.width()) {
+		quint32 diff = (size.width() - rect.width()) / tile.size;
+		quint32 width = (diff / 2) * tile.size;
+		QSize rectSize = QSize(width, rect.height());
+		
+		// Rect left
+		createTiles(QRect(QPoint(-rect.x() - width, -rect.y()), rectSize), tile, indexOrColor);
+		// Rect right
+		createTiles(QRect(QPoint(-rect.x() + rect.width(), -rect.y()), rectSize), tile, indexOrColor);
+
+		if (rect.height() < size.height()) {
+			quint32 diff = (size.height() - rect.height()) / tile.size;
+			quint32 height = (diff / 2) * tile.size;
+			QSize rectSize = QSize(width, height);
+			
+			// Rect top
+			createTiles(QRect(QPoint(-rect.x() - width, -rect.y() - height), rectSize), tile, indexOrColor);
+			// Rect bottom
+			createTiles(QRect(QPoint(-rect.x() - width, -rect.y() + rect.height()), rectSize), tile, indexOrColor);
+		}
+
+		return true;
+	}
+	if (rect.height() < size.height()) {
+		quint32 diff = (size.height() - rect.height()) / tile.size;
+		quint32 height = (diff / 2) * tile.size;
+		QSize rectSize = QSize(rect.width(), height);
+		
+		// Rect top
+		createTiles(QRect(QPoint(-rect.x(), -rect.y() - height), rectSize), tile, indexOrColor);
+		// Rect bottom
+		createTiles(QRect(QPoint(-rect.x(), -rect.y() + rect.height()), rectSize), tile, indexOrColor);
+
+		return true;
+	}
+
+	return false;
 }

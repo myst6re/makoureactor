@@ -4050,6 +4050,10 @@ Certains scripts peuvent y faire référence !</translation>
         <oldsource>Appliquer</oldsource>
         <translation>Appliquer</translation>
     </message>
+    <message>
+        <source>Resize backgrounds to 16/9 ratio</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OrientationWidget</name>
@@ -7930,7 +7934,7 @@ Fichiers modifiés :</translation>
     <message>
         <source>Compatible Files (*.lgp *.DAT *.bin *.iso *.img)</source>
         <oldsource>Fichiers compatibles (*.lgp *.DAT *.bin *.iso *.img)</oldsource>
-        <translation>Fichiers compatibles (*.lgp *.DAT *.bin *.iso *.img)</translation>
+        <translation type="vanished">Fichiers compatibles (*.lgp *.DAT *.bin *.iso *.img)</translation>
     </message>
     <message>
         <source>Lgp Files (*.lgp)</source>
@@ -8051,7 +8055,7 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
     </message>
     <message>
         <source>PC field File (*)</source>
-        <translation>Fichier Field PC (*)</translation>
+        <translation type="vanished">Fichier Field PC (*)</translation>
     </message>
     <message>
         <source>Failed to rename the file, check write permissions.</source>
@@ -8268,6 +8272,18 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
     <message>
         <source>Field Scripts</source>
         <translation>Scripts d&apos;écran</translation>
+    </message>
+    <message>
+        <source>Compatible Files (*.lgp *.DAT *.bin *.iso *.img *.lzs *.dec)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PC field File (* *.lzs *.dec)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PC Field Map (* *.lzs)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

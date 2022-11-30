@@ -76,6 +76,7 @@ public:
 	                       const bool *layers, const QSet<quint16> *IDs, const QList<quint16> *tileIds = nullptr, bool onlyParams = false) const;
 	BackgroundTiles orderedTiles(bool orderedForSaving) const;
 	BackgroundTiles tiles(quint8 layerID, bool orderedForSaving = false) const;
+	BackgroundTiles tiles(const QList<quint8> &layerIDs) const;
 	BackgroundTiles tilesByID(quint16 ID, bool orderedForSaving = false) const;
 	BackgroundTiles tiles(quint8 layerID, quint16 ID, qint16 dstX, qint16 dstY) const;
 	BackgroundTiles tiles(quint8 layerID, ParamState paramState) const;
@@ -87,7 +88,7 @@ public:
 	          int &width, int &height) const;
 	QPoint minTopLeft() const;
 	QRect rect() const;
-	QPoint dstShift(int tileSize) const;
+	QPoint dstShift(quint8 tileSize) const;
 	Tile search(quint8 textureID1, quint8 textureID2, quint8 srcX, quint8 srcY) const;
 	void setZLayer1(quint16 oldZ, quint16 newZ);
 	bool replace(const Tile &tile);
@@ -100,6 +101,7 @@ public:
 	using QMultiMap<qint32, Tile>::remove;
 	bool checkOrdering() const;
 	QList<SrcTex> detectHoles() const;
+	
 };
 
 int operator==(const Tile &tile, const Tile &other);
