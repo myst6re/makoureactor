@@ -143,7 +143,7 @@ jobs:
         cmake --build ${{ env.makoureactor_build_path }} --target package -j3
 
     - name: Build AppImage (Linux)
-      if: runner.os == 'Linux' && matrix.interface == 'gui'
+      if: runner.os == 'DisabledLinux' && matrix.interface == 'gui'
       run: |
         cmake --build ${{ env.makoureactor_build_path }} --target install -j3
         mkdir -p ${{env.makoureactor_appbundle_path}}/usr/share/makoureactor/translations
