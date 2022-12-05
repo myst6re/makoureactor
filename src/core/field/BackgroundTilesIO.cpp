@@ -412,7 +412,7 @@ bool BackgroundTilesIOPC::writeData(const BackgroundTiles &tiles) const
 	// Layer 2
 
 	BackgroundTiles tiles2 = tiles.tiles(1, true);
-	bool tiles2Enabled = !tiles2.isEmpty();
+	bool tiles2Enabled = true; // Tiles 2 is always enabled, not matter if there are tiles or not
 
 	device()->putChar(char(tiles2Enabled));
 
@@ -435,8 +435,8 @@ bool BackgroundTilesIOPC::writeData(const BackgroundTiles &tiles) const
 	// Layer 3
 
 	BackgroundTiles tiles3 = tiles.tiles(2, true);
-	bool tiles3Enabled = !tiles3.isEmpty();
-	
+	bool tiles3Enabled = !tiles3.isEmpty() || !tiles4.isEmpty(); // When tiles 4 is enabled, tiles 3 is enabled too, even without tiles in it
+
 	device()->putChar(char(tiles3Enabled));
 
 	if (tiles3Enabled) {
