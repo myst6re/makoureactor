@@ -268,7 +268,7 @@ bool BackgroundFilePC::compile()
 
 		if (texs[group].isEmpty() || texs[group].last().srcY >= 256) {
 			qDebug() << "BackgroundFilePC::compile" << "create Texture for group" << group << textureDataPos << tile.depth << tile.size << tile.blending << tile.typeTrans;
-			texs[group].append(BackgroundTexturePCInfosAndColors(textureDataPos, tile.depth, tile.size == 32));
+			texs[group].append(BackgroundTexturePCInfosAndColors(textureDataPos, tile.depth == 0 ? 1 : tile.depth, tile.size == 32));
 			textureDataPos += (tile.depth <= 1 ? 1 : 2) * 256 * 256;
 		}
 
