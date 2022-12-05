@@ -18,6 +18,7 @@
 #include "BackgroundTilesIO.h"
 #include "InfFile.h"
 #include "Palette.h"
+#include "BackgroundTextures.h"
 
 BackgroundTilesIO::BackgroundTilesIO(QIODevice *device) :
 	IO(device)
@@ -267,8 +268,8 @@ bool BackgroundTilesIOPC::writeTile(const Tile &tile) const
 	device()->write("\0\0", 2);
 	TilePC tilePC = tile2TilePC(tile);
 	device()->write((char *)&tilePC, sizeof(TilePC));
-	srcXBig = tilePC.srcX / 16 * 625000;
-	srcYBig = tilePC.srcY / 16 * 625000;
+	srcXBig = quint32(float((tilePC.srcX2 != 0 ? tilePC.srcX2 : tilePC.srcX) / 256.0) * 10000000);
+	srcYBig = quint32(float((tilePC.srcY2 != 0 ? tilePC.srcY2 : tilePC.srcY) / 256.0) * 10000000);
 	device()->write((char *)&srcXBig, 4);
 	device()->write((char *)&srcYBig, 4);
 	device()->write("\0\0", 2);
@@ -276,10 +277,115 @@ bool BackgroundTilesIOPC::writeTile(const Tile &tile) const
 	return true;
 }
 
+void BackgroundTilesIOPC::generateHeaders(const BackgroundTiles &tiles, HeaderLayer2TilePC &headerLayer2, HeaderLayer4TilePC &headerLayer4) const
+{
+	headerLayer2.firstPalettedTextureId = quint16(-1);
+	headerLayer2.nextPalettedTextureId = quint16(-1);
+	headerLayer2.firstPalettedBlendingTypeTransTextureId = quint16(-1);
+	headerLayer2.nextPalettedBlendingTypeTransTextureId = quint16(-1);
+	headerLayer2.firstDirectColorTextureId = quint16(-1);
+	headerLayer2.nextDirectColorTextureId = quint16(-1);
+	headerLayer2.firstDirectColorBlendingTypeTransTextureId = quint16(-1);
+	headerLayer2.nextDirectColorBlendingTypeTransTextureId = quint16(-1);
+
+	headerLayer4.firstPalettedBlendingTextureId = quint16(-1);
+	headerLayer4.nextPalettedBlendingTextureId = quint16(-1);
+	headerLayer4.firstDirectColorBlendingTextureId = quint16(-1);
+	headerLayer4.nextDirectColorBlendingTextureId = quint16(-1);
+
+	for (const Tile &tile : tiles) {
+		if (tile.layerID == 0) {
+			if (tile.depth == 2) {
+				headerLayer2.firstDirectColorTextureId = quint16(std::max(qint16(headerLayer2.firstDirectColorTextureId), qint16(tile.textureID)));
+			} else {
+				headerLayer2.firstPalettedTextureId = quint16(std::max(qint16(headerLayer2.firstPalettedTextureId), qint16(tile.textureID)));
+			}
+		} else if (tile.layerID == 1) {
+			if (tile.depth == 2) {
+				if (tile.blending) {
+					if (tile.typeTrans) {
+						headerLayer2.firstDirectColorBlendingTypeTransTextureId = std::min(headerLayer2.firstDirectColorBlendingTypeTransTextureId, quint16(tile.textureID));
+						headerLayer2.nextDirectColorBlendingTypeTransTextureId = quint16(std::max(qint16(headerLayer2.nextDirectColorBlendingTypeTransTextureId), qint16(tile.textureID + 1)));
+					}
+				} else {
+					headerLayer2.nextDirectColorTextureId = quint16(std::max(qint16(headerLayer2.nextDirectColorTextureId), qint16(tile.textureID + 1)));
+				}
+			} else if (tile.blending) {
+				if (tile.typeTrans) {
+					headerLayer2.firstPalettedBlendingTypeTransTextureId = std::min(headerLayer2.firstPalettedBlendingTypeTransTextureId, quint16(tile.textureID));
+					headerLayer2.nextPalettedBlendingTypeTransTextureId = quint16(std::max(qint16(headerLayer2.nextPalettedBlendingTypeTransTextureId), qint16(tile.textureID + 1)));
+				}
+			} else {
+				headerLayer2.nextPalettedTextureId = quint16(std::max(qint16(headerLayer2.nextPalettedTextureId), qint16(tile.textureID + 1)));
+			}
+		} else if (tile.layerID == 3 && tile.blending) {
+			if (tile.depth == 2) {
+				headerLayer4.firstDirectColorBlendingTextureId = std::min(headerLayer4.firstDirectColorBlendingTextureId, quint16(tile.textureID));
+				headerLayer4.nextDirectColorBlendingTextureId = quint16(std::max(qint16(headerLayer4.nextDirectColorBlendingTextureId), qint16(tile.textureID + 1)));
+			} else {
+				headerLayer4.firstPalettedBlendingTextureId = std::min(headerLayer4.firstPalettedBlendingTextureId, quint16(tile.textureID));
+				headerLayer4.nextPalettedBlendingTextureId = quint16(std::max(qint16(headerLayer4.nextPalettedBlendingTextureId), qint16(tile.textureID + 1)));
+			}
+		}
+	}
+
+	if (headerLayer2.firstPalettedTextureId == quint16(-1)) {
+		headerLayer2.firstPalettedTextureId = quint16(BackgroundTexturesPC::TextureGroups::Paletted);
+	}
+
+	if (headerLayer2.nextPalettedTextureId == quint16(-1)) {
+		headerLayer2.nextPalettedTextureId = headerLayer2.firstPalettedTextureId + 1;
+	}
+
+	if (headerLayer2.firstPalettedBlendingTypeTransTextureId == quint16(-1)) {
+		headerLayer2.firstPalettedBlendingTypeTransTextureId = quint16(BackgroundTexturesPC::TextureGroups::PalettedBlended);
+	}
+	
+	if (headerLayer2.nextPalettedBlendingTypeTransTextureId == quint16(-1)) {
+		headerLayer2.nextPalettedBlendingTypeTransTextureId = headerLayer2.firstPalettedBlendingTypeTransTextureId + 1;
+	}
+
+	if (headerLayer2.firstDirectColorTextureId == quint16(-1)) {
+		headerLayer2.firstDirectColorTextureId = quint16(BackgroundTexturesPC::TextureGroups::DirectColor);
+	}
+
+	if (headerLayer2.nextDirectColorTextureId == quint16(-1)) {
+		headerLayer2.nextDirectColorTextureId = headerLayer2.firstDirectColorTextureId + 1;
+	}
+
+	if (headerLayer2.firstDirectColorBlendingTypeTransTextureId == quint16(-1)) {
+		headerLayer2.firstDirectColorBlendingTypeTransTextureId = quint16(BackgroundTexturesPC::TextureGroups::DirectColorBlended);
+	}
+	
+	if (headerLayer2.nextDirectColorBlendingTypeTransTextureId == quint16(-1)) {
+		headerLayer2.nextDirectColorBlendingTypeTransTextureId = headerLayer2.firstDirectColorBlendingTypeTransTextureId + 1;
+	}
+
+	if (headerLayer4.firstPalettedBlendingTextureId == quint16(-1)) {
+		headerLayer4.firstPalettedBlendingTextureId = quint16(BackgroundTexturesPC::TextureGroups::Layer3PalettedBlended);
+	}
+	
+	if (headerLayer4.nextPalettedBlendingTextureId == quint16(-1)) {
+		headerLayer4.nextPalettedBlendingTextureId = headerLayer4.firstPalettedBlendingTextureId + 1;
+	}
+
+	if (headerLayer4.firstDirectColorBlendingTextureId == quint16(-1)) {
+		headerLayer4.firstDirectColorBlendingTextureId = quint16(BackgroundTexturesPC::TextureGroups::Layer3DirectColorBlended);
+	}
+
+	if (headerLayer4.nextDirectColorBlendingTextureId == quint16(-1)) {
+		headerLayer4.nextDirectColorBlendingTextureId = headerLayer4.firstDirectColorBlendingTextureId + 1;
+	}
+}
+
 bool BackgroundTilesIOPC::writeData(const BackgroundTiles &tiles) const
 {
 	quint16 nbTiles, depth = _palettes.isEmpty() ? 2 : _palettes.first()->size() > 16;
 	int w, h;
+	HeaderLayer2TilePC headerLayer2;
+	HeaderLayer4TilePC headerLayer4;
+
+	generateHeaders(tiles, headerLayer2, headerLayer4);
 
 	// Layer 1
 	w = _inf->cameraRange().right - _inf->cameraRange().left + 16;
@@ -306,15 +412,17 @@ bool BackgroundTilesIOPC::writeData(const BackgroundTiles &tiles) const
 	// Layer 2
 
 	BackgroundTiles tiles2 = tiles.tiles(1, true);
+	bool tiles2Enabled = !tiles2.isEmpty();
 
-	if (!tiles2.isEmpty()) {
+	device()->putChar(char(tiles2Enabled));
+
+	if (tiles2Enabled) {
 		nbTiles = tiles2.size();
 
-		device()->putChar('\x01'); // Enabled
 		device()->write((char *)&w, 2);
 		device()->write((char *)&h, 2);
 		device()->write((char *)&nbTiles, 2);
-		device()->write(QByteArray(16, '\0')); // Unknown but unused
+		device()->write((char *)&headerLayer2, 16);
 		device()->write("\0\0", 2);
 
 		for (const Tile &tile : qAsConst(tiles2)) {
@@ -322,18 +430,18 @@ bool BackgroundTilesIOPC::writeData(const BackgroundTiles &tiles) const
 		}
 
 		device()->write("\0\0", 2);
-	} else {
-		device()->putChar('\0'); // Disabled
 	}
 
 	// Layer 3
 
 	BackgroundTiles tiles3 = tiles.tiles(2, true);
+	bool tiles3Enabled = !tiles3.isEmpty();
+	
+	device()->putChar(char(tiles3Enabled));
 
-	if (!tiles3.isEmpty()) {
+	if (tiles3Enabled) {
 		nbTiles = tiles3.size();
 
-		device()->putChar('\x01'); // Enabled
 		device()->write((char *)&w, 2);
 		device()->write((char *)&h, 2);
 		device()->write((char *)&nbTiles, 2);
@@ -345,22 +453,23 @@ bool BackgroundTilesIOPC::writeData(const BackgroundTiles &tiles) const
 		}
 
 		device()->write("\0\0", 2);
-	} else {
-		device()->putChar('\0'); // Disabled
 	}
 
 	// Layer 4
 
 	BackgroundTiles tiles4 = tiles.tiles(3, true);
+	bool tiles4Enabled = !tiles4.isEmpty();
 
-	if (!tiles4.isEmpty()) {
+	device()->putChar(char(tiles4Enabled));
+
+	if (tiles4Enabled) {
 		nbTiles = tiles4.size();
 
-		device()->putChar('\x01'); // Enabled
 		device()->write((char *)&w, 2);
 		device()->write((char *)&h, 2);
 		device()->write((char *)&nbTiles, 2);
-		device()->write(QByteArray(10, '\0')); // Unknown but unused
+		device()->write("\0\0", 2);
+		device()->write((char *)&headerLayer4, 8);
 		device()->write("\0\0", 2);
 
 		for (const Tile &tile : qAsConst(tiles4)) {
@@ -368,8 +477,6 @@ bool BackgroundTilesIOPC::writeData(const BackgroundTiles &tiles) const
 		}
 
 		device()->write("\0\0", 2);
-	} else {
-		device()->putChar('\0'); // Disabled
 	}
 
 	return true;

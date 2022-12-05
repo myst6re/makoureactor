@@ -34,7 +34,7 @@ struct TilePC {
 	quint8 srcY, unused3;
 	quint8 srcX2, unused4;
 	quint8 srcY2, unused5;
-	quint16 width, height; // Normaly unused
+	quint16 width, height; // Normaly unused // 16
 	quint8 paletteID, unused6;
 	quint16 ID;
 	quint8 param;
@@ -45,27 +45,27 @@ struct TilePC {
 	quint8 textureID, unused9;
 	quint8 textureID2, unused10; // if blending > 0, textureID2 is used instead of textureID except for layer 0
 	quint8 depth, unused11; // Normaly unused
-	quint32 IDBig;
+	quint32 IDBig; // 32
 };
 
 //Sizeof : 16
 struct HeaderLayer2TilePC {
 	quint16 firstPalettedTextureId; // Unused
 	quint16 nextPalettedTextureId; // Unused
-	quint16 firstPalettedBlendingTypeTrans;
-	quint16 nextPalettedBlendingTypeTrans;
+	quint16 firstPalettedBlendingTypeTransTextureId;
+	quint16 nextPalettedBlendingTypeTransTextureId;
 	quint16 firstDirectColorTextureId; // Unused
 	quint16 nextDirectColorTextureId; // Unused
-	quint16 firstDirectColorBlendingTypeTrans; // Unused
-	quint16 nextDirectColorBlendingTypeTrans; // Unused
+	quint16 firstDirectColorBlendingTypeTransTextureId; // Unused
+	quint16 nextDirectColorBlendingTypeTransTextureId; // Unused
 };
 
 //Sizeof : 10
 struct HeaderLayer4TilePC {
-	quint16 firstPalettedBlending;
-	quint16 nextPalettedBlending;
-	quint16 firstDirectColorBlending; // Unused
-	quint16 nextDirectColorBlending; // Unused
+	quint16 firstPalettedBlendingTextureId;
+	quint16 nextPalettedBlendingTextureId;
+	quint16 firstDirectColorBlendingTextureId; // Unused
+	quint16 nextDirectColorBlendingTextureId; // Unused
 };
 
 //Sizeof : 8
@@ -118,6 +118,7 @@ protected:
 	bool readData(BackgroundTiles &tiles) const override;
 	bool writeData(const BackgroundTiles &tiles) const override;
 private:
+	void generateHeaders(const BackgroundTiles &tiles, HeaderLayer2TilePC &headerLayer2, HeaderLayer4TilePC &headerLayer4) const;
 	bool writeTile(const Tile &tile) const;
 	static Tile tilePC2Tile(const TilePC &tile, quint8 layerID, quint16 tileID);
 	static TilePC tile2TilePC(const Tile &tile);
