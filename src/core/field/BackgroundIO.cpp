@@ -78,8 +78,7 @@ bool BackgroundIOPC::openTiles(BackgroundTiles &tiles) const
 		return false;
 	}
 
-	const QList<Palette *> palettes;
-	BackgroundTilesIOPC io(device(), nullptr, palettes);
+	BackgroundTilesIOPC io(device());
 	if (!io.read(tiles)) {
 		return false;
 	}
@@ -135,12 +134,12 @@ bool BackgroundIOPC::write(const BackgroundFile &background) const
 		return false;
 	}
 
-	quint16 unknown1 = 0, depth = 1;
-	quint8 unknown2 = 1;
+	quint16 depth = background.palettes().isEmpty() ? 2 : 1;
+	quint8 isEnabled = 1;
 
-	if (device()->write((char *)&unknown1, 2) != 2
+	if (device()->write("\0\0", 2) != 2
 			|| device()->write((char *)&depth, 2) != 2
-			|| device()->write((char *)&unknown2, 1) != 1
+			|| device()->write((char *)&isEnabled, 1) != 1
 			|| device()->write("PALETTE", 7) != 7) {
 		return false;
 	}
@@ -154,7 +153,8 @@ bool BackgroundIOPC::write(const BackgroundFile &background) const
 		return false;
 	}
 
-	BackgroundTilesIOPC backgroundTiles(device(), _infFile, background.palettes());
+	const Palettes &palettes = background.palettes();
+	BackgroundTilesIOPC backgroundTiles(device(), _infFile, &palettes);
 
 	if (!backgroundTiles.write(background.tiles())) {
 		return false;

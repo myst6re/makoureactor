@@ -131,9 +131,9 @@ public:
 	                          BackgroundTiles &psTiles,
 	                          const PalettesPS &palettesPS) const;
 	static TextureGroups textureGroup(const Tile &tile);
+	quint8 depth(const Tile &tile) const override;
 protected:
 	quint16 textureWidth(const Tile &tile) const override;
-	quint8 depth(const Tile &tile) const override;
 	int originInData(const Tile &tile) const override;
 	QRgb directColor(quint16 color) const override;
 	quint16 fromQRgb(QRgb color) const override;

@@ -23,6 +23,7 @@
 
 class InfFile;
 class Palette;
+class BackgroundTexturesPC;
 
 #define MAX_TILE_DST 1024
 
@@ -113,7 +114,8 @@ protected:
 class BackgroundTilesIOPC : public BackgroundTilesIO
 {
 public:
-	explicit BackgroundTilesIOPC(QIODevice *device, InfFile *inf, const QList<Palette *> &palettes);
+	explicit BackgroundTilesIOPC(QIODevice *device);
+	explicit BackgroundTilesIOPC(QIODevice *device, const InfFile *inf, const QList<Palette *> *palettes);
 protected:
 	bool readData(BackgroundTiles &tiles) const override;
 	bool writeData(const BackgroundTiles &tiles) const override;
@@ -122,8 +124,8 @@ private:
 	bool writeTile(const Tile &tile) const;
 	static Tile tilePC2Tile(const TilePC &tile, quint8 layerID, quint16 tileID);
 	static TilePC tile2TilePC(const Tile &tile);
-	InfFile *_inf;
-	const QList<Palette *> &_palettes;
+	const InfFile *_inf;
+	const QList<Palette *> *_palettes;
 };
 
 class BackgroundTilesIOPS : public BackgroundTilesIO
