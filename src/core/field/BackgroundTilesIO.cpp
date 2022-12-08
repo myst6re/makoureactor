@@ -273,8 +273,8 @@ bool BackgroundTilesIOPC::writeTile(const Tile &tile) const
 	device()->write("\0\0", 2);
 	TilePC tilePC = tile2TilePC(tile);
 	device()->write((char *)&tilePC, sizeof(TilePC));
-	srcXBig = quint32(float((tilePC.srcX2 != 0 ? tilePC.srcX2 : tilePC.srcX) / 256.0) * 10000000);
-	srcYBig = quint32(float((tilePC.srcY2 != 0 ? tilePC.srcY2 : tilePC.srcY) / 256.0) * 10000000);
+	srcXBig = quint32(float((tilePC.srcX2 != 0 ? tilePC.srcX2 : tilePC.srcX) / 256.0) * 10000000.0);
+	srcYBig = quint32(float((tilePC.srcY2 != 0 ? tilePC.srcY2 : tilePC.srcY) / 256.0) * 10000000.0);
 	device()->write((char *)&srcXBig, 4);
 	device()->write((char *)&srcYBig, 4);
 	device()->write("\0\0", 2);

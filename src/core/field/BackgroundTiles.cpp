@@ -29,7 +29,7 @@ void Tile::calcIDBig()
 		IDBig = 9998999;
 	} else {
 		// FIXME: approximation
-		IDBig = quint32((float(ID) / 4096.0f) * 10000000.0f);
+		IDBig = quint32((float(ID) / 4096.0f) * 10000000.0);
 	}
 }
 

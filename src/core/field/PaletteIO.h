@@ -21,6 +21,8 @@
 #include <IO>
 #include "Palette.h"
 
+#define PALETTE_PC_MAX_FIRST_COLOR_TRANS_COUNT 20
+
 class PaletteIO : public IO
 {
 public:

@@ -50,8 +50,8 @@ bool PaletteIO::read(Palettes &palettes) const
 		return false;
 	}
 
-	for (quint32 i=0; i<palH; ++i) {
-		palettes.append(createPalette(palData.constData() + i*512));
+	for (quint32 i = 0; i < palH; ++i) {
+		palettes.append(createPalette(palData.constData() + i * 512));
 	}
 
 	return readAfter(palettes);
@@ -123,16 +123,16 @@ bool PaletteIOPC::readAfter(Palettes &palettes) const
 		return false;
 	}
 
-	QByteArray palFlags = deviceAlpha()->read(16);
+	QByteArray palFlags = deviceAlpha()->read(PALETTE_PC_MAX_FIRST_COLOR_TRANS_COUNT);
 
-	if (palFlags.size() < 16) {
+	if (palFlags.size() < PALETTE_PC_MAX_FIRST_COLOR_TRANS_COUNT) {
 		return false;
 	}
 
-	quint8 palId=0;
+	quint8 palId = 0;
 
 	for (Palette *palette : palettes) {
-		if (palId >= 16) {
+		if (palId >= PALETTE_PC_MAX_FIRST_COLOR_TRANS_COUNT) {
 			break;
 		}
 
@@ -153,7 +153,7 @@ bool PaletteIOPC::writeAfter(const Palettes &palettes) const
 	quint8 palId = 0;
 
 	for (const Palette *palette : palettes) {
-		if (palId >= 16) {
+		if (palId >= PALETTE_PC_MAX_FIRST_COLOR_TRANS_COUNT) {
 			break;
 		}
 
@@ -165,12 +165,8 @@ bool PaletteIOPC::writeAfter(const Palettes &palettes) const
 		++palId;
 	}
 
-	if (palId < 16 && deviceAlpha()->write(QByteArray(16 - palId, '\x01')) != 16 - palId) {
-		return false;
-	}
-
-	if (deviceAlpha()->write(QByteArray(8, '\0')) != 8) {
-		return false;
+	if (palId < PALETTE_PC_MAX_FIRST_COLOR_TRANS_COUNT) {
+		return deviceAlpha()->write(QByteArray(PALETTE_PC_MAX_FIRST_COLOR_TRANS_COUNT - palId, '\0')) == PALETTE_PC_MAX_FIRST_COLOR_TRANS_COUNT - palId;
 	}
 
 	return true;

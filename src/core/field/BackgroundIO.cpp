@@ -149,6 +149,10 @@ bool BackgroundIOPC::write(const BackgroundFile &background) const
 		return false;
 	}
 
+	if (device()->write("\0\0\0\0", 4) != 4) {
+		return false;
+	}
+
 	if (device()->write("BACK", 4) != 4) {
 		return false;
 	}

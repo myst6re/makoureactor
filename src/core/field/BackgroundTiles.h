@@ -33,7 +33,7 @@ struct Tile {
 	quint8 layerID;
 	quint16 tileID;
 	quint32 IDBig; // Only on PC
-	quint8 unknown7; // Only on PC
+	quint8 unknown7; // Only on PC (unused)
 	void calcIDBig();
 };
 
