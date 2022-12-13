@@ -4063,6 +4063,21 @@ Certains scripts peuvent y faire référence !</translation>
     </message>
 </context>
 <context>
+    <name>PsColorDialog</name>
+    <message>
+        <source>Choose a color</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose a color from the associated palette:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>16-bit colors:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>PsfDialog</name>
     <message>
         <source>psflib</source>

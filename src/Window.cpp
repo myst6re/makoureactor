@@ -747,6 +747,99 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 	actionSaveAs->setEnabled(true);
 	actionClose->setEnabled(true);
 	
+	/* FieldArchiveIterator it(*fieldArchive);
+	while (it.hasNext()) {
+		FieldPC *field = static_cast<FieldPC *>(it.next());
+		
+		if (field && field->name() == "woa_3" && field->isOpen()) {
+			BackgroundFile *bg = field->background();
+			
+			QByteArray oldData = field->sectionData(Field::Background);
+			QByteArray newData = bg->save();
+			
+			if (oldData.mid(102) != newData.mid(102)) {
+				qsizetype diffIndex = -1, firstDiffIndex = -1;
+				for (qsizetype i = 102; i < std::min(oldData.size(), newData.size()); ++i) {
+					if (oldData[i] != newData[i]) {
+						diffIndex = i;
+						if (firstDiffIndex == -1) {
+							firstDiffIndex = i;
+						}
+					}
+				}
+				
+				if (diffIndex == -1 && firstDiffIndex == -1 && oldData.indexOf("END") == newData.indexOf("END")) {
+					qDebug() << field->name() << "OK";
+					continue;
+				}
+				
+				quint16 nbTiles1, nbTiles2 = 0, nbTiles3 = 0, nbTiles4 = 0;
+				quint8 hasTiles2, hasTiles3, hasTiles4;
+				memcpy(&nbTiles1, oldData.constData() + 44, 2);
+				hasTiles2 = oldData.at(44 + 8 + nbTiles1 * 52);
+				if (hasTiles2) {
+					memcpy(&nbTiles2, oldData.constData() + 44 + 8 + nbTiles1 * 52 + 1 + 4, 2);
+				}
+				quint32 tiles3Pos = 44 + 8 + nbTiles1 * 52 + 1 + hasTiles2 * (26 + nbTiles2 * 52);
+				hasTiles3 = oldData.at(tiles3Pos);
+				if (hasTiles3) {
+					memcpy(&nbTiles3, oldData.constData() + tiles3Pos + 1 + 4, 2);
+				}
+				quint32 tiles4Pos = tiles3Pos + 1 + hasTiles3 * (20 + nbTiles3 * 52);
+				hasTiles4 = oldData.at(tiles4Pos);
+				if (hasTiles4) {
+					memcpy(&nbTiles4, oldData.constData() + tiles4Pos + 1 + 4, 2);
+				}
+
+				qDebug() << field->name() << firstDiffIndex << diffIndex;
+				qDebug() << "PALETTE" << oldData.indexOf("PALETTE") << "BACK" << oldData.indexOf("BACK") << "TEXTURE" << oldData.indexOf("TEXTURE") << "END" << oldData.indexOf("END") << oldData.size();
+				qDebug() << "nbTiles" << nbTiles1 << nbTiles2 << nbTiles3 << nbTiles4;
+				qDebug() << "posSection2" << 44 + 8 + nbTiles1 * 52 << "posSection3" << tiles3Pos << "posSection4" << tiles4Pos;
+				qDebug() << "hasSection2" << hasTiles2 << "hasSection3" << hasTiles3 << "hasSection4" << hasTiles4;
+				
+				if (diffIndex >= 50 && diffIndex < 50 + nbTiles1 * 52) {
+					qDebug() << "Diff in tiles section 1" << "tile #" << (diffIndex - 50) / 52 << "pos in tile" << (diffIndex - 50) % 52;
+				}
+				if (hasTiles2 && diffIndex >= 77 + nbTiles1 * 52 && diffIndex < 77 + (nbTiles1 + nbTiles2) * 52) {
+					qDebug() << "Diff in tiles section 2" << "tile #" << (diffIndex - 77 - nbTiles1 * 52) / 52 << "pos in tile" << (diffIndex - 77 - nbTiles1 * 52) % 52;
+				}
+				if (hasTiles3 && diffIndex >= tiles3Pos + 19 && diffIndex < tiles3Pos + 19 + nbTiles3 * 52) {
+					qDebug() << "Diff in tiles section 3" << "tile #" << (diffIndex - (tiles3Pos + 19)) / 52 << "pos in tile" << (diffIndex - (tiles3Pos + 19)) % 52;
+				}
+				if (hasTiles4 && diffIndex >= tiles4Pos + 19 && diffIndex < tiles4Pos + 19 + nbTiles4 * 52) {
+					qDebug() << "Diff in tiles section 4" << "tile #" << (diffIndex - (tiles4Pos + 19)) / 52 << "pos in tile" << (diffIndex - (tiles4Pos + 19)) % 52;
+				}
+				
+				nbTiles2 = 0;
+				nbTiles3 = 0;
+				nbTiles4 = 0;
+				memcpy(&nbTiles1, newData.constData() + 44, 2);
+				hasTiles2 = newData.at(44 + 8 + nbTiles1 * 52);
+				if (hasTiles2) {
+					memcpy(&nbTiles2, newData.constData() + 44 + 8 + nbTiles1 * 52 + 1 + 4, 2);
+				}
+				hasTiles3 = newData.at(44 + 8 + nbTiles1 * 52 + 1 + hasTiles2 * (26 + nbTiles2 * 52));
+				if (hasTiles3) {
+					memcpy(&nbTiles3, newData.constData() + 44 + 8 + nbTiles1 * 52 + 1 + hasTiles2 * (26 + nbTiles2 * 52) + 1 + 4, 2);
+				}
+				hasTiles4 = newData.at(44 + 8 + nbTiles1 * 52 + 1 + hasTiles2 * (26 + nbTiles2 * 52) + 1 + hasTiles3 * (20 + nbTiles3 * 52));
+				if (hasTiles4) {
+					memcpy(&nbTiles4, newData.constData() + 44 + 8 + nbTiles1 * 52 + 1 + hasTiles2 * (26 + nbTiles2 * 52) + 1 + hasTiles3 * (20 + nbTiles3 * 52) + 1 + 4, 2);
+				}
+
+				qDebug() << "PALETTE" << newData.indexOf("PALETTE") << "BACK" << newData.indexOf("BACK") << "TEXTURE" << newData.indexOf("TEXTURE") << "END" << newData.indexOf("END") << newData.size();
+				qDebug() << "nbTiles" << nbTiles1 << nbTiles2 << nbTiles3 << nbTiles4;
+				qDebug() << "posSection2" << 44 + 8 + nbTiles1 * 52 << "posSection3" << 44 + 8 + nbTiles1 * 52 + 1 + hasTiles2 * (26 + nbTiles2 * 52) << "posSection4" << 44 + 8 + nbTiles1 * 52 + 1 + hasTiles2 * (26 + nbTiles2 * 52) + 1 + hasTiles3 * (20 + nbTiles3 * 52);
+				qDebug() << "hasSection2" << hasTiles2 << "hasSection3" << hasTiles3 << "hasSection4" << hasTiles4;
+
+				qDebug() << oldData.mid(firstDiffIndex - 8, 16).toHex() << newData.mid(firstDiffIndex - 8, 16).toHex();
+				qDebug() << oldData.mid(diffIndex - 8, 16).toHex() << newData.mid(diffIndex - 8, 16).toHex();
+			} else {
+				qDebug() << field->name() << "OK";
+			}
+		}
+	} */
+	
 	/* QMap<qsizetype, QSet<QString> > aNamesByBoneCount;
 	FieldArchiveIterator it(*fieldArchive);
 	while (it.hasNext()) {

@@ -33,6 +33,7 @@ public:
 signals:
 	void changed(const QList<Tile> &tiles);
 public slots:
+	void choosePixelColor(const Cell &cell);
 	inline void setTile(const Tile &tile) {
 		setTiles(QList<Tile>() << tile);
 	}

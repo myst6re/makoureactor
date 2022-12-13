@@ -17,6 +17,7 @@
  ****************************************************************************/
 #include "BackgroundTileEditor.h"
 #include "core/field/BackgroundFile.h"
+#include "PsColorDialog.h"
 
 BackgroundTileEditor::BackgroundTileEditor(QWidget *parent)
     : QWidget(parent)
@@ -26,6 +27,7 @@ BackgroundTileEditor::BackgroundTileEditor(QWidget *parent)
 	_tileWidget = new ImageGridWidget(_formPage);
 	_tileWidget->setCellSize(1);
 	_tileWidget->setFixedHeight(32 * 4);
+	_tileWidget->setCursor(QCursor(Qt::CrossCursor));
 
 	_bgParamGroup = new QGroupBox(tr("Parameter"), _formPage);
 	_bgParamGroup->setCheckable(true);
@@ -95,6 +97,7 @@ BackgroundTileEditor::BackgroundTileEditor(QWidget *parent)
 	_stackedLayout->addWidget(_formPage);
 	_stackedLayout->addWidget(_createPage);
 	
+	connect(_tileWidget, &ImageGridWidget::clicked, this, &BackgroundTileEditor::choosePixelColor);
 	connect(_blendTypeInput, &QComboBox::currentIndexChanged, this, &BackgroundTileEditor::updateBlendType);
 	connect(createButton, &QPushButton::clicked, this, &BackgroundTileEditor::createTile);
 	connect(_bgParamInput, &QSpinBox::valueChanged, this, &BackgroundTileEditor::updateBgParam);
@@ -142,6 +145,8 @@ void BackgroundTileEditor::setTiles(const QList<Tile> &tiles)
 			isInvalid = true;
 		}
 	}
+
+	qDebug() << "BackgroundTileEditor::setTiles" << tiles.size() << params << states << paletteIDs << blendings << typeTranss << depths << depthBigs;
 
 	if (isInvalid) {
 		_stackedLayout->setCurrentWidget(_createPage);
@@ -246,6 +251,53 @@ void BackgroundTileEditor::setTiles(const QList<Tile> &tiles)
 			_tileEditorLayout->labelForField(_depthTuningInput)->setEnabled(false);
 		}
 		_depthInput->blockSignals(false);
+	}
+}
+
+void BackgroundTileEditor::choosePixelColor(const Cell &cell)
+{
+	if (_backgroundFile == nullptr || _tiles.isEmpty()) {
+		return;
+	}
+
+	const QPixmap &pixmap = _tileWidget->pixmap();
+	QImage image = pixmap.toImage();
+	QList<QRgb> colors;
+	quint8 paletteIndex = 0;
+
+	if (_paletteIdInput->isEnabled() && _paletteIdInput->isVisible()) {
+		colors = _backgroundFile->palettes().value(_paletteIdInput->value())->colors();
+		QList<uint> indexes = _backgroundFile->textures()->tile(_tiles.first());
+		qsizetype i = cell.x() + cell.y() * pixmap.width();
+		if (i < indexes.size()) {
+			paletteIndex = quint8(indexes.at(i));
+		}
+	}
+
+	PsColorDialog *dialog = !colors.isEmpty() ? new PsColorDialog(colors, paletteIndex, this) : new PsColorDialog(image.pixel(cell), this);
+	if (dialog->exec() == QDialog::Accepted) {
+		uint indexOrColor = dialog->indexOrColor();
+		qsizetype i = cell.x() + cell.y() * pixmap.width();
+		bool modified = false;
+
+		for (Tile &tile: _tiles) {
+			QList<uint> indexOrColors = _backgroundFile->textures()->tile(tile);
+			if (i < indexOrColors.size()) {
+				indexOrColors.replace(i, indexOrColor);
+
+				if (!_backgroundFile->textures()->setTile(tile, indexOrColors)) {
+					qWarning() << "BackgroundTileEditor::choosePixelColor cannot modify tile" << tile.tileID;
+				} else {
+					modified = true;
+				}
+			}
+		}
+
+		if (modified) {
+			emit changed(_tiles);
+	
+			_tileWidget->setPixmap(QPixmap::fromImage(_backgroundFile->textures()->toImage(_tiles.first(), _backgroundFile->palettes())));
+		}
 	}
 }
 

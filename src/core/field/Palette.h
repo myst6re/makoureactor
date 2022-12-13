@@ -40,6 +40,9 @@ public:
 	inline int size() const {
 		return _colors.size();
 	}
+	inline const QList<QRgb> &colors() const {
+		return _colors;
+	}
 	void fromData(const char *data);
 	QByteArray toByteArray() const;
 	QImage toImage() const;
