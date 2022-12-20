@@ -44,9 +44,9 @@ BackgroundEditor::BackgroundEditor(QWidget *parent)
 	addTopLevelItem(tr("By Effect"), Effect);
 
 	_shiftX = new QSpinBox(this);
-	_shiftX->setRange(0, 8);
+	_shiftX->setMinimum(0);
 	_shiftY = new QSpinBox(this);
-	_shiftY->setRange(0, 8);
+	_shiftY->setMinimum(0);
 	_shiftX->setEnabled(false);
 	_shiftY->setEnabled(false);
 
@@ -431,10 +431,10 @@ void BackgroundEditor::refreshImage(int layer, int section, ParamState paramStat
 	QRect area = layerTiles.rect();
 	QPoint shift = layerTiles.dstShift(tileSize);
 
-	qDebug() << "BackgroundEditor::refreshImage" << "area" << area;
+	qDebug() << "BackgroundEditor::refreshImage" << "area" << area << shift;
 
-	_shiftX->setMaximum(tileSize / 2);
-	_shiftY->setMaximum(tileSize / 2);
+	_shiftX->setMaximum(tileSize - 1);
+	_shiftY->setMaximum(tileSize - 1);
 	_shiftX->setValue(shift.x());
 	_shiftY->setValue(shift.y());
 	_shiftX->setEnabled(true);
@@ -612,7 +612,7 @@ void BackgroundEditor::updateSelectedTileTexture(const Cell &cell)
 		if (tile.srcX == srcX &&
 			tile.srcY == srcY &&
 			tile.textureID == textureID) {
-			qDebug() << "tileID" << tile.tileID << "texID" << tile.textureID << "src" << tile.srcX << tile.srcY << "dst" << tile.dstX << tile.dstY;
+			qDebug() << "tileID" << tile.tileID << "texID" << tile.textureID << "src" << tile.srcX << tile.srcY << "dst" << tile.dstX << tile.dstY << "size" << tile.size << "palette" << tile.paletteID << tile.depth << "param" << tile.param << tile.state;
 			selectedTile = tile;
 			break;
 		}

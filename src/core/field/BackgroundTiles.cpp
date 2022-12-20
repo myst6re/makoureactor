@@ -337,26 +337,29 @@ QRect BackgroundTiles::rect() const
 QPoint BackgroundTiles::dstShift(quint8 tileSize) const
 {
 	int shiftX = 0, shiftY = 0;
-	bool shiftXComputed = false, shiftYComputed = false;
+	QSet<int> shiftXs, shiftYs;
 
 	for (const Tile &tile : *this) {
 		if (tile.size != tileSize) {
 			continue;
 		}
 
-		if (!shiftXComputed && tile.dstX != 0) {
-			shiftX = std::abs(tile.dstX) % tile.size;
-			shiftXComputed = true;
+		shiftX = tile.dstX >= 0 ? tile.dstX % tile.size : tile.size - (-tile.dstX % tile.size);
+		shiftY = tile.dstY >= 0 ? tile.dstY % tile.size : tile.size - (-tile.dstY % tile.size);
+
+		if (shiftX == tile.size) {
+			shiftX = 0;
+		}
+		if (shiftY == tile.size) {
+			shiftY = 0;
 		}
 
-		if (!shiftYComputed && tile.dstY != 0) {
-			shiftY = std::abs(tile.dstY) % tile.size;
-			shiftYComputed = true;
-		}
+		shiftXs.insert(shiftX);
+		shiftYs.insert(shiftY);
+	}
 
-		if (shiftXComputed && shiftYComputed) {
-			break;
-		}
+	if (shiftXs.size() > 1 || shiftYs.size() > 1) {
+		qDebug() << "BackgroundTiles::dstShift" << shiftXs << shiftYs;
 	}
 
 	return QPoint(shiftX, shiftY);
