@@ -35,7 +35,7 @@ BackgroundTileEditor::BackgroundTileEditor(QWidget *parent)
 	_bgParamInput = new QSpinBox(_bgParamGroup);
 	_bgParamInput->setRange(1, 255);
 	_bgParamStateInput = new QSpinBox(_bgParamGroup);
-	_bgParamStateInput->setRange(1, 8);
+	_bgParamStateInput->setRange(0, 7);
 
 	QFormLayout *tileParameterEditorLayout = new QFormLayout(_bgParamGroup);
 	tileParameterEditorLayout->addRow(tr("Param ID"), _bgParamInput);
@@ -184,7 +184,14 @@ void BackgroundTileEditor::setTiles(const QList<Tile> &tiles)
 
 			if (states.size() == 1) {
 				_bgParamStateInput->blockSignals(true);
-				_bgParamStateInput->setValue(*states.begin());
+				quint8 state = *states.begin();
+				for (quint8 i = 0; i < 8; ++i) {
+					if ((state >> i) & 1) {
+						state = i;
+						break;
+					}
+				}
+				_bgParamStateInput->setValue(state);
 				_bgParamStateInput->blockSignals(false);
 				_bgParamStateInput->setEnabled(true);
 			} else {
@@ -375,7 +382,7 @@ void BackgroundTileEditor::updateBgState(int value)
 		return;
 	}
 
-	quint8 bgState = quint8(value);
+	quint8 bgState = quint8(1 << value);
 
 	for (Tile &tile: _tiles) {
 		tile.state = bgState;

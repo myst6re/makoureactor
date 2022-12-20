@@ -166,9 +166,12 @@ BackgroundTiles BackgroundTiles::tiles(quint8 layerID, ParamState paramState) co
 {
 	BackgroundTiles ret;
 
+	if (layerID == 0 || !paramState.isValid()) {
+		return ret;
+	}
+
 	for (const Tile &tile : *this) {
-		if (tile.layerID == layerID &&
-		        layerID >= 1 && tile.param == paramState.param && tile.state == paramState.state) {
+		if (tile.layerID == layerID && tile.param == paramState.param && tile.state == paramState.state) {
 			ret.insert(tile);
 		}
 	}
