@@ -20,7 +20,7 @@
 #include "core/field/Field.h"
 
 BGDialog::BGDialog(QWidget *parent) :
-    QDialog(parent, Qt::Tool), _field(nullptr), zoomFactor(1.0f)
+    QDialog(parent, Qt::Tool), _field(nullptr), editorPage(nullptr), zoomFactor(1.0f)
 {
 	setWindowTitle(tr("Background"));
 
@@ -78,14 +78,18 @@ BGDialog::BGDialog(QWidget *parent) :
 	layout->addWidget(buttonRepair, 4, 1);
 	layout->setColumnStretch(0, 2);
 	layout->setColumnStretch(1, 1);
+	
+	QVBoxLayout *mainLayout = new QVBoxLayout(this);
 
-	editorPage = new BackgroundEditor();
+	mainTabBar = new QTabBar(this);
+	mainTabBar->addTab(tr("Viewer"));
+	mainTabBar->addTab(tr("Editor"));
 
-	tabWidget = new QTabWidget(this);
-	tabWidget->addTab(viewerPage, tr("Viewer"));
-	tabWidget->addTab(editorPage, tr("Editor"));
+	stackedLayout = new QStackedLayout;
+	stackedLayout->addWidget(viewerPage);
 
-	(new QVBoxLayout(this))->addWidget(tabWidget);
+	mainLayout->addWidget(mainTabBar);
+	mainLayout->addLayout(stackedLayout);
 
 	connect(image, &ApercuBGLabel::saveRequested, this, &BGDialog::saveImage);
 	connect(parametersWidget, &QComboBox::currentIndexChanged, this, &BGDialog::parameterChanged);
@@ -98,18 +102,42 @@ BGDialog::BGDialog(QWidget *parent) :
 	connect(buttonRepair, &QPushButton::clicked, this, &BGDialog::tryToRepairBG);
 	connect(tabBar, &QTabBar::currentChanged, this, &BGDialog::updateBG);
 	connect(tabBar, &QTabBar::currentChanged, this, &BGDialog::showLayersPage);
-	connect(editorPage, &BackgroundEditor::modified, this, &BGDialog::updateBG);
-	connect(editorPage, &BackgroundEditor::modified, this, &BGDialog::modified);
+	connect(mainTabBar, &QTabBar::currentChanged, this, &BGDialog::setCurrentPage);
 
 	if (Config::value("backgroundEditorSize").toSize() != QSize(0, 0)) {
 		resize(Config::value("backgroundEditorSize").toSize());
 	}
 }
 
+void BGDialog::createEditorPage()
+{
+	editorPage = new BackgroundEditor();
+	
+	connect(editorPage, &BackgroundEditor::modified, this, &BGDialog::updateBG);
+	connect(editorPage, &BackgroundEditor::modified, this, &BGDialog::modified);
+
+	stackedLayout->addWidget(editorPage);
+}
+
+void BGDialog::setCurrentPage(int index)
+{
+	if (index == 1 && editorPage == nullptr) {
+		createEditorPage();
+	}
+
+	stackedLayout->setCurrentIndex(index);
+	
+	if (index == 1 && _field != nullptr) {
+		editorPage->setBackgroundFile(_field->background());
+	}
+}
+
 void BGDialog::saveConfig()
 {
 	Config::setValue("backgroundEditorSize", size());
-	editorPage->saveConfig();
+	if (editorPage != nullptr) {
+		editorPage->saveConfig();
+	}
 }
 
 void BGDialog::fill(Field *field, bool reload)
@@ -119,7 +147,9 @@ void BGDialog::fill(Field *field, bool reload)
 	}
 
 	_field = field;
-	editorPage->clear();
+	if (editorPage != nullptr) {
+		editorPage->clear();
+	}
 
 	fillWidgets();
 
@@ -134,7 +164,9 @@ void BGDialog::clear()
 	statesWidget->blockSignals(true);
 	layersWidget->blockSignals(true);
 	zWidget->blockSignals(true);
-	editorPage->blockSignals(true);
+	if (editorPage != nullptr) {
+		editorPage->blockSignals(true);
+	}
 
 	_field = nullptr;
 	allparams.clear();
@@ -145,13 +177,17 @@ void BGDialog::clear()
 	layersWidget->clear();
 	sectionsWidget->clear();
 	zWidget->clear();
-	editorPage->clear();
+	if (editorPage != nullptr) {
+		editorPage->clear();
+	}
 
 	parametersWidget->blockSignals(false);
 	statesWidget->blockSignals(false);
 	layersWidget->blockSignals(false);
 	zWidget->blockSignals(false);
-	editorPage->blockSignals(false);
+	if (editorPage != nullptr) {
+		editorPage->blockSignals(false);
+	}
 }
 
 void BGDialog::fillWidgets()
@@ -229,7 +265,9 @@ void BGDialog::fillWidgets()
 		z[1] = -1;
 		_field->scriptsAndTexts()->bgParamAndBgMove(params, z, x, y);
 
-		editorPage->setBackgroundFile(_field->background());
+		if (editorPage != nullptr && mainTabBar->currentIndex() == 1) {
+			editorPage->setBackgroundFile(_field->background());
+		}
 	}
 }
 

@@ -34,6 +34,7 @@ public:
 signals:
 	void modified();
 private slots:
+	void setCurrentPage(int index);
 	void showLayersPage(int index);
 	void parameterChanged(int index);
 	void layerChanged();
@@ -46,12 +47,14 @@ private slots:
 	void tryToRepairBG();
 	void updateBG();
 private:
+	void createEditorPage();
 	QImage background(bool *bgWarning = nullptr);
 	void fillWidgets();
 
 	Field *_field;
 	ApercuBGLabel *image;
-	QTabWidget *tabWidget;
+	QTabBar *mainTabBar;
+	QStackedLayout *stackedLayout;
 	QWidget *viewerPage;
 	BackgroundEditor *editorPage;
 	QComboBox *parametersWidget;
