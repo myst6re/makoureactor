@@ -43,14 +43,24 @@ bool operator<(const LayerParam &layerParam, const LayerParam &other)
 	return memcmp(&layerParam, &other, sizeof(layerParam)) < 0;
 }
 
-int operator==(const LayerDstTex &layerDstTex, const LayerDstTex &other)
+int operator==(const Conflict &conflict, const Conflict &other)
 {
-	return memcmp(&layerDstTex, &other, sizeof(LayerDstTex));
+	return memcmp(&conflict, &other, sizeof(Conflict));
 }
 
-bool operator<(const LayerDstTex &layerDstTex, const LayerDstTex &other)
+bool operator<(const Conflict &conflict, const Conflict &other)
 {
-	return memcmp(&layerDstTex, &other, sizeof(LayerDstTex)) < 0;
+	return memcmp(&conflict, &other, sizeof(Conflict)) < 0;
+}
+
+int operator==(const DstTex &dstTex, const DstTex &other)
+{
+	return memcmp(&dstTex, &other, sizeof(DstTex));
+}
+
+bool operator<(const DstTex &dstTex, const DstTex &other)
+{
+	return memcmp(&dstTex, &other, sizeof(DstTex)) < 0;
 }
 
 BackgroundTiles::BackgroundTiles() :
@@ -228,7 +238,7 @@ QMap<qint32, Tile> BackgroundTiles::sortedTiles() const
 QMap<LayerParam, quint8> BackgroundTiles::usedParams(bool *layerExists, QSet<quint16> *usedIDs, QList< QList<quint16> > *effectLayers) const
 {
 	QMap<LayerParam, quint8> ret;
-	QMap<LayerDstTex, qsizetype> collectEffectLayerTexPos;
+	QMap< Conflict, QMap<DstTex, QList<quint16> > > collectEffectLayerTexPos[3];
 	layerExists[0] = layerExists[1] = layerExists[2] = false;
 
 	if (effectLayers != nullptr) {
@@ -250,23 +260,44 @@ QMap<LayerParam, quint8> BackgroundTiles::usedParams(bool *layerExists, QSet<qui
 				ret.insert(layerParam, ret.value(layerParam) | tile.state);
 			}
 
-			if (effectLayers != nullptr && tile.blending) {
-				LayerDstTex layerDst;
-				layerDst.layer = tile.layerID;
+			if (effectLayers != nullptr) {
+				Conflict conflict;
+				conflict.tileID = tile.ID;
+				ParamState paramState;
+				paramState.param = tile.param;
+				paramState.state = tile.state;
+				conflict.paramState = paramState;
+				DstTex layerDst;
 				layerDst.dstX = tile.dstX;
 				layerDst.dstY = tile.dstY;
-				qsizetype index = collectEffectLayerTexPos.value(layerDst, -1) + 1;
 
-				LayerParam layerParam;
-				layerParam.layer = tile.layerID;
-				layerParam.param = tile.param;
-
-				if (index >= effectLayers[tile.layerID - 1].size()) {
-					effectLayers[tile.layerID - 1].append(QList<quint16>());
+				collectEffectLayerTexPos[tile.layerID - 1][conflict][layerDst].append(tile.tileID);
+			}
+		}
+	}
+	
+	if (effectLayers != nullptr) {
+		for (quint8 layer = 0; layer < 3; ++layer) {
+			for (const QMap< DstTex, QList<quint16> > &dst: collectEffectLayerTexPos[layer]) {
+				qsizetype maxSize = -1;
+				for (const QList<quint16> &tileIDs: dst) {
+					if (tileIDs.size() > maxSize) {
+						maxSize = tileIDs.size();
+					}
 				}
-
-				effectLayers[tile.layerID - 1][index].append(tile.tileID);
-				collectEffectLayerTexPos.insert(layerDst, index);
+				if (maxSize > 1) {
+					qsizetype id = effectLayers->size();
+					for (const QList<quint16> &tileIDs: dst) {
+						if (tileIDs.size() > 1) {
+							for (qsizetype i = 0; i < tileIDs.size(); ++i) {
+								if (id + i >= effectLayers->size()) {
+									effectLayers->append(QList<quint16>());
+								}
+								(*effectLayers)[id + i].append(tileIDs.at(i));
+							}
+						}
+					}
+				}
 			}
 		}
 	}

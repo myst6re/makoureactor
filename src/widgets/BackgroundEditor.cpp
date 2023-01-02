@@ -41,7 +41,7 @@ BackgroundEditor::BackgroundEditor(QWidget *parent)
 
 	addTopLevelItem(tr("By Depth"), SubLayer);
 	addTopLevelItem(tr("By Param"), BackgroundParameter);
-	addTopLevelItem(tr("By Effect"), Effect);
+	addTopLevelItem(tr("Conflicts"), Effect);
 
 	_shiftX = new QSpinBox(this);
 	_shiftX->setRange(0, 8);
@@ -352,7 +352,7 @@ void BackgroundEditor::refreshList(int layer)
 				for (quint16 tileId: tileIds) {
 					tilesIdsVariant.append(tileId);
 				}
-				item = new QTreeWidgetItem(QStringList(tr("Effect %1").arg(i)), Effect);
+				item = new QTreeWidgetItem(QStringList(tr("Conflict %1").arg(i)), Effect);
 				item->setData(0, Qt::UserRole, tilesIdsVariant);
 				item->setExpanded(false);
 				item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);

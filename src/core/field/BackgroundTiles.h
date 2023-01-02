@@ -48,14 +48,6 @@ struct SrcTex {
 	quint8 srcX, srcY;
 };
 
-struct LayerDstTex {
-	quint8 layer;
-	qint16 dstX, dstY;
-};
-
-int operator==(const LayerDstTex &layerSrcTex, const LayerDstTex &other);
-bool operator<(const LayerDstTex &layerSrcTex, const LayerDstTex &other);
-
 struct ParamState {
 	ParamState(): param(0), state(0) {}
 	ParamState(quint8 param, quint8 state) : param(param), state(state) {}
@@ -64,6 +56,21 @@ struct ParamState {
 	}
 	quint8 param, state;
 };
+
+struct Conflict {
+	quint16 tileID;
+	ParamState paramState;
+};
+
+int operator==(const Conflict &conflict, const Conflict &other);
+bool operator<(const Conflict &conflict, const Conflict &other);
+
+struct DstTex {
+	qint16 dstX, dstY;
+};
+
+int operator==(const DstTex &layerSrcTex, const DstTex &other);
+bool operator<(const DstTex &layerSrcTex, const DstTex &other);
 
 class BackgroundTiles : public QMultiMap<qint32, Tile>
 {

@@ -210,11 +210,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>By Effect</source>
+        <source>Conflict %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Effect %1</source>
+        <source>Conflicts</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
