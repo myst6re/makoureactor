@@ -20,7 +20,8 @@
 #include "core/field/Field.h"
 
 BGDialog::BGDialog(QWidget *parent) :
-    QDialog(parent, Qt::Tool), _field(nullptr), editorPage(nullptr), zoomFactor(1.0f)
+    QDialog(parent, Qt::Tool), _field(nullptr), editorPage(nullptr), palettesPage(nullptr),
+    zoomFactor(1.0f)
 {
 	setWindowTitle(tr("Background"));
 
@@ -84,6 +85,7 @@ BGDialog::BGDialog(QWidget *parent) :
 	mainTabBar = new QTabBar(this);
 	mainTabBar->addTab(tr("Viewer"));
 	mainTabBar->addTab(tr("Editor"));
+	mainTabBar->addTab(tr("Palettes"));
 
 	stackedLayout = new QStackedLayout;
 	stackedLayout->addWidget(viewerPage);
@@ -119,16 +121,35 @@ void BGDialog::createEditorPage()
 	stackedLayout->addWidget(editorPage);
 }
 
+void BGDialog::createPalettesPage()
+{
+	palettesPage = new BackgroundPaletteEditor();
+
+	connect(palettesPage, &BackgroundPaletteEditor::modified, this, &BGDialog::updateBG);
+	connect(palettesPage, &BackgroundPaletteEditor::modified, this, &BGDialog::modified);
+
+	stackedLayout->addWidget(palettesPage);
+}
+
 void BGDialog::setCurrentPage(int index)
 {
-	if (index == 1 && editorPage == nullptr) {
-		createEditorPage();
+	if (index >= 1 && editorPage == nullptr) {
+		if (editorPage == nullptr) {
+			createEditorPage();
+		}
+		if (palettesPage == nullptr) {
+			createPalettesPage();
+		}
 	}
 
 	stackedLayout->setCurrentIndex(index);
 	
-	if (index == 1 && _field != nullptr) {
-		editorPage->setBackgroundFile(_field->background());
+	if (_field != nullptr) {
+		if (index == 1) {
+			editorPage->setBackgroundFile(_field->background());
+		} else if (index == 2) {
+			palettesPage->setBackgroundFile(_field->background());
+		}
 	}
 }
 
@@ -267,6 +288,9 @@ void BGDialog::fillWidgets()
 
 		if (editorPage != nullptr && mainTabBar->currentIndex() == 1) {
 			editorPage->setBackgroundFile(_field->background());
+		}
+		if (palettesPage != nullptr && mainTabBar->currentIndex() == 2) {
+			palettesPage->setBackgroundFile(_field->background());
 		}
 	}
 }

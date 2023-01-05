@@ -142,6 +142,10 @@
         <source>Editor</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Palettes</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>BackgroundEditor</name>
@@ -215,6 +219,17 @@
     </message>
     <message>
         <source>Conflicts</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>BackgroundPaletteEditor</name>
+    <message>
+        <source>Palette %1</source>
+        <translation type="unfinished">Palette %1</translation>
+    </message>
+    <message>
+        <source>Is first pixel transparent</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

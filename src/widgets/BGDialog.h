@@ -20,6 +20,7 @@
 #include <QtWidgets>
 #include "ApercuBGLabel.h"
 #include "BackgroundEditor.h"
+#include "BackgroundPaletteEditor.h"
 
 class Field;
 
@@ -48,6 +49,7 @@ private slots:
 	void updateBG();
 private:
 	void createEditorPage();
+	void createPalettesPage();
 	QImage background(bool *bgWarning = nullptr);
 	void fillWidgets();
 
@@ -57,6 +59,7 @@ private:
 	QStackedLayout *stackedLayout;
 	QWidget *viewerPage;
 	BackgroundEditor *editorPage;
+	BackgroundPaletteEditor *palettesPage;
 	QComboBox *parametersWidget;
 	QListWidget *statesWidget, *layersWidget, *sectionsWidget;
 	QSpinBox *zWidget;
