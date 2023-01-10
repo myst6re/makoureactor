@@ -32,6 +32,15 @@ BackgroundPaletteEditor::BackgroundPaletteEditor(QWidget *parent)
 	connect(_listWidget, &ListWidget::removeTriggered, this, &BackgroundPaletteEditor::removePalette);
 }
 
+QListWidgetItem *BackgroundPaletteEditor::createItem(qsizetype i) const
+{
+	if (_backgroundFile == nullptr) {
+		return nullptr;
+	}
+
+	return new QListWidgetItem(QIcon(QPixmap::fromImage(_backgroundFile->palettes().at(i)->toImage())), tr("Palette %1").arg(i));
+}
+
 void BackgroundPaletteEditor::setBackgroundFile(BackgroundFile *backgroundFile)
 {
 	_backgroundFile = backgroundFile;
@@ -47,7 +56,7 @@ void BackgroundPaletteEditor::setBackgroundFile(BackgroundFile *backgroundFile)
 	qsizetype paletteCount = _backgroundFile->palettes().size();
 
 	for (qsizetype i = 0; i < paletteCount; ++i) {
-		_listWidget->listWidget()->addItem(tr("Palette %1").arg(i));
+		_listWidget->listWidget()->addItem(createItem(i));
 	}
 
 	_listWidget->listWidget()->setCurrentRow(0);
@@ -105,7 +114,9 @@ void BackgroundPaletteEditor::choosePixelColor(const Cell &cell)
 
 		emit modified();
 
-		_imageGrid->setPixmap(QPixmap::fromImage(palette->toImage()));
+		QPixmap pix = QPixmap::fromImage(palette->toImage());
+		_imageGrid->setPixmap(pix);
+		_listWidget->listWidget()->currentItem()->setIcon(QIcon(pix));
 	}
 }
 
@@ -130,10 +141,10 @@ void BackgroundPaletteEditor::addPalette()
 		return;
 	}
 
-	char data[256] = {};
-	_backgroundFile->addPalette(data);
+	quint16 data[256] = {};
+	_backgroundFile->addPalette((const char *)data);
 
-	_listWidget->listWidget()->addItem(tr("Palette %1").arg(_listWidget->listWidget()->count()));
+	_listWidget->listWidget()->addItem(createItem(_listWidget->listWidget()->count()));
 
 	emit modified();
 }

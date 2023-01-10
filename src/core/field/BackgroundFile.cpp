@@ -78,8 +78,6 @@ QImage BackgroundFile::openBackground(const BackgroundTiles &tiles, const QRect 
 		return QImage();
 	}
 
-	qDebug() << "BackgroundFile::openBackground" << area;
-
 	return drawBackground(tiles, area, transparent, warning);
 }
 

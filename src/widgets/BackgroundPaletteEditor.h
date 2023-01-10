@@ -24,6 +24,7 @@ signals:
 	void modified();
 
 private:
+	QListWidgetItem *createItem(qsizetype i) const;
 	Palette *currentPalette();
 
 	ListWidget *_listWidget;

@@ -344,7 +344,6 @@ void BackgroundTiles::area(quint16 &minWidth, quint16 &minHeight,
 		else if (tile.dstY < 0 && -tile.dstY > minHeight)
 			minHeight = -tile.dstY;
 	}
-	qDebug() << "area2" << minWidth << minHeight;
 
 	width = minWidth + maxWidth + 16;
 	height = minHeight + maxHeight + 16;

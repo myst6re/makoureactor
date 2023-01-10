@@ -61,7 +61,7 @@ void PsColorDialog::setLayout()
 	QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
 
 	_layout = new QGridLayout(this);
-	_layout->addWidget(_topLabel, 0, 1, 1, _colorPicker != nullptr ? 1 : 2);
+	_layout->addWidget(_topLabel, 0, 0, 1, _colorPicker != nullptr ? 1 : 2);
 	_layout->addWidget(_colorPicker != nullptr ? static_cast<QWidget *>(_colorPicker) : static_cast<QWidget *>(_imageGrid), 1, 0, 1, _colorPicker != nullptr ? 1 : 2);
 	if (_colorLumniancePicker != nullptr) {
 		_layout->addWidget(_colorLumniancePicker, 1, 1);
