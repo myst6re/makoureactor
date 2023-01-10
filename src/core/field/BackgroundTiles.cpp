@@ -318,6 +318,15 @@ QSet<quint8> BackgroundTiles::usedPalettes() const
 	return ret;
 }
 
+void BackgroundTiles::shiftPalettes(quint8 palID, int steps)
+{
+	for (Tile &tile : *this) {
+		if (tile.depth < 2 && tile.paletteID && tile.paletteID > palID) {
+			tile.paletteID = quint8(std::min(palID + steps, 255));
+		}
+	}
+}
+
 void BackgroundTiles::area(quint16 &minWidth, quint16 &minHeight,
                            int &width, int &height) const
 {

@@ -18,6 +18,8 @@ private slots:
 	void setCurrentPalette(int palID);
 	void choosePixelColor(const Cell &cell);
 	void setTransparencyFlag();
+	void addPalette();
+	void removePalette();
 signals:
 	void modified();
 

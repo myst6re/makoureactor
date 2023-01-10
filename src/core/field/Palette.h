@@ -63,8 +63,8 @@ class PalettePC : public Palette
 {
 public:
 	PalettePC();
-	PalettePC(const Palette &palette, bool transparency=false);
-	explicit PalettePC(const char *data, bool transparency=false);
+	PalettePC(const Palette &palette, bool transparency = false);
+	explicit PalettePC(const char *data, bool transparency = false);
 	QRgb color(int index) const override;
 	bool isZero(int index) const override;
 	bool transparency() const;

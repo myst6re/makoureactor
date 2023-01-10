@@ -1061,6 +1061,14 @@ void Section1File::shiftTutIds(int row, int shift)
 	setModified(true);
 }
 
+void Section1File::shiftPalIds(int row, int shift)
+{
+	for (GrpScript &grpScript : _grpScripts) {
+		grpScript.shiftPalIds(row, shift);
+	}
+	setModified(true);
+}
+
 QSet<quint8> Section1File::listUsedTuts() const
 {
 	QSet<quint8> usedTuts;

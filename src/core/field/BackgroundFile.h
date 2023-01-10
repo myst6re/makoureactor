@@ -61,6 +61,8 @@ public:
 		qDeleteAll(_palettes);
 		_palettes = palettes;
 	}
+	virtual void addPalette(const char *data);
+	void removePalette(qsizetype palID);
 
 	inline virtual BackgroundTextures *textures() const {
 		return _textures;
@@ -92,9 +94,9 @@ protected:
 		return false;
 	}
 	void createTiles(const QRect &rect, const Tile &model, uint colorOrIndex = 0);
+	Palettes _palettes;
 
 private:
 	BackgroundTiles _tiles;
-	Palettes _palettes;
 	BackgroundTextures *_textures;
 };

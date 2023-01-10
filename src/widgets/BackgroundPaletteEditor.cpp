@@ -1,5 +1,6 @@
 #include "BackgroundPaletteEditor.h"
 #include "core/field/BackgroundFile.h"
+#include "core/field/BackgroundFilePC.h"
 #include "core/field/FieldPC.h"
 #include "core/field/Palette.h"
 #include "PsColorDialog.h"
@@ -27,6 +28,8 @@ BackgroundPaletteEditor::BackgroundPaletteEditor(QWidget *parent)
 	connect(_listWidget->listWidget(), &QListWidget::currentRowChanged, this, &BackgroundPaletteEditor::setCurrentPalette);
 	connect(_imageGrid, &ImageGridWidget::clicked, this, &BackgroundPaletteEditor::choosePixelColor);
 	connect(_transparency, &QCheckBox::clicked, this, &BackgroundPaletteEditor::setTransparencyFlag);
+	connect(_listWidget, &ListWidget::addTriggered, this, &BackgroundPaletteEditor::addPalette);
+	connect(_listWidget, &ListWidget::removeTriggered, this, &BackgroundPaletteEditor::removePalette);
 }
 
 void BackgroundPaletteEditor::setBackgroundFile(BackgroundFile *backgroundFile)
@@ -46,6 +49,8 @@ void BackgroundPaletteEditor::setBackgroundFile(BackgroundFile *backgroundFile)
 	for (qsizetype i = 0; i < paletteCount; ++i) {
 		_listWidget->listWidget()->addItem(tr("Palette %1").arg(i));
 	}
+
+	_listWidget->listWidget()->setCurrentRow(0);
 
 	_transparency->setVisible(_backgroundFile->field()->isPC());
 }
@@ -117,4 +122,43 @@ void BackgroundPaletteEditor::setTransparencyFlag()
 
 		emit modified();
 	}
+}
+
+void BackgroundPaletteEditor::addPalette()
+{
+	if (_backgroundFile == nullptr) {
+		return;
+	}
+
+	char data[256] = {};
+	_backgroundFile->addPalette(data);
+
+	_listWidget->listWidget()->addItem(tr("Palette %1").arg(_listWidget->listWidget()->count()));
+
+	emit modified();
+}
+
+void BackgroundPaletteEditor::removePalette()
+{
+	int palID = _listWidget->listWidget()->currentRow();
+
+	if (palID < 0 || _backgroundFile == nullptr || palID >= _backgroundFile->palettes().size()) {
+		return;
+	}
+
+	QMessageBox::StandardButton rep = QMessageBox::warning(this, tr("Palette used in background"), tr("This palette is maybe used in the background or by one or more scripts on this field.\nRemoving this palette may break scripts that reference it.\nAre you sure you want to continue?"), QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
+	if (rep == QMessageBox::Cancel) {
+		return;
+	}
+
+	_backgroundFile->removePalette(palID);
+	// Fix palette id occurences in scripts
+	if (_backgroundFile->field() && _backgroundFile->field()->scriptsAndTexts()) {
+		_backgroundFile->field()->scriptsAndTexts()->shiftPalIds(palID, -1);
+	}
+
+	delete _listWidget->listWidget()->takeItem(_listWidget->listWidget()->count() - 1);
+	setCurrentPalette(palID);
+
+	emit modified();
 }

@@ -84,6 +84,7 @@ public:
 	void shiftGroupIds(int groupId, int steps = 1);
 	void shiftTextIds(int textId, int steps = 1);
 	void shiftTutIds(int tutId, int steps = 1);
+	void shiftPalIds(int palId, int steps = 1);
 	void swapGroupIds(int groupId1, int groupId2);
 	void setWindow(const FF7Window &win);
 	void listWindows(int groupID, QMultiMap<quint64, FF7Window> &windows, QMultiMap<quint8, quint64> &text2win) const;

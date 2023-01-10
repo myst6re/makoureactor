@@ -403,3 +403,10 @@ bool BackgroundFilePC::resize(const QSize &size)
 
 	return false;
 }
+
+void BackgroundFilePC::addPalette(const char *data)
+{
+	_palettes.append(new PalettePC(data, false));
+
+	setModified(true);
+}

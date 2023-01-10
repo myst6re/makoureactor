@@ -551,6 +551,16 @@ void Script::shiftTutIds(quint8 tutoId, qint16 steps)
 	}
 }
 
+void Script::shiftPalIds(quint8 palId, qint16 steps)
+{
+	for (Opcode &opcode : _opcodes) {
+		qint16 paletteID = opcode.paletteID();
+		if (paletteID >= 0 && paletteID > palId) {
+			opcode.setPaletteID(quint8(std::min(paletteID + steps, 255)));
+		}
+	}
+}
+
 void Script::swapGroupIds(quint8 groupId1, quint8 groupId2)
 {
 	for (Opcode &opcode : _opcodes) {

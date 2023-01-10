@@ -420,6 +420,13 @@ void GrpScript::shiftTutIds(int tutId, int steps)
 	}
 }
 
+void GrpScript::shiftPalIds(int palId, int steps)
+{
+	for (Script &script : _scripts) {
+		script.shiftPalIds(palId, steps);
+	}
+}
+
 void GrpScript::swapGroupIds(int groupId1, int groupId2)
 {
 	for (Script &script : _scripts) {

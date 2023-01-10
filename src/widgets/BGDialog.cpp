@@ -86,11 +86,13 @@ BGDialog::BGDialog(QWidget *parent) :
 	mainTabBar->addTab(tr("Viewer"));
 	mainTabBar->addTab(tr("Editor"));
 	mainTabBar->addTab(tr("Palettes"));
+	mainTabBar->setExpanding(false);
+	mainTabBar->setDrawBase(false);
 
 	stackedLayout = new QStackedLayout;
 	stackedLayout->addWidget(viewerPage);
 
-	mainLayout->addWidget(mainTabBar);
+	mainLayout->addWidget(mainTabBar, 0, mainTabBar->documentMode() ? Qt::AlignCenter : Qt::Alignment());
 	mainLayout->addLayout(stackedLayout);
 
 	connect(image, &ApercuBGLabel::saveRequested, this, &BGDialog::saveImage);

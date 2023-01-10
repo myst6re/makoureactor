@@ -115,6 +115,11 @@ struct FF7If {
 	FF7Var::VarSize size;
 };
 
+struct FF7VarOrValue {
+	FF7Var var;
+	int value;
+};
+
 class Section1File;
 
 #define OPCODE_GENERATE_LIST \
@@ -1635,6 +1640,8 @@ public:
 	void setTextID(quint8 textID);
 	qint16 tutoID() const;
 	void setTutoID(quint8 tutoID);
+	qint16 paletteID() const;
+	void setPaletteID(quint8 palID);
 	int mapID() const;
 	void setMapID(quint16 mapID);
 	qint16 subKey() const;

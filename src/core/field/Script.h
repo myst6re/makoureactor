@@ -52,6 +52,7 @@ public:
 	void shiftGroupIds(quint8 groupId, qint16 steps = 1);
 	void shiftTextIds(quint8 textId, qint16 steps = 1);
 	void shiftTutIds(quint8 tutId, qint16 steps = 1);
+	void shiftPalIds(quint8 palId, qint16 steps = 1);
 	void swapGroupIds(quint8 groupId1, quint8 groupId2);
 	void setWindow(const FF7Window &win);
 	quint32 opcodePositionInBytes(qsizetype opcodeID) const;

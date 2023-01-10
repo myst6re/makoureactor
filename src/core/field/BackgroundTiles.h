@@ -91,6 +91,7 @@ public:
 	QMap<qint32, Tile> sortedTiles() const;
 	QMap<LayerParam, quint8> usedParams(bool *layerExists, QSet<quint16> *usedIDs = nullptr, QList<QList<quint16> > *effectLayers = nullptr) const;
 	QSet<quint8> usedPalettes() const;
+	void shiftPalettes(quint8 palID, int steps);
 	void area(quint16 &minWidth, quint16 &minHeight,
 	          int &width, int &height) const;
 	QPoint minTopLeft() const;

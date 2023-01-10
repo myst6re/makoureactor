@@ -557,6 +557,48 @@ void Opcode::setTutoID(quint8 tutoID)
 	}
 }
 
+qint16 Opcode::paletteID() const
+{
+	switch (id()) {
+	case OpcodeKey::STPAL:
+		if (B1(_opcode.opcodeSTPAL.banks) == 0) {
+			return _opcode.opcodeSTPAL.palID;
+		}
+		break;
+	case OpcodeKey::LDPAL:
+		if (B2(_opcode.opcodeLDPAL.banks) == 0) {
+			return _opcode.opcodeLDPAL.palID;
+		}
+		break;
+		CaseOpcodeAttribute(STPLS, palID);
+		CaseOpcodeAttribute(LDPLS, palID);
+	default:
+		break;
+	}
+
+	return -1;
+}
+
+void Opcode::setPaletteID(quint8 palID)
+{
+	switch (id()) {
+	case OpcodeKey::STPAL:
+		if (B1(_opcode.opcodeSTPAL.banks) == 0) {
+			_opcode.opcodeSTPAL.palID = palID;
+		}
+		break;
+	case OpcodeKey::LDPAL:
+		if (B2(_opcode.opcodeLDPAL.banks) == 0) {
+			_opcode.opcodeLDPAL.palID = palID;
+		}
+		break;
+		CaseOpcodeSetAttribute(STPLS, palID);
+		CaseOpcodeSetAttribute(LDPLS, palID);
+	default:
+		break;
+	}
+}
+
 int Opcode::mapID() const
 {
 	switch (id()) {

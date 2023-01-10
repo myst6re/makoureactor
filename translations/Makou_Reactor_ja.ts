@@ -225,6 +225,16 @@
         <source>Palette %1</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Palette used in background</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This palette is maybe used in the background or by one or more scripts on this field.
+Removing this palette may break scripts that reference it.
+Are you sure you want to continue?</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>BackgroundTileEditor</name>

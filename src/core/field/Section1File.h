@@ -73,6 +73,7 @@ public:
 	void linePosition(QMap<int, std::pair<FF7Position, FF7Position>> &positions) const;
 
 	void shiftTutIds(int row, int shift);
+	void shiftPalIds(int row, int shift);
 	bool compileScripts(int &groupID, int &scriptID, int &opcodeID, QString &errorStr);
 	void removeTexts();
 	void cleanTexts();
