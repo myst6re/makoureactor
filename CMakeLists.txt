@@ -22,6 +22,9 @@ cmake_policy(SET CMP0042 NEW)
 cmake_policy(SET CMP0074 NEW)
 cmake_policy(SET CMP0091 NEW)
 
+set(VCPKG_DISABLE_COMPILER_TRACKING 1)
+set(VCPKG_INSTALL_OPTIONS "--clean-after-build" "--x-use-aria2")
+
 set(RELEASE_NAME "Makou_Reactor")
 set(GUI_TARGET "${RELEASE_NAME}")
 set(CLI_TARGET "makoureactor")
@@ -29,13 +32,14 @@ if(NOT PRERELEASE_STRING)
     set(PRERELEASE_STRING "")
 endif()
 
-project("Makou Reactor" VERSION 2.0.0 LANGUAGES CXX
+project(${RELEASE_NAME} VERSION 2.0.0 LANGUAGES CXX
     DESCRIPTION "Final Fantasy VII field archive editor"
     HOMEPAGE_URL "https://github.com/myst6re/makoureactor"
 )
 
-# Try to autodetect Qt path if not specified
-include(qt.cmake)
+find_package(Qt6 CONFIG REQUIRED COMPONENTS Core Widgets OpenGLWidgets Svg OpenGL LinguistTools Core5Compat Xml Quick)
+find_package(ff7tk CONFIG REQUIRED COMPONENTS ff7tk fftkData ff7tkQtWidgets ff7tkFormats ff7tkUtils)
+find_package(ZLIB REQUIRED)
 
 # specify the C++ standard
 set(CMAKE_CXX_STANDARD 17)
@@ -47,6 +51,7 @@ else()
     add_compile_options(-Wall -Wextra -pedantic)
 endif()
 
+qt_standard_project_setup()
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC OFF)
@@ -69,13 +74,6 @@ add_compile_definitions(
     MAKOU_REACTOR_VERSION_PATCH=${PROJECT_VERSION_PATCH}
     MAKOU_REACTOR_VERSION_TWEAK=0
 )
-
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets OpenGLWidgets Svg OpenGL LinguistTools Core5Compat Xml Quick REQUIRED)
-
-set(REQUIRED_FF7TK_VERSION 0.83.0.0)
-find_package(ff7tk ${REQUIRED_FF7TK_VERSION} REQUIRED COMPONENTS ff7tk fftkData ff7tkQtWidgets ff7tkFormats ff7tkUtils)
-
-find_package(ZLIB REQUIRED)
 
 set(LANGS
     fr
@@ -543,15 +541,13 @@ if(GUI)
         ff7tk::ff7tkUtils
     )
 
-    if(${QT_VERSION_MAJOR} EQUAL 6)
-        target_link_libraries(${GUI_TARGET} PRIVATE Qt::Core5Compat)
-        
-        target_compile_definitions(${GUI_TARGET}
-            PRIVATE TASKBAR_BUTTON=1
-            GUI=1
-        )
-    endif()
-    
+    target_link_libraries(${GUI_TARGET} PRIVATE Qt::Core5Compat)
+
+    target_compile_definitions(${GUI_TARGET}
+        PRIVATE TASKBAR_BUTTON=1
+        GUI=1
+    )
+
     set_target_properties(${GUI_TARGET} PROPERTIES
         MACOSX_BUNDLE_BUNDLE_NAME "Makou Reactor"
         MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}

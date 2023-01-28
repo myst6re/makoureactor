@@ -1,0 +1,51 @@
+{
+  "name": "makou-reactor",
+  "version": "2.0.0",
+  "builtin-baseline": "e69dd972ba64840955f46704ecce6241bf607c0f",
+  "dependencies": [
+    "ff7tk",
+    "qtbase",
+    "qtsvg",
+    "qttools",
+    "qttranslations",
+    "qt5compat",
+    "zlib"
+  ],
+  "overrides": [
+    {
+      "name": "ff7tk",
+      "version": "0.83.0",
+      "port-version": 0
+    },
+    {
+      "name": "qtbase",
+      "version": "6.4.2",
+      "port-version": 0
+    },
+    {
+      "name": "qtsvg",
+      "version": "6.4.2",
+      "port-version": 0
+    },
+    {
+      "name": "qttools",
+      "version": "6.4.2",
+      "port-version": 0
+    },
+    {
+      "name": "qttranslations",
+      "version": "6.4.2",
+      "port-version": 0
+    },
+    {
+      "name": "qt5compat",
+      "version": "6.4.2",
+      "port-version": 0
+    },
+    {
+      "name": "zlib",
+      "version": "1.2.13",
+      "port-version": 0
+    }
+  ]
+}
