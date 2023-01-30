@@ -541,7 +541,7 @@ if(GUI)
         ff7tk::ff7tkUtils
     )
 
-    target_link_libraries(${GUI_TARGET} PRIVATE Qt::Core5Compat)
+    target_link_libraries(${GUI_TARGET} PRIVATE Qt6::Core5Compat)
 
     target_compile_definitions(${GUI_TARGET}
         PRIVATE TASKBAR_BUTTON=1
