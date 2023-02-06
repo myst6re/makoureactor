@@ -61,7 +61,7 @@ public:
 		qDeleteAll(_palettes);
 		_palettes = palettes;
 	}
-	virtual void addPalette(const char *data);
+	virtual bool addPalette(const char *data);
 	void removePalette(qsizetype palID);
 
 	inline virtual BackgroundTextures *textures() const {

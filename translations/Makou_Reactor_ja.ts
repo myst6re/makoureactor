@@ -235,6 +235,14 @@ Removing this palette may break scripts that reference it.
 Are you sure you want to continue?</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Cannot add more palettes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You reached the maximum amount of palettes (256).</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>BackgroundTileEditor</name>

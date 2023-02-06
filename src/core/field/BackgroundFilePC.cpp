@@ -404,9 +404,15 @@ bool BackgroundFilePC::resize(const QSize &size)
 	return false;
 }
 
-void BackgroundFilePC::addPalette(const char *data)
+bool BackgroundFilePC::addPalette(const char *data)
 {
-	_palettes.append(new PalettePC(data, false));
+	if (_palettes.size() < 256) {
+		_palettes.append(new PalettePC(data, false));
+	
+		setModified(true);
+		
+		return true;
+	}
 
-	setModified(true);
+	return false;
 }

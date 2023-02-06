@@ -263,11 +263,17 @@ bool BackgroundFile::exportLayers(const QString &dirPath, const QString &extensi
 	return true;
 }
 
-void BackgroundFile::addPalette(const char *data)
+bool BackgroundFile::addPalette(const char *data)
 {
-	_palettes.append(new Palette(data));
+	if (_palettes.size() < 256) {
+		_palettes.append(new Palette(data));
+	
+		setModified(true);
+		
+		return true;
+	}
 
-	setModified(true);
+	return false;
 }
 
 void BackgroundFile::removePalette(qsizetype palID)

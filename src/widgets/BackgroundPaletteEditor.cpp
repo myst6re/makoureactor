@@ -142,9 +142,13 @@ void BackgroundPaletteEditor::addPalette()
 	}
 
 	quint16 data[256] = {};
-	_backgroundFile->addPalette((const char *)data);
+	if (_backgroundFile->addPalette((const char *)data)) {
+		_listWidget->listWidget()->addItem(createItem(_listWidget->listWidget()->count()));
+	} else {
+		QMessageBox::warning(this, tr("Cannot add more palettes"), tr("You reached the maximum amount of palettes (256)."));
 
-	_listWidget->listWidget()->addItem(createItem(_listWidget->listWidget()->count()));
+		return;
+	}
 
 	emit modified();
 }
