@@ -199,6 +199,7 @@ Opcode ScriptEditorDLPBWriteToMemory::buildOpcode()
 
 	op.address = quint32(_address->value());
 	opcode().setResizableData(data);
+	op.subSize = data.size();
 
 	return opcode();
 }
