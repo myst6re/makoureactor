@@ -513,7 +513,7 @@ STRUCTPACK(struct OpcodeIFUWL : public OpcodeBase {
 STRUCTPACK(struct OpcodeUnused1A : public OpcodeBase {
 	quint16 from;
 	quint16 to;
-	quint32 absValue;
+	qint32 absValue;
 	quint8 flag;
 });
 

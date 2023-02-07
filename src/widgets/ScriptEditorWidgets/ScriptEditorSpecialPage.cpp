@@ -92,19 +92,20 @@ ScriptEditorDLPBSavemap::ScriptEditorDLPBSavemap(const Section1File *scriptsAndT
 void ScriptEditorDLPBSavemap::build()
 {
 	_from = new QSpinBox(this);
+	_from->setDisplayIntegerBase(16);
 	_from->setRange(0, 65535);
 	_to = new QSpinBox(this);
+	_to->setDisplayIntegerBase(16);
 	_to->setRange(0, 65535);
 	_absValue = new QDoubleSpinBox(this);
 	_absValue->setDecimals(0);
-	_absValue->setRange(0, pow(2, 32)-1);
+	_absValue->setRange(qint32(0x80000000), pow(2, 32)-1);
 
 	_flag = new QComboBox(this);
-	_flag->addItem("-");
-	_flag->addItem(tr("8 bit"));
-	_flag->addItem(tr("16 bit"));
-	_flag->addItem(tr("24 bit"));
-	_flag->addItem(tr("32 bit"));
+	_flag->addItem(tr("8 bit"), 0);
+	_flag->addItem(tr("16 bit"), 1);
+	_flag->addItem(tr("24 bit"), 2);
+	_flag->addItem(tr("32 bit"), 3);
 
 	_fromIsPointer = new QCheckBox(tr("From is a pointer"), this);
 	_toIsPointer = new QCheckBox(tr("To is a pointer"), this);
@@ -123,7 +124,8 @@ void ScriptEditorDLPBSavemap::build()
 	layout->setRowStretch(5, 1);
 	layout->setColumnStretch(2, 1);
 	layout->setContentsMargins(QMargins());
-
+	
+	connect(_from, &QSpinBox::valueChanged, this, &ScriptEditorDLPBSavemap::setAbsValueEnabled);
 	connect(_from, &QSpinBox::editingFinished, this, &ScriptEditorDLPBSavemap::opcodeChanged);
 	connect(_to, &QSpinBox::editingFinished, this, &ScriptEditorDLPBSavemap::opcodeChanged);
 	connect(_absValue, &QDoubleSpinBox::editingFinished, this, &ScriptEditorDLPBSavemap::opcodeChanged);
@@ -141,7 +143,7 @@ Opcode ScriptEditorDLPBSavemap::buildOpcode()
 	op.absValue = quint32(_absValue->value());
 	op.flag = quint8((_toIsPointer->isChecked() << 5) |
 	                 (_fromIsPointer->isChecked() << 4) |
-	                 quint8(_flag->currentIndex()));
+	                 quint8(_flag->currentData().toInt()));
 
 	return opcode();
 }
@@ -155,9 +157,14 @@ void ScriptEditorDLPBSavemap::setOpcode(const Opcode &opcode)
 	_from->setValue(o.from);
 	_to->setValue(o.to);
 	_absValue->setValue(o.absValue);
-	_flag->setCurrentIndex(o.flag & 0x7);
+	_flag->setCurrentIndex(_flag->findData(o.flag & 0x7));
 	_fromIsPointer->setChecked(o.flag & 0x10);
 	_toIsPointer->setChecked(o.flag & 0x20);
+}
+
+void ScriptEditorDLPBSavemap::setAbsValueEnabled(int value)
+{
+	_absValue->setEnabled(value == 0xFFFF);
 }
 
 ScriptEditorDLPBWriteToMemory::ScriptEditorDLPBWriteToMemory(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script,
@@ -168,9 +175,9 @@ ScriptEditorDLPBWriteToMemory::ScriptEditorDLPBWriteToMemory(const Section1File 
 
 void ScriptEditorDLPBWriteToMemory::build()
 {
-	_address = new QDoubleSpinBox(this);
-	_address->setDecimals(0);
-	_address->setRange(0, pow(2, 32)-1);
+	_address = new QSpinBox(this);
+	_address->setDisplayIntegerBase(16);
+	_address->setRange(0, 0x7FFFFFFF);
 	_bytes = new QLineEdit(this);
 
 	QGridLayout *layout = new QGridLayout(this);
@@ -181,7 +188,7 @@ void ScriptEditorDLPBWriteToMemory::build()
 	layout->setRowStretch(2, 1);
 	layout->setContentsMargins(QMargins());
 
-	connect(_address, &QDoubleSpinBox::editingFinished, this, &ScriptEditorDLPBWriteToMemory::opcodeChanged);
+	connect(_address, &QSpinBox::editingFinished, this, &ScriptEditorDLPBWriteToMemory::opcodeChanged);
 	connect(_bytes, &QLineEdit::editingFinished, this, &ScriptEditorDLPBWriteToMemory::opcodeChanged);
 }
 

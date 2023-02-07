@@ -44,6 +44,8 @@ public:
 	                        int opcodeID, QWidget *parent = nullptr);
 	Opcode buildOpcode() override;
 	void setOpcode(const Opcode &opcode) override;
+private slots:
+	void setAbsValueEnabled(int value);
 private:
 	void build() override;
 	QSpinBox *_from, *_to;
@@ -62,6 +64,6 @@ public:
 	void setOpcode(const Opcode &opcode) override;
 private:
 	void build() override;
-	QDoubleSpinBox *_address;
+	QSpinBox *_address;
 	QLineEdit *_bytes;
 };

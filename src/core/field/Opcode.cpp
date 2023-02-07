@@ -2437,16 +2437,16 @@ QString Opcode::toStringUnused1A(const Section1File *scriptsAndTexts, const Opco
 	QStringList flags;
 	
 	switch (opcode.flag & 0x7) {
-	case 1:
+	case 0:
 		flags.append(Opcode::tr("8 bit"));
 		break;
-	case 2:
+	case 1:
 		flags.append(Opcode::tr("16 bit"));
 		break;
-	case 3:
+	case 2:
 		flags.append(Opcode::tr("24 bit"));
 		break;
-	case 4:
+	case 3:
 		flags.append(Opcode::tr("32 bit"));
 		break;
 	default:
@@ -2462,8 +2462,8 @@ QString Opcode::toStringUnused1A(const Section1File *scriptsAndTexts, const Opco
 	}
 	
 	return Opcode::tr("Write/Read entire savemap (from=%1, to=%2, absValue=%3, flags={%4})")
-	        .arg(opcode.from)
-	        .arg(opcode.to)
+	        .arg(opcode.from, 0, 16)
+	        .arg(opcode.to, 0, 16)
 	        .arg(opcode.absValue)
 	        .arg(flags.join(", "));
 }
