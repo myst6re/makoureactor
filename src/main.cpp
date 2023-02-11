@@ -51,6 +51,10 @@ int main(int argc, char *argv[])
 	app.setWindowIcon(QIcon(":/images/logo-shinra.png"));
 
 	QSurfaceFormat format;
+	format.setOption(QSurfaceFormat::DeprecatedFunctions, false);
+	format.setProfile(QSurfaceFormat::CoreProfile);
+	format.setRenderableType(QSurfaceFormat::OpenGL);
+	format.setVersion(4, 1);
 #ifdef QT_DEBUG
 	format.setOption(QSurfaceFormat::DebugContext);
 #endif
