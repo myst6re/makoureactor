@@ -32,17 +32,26 @@ instructions below.
 
 ### Requirements
 
+- [zlib](http://www.zlib.net/)
 - [ff7tk](https://www.github.com/sithlord48/ff7tk)
 - CMake
 - Qt 6.2+
 
 ### Windows
 
+#### Zlib
+
+Download and install Zlib using the [official installer](https://gnuwin32.sourceforge.net/downlinks/zlib.php) at this path: `C:\Program Files (x86)\zlib`
+
+#### ff7tk
+
+Download and install ff7tk using the [official installer](https://github.com/sithlord48/ff7tk/releases/download/continuous/ff7tk-continuous-win64-installer.exe) at the suggested default path.
+
 #### Qt + Qt Creator
 
 0. Download the online installer from https://www.qt.io/download-qt-installer
 1. Install Qt 6 with these items checked:
-   - **Qt/Qt 6.x.x (last version):** Check `MSVC 2019 64-bit`
+   - **Qt/Qt 6.x.x (last version):** Check `MSVC 2019 64-bit`, `Qt Creator`, `Qt Shader Tools` and `Qt 5 Compatibility Module`
    - **Developer And Designer Tools:** Check `CMake` and `Ninja`
 2. Run Qt Creator and open an existing project, select the CMakeLists.txt in the source directory of Makou Reactor
 
