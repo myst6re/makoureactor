@@ -16,7 +16,7 @@
 ## along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ###############################################################################
 
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.24)
 cmake_policy(SET CMP0010 NEW)
 cmake_policy(SET CMP0042 NEW)
 cmake_policy(SET CMP0074 NEW)
@@ -71,9 +71,20 @@ add_compile_definitions(
 )
 
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets OpenGLWidgets Svg OpenGL LinguistTools Core5Compat Xml Quick REQUIRED)
+find_package(ff7tk CONFIG REQUIRED COMPONENTS ff7tk fftkData ff7tkQtWidgets ff7tkFormats ff7tkUtils)
 
-set(REQUIRED_FF7TK_VERSION 0.83.0.0)
-find_package(ff7tk ${REQUIRED_FF7TK_VERSION} REQUIRED COMPONENTS ff7tk fftkData ff7tkQtWidgets ff7tkFormats ff7tkUtils)
+set_target_properties(
+    ff7tk::ff7tk
+    ff7tk::ff7tkData
+    ff7tk::ff7tkQtWidgets
+    ff7tk::ff7tkFormats
+    ff7tk::ff7tkUtils
+    PROPERTIES
+    MAP_IMPORTED_CONFIG_DEBUG RELWITHDEBINFO
+    MAP_IMPORTED_CONFIG_RELEASE RELWITHDEBINFO
+    MAP_IMPORTED_CONFIG_RELWITHDEBINFO RELWITHDEBINFO
+    MAP_IMPORTED_CONFIG_MINSIZEREL RELWITHDEBINFO
+)
 
 find_package(ZLIB REQUIRED)
 

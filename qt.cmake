@@ -1,6 +1,6 @@
 ###############################################################################
-## Copyright (C) 2009-2022 Arzel Jérôme <myst6re@gmail.com>
-## Copyright (C) 2020 Julian Xhokaxhiu <https://julianxhokaxhiu.com>
+## Copyright (C) 2009-2023 Arzel Jérôme <myst6re@gmail.com>
+## Copyright (C) 2023 Julian Xhokaxhiu <https://julianxhokaxhiu.com>
 ##
 ## This program is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -33,19 +33,21 @@ if(NOT QT_FOUND)
     else()
         if(WIN32)
             # look for user-registry pointing to Qt installation
-            get_filename_component(QT_INSTALLATION_PATH [HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{89c4e30e-3a1a-47c7-80d7-013ba3e25e57};InstallLocation] ABSOLUTE CACHE)
+            cmake_host_system_information(RESULT QT_INSTALLATION_PATH QUERY WINDOWS_REGISTRY "HKEY_CURRENT_USER/Software/Microsoft/Windows/CurrentVersion/Uninstall/{89c4e30e-3a1a-47c7-80d7-013ba3e25e57}" VALUE "InstallLocation")
 
-            if(QT_INSTALLATION_PATH STREQUAL "/")
+            if(QT_INSTALLATION_PATH STREQUAL "")
                 # look for user-registry pointing to qtcreator
-                get_filename_component(QT_INSTALLATION_PATH [HKEY_CURRENT_USER\\Software\\Classes\\Applications\\QtProject.QtCreator.cpp\\shell\\Open\\Command] DIRECTORY CACHE)
+                cmake_host_system_information(RESULT QT_INSTALLATION_PATH QUERY WINDOWS_REGISTRY "HKEY_CURRENT_USER/Software/Classes/Applications/QtProject.QtCreator.cpp/shell/Open/Command")
+                string(REPLACE " -client \"%1\"" "" QT_INSTALLATION_PATH ${QT_INSTALLATION_PATH})
 
-                if(QT_INSTALLATION_PATH STREQUAL "/")
+                if(QT_INSTALLATION_PATH STREQUAL "")
                     message(FATAL_ERROR "Please set QT_INSTALLATION_PATH or Qt${QT_VERSION_TO_FIND}_DIR")
                 endif()
 
                 message("-- QtCreator Auto-Detected at ${QT_INSTALLATION_PATH}")
 
-                # ../../../
+                # ../../../../
+                get_filename_component(QT_INSTALLATION_PATH "${QT_INSTALLATION_PATH}" DIRECTORY)
                 get_filename_component(QT_INSTALLATION_PATH "${QT_INSTALLATION_PATH}" DIRECTORY)
                 get_filename_component(QT_INSTALLATION_PATH "${QT_INSTALLATION_PATH}" DIRECTORY)
                 get_filename_component(QT_INSTALLATION_PATH "${QT_INSTALLATION_PATH}" DIRECTORY)
@@ -65,7 +67,9 @@ if(NOT QT_FOUND)
         message("-- Last Qt version ${QT_VERSION}")
 
         if(MSVC)
-            if(MSVC_TOOLSET_VERSION MATCHES 142)
+            if(MSVC_TOOLSET_VERSION MATCHES 143)
+                set(QT_MSVC "2019") # Qt does not yet provide an official 2022 toolset
+            elseif(MSVC_TOOLSET_VERSION MATCHES 142)
                 set(QT_MSVC "2019")
             elseif(MSVC_TOOLSET_VERSION MATCHES 141)
                 set(QT_MSVC "2017")
@@ -107,3 +111,6 @@ message("-- QT_QMAKE_EXECUTABLE: ${QT_QMAKE_EXECUTABLE}")
 get_filename_component(_qt_bin_dir "${QT_QMAKE_EXECUTABLE}" DIRECTORY)
 get_filename_component(_qt_dir "${_qt_bin_dir}" DIRECTORY)
 set(_qt_translations_dir "${_qt_dir}/translations")
+
+# Add the QT_PATH to the resolution paths
+list(APPEND CMAKE_PREFIX_PATH "${QT_PATH}")
