@@ -39,13 +39,15 @@ instructions below.
 
 ### Windows
 
-#### Zlib
+#### vcpkg
 
-Download and install Zlib using the [official installer](https://gnuwin32.sourceforge.net/downlinks/zlib.php) at this path: `C:\Program Files (x86)\zlib`
+> **Please note:**
+>
+> Makou Reactor will now use vcpkg as a package manager to resolve dependencies. Failing to follow these steps will fail your builds.
 
-#### ff7tk
-
-Download and install ff7tk using the [official installer](https://github.com/sithlord48/ff7tk/releases/download/continuous/ff7tk-continuous-win64-installer.exe) at the suggested default path.
+0. Clone the [vcpkg](https://vcpkg.io) project in the root folder of your `C:` drive ( `git clone https://github.com/Microsoft/vcpkg.git` )
+1. Go inside the `C:\vcpkg` folder and double click `bootstrap-vcpkg.bat`
+2. Open a `cmd` window in `C:\vcpkg` and run the following command: `vcpkg integrate install`
 
 #### Qt + Qt Creator
 

@@ -22,6 +22,9 @@ cmake_policy(SET CMP0042 NEW)
 cmake_policy(SET CMP0074 NEW)
 cmake_policy(SET CMP0091 NEW)
 
+set(VCPKG_DISABLE_COMPILER_TRACKING 1)
+set(VCPKG_INSTALL_OPTIONS "--clean-after-build" "--x-use-aria2")
+
 set(RELEASE_NAME "Makou_Reactor")
 set(GUI_TARGET "${RELEASE_NAME}")
 set(CLI_TARGET "makoureactor")
@@ -72,20 +75,6 @@ add_compile_definitions(
 
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets OpenGLWidgets Svg OpenGL LinguistTools Core5Compat Xml Quick REQUIRED)
 find_package(ff7tk CONFIG REQUIRED COMPONENTS ff7tk fftkData ff7tkQtWidgets ff7tkFormats ff7tkUtils)
-
-set_target_properties(
-    ff7tk::ff7tk
-    ff7tk::ff7tkData
-    ff7tk::ff7tkQtWidgets
-    ff7tk::ff7tkFormats
-    ff7tk::ff7tkUtils
-    PROPERTIES
-    MAP_IMPORTED_CONFIG_DEBUG RELWITHDEBINFO
-    MAP_IMPORTED_CONFIG_RELEASE RELWITHDEBINFO
-    MAP_IMPORTED_CONFIG_RELWITHDEBINFO RELWITHDEBINFO
-    MAP_IMPORTED_CONFIG_MINSIZEREL RELWITHDEBINFO
-)
-
 find_package(ZLIB REQUIRED)
 
 set(LANGS

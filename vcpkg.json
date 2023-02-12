@@ -1,0 +1,21 @@
+{
+  "name": "makou-reactor",
+  "version": "2.0.0",
+  "builtin-baseline": "0ba60bfef5dea4cb2599daa7ad8364e309835a68",
+  "dependencies": [
+    "ff7tk",
+    "zlib"
+  ],
+  "overrides": [
+    {
+      "name": "ff7tk",
+      "version": "0.83.1",
+      "port-version": 0
+    },
+    {
+      "name": "zlib",
+      "version": "1.2.13",
+      "port-version": 0
+    }
+  ]
+}
