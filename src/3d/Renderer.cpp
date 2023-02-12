@@ -42,7 +42,7 @@ Renderer::Renderer(QOpenGLWidget *_widget) :
 	connect(&mLogger, &QOpenGLDebugLogger::messageLogged, this, &Renderer::messageLogged);
 
 	if (mLogger.initialize()) {
-		mLogger.startLogging();
+		mLogger.startLogging(QOpenGLDebugLogger::SynchronousLogging);
 	} else {
 		qWarning() << "Cannot initialize OpenGL Debug Logger";
 		if (!QOpenGLContext::currentContext()->hasExtension(QByteArrayLiteral("GL_KHR_debug"))) {
@@ -181,13 +181,7 @@ void Renderer::draw(RendererPrimitiveType _type, float _pointSize)
 	mProgram.setUniformValue("viewMatrix", mViewMatrix);
 
 	// --- Draw ---
-	mGL.glDrawElements(_type, GLsizei(mIndexBuffer.size()), GL_UNSIGNED_INT, nullptr);
-#ifdef QT_DEBUG
-	GLenum lastError = mGL.glGetError();
-	if (lastError != GL_NO_ERROR) {
-		qDebug() << "mGL.glDrawElements(" << _type << ", " << GLsizei(mIndexBuffer.size()) << ", GL_UNSIGNED_INT, nullptr) ERROR " << lastError;
-	}
-#endif
+	mGL.glDrawElements(GLenum(_type), GLsizei(mIndexBuffer.size()), GL_UNSIGNED_INT, nullptr);
 
 	// --- After Draw ---
 	mVertex.release();
