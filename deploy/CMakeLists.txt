@@ -10,11 +10,15 @@ endif()
 install(FILES ${QM_FILES} DESTINATION "${TRANSLATIONS_PATH}")
 
 # Deploy ff7tk
-if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.20.0")
-    # Remove \ occurrences
+if(VCPKG_TOOLCHAIN)
     cmake_path(SET _ff7tk_ROOT "${ff7tk_DIR}/../..")
 else()
-    set(_ff7tk_ROOT "${ff7tk_DIR}/../..")
+    if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.20.0")
+        # Remove \ occurrences
+        cmake_path(SET _ff7tk_ROOT "${ff7tk_DIR}/../../..")
+    else()
+        set(_ff7tk_ROOT "${ff7tk_DIR}/../../..")
+    endif()
 endif()
 
 if(WIN32)
