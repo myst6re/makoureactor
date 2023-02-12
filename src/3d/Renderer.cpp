@@ -29,7 +29,7 @@ size_t vectorSizeOf(const typename std::vector<T>& vec)
 
 Renderer::Renderer(QOpenGLWidget *_widget) :
     mProgram(_widget), mVertexShader(QOpenGLShader::Vertex, _widget), mFragmentShader(QOpenGLShader::Fragment, _widget),
-    mVertex(QOpenGLBuffer::VertexBuffer), mIndex(QOpenGLBuffer::IndexBuffer), mTexture(QOpenGLTexture::Target2D), _hasError(false)
+    mVertex(QOpenGLBuffer::VertexBuffer), mIndex(QOpenGLBuffer::IndexBuffer), mTexture(QOpenGLTexture::Target2D), mVAO(this), _hasError(false)
 #ifdef QT_DEBUG
     , mLogger(_widget)
 #endif
@@ -98,7 +98,16 @@ Renderer::Renderer(QOpenGLWidget *_widget) :
 	mGL.glDisable(GL_CULL_FACE);
 
 	mGL.glDisable(GL_BLEND);
-	mGL.glDisable(GL_TEXTURE_2D);
+
+	// Vertex Array Object
+	if (!mVAO.isCreated() && !mVAO.create()) {
+#ifdef QT_DEBUG
+		qWarning() << "Cannot create the vertex array object";
+#endif
+		return;
+	}
+
+	mVAO.bind();
 }
 
 void Renderer::clear()
@@ -193,7 +202,6 @@ void Renderer::draw(RendererPrimitiveType _type, float _pointSize)
 		mTexture.release();
 	}
 	mGL.glDisable(GL_BLEND);
-	mGL.glDisable(GL_TEXTURE_2D);
 }
 
 void Renderer::setViewport(int32_t _x, int32_t _y, int32_t _width, int32_t _height)
@@ -247,8 +255,6 @@ void Renderer::bindTexture(QImage &_image, bool generateMipmaps)
 	);
 
 	mTexture.bind();
-
-	mGL.glEnable(GL_TEXTURE_2D);
 
 	mGL.glEnable(GL_BLEND);
 	mGL.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

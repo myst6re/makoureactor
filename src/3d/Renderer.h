@@ -26,6 +26,7 @@
 #include <QOpenGLShader>
 #include <QOpenGLShaderProgram>
 #include <QOpenGLTexture>
+#include <QOpenGLVertexArrayObject>
 #include <QOpenGLWidget>
 
 struct RendererVertex {
@@ -64,6 +65,8 @@ private:
 	QOpenGLShaderProgram mProgram;
 	QOpenGLShader mVertexShader;
 	QOpenGLShader mFragmentShader;
+
+	QOpenGLVertexArrayObject mVAO;
 
 	QOpenGLBuffer mVertex;
 	QOpenGLBuffer mIndex;
