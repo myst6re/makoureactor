@@ -157,11 +157,19 @@ void Renderer::draw(RendererPrimitiveType _type, float _pointSize)
 		}
 	}
 
-	if (!mIndex.isCreated()) {
-		mIndex.create();
+		if (!mIndex.isCreated() && !mIndex.create()) {
+#ifdef QT_DEBUG
+		qWarning() << "Cannot create the index buffer";
+#endif
+		return;
 	}
 
-	mIndex.bind();
+	if (!mIndex.bind()) {
+#ifdef QT_DEBUG
+		qWarning() << "Cannot bind the index buffer";
+#endif
+		return;
+	}
 	mIndex.allocate(mIndexBuffer.data(), int(vectorSizeOf(mIndexBuffer)));
 
 	// Set Point Size
