@@ -450,5 +450,3 @@ compile_commands.json
 # Custom
 .dist
 .DS_Store
-
-.vscode/*
