@@ -17,6 +17,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 
+#include <iostream>
 #include "Renderer.h"
 
 // Get the size of a vector in bytes
@@ -176,7 +177,7 @@ void Renderer::draw(RendererPrimitiveType _type, float _pointSize)
 #ifdef QT_DEBUG
 	GLenum lastError = mGL.glGetError();
 	if (lastError != GL_NO_ERROR) {
-		qDebug() << "mGL.glDrawElements(_type, mIndexBuffer.size(), GL_UNSIGNED_INT, nullptr) ERROR" << lastError << _type << mIndexBuffer.size();
+		qDebug() << "mGL.glDrawElements(" << _type << ", " << GLsizei(mIndexBuffer.size()) << ", GL_UNSIGNED_INT, nullptr) ERROR " << lastError;
 	}
 #endif
 
