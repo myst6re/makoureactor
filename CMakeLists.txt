@@ -298,8 +298,6 @@ set(PROJECT_SOURCES
     "src/widgets/OpcodeList.h"
     "src/widgets/OperationsManager.cpp"
     "src/widgets/OperationsManager.h"
-    "src/widgets/OrientationWidget.cpp"
-    "src/widgets/OrientationWidget.h"
     "src/widgets/PsColorDialog.cpp"
     "src/widgets/PsColorDialog.h"
     "src/widgets/PsfDialog.cpp"

@@ -20,7 +20,7 @@
 #include <QtWidgets>
 #include "3d/WalkmeshWidget.h"
 #include "VertexWidget.h"
-#include "OrientationWidget.h"
+#include <OrientationWidget>
 
 class Field;
 class FieldArchive;

@@ -3594,13 +3594,6 @@ Some scripts can refer to it!</source>
     </message>
 </context>
 <context>
-    <name>OrientationWidget</name>
-    <message>
-        <source>Right</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>PsColorDialog</name>
     <message>
         <source>Choose a color</source>

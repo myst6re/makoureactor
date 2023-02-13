@@ -4092,7 +4092,7 @@ Certains scripts peuvent y faire référence !</translation>
     <name>OrientationWidget</name>
     <message>
         <source>Right</source>
-        <translation>Droite</translation>
+        <translation type="vanished">Droite</translation>
     </message>
 </context>
 <context>
