@@ -26,6 +26,7 @@
 #include <QOpenGLShader>
 #include <QOpenGLShaderProgram>
 #include <QOpenGLTexture>
+#include <QOpenGLVertexArrayObject>
 #include <QOpenGLWidget>
 
 struct RendererVertex {
@@ -35,15 +36,16 @@ struct RendererVertex {
 };
 
 enum RendererPrimitiveType {
-	PT_POINTS = 0,
-	PT_LINES,
-	PT_LINE_LOOP,
-	PT_LINE_STRIP,
-	PT_TRIANGLES,
-	PT_TRIANGLE_STRIP,
-	PT_TRIANGLE_FAN,
-	PT_QUADS,
-	PT_QUAD_STRIP
+	PT_POINTS = GL_POINTS,
+	PT_LINES = GL_LINES,
+	PT_LINE_LOOP = GL_LINE_LOOP,
+	PT_LINE_STRIP = GL_LINE_STRIP,
+	PT_TRIANGLES = GL_TRIANGLES,
+	PT_TRIANGLE_STRIP = GL_TRIANGLE_STRIP,
+	PT_TRIANGLE_FAN = GL_TRIANGLE_FAN,
+	PT_QUADS = GL_QUADS,
+	PT_QUAD_STRIP = GL_QUAD_STRIP,
+	PT_POLYGON = GL_POLYGON
 };
 
 class Renderer : public QObject
@@ -63,6 +65,8 @@ private:
 	QOpenGLShaderProgram mProgram;
 	QOpenGLShader mVertexShader;
 	QOpenGLShader mFragmentShader;
+
+	QOpenGLVertexArrayObject mVAO;
 
 	QOpenGLBuffer mVertex;
 	QOpenGLBuffer mIndex;

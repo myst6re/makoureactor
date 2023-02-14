@@ -17,6 +17,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 
+#include <iostream>
 #include "Renderer.h"
 
 // Get the size of a vector in bytes
@@ -28,7 +29,7 @@ size_t vectorSizeOf(const typename std::vector<T>& vec)
 
 Renderer::Renderer(QOpenGLWidget *_widget) :
     mProgram(_widget), mVertexShader(QOpenGLShader::Vertex, _widget), mFragmentShader(QOpenGLShader::Fragment, _widget),
-    mVertex(QOpenGLBuffer::VertexBuffer), mIndex(QOpenGLBuffer::IndexBuffer), mTexture(QOpenGLTexture::Target2D), _hasError(false)
+    mVertex(QOpenGLBuffer::VertexBuffer), mIndex(QOpenGLBuffer::IndexBuffer), mTexture(QOpenGLTexture::Target2D), mVAO(this), _hasError(false)
 #ifdef QT_DEBUG
     , mLogger(_widget)
 #endif
@@ -41,7 +42,7 @@ Renderer::Renderer(QOpenGLWidget *_widget) :
 	connect(&mLogger, &QOpenGLDebugLogger::messageLogged, this, &Renderer::messageLogged);
 
 	if (mLogger.initialize()) {
-		mLogger.startLogging();
+		mLogger.startLogging(QOpenGLDebugLogger::SynchronousLogging);
 	} else {
 		qWarning() << "Cannot initialize OpenGL Debug Logger";
 		if (!QOpenGLContext::currentContext()->hasExtension(QByteArrayLiteral("GL_KHR_debug"))) {
@@ -97,7 +98,16 @@ Renderer::Renderer(QOpenGLWidget *_widget) :
 	mGL.glDisable(GL_CULL_FACE);
 
 	mGL.glDisable(GL_BLEND);
-	mGL.glDisable(GL_TEXTURE_2D);
+
+	// Vertex Array Object
+	if (!mVAO.isCreated() && !mVAO.create()) {
+#ifdef QT_DEBUG
+		qWarning() << "Cannot create the vertex array object";
+#endif
+		return;
+	}
+
+	mVAO.bind();
 }
 
 void Renderer::clear()
@@ -156,11 +166,19 @@ void Renderer::draw(RendererPrimitiveType _type, float _pointSize)
 		}
 	}
 
-	if (!mIndex.isCreated()) {
-		mIndex.create();
+		if (!mIndex.isCreated() && !mIndex.create()) {
+#ifdef QT_DEBUG
+		qWarning() << "Cannot create the index buffer";
+#endif
+		return;
 	}
 
-	mIndex.bind();
+	if (!mIndex.bind()) {
+#ifdef QT_DEBUG
+		qWarning() << "Cannot bind the index buffer";
+#endif
+		return;
+	}
 	mIndex.allocate(mIndexBuffer.data(), int(vectorSizeOf(mIndexBuffer)));
 
 	// Set Point Size
@@ -172,13 +190,7 @@ void Renderer::draw(RendererPrimitiveType _type, float _pointSize)
 	mProgram.setUniformValue("viewMatrix", mViewMatrix);
 
 	// --- Draw ---
-	mGL.glDrawElements(_type, GLsizei(mIndexBuffer.size()), GL_UNSIGNED_INT, nullptr);
-#ifdef QT_DEBUG
-	GLenum lastError = mGL.glGetError();
-	if (lastError != GL_NO_ERROR) {
-		qDebug() << "mGL.glDrawElements(_type, mIndexBuffer.size(), GL_UNSIGNED_INT, nullptr) ERROR" << lastError << _type << mIndexBuffer.size();
-	}
-#endif
+	mGL.glDrawElements(GLenum(_type), GLsizei(mIndexBuffer.size()), GL_UNSIGNED_INT, nullptr);
 
 	// --- After Draw ---
 	mVertex.release();
@@ -190,7 +202,6 @@ void Renderer::draw(RendererPrimitiveType _type, float _pointSize)
 		mTexture.release();
 	}
 	mGL.glDisable(GL_BLEND);
-	mGL.glDisable(GL_TEXTURE_2D);
 }
 
 void Renderer::setViewport(int32_t _x, int32_t _y, int32_t _width, int32_t _height)
@@ -244,8 +255,6 @@ void Renderer::bindTexture(QImage &_image, bool generateMipmaps)
 	);
 
 	mTexture.bind();
-
-	mGL.glEnable(GL_TEXTURE_2D);
 
 	mGL.glEnable(GL_BLEND);
 	mGL.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

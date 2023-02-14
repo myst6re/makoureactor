@@ -8,10 +8,10 @@
       "name": "(Windows) Launch",
       "type": "cppvsdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/.dist/build/bin/Makou_Reactor.exe",
+      "program": "${workspaceFolder}/.dist/install/Makou Reactor.exe",
       "args": [],
       "stopAtEntry": false,
-      "cwd": "${workspaceFolder}",
+      "cwd": "${workspaceFolder}/.dist/install",
       "environment": [],
       "externalConsole": false
     }

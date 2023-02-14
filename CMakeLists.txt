@@ -16,11 +16,14 @@
 ## along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ###############################################################################
 
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.24)
 cmake_policy(SET CMP0010 NEW)
 cmake_policy(SET CMP0042 NEW)
 cmake_policy(SET CMP0074 NEW)
 cmake_policy(SET CMP0091 NEW)
+
+set(VCPKG_DISABLE_COMPILER_TRACKING 1)
+set(VCPKG_INSTALL_OPTIONS "--clean-after-build" "--x-use-aria2")
 
 set(RELEASE_NAME "Makou_Reactor")
 set(GUI_TARGET "${RELEASE_NAME}")
@@ -72,8 +75,8 @@ add_compile_definitions(
 
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets OpenGLWidgets Svg OpenGL LinguistTools Core5Compat Xml Quick REQUIRED)
 
-set(REQUIRED_FF7TK_VERSION 0.83.0.0)
-find_package(ff7tk ${REQUIRED_FF7TK_VERSION} REQUIRED COMPONENTS ff7tk fftkData ff7tkQtWidgets ff7tkFormats ff7tkUtils)
+set(REQUIRED_FF7TK_VERSION 0.83.1.0)
+find_package(ff7tk ${REQUIRED_FF7TK_VERSION} CONFIG REQUIRED COMPONENTS ff7tk fftkData ff7tkQtWidgets ff7tkFormats ff7tkUtils)
 
 find_package(ZLIB REQUIRED)
 
@@ -544,8 +547,8 @@ if(GUI)
     )
 
     if(${QT_VERSION_MAJOR} EQUAL 6)
-        target_link_libraries(${GUI_TARGET} PRIVATE Qt::Core5Compat)
-        
+        target_link_libraries(${GUI_TARGET} PRIVATE Qt6::Core5Compat)
+
         target_compile_definitions(${GUI_TARGET}
             PRIVATE TASKBAR_BUTTON=1
             GUI=1

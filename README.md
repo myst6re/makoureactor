@@ -32,17 +32,28 @@ instructions below.
 
 ### Requirements
 
+- [zlib](http://www.zlib.net/)
 - [ff7tk](https://www.github.com/sithlord48/ff7tk)
 - CMake
 - Qt 6.2+
 
 ### Windows
 
+#### vcpkg
+
+> **Please note:**
+>
+> Makou Reactor will now use vcpkg as a package manager to resolve dependencies. Failing to follow these steps will fail your builds.
+
+0. Clone the [vcpkg](https://vcpkg.io) project in the root folder of your `C:` drive ( `git clone https://github.com/Microsoft/vcpkg.git` )
+1. Go inside the `C:\vcpkg` folder and double click `bootstrap-vcpkg.bat`
+2. Open a `cmd` window in `C:\vcpkg` and run the following command: `vcpkg integrate install`
+
 #### Qt + Qt Creator
 
 0. Download the online installer from https://www.qt.io/download-qt-installer
 1. Install Qt 6 with these items checked:
-   - **Qt/Qt 6.x.x (last version):** Check `MSVC 2019 64-bit`
+   - **Qt/Qt 6.x.x (last version):** Check `MSVC 2019 64-bit`, `Qt Creator`, `Qt Shader Tools` and `Qt 5 Compatibility Module`
    - **Developer And Designer Tools:** Check `CMake` and `Ninja`
 2. Run Qt Creator and open an existing project, select the CMakeLists.txt in the source directory of Makou Reactor
 
