@@ -56,7 +56,8 @@ instructions below.
 0. **REQUIRED!** Follow the steps to install Qt, if you didn't already
 1. Download the the latest [Visual Studio Community](https://visualstudio.microsoft.com/vs/community/) installer
 2. Run the installer and import this [.vsconfig](.vsconfig) file in the installer to pick the required components to build this project
-3. Once installed, open this repository **as a folder** in Visual Studio 2019 and click the build button.
+3. Make sure you select the English Language pack in the language list before clicking Install
+4. Once installed, open this repository **as a folder** in Visual Studio 2019 and click the build button.
 
 #### Optional: Visual Studio Code
 
