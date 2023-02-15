@@ -16,7 +16,6 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "OperationsManager.h"
-#include "core/field/FieldArchive.h"
 
 OperationsManager::OperationsManager(bool isPC, QWidget *parent) :
 	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint)
