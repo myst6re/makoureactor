@@ -2,7 +2,7 @@
 
 #include <QtWidgets>
 #include <ListWidget>
-#include "ImageGridWidget.h"
+#include <ImageGridWidget>
 
 class BackgroundFile;
 class Palette;

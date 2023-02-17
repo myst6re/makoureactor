@@ -270,8 +270,6 @@ set(PROJECT_SOURCES
     #"src/widgets/GrpScriptWizard.h"
     "src/widgets/HelpWidget.cpp"
     "src/widgets/HelpWidget.h"
-    "src/widgets/ImageGridWidget.cpp"
-    "src/widgets/ImageGridWidget.h"
     "src/widgets/ImportDialog.cpp"
     "src/widgets/ImportDialog.h"
     "src/widgets/KeyEditorDialog.cpp"

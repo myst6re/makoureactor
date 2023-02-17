@@ -18,7 +18,7 @@
 #pragma once
 
 #include <QtWidgets>
-#include "ImageGridWidget.h"
+#include <ImageGridWidget>
 #include "core/field/BackgroundTiles.h"
 
 class BackgroundFile;
