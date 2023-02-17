@@ -278,8 +278,6 @@ set(PROJECT_SOURCES
     "src/widgets/KeyEditorDialog.h"
     "src/widgets/LgpWidget.cpp"
     "src/widgets/LgpWidget.h"
-    "src/widgets/Listwidget.cpp"
-    "src/widgets/Listwidget.h"
     "src/widgets/MassExportDialog.cpp"
     "src/widgets/MassExportDialog.h"
     "src/widgets/MassImportDialog.cpp"

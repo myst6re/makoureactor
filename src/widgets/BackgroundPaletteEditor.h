@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QtWidgets>
-#include "Listwidget.h"
+#include <ListWidget>
 #include "ImageGridWidget.h"
 
 class BackgroundFile;
