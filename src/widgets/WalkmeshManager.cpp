@@ -16,11 +16,12 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "WalkmeshManager.h"
-#include "Listwidget.h"
 #include "core/Config.h"
 #include "Data.h"
 #include "core/field/Field.h"
 #include "core/field/FieldArchive.h"
+
+#include <ListWidget>
 
 WalkmeshManager::WalkmeshManager(QWidget *parent) :
 	QDialog(parent, Qt::Tool),

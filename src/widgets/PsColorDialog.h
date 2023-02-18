@@ -2,7 +2,7 @@
 
 #include <QtWidgets>
 #include "QColorPicker.h"
-#include "ImageGridWidget.h"
+#include <ImageGridWidget.h>
 
 class PsColorDialog : public QDialog
 {

@@ -1,8 +1,8 @@
 #pragma once
 
 #include <QtWidgets>
-#include "Listwidget.h"
-#include "ImageGridWidget.h"
+#include <ListWidget>
+#include <ImageGridWidget>
 
 class BackgroundFile;
 class Palette;
