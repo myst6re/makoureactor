@@ -29,7 +29,7 @@ size_t vectorSizeOf(const typename std::vector<T>& vec)
 
 Renderer::Renderer(QOpenGLWidget *_widget) :
     mProgram(_widget), mVertexShader(QOpenGLShader::Vertex, _widget), mFragmentShader(QOpenGLShader::Fragment, _widget),
-    mVertex(QOpenGLBuffer::VertexBuffer), mIndex(QOpenGLBuffer::IndexBuffer), mVAO(this), mTexture(QOpenGLTexture::Target2D), _hasError(false)
+    mVAO(this), mVertex(QOpenGLBuffer::VertexBuffer), mIndex(QOpenGLBuffer::IndexBuffer), mTexture(QOpenGLTexture::Target2D), _hasError(false)
 #ifdef QT_DEBUG
     , mLogger(_widget)
 #endif
