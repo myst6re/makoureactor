@@ -158,8 +158,8 @@ jobs:
         export PATH=$PATH:${{ env.qt_installation_path }}/Qt/${{ matrix.qt }}/gcc_64/libexec
         linuxdeploy --appdir="${{ env.makoureactor_appbundle_path }}" --plugin=qt --output appimage \
           -e "${{ env.makoureactor_installation_path }}"/bin/Makou_Reactor \
-          -d "${{ env.makoureactor_installation_path }}"/share/applications/Makou_Reactor.desktop \
-          -i "${{ env.makoureactor_installation_path }}"/share/icons/hicolor/256x256/apps/Makou_Reactor.png
+          -d "${{ env.makoureactor_installation_path }}"/share/applications/io.github.myst6re.makoureactor.desktop \
+          -i "${{ env.makoureactor_installation_path }}"/share/icons/hicolor/256x256/apps/io.github.myst6re.makoureactor.png
         mv *.AppImage makoureactor-continuous-${{ matrix.interface }}-${{ matrix.package_suffix }}.AppImage
 
     - name: Prepare Upload
