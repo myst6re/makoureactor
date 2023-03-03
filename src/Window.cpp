@@ -57,7 +57,6 @@ Window::Window() :
 		QIcon::setFallbackThemeName(QStringLiteral("mr-%1").arg(colorMode));
 	}
 	setWindowTitle();
-	setWindowState(Qt::WindowMaximized);
 
 	taskBarButton = new QTaskBarButton(this);
 	taskBarButton->setMinimum(0);
