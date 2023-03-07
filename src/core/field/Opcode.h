@@ -315,7 +315,7 @@ enum OpcodeKawaiKey : quint8 {
 };
 
 enum BadJumpError : quint8 {
-	Ok,
+	Ok = 0,
 	InsideInstruction,
 	AfterScript,
 	BeforeScript,

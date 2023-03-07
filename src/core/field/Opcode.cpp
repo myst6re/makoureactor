@@ -957,25 +957,28 @@ void Opcode::setLabel(quint16 _label)
 	}
 }
 
+#define getBadJump() \
+	_badJump & 0x7F
+
 BadJumpError Opcode::badJump() const
 {
 	switch (id()) {
-		CaseOpcodeAttrConvert(JMPF, _badJump & 0x7F, BadJumpError);
-		CaseOpcodeAttrConvert(JMPFL, _badJump & 0x7F, BadJumpError);
-		CaseOpcodeAttrConvert(JMPB, _badJump & 0x7F, BadJumpError);
-		CaseOpcodeAttrConvert(JMPBL, _badJump & 0x7F, BadJumpError);
-		CaseOpcodeAttrConvert(IFUB, _badJump & 0x7F, BadJumpError);
-		CaseOpcodeAttrConvert(IFUBL, _badJump & 0x7F, BadJumpError);
-		CaseOpcodeAttrConvert(IFSW, _badJump & 0x7F, BadJumpError);
-		CaseOpcodeAttrConvert(IFSWL, _badJump & 0x7F, BadJumpError);
-		CaseOpcodeAttrConvert(IFUW, _badJump & 0x7F, BadJumpError);
-		CaseOpcodeAttrConvert(IFUWL, _badJump & 0x7F, BadJumpError);
-		CaseOpcodeAttrConvert(Unused1B, _badJump & 0x7F, BadJumpError);
-		CaseOpcodeAttrConvert(IFKEY, _badJump & 0x7F, BadJumpError);
-		CaseOpcodeAttrConvert(IFKEYON, _badJump & 0x7F, BadJumpError);
-		CaseOpcodeAttrConvert(IFKEYOFF, _badJump & 0x7F, BadJumpError);
-		CaseOpcodeAttrConvert(IFPRTYQ, _badJump & 0x7F, BadJumpError);
-		CaseOpcodeAttrConvert(IFMEMBQ, _badJump & 0x7F, BadJumpError);
+		CaseOpcodeAttrConvert(JMPF, getBadJump(), BadJumpError);
+		CaseOpcodeAttrConvert(JMPFL, getBadJump(), BadJumpError);
+		CaseOpcodeAttrConvert(JMPB, getBadJump(), BadJumpError);
+		CaseOpcodeAttrConvert(JMPBL, getBadJump(), BadJumpError);
+		CaseOpcodeAttrConvert(IFUB, getBadJump(), BadJumpError);
+		CaseOpcodeAttrConvert(IFUBL, getBadJump(), BadJumpError);
+		CaseOpcodeAttrConvert(IFSW, getBadJump(), BadJumpError);
+		CaseOpcodeAttrConvert(IFSWL, getBadJump(), BadJumpError);
+		CaseOpcodeAttrConvert(IFUW, getBadJump(), BadJumpError);
+		CaseOpcodeAttrConvert(IFUWL, getBadJump(), BadJumpError);
+		CaseOpcodeAttrConvert(Unused1B, getBadJump(), BadJumpError);
+		CaseOpcodeAttrConvert(IFKEY, getBadJump(), BadJumpError);
+		CaseOpcodeAttrConvert(IFKEYON, getBadJump(), BadJumpError);
+		CaseOpcodeAttrConvert(IFKEYOFF, getBadJump(), BadJumpError);
+		CaseOpcodeAttrConvert(IFPRTYQ, getBadJump(), BadJumpError);
+		CaseOpcodeAttrConvert(IFMEMBQ, getBadJump(), BadJumpError);
 	default:
 		break;
 	}
@@ -2318,7 +2321,7 @@ QString Opcode::toStringLABEL(const Section1File *scriptsAndTexts, const OpcodeL
 QString Opcode::toStringJMPF(const Section1File *scriptsAndTexts, const OpcodeJMPF &opcode) const
 {
 	Q_UNUSED(scriptsAndTexts)
-	return opcode._badJump ? Opcode::tr("Forward %n byte(s)", "With plural", opcode.jump)
+	return opcode.getBadJump() ? Opcode::tr("Forward %n byte(s)", "With plural", opcode.jump)
 	                       : Opcode::tr("Goto label %1")
 	                         .arg(opcode._label);
 }
@@ -2326,7 +2329,7 @@ QString Opcode::toStringJMPF(const Section1File *scriptsAndTexts, const OpcodeJM
 QString Opcode::toStringJMPFL(const Section1File *scriptsAndTexts, const OpcodeJMPFL &opcode) const
 {
 	Q_UNUSED(scriptsAndTexts)
-	return opcode._badJump ? Opcode::tr("Forward %n byte(s)", "With plural", opcode.jump)
+	return opcode.getBadJump() ? Opcode::tr("Forward %n byte(s)", "With plural", opcode.jump)
 	                       : Opcode::tr("Goto label %1")
 	                         .arg(opcode._label);
 }
@@ -2334,7 +2337,7 @@ QString Opcode::toStringJMPFL(const Section1File *scriptsAndTexts, const OpcodeJ
 QString Opcode::toStringJMPB(const Section1File *scriptsAndTexts, const OpcodeJMPB &opcode) const
 {
 	Q_UNUSED(scriptsAndTexts)
-	return opcode._badJump ? Opcode::tr("Back %n byte(s)", "With plural", -opcode.jump)
+	return opcode.getBadJump() ? Opcode::tr("Back %n byte(s)", "With plural", -opcode.jump)
 	                       : Opcode::tr("Goto label %1")
 	                         .arg(opcode._label);
 }
@@ -2342,7 +2345,7 @@ QString Opcode::toStringJMPB(const Section1File *scriptsAndTexts, const OpcodeJM
 QString Opcode::toStringJMPBL(const Section1File *scriptsAndTexts, const OpcodeJMPBL &opcode) const
 {
 	Q_UNUSED(scriptsAndTexts)
-	return opcode._badJump ? Opcode::tr("Back %n byte(s)", "With plural", -opcode.jump)
+	return opcode.getBadJump() ? Opcode::tr("Back %n byte(s)", "With plural", -opcode.jump)
 	                       : Opcode::tr("Goto label %1")
 	                         .arg(opcode._label);
 }
@@ -2355,7 +2358,7 @@ QString Opcode::toStringIFUB(const Section1File *scriptsAndTexts, const OpcodeIF
 	            _var(opcode.value1, B1(opcode.banks)),
 	            _var(opcode.value2, B2(opcode.banks)),
 	            _operateur(opcode.oper),
-	            opcode._badJump
+	            opcode.getBadJump()
 	            ? Opcode::tr("else forward %n byte(s)", "With plural", opcode.jump)
 	            : Opcode::tr("else goto label %1").arg(opcode._label)
 	        );
@@ -2369,7 +2372,7 @@ QString Opcode::toStringIFUBL(const Section1File *scriptsAndTexts, const OpcodeI
 	            _var(opcode.value1, B1(opcode.banks)),
 	            _var(opcode.value2, B2(opcode.banks)),
 	            _operateur(opcode.oper),
-	            opcode._badJump
+	            opcode.getBadJump()
 	             ? Opcode::tr("else forward %n byte(s)", "With plural", opcode.jump)
 	             : Opcode::tr("else goto label %1").arg(opcode._label)
 	        );
@@ -2383,7 +2386,7 @@ QString Opcode::toStringIFSW(const Section1File *scriptsAndTexts, const OpcodeIF
 	            _var(opcode.value1, B1(opcode.banks)),
 	            _var(opcode.value2, B2(opcode.banks)),
 	            _operateur(opcode.oper),
-	            opcode._badJump
+	            opcode.getBadJump()
 	            ? Opcode::tr("else forward %n byte(s)", "With plural", opcode.jump)
 	            : Opcode::tr("else goto label %1").arg(opcode._label)
 	        );
@@ -2397,7 +2400,7 @@ QString Opcode::toStringIFSWL(const Section1File *scriptsAndTexts, const OpcodeI
 	            _var(opcode.value1, B1(opcode.banks)),
 	            _var(opcode.value2, B2(opcode.banks)),
 	            _operateur(opcode.oper),
-	            opcode._badJump
+	            opcode.getBadJump()
 	            ? Opcode::tr("else forward %n byte(s)", "With plural", opcode.jump)
 	            : Opcode::tr("else goto label %1").arg(opcode._label)
 	        );
@@ -2411,7 +2414,7 @@ QString Opcode::toStringIFUW(const Section1File *scriptsAndTexts, const OpcodeIF
 	            _var(opcode.value1, B1(opcode.banks)),
 	            _var(opcode.value2, B2(opcode.banks)),
 	            _operateur(opcode.oper),
-	            opcode._badJump
+	            opcode.getBadJump()
 	             ? Opcode::tr("else forward %n byte(s)", "With plural", opcode.jump)
 	             : Opcode::tr("else goto label %1").arg(opcode._label)
 	        );
@@ -2425,7 +2428,7 @@ QString Opcode::toStringIFUWL(const Section1File *scriptsAndTexts, const OpcodeI
 	            _var(opcode.value1, B1(opcode.banks)),
 	            _var(opcode.value2, B2(opcode.banks)),
 	            _operateur(opcode.oper),
-	            opcode._badJump
+	            opcode.getBadJump()
 	            ? Opcode::tr("else forward %n byte(s)", "With plural", opcode.jump)
 	            : Opcode::tr("else goto label %1").arg(opcode._label)
 	        );
@@ -2472,7 +2475,7 @@ QString Opcode::toStringUnused1B(const Section1File *scriptsAndTexts, const Opco
 {
 	Q_UNUSED(scriptsAndTexts)
 	return Opcode::tr("If Red XIII is named Nanaki (%2)")
-	        .arg(opcode._badJump
+	        .arg(opcode.getBadJump()
 	             ? Opcode::tr("else forward %n byte(s)", "With plural", opcode.jump)
 	             : Opcode::tr("else goto label %1").arg(opcode._label));
 }
@@ -2830,7 +2833,7 @@ QString Opcode::toStringIFKEY(const Section1File *scriptsAndTexts, const OpcodeI
 	return Opcode::tr("If key %1 pressed (%2)")
 	        .arg(
 	            _keys(opcode.keys),
-	            opcode._badJump
+	            opcode.getBadJump()
 	            ? Opcode::tr("else forward %n byte(s)", "With plural", opcode.jump)
 	            : Opcode::tr("else goto label %1")
 	              .arg(opcode._label)
@@ -2843,7 +2846,7 @@ QString Opcode::toStringIFKEYON(const Section1File *scriptsAndTexts, const Opcod
 	return Opcode::tr("If key %1 pressed once (%2)")
 	        .arg(
 	            _keys(opcode.keys),
-	            opcode._badJump
+	            opcode.getBadJump()
 	            ? Opcode::tr("else forward %n byte(s)", "With plural", opcode.jump)
 	            : Opcode::tr("else goto label %1")
 	              .arg(opcode._label)
@@ -2856,7 +2859,7 @@ QString Opcode::toStringIFKEYOFF(const Section1File *scriptsAndTexts, const Opco
 	return Opcode::tr("If key %1 released once (%2)")
 	        .arg(
 	            _keys(opcode.keys),
-	            opcode._badJump
+	            opcode.getBadJump()
 	            ? Opcode::tr("else forward %n byte(s)", "With plural", opcode.jump)
 	            : Opcode::tr("else goto label %1").arg(opcode._label)
 	        );
@@ -4407,7 +4410,7 @@ QString Opcode::toStringIFPRTYQ(const Section1File *scriptsAndTexts, const Opcod
 	return Opcode::tr("If %1 is in the current party (%2)")
 	        .arg(
 	            character(opcode.charID),
-	            opcode._badJump
+	            opcode.getBadJump()
 	             ? Opcode::tr("else forward %n byte(s)", "With plural", opcode.jump)
 	             : Opcode::tr("else goto label %1").arg(opcode._label)
 	        );
@@ -4419,7 +4422,7 @@ QString Opcode::toStringIFMEMBQ(const Section1File *scriptsAndTexts, const Opcod
 	return Opcode::tr("If %1 exists (%2)")
 	        .arg(
 	           character(opcode.charID),
-	           opcode._badJump
+	           opcode.getBadJump()
 	             ? Opcode::tr("else forward %n byte(s)", "With plural", opcode.jump)
 	             : Opcode::tr("else goto label %1").arg(opcode._label)
 	        );
