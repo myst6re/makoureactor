@@ -328,8 +328,6 @@ set(PROJECT_SOURCES
     "src/widgets/Search.h"
     "src/widgets/SearchAll.cpp"
     "src/widgets/SearchAll.h"
-    "src/widgets/Splitter.cpp"
-    "src/widgets/Splitter.h"
     "src/widgets/TextHighlighter.cpp"
     "src/widgets/TextHighlighter.h"
     "src/widgets/TextManager.cpp"

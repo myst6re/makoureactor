@@ -33,8 +33,9 @@
 #include "widgets/TutWidget.h"
 #include "widgets/WalkmeshManager.h"
 #include "widgets/LgpWidget.h"
-#include "widgets/Splitter.h"
 //#include "FieldModelThread.h"
+
+#include <Splitter.h>
 
 class Window : public QMainWindow, ArchiveObserver
 {
