@@ -244,8 +244,6 @@ set(PROJECT_SOURCES
     "src/widgets/ConfigWindow.h"
     "src/widgets/EmptyFieldWidget.cpp"
     "src/widgets/EmptyFieldWidget.h"
-    "src/widgets/EncounterTableWidget.cpp"
-    "src/widgets/EncounterTableWidget.h"
     "src/widgets/EncounterWidget.cpp"
     "src/widgets/EncounterWidget.h"
     "src/widgets/FieldList.cpp"

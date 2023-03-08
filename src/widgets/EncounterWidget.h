@@ -18,7 +18,7 @@
 #pragma once
 
 #include <QtWidgets>
-#include "EncounterTableWidget.h"
+#include <EncounterTableWidget>
 #include "core/field/EncounterFile.h"
 
 class EncounterWidget : public QDialog

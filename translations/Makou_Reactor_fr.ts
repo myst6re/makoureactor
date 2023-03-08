@@ -577,58 +577,6 @@ Voulez-vous vraiment continuer ?</translation>
     </message>
 </context>
 <context>
-    <name>EncounterTableWidget</name>
-    <message>
-        <source>-</source>
-        <translation>-</translation>
-    </message>
-    <message>
-        <source>+</source>
-        <translation>+</translation>
-    </message>
-    <message>
-        <source>Battle ID</source>
-        <oldsource>ID Combat</oldsource>
-        <translation>ID Combat</translation>
-    </message>
-    <message>
-        <source>Probability</source>
-        <oldsource>Probabilité</oldsource>
-        <translation>Probabilité</translation>
-    </message>
-    <message>
-        <source>Back Attack 1</source>
-        <translation>Attaque par l&apos;arrière 1</translation>
-    </message>
-    <message>
-        <source>Back Attack 2</source>
-        <translation>Attaque par l&apos;arrière 2</translation>
-    </message>
-    <message>
-        <source>Side Attack</source>
-        <translation>Attaque de côté</translation>
-    </message>
-    <message>
-        <source>Attack From Both Sides</source>
-        <translation>Attaque des deux côtés</translation>
-    </message>
-    <message>
-        <source>Battle %1</source>
-        <oldsource>Combat %1</oldsource>
-        <translation>Combat %1</translation>
-    </message>
-    <message>
-        <source>Battle rate: %1/255</source>
-        <oldsource>Fréquence des combats : %1/255</oldsource>
-        <translation>Fréquence des combats : %1/255</translation>
-    </message>
-    <message>
-        <source>Remaining probability points: %1</source>
-        <oldsource>Points de probabilité restants : %1</oldsource>
-        <translation>Points de probabilité restants : %1</translation>
-    </message>
-</context>
-<context>
     <name>EncounterWidget</name>
     <message>
         <source>Encounters</source>
@@ -4088,13 +4036,6 @@ Certains scripts peuvent y faire référence !</translation>
     <message>
         <source>Resize backgrounds to 16/9 ratio</source>
         <translation>Redimensionner décors en ratio 16/9</translation>
-    </message>
-</context>
-<context>
-    <name>OrientationWidget</name>
-    <message>
-        <source>Right</source>
-        <translation type="vanished">Droite</translation>
     </message>
 </context>
 <context>

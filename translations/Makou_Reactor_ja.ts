@@ -519,62 +519,6 @@ Are you sure you want to continue?</source>
     </message>
 </context>
 <context>
-    <name>EncounterTableWidget</name>
-    <message>
-        <source>-</source>
-        <translation>-</translation>
-    </message>
-    <message>
-        <source>+</source>
-        <translation>+</translation>
-    </message>
-    <message>
-        <source>Battle ID</source>
-        <oldsource>ID Combat</oldsource>
-        <translatorcomment>Battle ID</translatorcomment>
-        <translation>バトル ID</translation>
-    </message>
-    <message>
-        <source>Probability</source>
-        <oldsource>Probabilité</oldsource>
-        <translatorcomment>Probability</translatorcomment>
-        <translation>レート値</translation>
-    </message>
-    <message>
-        <source>Back Attack 1</source>
-        <translation>バックアタック 1</translation>
-    </message>
-    <message>
-        <source>Back Attack 2</source>
-        <translation>バックアタック 2</translation>
-    </message>
-    <message>
-        <source>Side Attack</source>
-        <translation>サイドアタック</translation>
-    </message>
-    <message>
-        <source>Attack From Both Sides</source>
-        <translation>はさみうち</translation>
-    </message>
-    <message>
-        <source>Battle %1</source>
-        <oldsource>Combat %1</oldsource>
-        <translatorcomment>Battle %1</translatorcomment>
-        <translation>バトル %1</translation>
-    </message>
-    <message>
-        <source>Battle rate: %1/255</source>
-        <oldsource>Fréquence des combats : %1/255</oldsource>
-        <translation>バトル レート: %1/255</translation>
-    </message>
-    <message>
-        <source>Remaining probability points: %1</source>
-        <oldsource>Points de probabilité restants : %1</oldsource>
-        <translatorcomment>Remaining probability points: %1</translatorcomment>
-        <translation>割当可能な残りレート: %1</translation>
-    </message>
-</context>
-<context>
     <name>EncounterWidget</name>
     <message>
         <source>Rencontres aléatoires</source>
