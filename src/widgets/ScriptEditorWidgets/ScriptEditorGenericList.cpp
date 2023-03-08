@@ -121,14 +121,14 @@ QByteArray ScriptEditorGenericList::parseModel(bool *isLabel)
 		length = quint8(model->rowCount() + 3);
 		newOpcode.append(char(length));
 		newOpcode.append(char(byte3));
-		for (quint8 i = 0; i < length - 3; ++i) {
+		for (int i = 0; i < model->rowCount(); ++i) {
 			newOpcode.append(char(model->item(i, 1)->text().toUInt()));
 		}
 		return newOpcode;
 	}
 
 	length += Opcode::length[opcode().id()];
-	newOpcode.append(QByteArray(length-start, '\x0'));
+	newOpcode.append(QByteArray(length - start, '\x0'));
 	QList<int> paramTypes = this->paramTypes(opcode().id());
 
 	if (!paramTypes.isEmpty()) {
