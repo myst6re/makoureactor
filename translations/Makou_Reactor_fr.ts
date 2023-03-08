@@ -132,19 +132,19 @@
     </message>
     <message>
         <source>Z:</source>
-        <translation type="unfinished"></translation>
+        <translation>Z :</translation>
     </message>
     <message>
         <source>Viewer</source>
-        <translation type="unfinished"></translation>
+        <translation>Aperçu</translation>
     </message>
     <message>
         <source>Editor</source>
-        <translation type="unfinished"></translation>
+        <translation>Éditeur</translation>
     </message>
     <message>
         <source>Palettes</source>
-        <translation type="unfinished"></translation>
+        <translation>Palettes</translation>
     </message>
 </context>
 <context>
@@ -155,7 +155,7 @@
     </message>
     <message>
         <source>Section %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Section %1</translation>
     </message>
     <message>
         <source>Parameter</source>
@@ -167,15 +167,15 @@
     </message>
     <message>
         <source>State %1</source>
-        <translation type="unfinished">État %1</translation>
+        <translation>État %1</translation>
     </message>
     <message>
         <source>Param %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Param %1</translation>
     </message>
     <message>
         <source>Single Section</source>
-        <translation type="unfinished"></translation>
+        <translation>Section unique</translation>
     </message>
     <message>
         <source>Layer 0-1</source>
@@ -183,151 +183,153 @@
     </message>
     <message>
         <source>Layer 2</source>
-        <translation type="unfinished">Couche 2</translation>
+        <translation>Couche 2</translation>
     </message>
     <message>
         <source>Layer 3</source>
-        <translation type="unfinished">Couche 3</translation>
+        <translation>Couche 3</translation>
     </message>
     <message>
         <source>Base Section</source>
-        <translation type="unfinished"></translation>
+        <translation>Section de base</translation>
     </message>
     <message>
         <source>Layers 0-1</source>
-        <translation type="unfinished"></translation>
+        <translation>Couches 0-1</translation>
     </message>
     <message>
         <source>Shift X:</source>
-        <translation type="unfinished"></translation>
+        <translation>Décalage X :</translation>
     </message>
     <message>
         <source>Shift Y:</source>
-        <translation type="unfinished"></translation>
+        <translation>Décalage Y :</translation>
     </message>
     <message>
         <source>By Depth</source>
-        <translation type="unfinished"></translation>
+        <translation>Par profondeur</translation>
     </message>
     <message>
         <source>By Param</source>
-        <translation type="unfinished"></translation>
+        <translation>Par param</translation>
     </message>
     <message>
         <source>Conflict %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Conflit %1</translation>
     </message>
     <message>
         <source>Conflicts</source>
-        <translation type="unfinished"></translation>
+        <translation>Conflits</translation>
     </message>
 </context>
 <context>
     <name>BackgroundPaletteEditor</name>
     <message>
         <source>Palette %1</source>
-        <translation type="unfinished">Palette %1</translation>
+        <translation>Palette %1</translation>
     </message>
     <message>
         <source>Is first pixel transparent</source>
-        <translation type="unfinished"></translation>
+        <translation>Premier pixel transparent ?</translation>
     </message>
     <message>
         <source>Palette used in background</source>
-        <translation type="unfinished"></translation>
+        <translation>Palette utilisée dans le décor</translation>
     </message>
     <message>
         <source>This palette is maybe used in the background or by one or more scripts on this field.
 Removing this palette may break scripts that reference it.
 Are you sure you want to continue?</source>
-        <translation type="unfinished"></translation>
+        <translation>Cette palette est peut-être utilisée dans le décor ou par un ou plusieurs scripts de cet écran.
+Supprimer cette palette peut provoquer un dysfonctionnement sur les scripts qui y font référence.
+Voulez-vous vraiment continuer ?</translation>
     </message>
     <message>
         <source>Cannot add more palettes</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible d&apos;ajouter plus de palettes</translation>
     </message>
     <message>
         <source>You reached the maximum amount of palettes (256).</source>
-        <translation type="unfinished"></translation>
+        <translation>Vous avez atteint le maximum de palettes (256).</translation>
     </message>
 </context>
 <context>
     <name>BackgroundTileEditor</name>
     <message>
         <source>Parameter</source>
-        <translation type="unfinished">Paramètre</translation>
+        <translation>Paramètre</translation>
     </message>
     <message>
         <source>Param ID</source>
-        <translation type="unfinished"></translation>
+        <translation>ID param</translation>
     </message>
     <message>
         <source>State ID</source>
-        <translation type="unfinished"></translation>
+        <translation>ID état</translation>
     </message>
     <message>
         <source>None</source>
-        <translation type="unfinished">Aucun</translation>
+        <translation>Aucun</translation>
     </message>
     <message>
         <source>Average</source>
-        <translation type="unfinished"></translation>
+        <translation>Moyenne</translation>
     </message>
     <message>
         <source>Plus</source>
-        <translation type="unfinished"></translation>
+        <translation>Plus</translation>
     </message>
     <message>
         <source>Minus</source>
-        <translation type="unfinished"></translation>
+        <translation>Moins</translation>
     </message>
     <message>
         <source>Source +25% destination</source>
-        <translation type="unfinished"></translation>
+        <translation>Source +25 % destination</translation>
     </message>
     <message>
         <source>Paletted 8-bit</source>
-        <translation type="unfinished"></translation>
+        <translation>Via palette 8 bit</translation>
     </message>
     <message>
         <source>Direct color 16-bit</source>
-        <translation type="unfinished"></translation>
+        <translation>Couleur 16 bits</translation>
     </message>
     <message>
         <source>Blend type</source>
-        <translation type="unfinished"></translation>
+        <translation>Type de fusion</translation>
     </message>
     <message>
         <source>Palette ID</source>
-        <translation type="unfinished"></translation>
+        <translation>ID palette</translation>
     </message>
     <message>
         <source>Create tile</source>
-        <translation type="unfinished"></translation>
+        <translation>Créer la tuile</translation>
     </message>
     <message>
         <source>No more space</source>
-        <translation type="unfinished"></translation>
+        <translation>Plus assez d&apos;espace</translation>
     </message>
     <message>
         <source>No more space available in the file for a new Tile</source>
-        <translation type="unfinished"></translation>
+        <translation>Plus assez d&apos;espace dans le fichier pour ajouter une tuile</translation>
     </message>
     <message>
         <source>Color type</source>
-        <translation type="unfinished"></translation>
+        <translation>Type de couleur</translation>
     </message>
     <message>
         <source>Depth (Z)</source>
-        <translation type="unfinished"></translation>
+        <translation>Profondeur (Z)</translation>
     </message>
     <message>
         <source>Depth fine tune</source>
-        <translation type="unfinished"></translation>
+        <translation>Profondeur plus précis</translation>
     </message>
     <message>
         <source>Delete selected tiles</source>
-        <translation type="unfinished"></translation>
+        <translation>Supprimer les tuiles sélectionnées</translation>
     </message>
 </context>
 <context>
@@ -4085,7 +4087,7 @@ Certains scripts peuvent y faire référence !</translation>
     </message>
     <message>
         <source>Resize backgrounds to 16/9 ratio</source>
-        <translation type="unfinished"></translation>
+        <translation>Redimensionner décors en ratio 16/9</translation>
     </message>
 </context>
 <context>
@@ -4099,15 +4101,15 @@ Certains scripts peuvent y faire référence !</translation>
     <name>PsColorDialog</name>
     <message>
         <source>Choose a color</source>
-        <translation type="unfinished"></translation>
+        <translation>Sélectionnez une couleur</translation>
     </message>
     <message>
         <source>Choose a color from the associated palette:</source>
-        <translation type="unfinished"></translation>
+        <translation>Sélectionnez une couleur à partir de la palette associée :</translation>
     </message>
     <message>
         <source>16-bit colors:</source>
-        <translation type="unfinished"></translation>
+        <translation>Couleurs 16 bits :</translation>
     </message>
 </context>
 <context>
@@ -7733,23 +7735,23 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
     </message>
     <message>
         <source>BG layers alignment</source>
-        <translation type="unfinished"></translation>
+        <translation>Alignement couches décor</translation>
     </message>
     <message>
         <source>Width</source>
-        <translation type="unfinished">Largeur</translation>
+        <translation>Largeur</translation>
     </message>
     <message>
         <source>Height</source>
-        <translation type="unfinished">Hauteur</translation>
+        <translation>Hauteur</translation>
     </message>
     <message>
         <source>X Multiplier</source>
-        <translation type="unfinished"></translation>
+        <translation>Multiplicateur X</translation>
     </message>
     <message>
         <source>Y Multiplier</source>
-        <translation type="unfinished"></translation>
+        <translation>Multiplicateur Y</translation>
     </message>
 </context>
 <context>
@@ -8323,15 +8325,15 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
     </message>
     <message>
         <source>Compatible Files (*.lgp *.DAT *.bin *.iso *.img *.lzs *.dec)</source>
-        <translation type="unfinished"></translation>
+        <translation>Fichiers compatibles (*.lgp *.DAT *.bin *.iso *.img *.lzs *.dec)</translation>
     </message>
     <message>
         <source>PC field File (* *.lzs *.dec)</source>
-        <translation type="unfinished"></translation>
+        <translation>Fichier Field PC (* *.lzs *.dec)</translation>
     </message>
     <message>
         <source>PC Field Map (* *.lzs)</source>
-        <translation type="unfinished"></translation>
+        <translation>Écran field PC (* *.lzs)</translation>
     </message>
 </context>
 <context>
