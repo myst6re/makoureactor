@@ -69,6 +69,9 @@
 #include "../KeyEditorDialog.h"
 #include "../AnimEditorDialog.h"
 #include "core/field/Section1File.h"
+#include "core/field/Field.h"
+#include "core/field/FieldArchiveIO.h"
+#include "core/field/FieldArchive.h"
 #include "widgets/ScriptEditorWidgets/ScriptEditorGenericList.h"
 
 SpinBoxDelegate::SpinBoxDelegate(QObject *parent) :
@@ -91,7 +94,11 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
 		comboBox->setInsertPolicy(QComboBox::NoInsert);
 		comboBox->completer()->setCompletionMode(QCompleter::PopupCompletion);
 		comboBox->completer()->setFilterMode(Qt::MatchContains);
-		comboBox->addItems(Data::maplist());
+		if (!_scriptsAndTexts->field()->io()->fieldArchive()->mapList().mapNames().empty()) {
+			comboBox->addItems(_scriptsAndTexts->field()->io()->fieldArchive()->mapList().mapNames());
+		} else {
+			comboBox->addItems(Data::maplist());
+		}
 		return comboBox;
 	} else if (type == ScriptEditorGenericList::group_id
 	          && _scriptsAndTexts->grpScriptCount() > 0) {

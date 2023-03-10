@@ -20,6 +20,9 @@
 #include "core/Config.h"
 #include "core/Var.h"
 #include "Data.h"
+#include "Field.h"
+#include "FieldArchiveIO.h"
+#include "FieldArchive.h"
 
 Opcode::Opcode() noexcept
 {
@@ -2548,7 +2551,7 @@ QString Opcode::toStringMINIGAME(const Section1File *scriptsAndTexts, const Opco
 	}
 	
 	return Opcode::tr("Mini-game: %5 (After the game goto field %1 (X=%2, Y=%3, triangle ID=%4))")
-	        .arg(_field(opcode.mapID))
+	        .arg(_field(opcode.mapID, scriptsAndTexts))
 	        .arg(opcode.targetX)
 	        .arg(opcode.targetY)
 	        .arg(opcode.targetI)
@@ -3407,7 +3410,7 @@ QString Opcode::toStringMAPJUMP(const Section1File *scriptsAndTexts, const Opcod
 {
 	Q_UNUSED(scriptsAndTexts)
 	return Opcode::tr("Jump to map %1 (X=%2, Y=%3, triangle ID=%4, direction=%5)")
-	        .arg(_field(opcode.mapID))
+	        .arg(_field(opcode.mapID, scriptsAndTexts))
 	        .arg(opcode.targetX)
 	        .arg(opcode.targetY)
 	        .arg(opcode.targetI)
@@ -4534,7 +4537,7 @@ QString Opcode::toStringPMJMP(const Section1File *scriptsAndTexts, const OpcodeP
 {
 	Q_UNUSED(scriptsAndTexts)
 	return Opcode::tr("Preload the field map %1")
-	        .arg(_field(opcode.mapID));
+	        .arg(_field(opcode.mapID, scriptsAndTexts));
 }
 
 QString Opcode::toStringPMJMP2(const Section1File *scriptsAndTexts, const OpcodePMJMP2 &opcode) const
@@ -4973,12 +4976,22 @@ QString Opcode::_materia(quint8 materiaID, quint8 bank)
 	return Opcode::tr("No%1").arg(materiaID);
 }
 
-QString Opcode::_field(quint16 mapID)
+QString Opcode::_field(quint16 mapID, const Section1File *scriptsAndTexts)
 {
-	if (mapID < Data::maplist().size()) {
+	const QStringList *mapNames = nullptr;
+
+	if (scriptsAndTexts != nullptr
+	    && scriptsAndTexts->field()->io() != nullptr
+	    && scriptsAndTexts->field()->io()->fieldArchive() != nullptr) {
+		mapNames = &(scriptsAndTexts->field()->io()->fieldArchive()->mapList().mapNames());
+	} else if (mapID < Data::maplist().size()) {
+		mapNames = &Data::maplist();
+	}
+
+	if (mapNames != nullptr && mapID < mapNames->size()) {
 		return Opcode::tr("%1 (#%2)")
-		        .arg(Data::maplist().at(mapID))
-		        .arg(mapID);
+		    .arg(mapNames->at(mapID))
+		    .arg(mapID);
 	}
 	return Opcode::tr("No%1").arg(mapID);
 }

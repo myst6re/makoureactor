@@ -1728,7 +1728,7 @@ private:
 	static QString _text(quint8 textID, const Section1File *scriptsAndTexts);
 	static QString _item(quint16 itemID, quint8 bank);
 	static QString _materia(quint8 materiaID, quint8 bank);
-	static QString _field(quint16 fieldID);
+	static QString _field(quint16 fieldID, const Section1File *scriptsAndTexts);
 	static QString _movie(quint8 movieID);
 	// static QString _objet3D(quint8 objet3D_ID);
 
