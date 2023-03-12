@@ -109,7 +109,7 @@ jobs:
       if: github.ref == 'refs/heads/develop'
       shell: bash
       run: |
-        echo "PRERELEASE_STRING=' unstable build'" >> $GITHUB_ENV
+        echo "PRERELEASE_STRING= unstable build" >> $GITHUB_ENV
 
     - name: Cache Zlib
       id: cache-zlib
@@ -145,7 +145,7 @@ jobs:
     - name: Build Makou Reactor
       id: main_build
       run: |
-        cmake -B ${{ env.makoureactor_build_path }} -DCMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }} -DCMAKE_INSTALL_PREFIX=${{ env.makoureactor_installation_path }} -Dff7tk_DIR=${{ env.ff7tk_installation_path }}/lib/cmake/ff7tk -DCLI:BOOL=${{ matrix.cmake_cli_arg }} -DGUI:BOOL=${{ matrix.cmake_gui_arg }} -DPRERELEASE_STRING=$PRERELEASE_STRING ${{ matrix.cmake_extra_args }}
+        cmake -B ${{ env.makoureactor_build_path }} -DCMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }} -DCMAKE_INSTALL_PREFIX=${{ env.makoureactor_installation_path }} -Dff7tk_DIR=${{ env.ff7tk_installation_path }}/lib/cmake/ff7tk -DCLI:BOOL=${{ matrix.cmake_cli_arg }} -DGUI:BOOL=${{ matrix.cmake_gui_arg }} -DPRERELEASE_STRING="$PRERELEASE_STRING" ${{ matrix.cmake_extra_args }}
         cmake --build ${{ env.makoureactor_build_path }} --target package -j3
 
     - name: Build AppImage (Linux)
