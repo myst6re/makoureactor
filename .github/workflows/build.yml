@@ -105,6 +105,12 @@ jobs:
         echo "QT_MAJOR_VERSION=$QT_MAJOR_VERSION" >> $GITHUB_ENV
         echo "QT_DIR=$QT_DIR" >> $GITHUB_ENV
 
+    - name: Set prerelease string
+      if: github.ref == 'refs/heads/develop'
+      shell: bash
+      run: |
+        echo "PRERELEASE_STRING=' unstable build'" >> $GITHUB_ENV
+
     - name: Cache Zlib
       id: cache-zlib
       if: runner.os == 'Windows'
