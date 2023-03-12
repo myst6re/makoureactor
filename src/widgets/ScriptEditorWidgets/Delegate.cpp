@@ -94,10 +94,15 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
 		comboBox->setInsertPolicy(QComboBox::NoInsert);
 		comboBox->completer()->setCompletionMode(QCompleter::PopupCompletion);
 		comboBox->completer()->setFilterMode(Qt::MatchContains);
+		const QStringList *mapList = nullptr;
 		if (!_scriptsAndTexts->field()->io()->fieldArchive()->mapList().mapNames().empty()) {
-			comboBox->addItems(_scriptsAndTexts->field()->io()->fieldArchive()->mapList().mapNames());
+			mapList = &_scriptsAndTexts->field()->io()->fieldArchive()->mapList().mapNames();
 		} else {
-			comboBox->addItems(Data::maplist());
+			mapList = &Data::maplist();
+		}
+		int mapId = 0;
+		for (const QString &mapName: *mapList) {
+			comboBox->addItem(QString("%1 - %2").arg(mapId++).arg(mapName));
 		}
 		return comboBox;
 	} else if (type == ScriptEditorGenericList::group_id
