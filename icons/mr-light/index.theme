@@ -1,0 +1,19 @@
+[Icon Theme]
+Name=mr-light
+DisplayDepth=32
+FollowsColorScheme=true
+Directories=scalable/actions,scalable/mimetypes
+
+[scalable/actions]
+Size=48
+Context=Actions
+Type=Scalable
+MinSize=16
+MaxSize=256
+
+[scalable/mimetypes]
+Size=48
+Context=MimeTypes
+Type=Scalable
+MinSize=16
+MaxSize=256

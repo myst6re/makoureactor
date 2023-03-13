@@ -1,0 +1,258 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [ master, develop ]
+  pull_request:
+    branches: [ master, develop ]
+  create: null
+
+env:
+  debianRequirements: "build-essential git zlib1g-dev cmake qt6-tools-dev qt6-tools-dev-tools qt6-l10n-tools qt6-declarative-dev qt6-base-dev libqt6svg6-dev qt6-base-dev-tools qt6-translations-l10n libqt6core5compat6-dev libqt6opengl6-dev libgl1-mesa-dev wget curl devscripts"
+
+jobs:
+  main_build:
+    name: ${{ matrix.package_suffix }} ${{ matrix.interface }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        qt:
+          - 6.4.2
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+        interface:
+          - cli
+          - gui
+        build_type:
+          - Release
+        include:
+        - qt_tools: tools_ninja
+          qt_modules: qt5compat
+          cmake_cli_arg: 'OFF'
+        - os: ubuntu-latest
+          package_extension: 'tar.xz'
+          package_suffix: 'linux64'
+          ff7tk_pack_suffix: "linux_x86_64.tar.gz"
+          ff7tk_install_command_extract: "tar -xf"
+          ff7tk_install_command_dest: "--one-top-level="
+        - os: macos-latest
+          package_extension: 'dmg'
+          package_suffix: 'macos'
+          ff7tk_pack_suffix: "macos.zip"
+          ff7tk_install_command_extract: "unzip "
+          ff7tk_install_command_dest: "-d "
+          cmake_extra_args: "-DCMAKE_OSX_ARCHITECTURES=\"arm64;x86_64\""
+        - os: windows-latest
+          package_extension: 'zip'
+          package_suffix: 'win64'
+          win_arch: "x64"
+          qt_arch: win64_msvc2019_64
+          cmake_extra_args: '-DZLIB_ROOT=C:/zlib'
+          qt_tools: tools_ninja, tools_cmake
+          ff7tk_pack_suffix: "win64.7z"
+          ff7tk_install_command_extract: "7z x"
+          ff7tk_install_command_dest: "-o"
+        - interface: gui
+          cmake_cli_arg: 'OFF'
+          cmake_gui_arg: 'ON'
+        - interface: cli
+          cmake_cli_arg: 'ON'
+          cmake_gui_arg: 'OFF'
+
+    env:
+      qt_installation_path: ${{ github.workspace }}
+      zlib_path: ${{ github.workspace }}/../zlib-git
+      zlib_build_path: ${{ github.workspace }}/../build-zlib-git
+      zlib_installation_path: C:/zlib
+      ff7tk_installation_path: ${{ github.workspace }}/ff7tk
+      makoureactor_build_path: ${{ github.workspace }}/../build-makoureactor
+      makoureactor_installation_path: ${{ github.workspace }}/../installation-makoureactor
+      makoureactor_appbundle_path: ${{ github.workspace }}/../appbundle-makoureactor
+      CMAKE_GENERATOR: Ninja
+      CMAKE_BUILD_TYPE: ${{ matrix.build_type }}
+      ff7tk_package: ff7tk-continuous-${{matrix.ff7tk_pack_suffix}}
+
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Env Script (Windows)
+      uses: ilammy/msvc-dev-cmd@v1
+      if: runner.os == 'Windows'
+      with:
+        arch: ${{ matrix.win_arch }}
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v3
+      with:
+       dir: ${{ env.qt_installation_path }}
+       arch: ${{ matrix.qt_arch }}
+       version: ${{ matrix.qt }}
+       cache: true
+       tools: ${{ matrix.qt_tools }}
+       modules: ${{ matrix.qt_modules }}
+
+    - name: Configure env
+      shell: bash
+      run: |
+        QT_MAJOR_VERSION=$(echo "${{ matrix.qt }}" | sed -E 's/^([0-9]+)\..*/\1/')
+        QT_DIR=$(eval 'echo $Qt'"$QT_MAJOR_VERSION"'_DIR')
+        echo "$IQTA_TOOLS/Ninja" >> $GITHUB_PATH
+        echo "$IQTA_TOOLS/CMake_64/bin" >> $GITHUB_PATH
+        echo "QT_MAJOR_VERSION=$QT_MAJOR_VERSION" >> $GITHUB_ENV
+        echo "QT_DIR=$QT_DIR" >> $GITHUB_ENV
+
+    - name: Set prerelease string
+      if: github.ref == 'refs/heads/develop'
+      shell: bash
+      run: |
+        echo "PRERELEASE_STRING= unstable build" >> $GITHUB_ENV
+
+    - name: Cache Zlib
+      id: cache-zlib
+      if: runner.os == 'Windows'
+      uses: actions/cache@v3
+      with:
+        path: ${{ env.zlib_installation_path }}
+        key: ${{ runner.os }}${{ matrix.win_arch }}-zlib
+
+    - name: Install Zlib
+      if: (runner.os == 'Windows') && (steps.cache-zlib.outputs.cache-hit != 'true')
+      run: |
+        git clone -q --depth 1 --single-branch --branch=v1.2.11 https://github.com/madler/zlib ${{ env.zlib_path }}
+        cmake -S${{ env.zlib_path }} -B${{ env.zlib_build_path }} -DCMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }} -DCMAKE_INSTALL_PREFIX=${{ env.zlib_installation_path }}
+        cmake --build ${{ env.zlib_build_path }} --target install -j3
+
+    - name: Get ff7tk redist
+      run: curl -LJO https://github.com/sithlord48/ff7tk/releases/download/continuous/${{ env.ff7tk_package }}
+
+    - name: Install ff7tk
+      run: ${{matrix.ff7tk_install_command_extract}} ${{env.ff7tk_package}} ${{matrix.ff7tk_install_command_dest}}${{env.ff7tk_installation_path}}
+
+    - name: Download linuxdeployqt
+      if: runner.os == 'Linux'
+      run: |
+        wget -qc "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage"
+        wget -qc "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage"
+        export VERSION=continuous
+        chmod a+x linuxdeploy*.AppImage
+        mv linuxdeploy-plugin-qt-*.AppImage $QT_DIR/bin/linuxdeploy-plugin-qt
+        mv linuxdeploy-*.AppImage $QT_DIR/bin/linuxdeploy
+
+    - name: Build Makou Reactor
+      id: main_build
+      run: |
+        cmake -B ${{ env.makoureactor_build_path }} -DCMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }} -DCMAKE_INSTALL_PREFIX=${{ env.makoureactor_installation_path }} -Dff7tk_DIR=${{ env.ff7tk_installation_path }}/lib/cmake/ff7tk -DCLI:BOOL=${{ matrix.cmake_cli_arg }} -DGUI:BOOL=${{ matrix.cmake_gui_arg }} -DPRERELEASE_STRING="$PRERELEASE_STRING" ${{ matrix.cmake_extra_args }}
+        cmake --build ${{ env.makoureactor_build_path }} --target package -j3
+
+    - name: Build AppImage (Linux)
+      if: runner.os == 'Linux' && matrix.interface == 'gui'
+      run: |
+        sudo add-apt-repository -y universe
+        sudo apt install -y libfuse2 libxkbcommon-x11-0
+        cmake --build ${{ env.makoureactor_build_path }} --target install -j3
+        mkdir -p ${{env.makoureactor_appbundle_path}}/usr/share/makoureactor/translations
+        cp ${{env.makoureactor_installation_path}}/share/makoureactor/translations/*.qm ${{env.makoureactor_appbundle_path}}/usr/share/makoureactor/translations/
+        mkdir -p ${{env.makoureactor_appbundle_path}}/usr/plugins/iconengines
+        cp ${{ env.qt_installation_path }}/Qt/${{ matrix.qt }}/gcc_64/plugins/iconengines/libqsvgicon.so ${{env.makoureactor_appbundle_path}}/usr/plugins/iconengines/libqsvgicon.so
+
+        export VERSION=continuous
+        export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${{ env.ff7tk_installation_path }}/lib
+        export PATH=$PATH:${{ env.qt_installation_path }}/Qt/${{ matrix.qt }}/gcc_64/libexec
+        linuxdeploy --appdir="${{ env.makoureactor_appbundle_path }}" --plugin=qt --output appimage \
+          -e "${{ env.makoureactor_installation_path }}"/bin/Makou_Reactor \
+          -d "${{ env.makoureactor_installation_path }}"/share/applications/io.github.myst6re.makoureactor.desktop \
+          -i "${{ env.makoureactor_installation_path }}"/share/icons/hicolor/256x256/apps/io.github.myst6re.makoureactor.png
+        mv *.AppImage makoureactor-continuous-${{ matrix.interface }}-${{ matrix.package_suffix }}.AppImage
+
+    - name: Prepare Upload
+      shell: bash
+      run: mv ../build-makoureactor/*.${{ matrix.package_extension }} makoureactor-continuous-${{ matrix.interface }}-${{ matrix.package_suffix }}.${{ matrix.package_extension }}
+
+    - name: Upload
+      uses: actions/upload-artifact@v3
+      with:
+        path: ${{ github.workspace }}/makoureactor-continuous-*.*
+
+  deb_builder:
+    name: debianBuilder-${{matrix.config.name}}
+    runs-on: ${{matrix.config.os}}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - {
+             name: jammy , os: ubuntu-22.04
+             , debArch: amd64
+          }
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - run: git fetch --tags --force
+    - name: Install Dependencies
+      run: |
+        sudo apt-get update -y > /dev/null
+        sudo apt-get install -qqq ${{env.debianRequirements}} > /dev/null
+        curl -s https://api.github.com/repos/sithlord48/ff7tk/releases/latest | awk -F\" '/browser_download_url.*${{matrix.config.debArch}}*[.deb]/{print $(NF-1)}' | wget -i -
+        sudo apt -y -qqq install ./libff7tk*.deb
+        rm libff7tk*.deb
+    - name: Build
+      run: |
+        cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DQT_DEFAULT_MAJOR_VERSION=6 -DCPACK_DEBIAN_PACKAGE_RELEASE=${{github.run_attempt}}~${{matrix.config.name}} -DBUNDLE_FF7TK_QM=OFF
+        cmake --build build
+        cpack -G DEB -C Release --config build/CPackConfig.cmake
+    - name: Upload
+      uses: actions/upload-artifact@v3
+      with:
+        name: debian-artifacts
+        path: makoureactor*.deb
+
+  pre_release_assets:
+    name: Pre-Release
+    needs: [main_Build, deb_builder]
+    if: github.ref == 'refs/heads/develop'
+    concurrency: pre-release-${{ github.ref }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download Files
+      uses: actions/download-artifact@v3
+
+    - name: Deploy Package
+      uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+       repo_token: "${{ secrets.GITHUB_TOKEN }}"
+       automatic_release_tag: "continuous"
+       prerelease: true
+       title: "Unstable Build"
+       files: |
+         artifact/*
+         debian-artifacts/*
+
+  release_assets:
+    name: Release
+    needs: [main_Build, deb_builder]
+    if: github.event.ref_type == 'tag'
+    concurrency: release-${{ github.ref }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download Files
+      uses: actions/download-artifact@v3
+
+    - name: Prepare Upload
+      shell: bash
+      run: find . -type f -name 'makoureactor-continuous-*' -exec bash -c 'mv "{}" $(echo {} | sed 's/continuous-//')' ';'
+
+    - name: Deploy Package
+      uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+       repo_token: "${{ secrets.GITHUB_TOKEN }}"
+       prerelease: false
+       title: ${{ github.event.ref }}
+       files: |
+         artifact/*
+         debian-artifacts/*
+

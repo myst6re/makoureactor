@@ -1,0 +1,21 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/reactor.png</file>
+        <file>images/numbers.png</file>
+        <file>images/logo-shinra.png</file>
+        <file>images/font.png</file>
+        <file>images/keys.png</file>
+        <file>images/field-arrow-green.png</file>
+        <file>images/field-arrow-red.png</file>
+        <file>images/background.png</file>
+        <file>images/location.png</file>
+        <file>images/main.png</file>
+        <file>images/model.png</file>
+        <file>vars.cfg</file>
+        <file>images/text-editor.png</file>
+        <file>images/cursor.png</file>
+        <file>shaders/main.vert</file>
+        <file>shaders/main.frag</file>
+        <file>images/texture-purple.png</file>
+    </qresource>
+</RCC>
