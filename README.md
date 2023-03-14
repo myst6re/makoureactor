@@ -22,8 +22,6 @@ when available:
 
 You are welcome to contribute on this project, feel free to open issues and
 PR on [GitHub](https://github.com/myst6re/makoureactor).
-Ensure that you have commited in `develop` branch, otherwise I will not accept your
-request.
 
 ## Building
 
