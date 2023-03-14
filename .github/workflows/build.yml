@@ -2,9 +2,9 @@ name: CI/CD
 
 on:
   push:
-    branches: [ master, develop ]
+    branches: [ master ]
   pull_request:
-    branches: [ master, develop ]
+    branches: [ master ]
   create: null
 
 env:
@@ -106,7 +106,7 @@ jobs:
         echo "QT_DIR=$QT_DIR" >> $GITHUB_ENV
 
     - name: Set prerelease string
-      if: github.ref == 'refs/heads/develop'
+      if: github.event.ref_type != 'tag'
       shell: bash
       run: |
         echo "PRERELEASE_STRING= unstable build" >> $GITHUB_ENV
@@ -214,7 +214,7 @@ jobs:
   pre_release_assets:
     name: Pre-Release
     needs: [main_Build, deb_builder]
-    if: github.ref == 'refs/heads/develop'
+    if: github.event.ref_type != 'tag'
     concurrency: pre-release-${{ github.ref }}
     runs-on: ubuntu-latest
     steps:
