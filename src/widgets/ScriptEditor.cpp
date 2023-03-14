@@ -20,6 +20,7 @@
 #include "ScriptEditorWidgets/ScriptEditorStructPage.h"
 #include "ScriptEditorWidgets/ScriptEditorMathPage.h"
 #include "ScriptEditorWidgets/ScriptEditorWindowPage.h"
+#include "ScriptEditorWidgets/ScriptEditorModelPage.h"
 #include "ScriptEditorWidgets/ScriptEditorMoviePage.h"
 #include "ScriptEditorWidgets/ScriptEditorSpecialPage.h"
 #include "ScriptEditorWidgets/ScriptEditorWalkmeshPage.h"
@@ -167,6 +168,8 @@ ScriptEditorView *ScriptEditor::buildEditorPage(PageType id)
 		return new ScriptEditorWindowVariablePage(scriptsAndTexts, grpScript, script, opcodeID, this);
 	case WindowNumDisplay:
 		return new ScriptEditorWindowNumDisplayPage(scriptsAndTexts, grpScript, script, opcodeID, this);
+	case Model:
+		return new ScriptEditorModelPage(field, scriptsAndTexts, grpScript, script, opcodeID, this);
 	case Movie:
 		return new ScriptEditorMoviePage(scriptsAndTexts, grpScript, script, opcodeID, this);
 	case Walkmesh:
@@ -329,6 +332,9 @@ void ScriptEditor::fillEditor()
 	case OpcodeKey::MPARA:
 	case OpcodeKey::MPRA2:
 		_currentPageType = WindowVar;
+		break;
+	case OpcodeKey::CHAR_:
+		_currentPageType = Model;
 		break;
 	case OpcodeKey::PMVIE:
 		_currentPageType = Movie;

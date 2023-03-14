@@ -6188,6 +6188,13 @@ id=%2
     </message>
 </context>
 <context>
+    <name>ScriptEditorModelPage</name>
+    <message>
+        <source>%1 - Model #%2</source>
+        <translation>%1 - Modèle n°%2</translation>
+    </message>
+</context>
+<context>
     <name>ScriptEditorMoviePage</name>
     <message>
         <source>Disc</source>

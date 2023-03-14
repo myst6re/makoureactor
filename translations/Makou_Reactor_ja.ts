@@ -5596,6 +5596,13 @@ Make sure it is valid or delete it.</source>
     </message>
 </context>
 <context>
+    <name>ScriptEditorModelPage</name>
+    <message>
+        <source>%1 - Model #%2</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ScriptEditorMoviePage</name>
     <message>
         <source>Disc</source>

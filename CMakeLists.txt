@@ -306,6 +306,8 @@ set(PROJECT_SOURCES
     "src/widgets/ScriptEditorWidgets/ScriptEditorGenericList.h"
     "src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp"
     "src/widgets/ScriptEditorWidgets/ScriptEditorMathPage.h"
+    "src/widgets/ScriptEditorWidgets/ScriptEditorModelPage.cpp"
+    "src/widgets/ScriptEditorWidgets/ScriptEditorModelPage.h"
     "src/widgets/ScriptEditorWidgets/ScriptEditorMoviePage.cpp"
     "src/widgets/ScriptEditorWidgets/ScriptEditorMoviePage.h"
     "src/widgets/ScriptEditorWidgets/ScriptEditorSpecialPage.cpp"

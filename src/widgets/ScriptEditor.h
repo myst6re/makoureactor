@@ -63,6 +63,7 @@ private:
 		WindowVar,
 		WindowNumDisplay,
 		Movie,
+		Model,
 		Walkmesh,
 		JumpNanaki,
 		SpecialPName,
