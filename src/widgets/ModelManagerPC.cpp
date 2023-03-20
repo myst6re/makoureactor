@@ -407,13 +407,13 @@ void ModelManagerPC::addAnim()
 	if (item == nullptr) {
 		modelAnims->addTopLevelItem(newItem);
 
-		modelLoader()->insertAnim(modelID, modelAnims->topLevelItemCount(), a);
+		modelLoader()->insertAnim(modelID, modelAnims->topLevelItemCount() - 1, a);
 	}
 	else {
 		int animID = currentAnimID(item);
-		modelAnims->insertTopLevelItem(animID+1, newItem);
+		modelAnims->insertTopLevelItem(animID + 1, newItem);
 
-		modelLoader()->insertAnim(modelID, animID+1, a);
+		modelLoader()->insertAnim(modelID, animID + 1, a);
 	}
 
 	// Update animation IDs
