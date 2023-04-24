@@ -1,7 +1,7 @@
 # Makou Reactor
 
 [![CI/CD](https://github.com/myst6re/makoureactor/actions/workflows/build.yml/badge.svg)](https://github.com/myst6re/makoureactor/actions/workflows/build.yml)
-[![Coverity Scan Build Status](https://img.shields.io/coverity/scan/8102.svg)](https://scan.coverity.com/projects/myst6re-makoureactor)
+[![Coverity Scan Build Status](https://img.shields.io/coverity/scan/8102.svg)](https://scan.coverity.com/projects/myst6re-makoureactor) [![Stable Release](https://img.shields.io/github/downloads/myst6re/makoureactor/total?label=Total%20Downloads)](#)
 
 ![Makou Reactor](src/qt/images/logo-shinra.png)
 
@@ -9,14 +9,7 @@ Final Fantasy VII field archive editor ([Forum](http://forums.qhimm.com/index.ph
 
 ## Installing
 
-Makou Reactor can be downloaded as a simple ZIP archive, or via repositories
-when available:
-
-- **Windows**: Download the last release on [GitHub](https://github.com/myst6re/makoureactor/releases).
-- **MacOSX**: Download the latest release on [GitHub](https://github.com/myst6re/makoureactor/releases)
-- **Debian/Ubuntu**: [GitHub](https://github.com/myst6re/makoureactor/releases)
-- **ArchLinux**: Use packages from the [AUR](https://aur.archlinux.org/packages/?O=0&SeB=nd&K=makoureactor&outdated=&SB=n&SO=a&PP=50&do_Search=Go).
-- **Other Linux**: Download the latest release on [GitHub](https://github.com/myst6re/makoureactor/releases)
+[![Stable Release](https://img.shields.io/github/downloads/myst6re/makoureactor/2.0.0/total?logo=github&label=Download%20Stable%20Release)](https://github.com/myst6re/makoureactor/releases/tag/2.0.0) [![Continious Release](https://img.shields.io/github/downloads/myst6re/makoureactor/continuous/total?logo=github&label=Download%20Continuous%20Release)](https://github.com/myst6re/makoureactor/releases/tag/continuous) [![Get From Flathub](https://img.shields.io/flathub/downloads/io.github.myst6re.makoureactor?logo=flathub&label=Download%20From%20Flathub)](https://flathub.org/apps/details/io.github.myst6re.makoureactor)
 
 ## Contributing
 
