@@ -322,6 +322,10 @@ Are you sure you want to continue?</source>
         <source>Delete selected tiles</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Depth fine tune auto</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CLI</name>
@@ -7460,12 +7464,12 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
     <name>main</name>
     <message>
         <source>Error</source>
-        <translation type="unfinished">エラー</translation>
+        <translation type="obsolete">エラー</translation>
     </message>
     <message>
         <source>The file &apos;var.cfg&apos; could not be loaded.
 Make sure it is valid or delete it.</source>
-        <translation type="unfinished">ファイル &apos;var.cfg&apos; が読み込めません。
+        <translation type="obsolete">ファイル &apos;var.cfg&apos; が読み込めません。
 ファイルが有効か確認するか、または削除してください。。</translation>
     </message>
 </context>

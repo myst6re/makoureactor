@@ -552,6 +552,7 @@ Tile BackgroundTilesIOPC::tilePC2Tile(const TilePC &tile, quint8 layerID, quint1
 	ret.layerID = layerID;
 	ret.tileID = tileID;
 	ret.IDBig = tile.IDBig;
+	ret.manualIDBig = false;
 	ret.unknown7 = tile.unknown7;
 
 	// qDebug() << "tile" << tileID << "layerID" << layerID << QPoint(ret.srcX, ret.srcY) << QPoint(ret.dstX, ret.dstY) << tile.unused1 << "Z" << ret.ID << ret.IDBig << "texID" << ret.textureID << "palID" << ret.paletteID << "blend" << ret.blending << "depth" << ret.depth << "size" << ret.size << "param" << ret.param;
@@ -729,6 +730,7 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 			tile.layerID = 0;
 			tile.tileID = i;
 			tile.IDBig = 0;
+			tile.manualIDBig = false;
 
 			tiles.insert(1, tile);
 		} else {
@@ -824,6 +826,7 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 			tile.layerID = layerID;
 			tile.tileID = j;
 			tile.IDBig = 0;
+			tile.manualIDBig = false;
 
 			tiles.insert(tile);
 		} else {

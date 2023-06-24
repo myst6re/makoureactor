@@ -46,6 +46,8 @@ private slots:
 	void updateBgParamEnabled(bool enabled);
 	void updatePaletteId(int value);
 	void updateDepth(int value);
+	void disableDepthTuningInput(bool disabled);
+	void updateDepthTuning(int value);
 	void removeTiles();
 private:
 	ImageGridWidget *_tileWidget;
@@ -53,6 +55,7 @@ private:
 	QSpinBox *_bgParamInput, *_bgParamStateInput;
 	QComboBox *_blendTypeInput, *_colorTypeInput;
 	QSpinBox *_depthInput, *_depthTuningInput;
+	QCheckBox *_depthTuningAutoInput;
 	QFormLayout *_tileEditorLayout, *_tileCreateLayout;
 	QSpinBox *_paletteIdInput;
 	QStackedLayout *_stackedLayout;

@@ -20,6 +20,10 @@
 
 void Tile::calcIDBig()
 {
+	if (manualIDBig) {
+		return;
+	}
+
 	// Used for conversion to PC format 
 	if (ID == 0) {
 		IDBig = 999;

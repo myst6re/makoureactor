@@ -55,12 +55,16 @@ BackgroundTileEditor::BackgroundTileEditor(QWidget *parent)
 	_depthInput->setRange(0, 4096);
 
 	_depthTuningInput = new QSpinBox(_formPage);
-	_depthTuningInput->setRange(-10000, 100000);
+	_depthTuningInput->setRange(0, 10000000);
+
+	_depthTuningAutoInput = new QCheckBox(_formPage);
+	_depthTuningAutoInput->setChecked(true);
 
 	_tileEditorLayout = new QFormLayout();
 	_tileEditorLayout->addRow(tr("Blend type"), _blendTypeInput);
 	_tileEditorLayout->addRow(tr("Palette ID"), _paletteIdInput);
 	_tileEditorLayout->addRow(tr("Depth (Z)"), _depthInput);
+	_tileEditorLayout->addRow(tr("Depth fine tune auto"), _depthTuningAutoInput);
 	_tileEditorLayout->addRow(tr("Depth fine tune"), _depthTuningInput);
 
 	QPushButton *removeButton = new QPushButton(tr("Delete selected tiles"), _formPage);
@@ -105,6 +109,8 @@ BackgroundTileEditor::BackgroundTileEditor(QWidget *parent)
 	connect(_bgParamGroup, &QGroupBox::clicked, this, &BackgroundTileEditor::updateBgParamEnabled);
 	connect(_paletteIdInput, &QSpinBox::valueChanged, this, &BackgroundTileEditor::updatePaletteId);
 	connect(_depthInput, &QSpinBox::valueChanged, this, &BackgroundTileEditor::updateDepth);
+	connect(_depthTuningAutoInput, &QAbstractButton::toggled, this, &BackgroundTileEditor::disableDepthTuningInput);
+	connect(_depthTuningInput, &QSpinBox::valueChanged, this, &BackgroundTileEditor::updateDepthTuning);
 	connect(removeButton, &QPushButton::clicked, this, &BackgroundTileEditor::removeTiles);
 }
 
@@ -128,7 +134,7 @@ void BackgroundTileEditor::setTiles(const QList<Tile> &tiles)
 
 	bool isInvalid = false;
 	int layerID = 0;
-	QSet<int> params, states, paletteIDs, blendings, typeTranss, depths, depthBigs;
+	QSet<int> params, states, paletteIDs, blendings, typeTranss, depths, depthBigs, depthBigsManual;
 
 	for (const Tile &tile: tiles) {
 		layerID = tile.layerID;
@@ -141,6 +147,7 @@ void BackgroundTileEditor::setTiles(const QList<Tile> &tiles)
 		typeTranss.insert(tile.typeTrans);
 		depths.insert(tile.ID);
 		depthBigs.insert(tile.IDBig);
+		depthBigsManual.insert(tile.manualIDBig);
 		if (tile.tileID == quint16(-1)) {
 			isInvalid = true;
 		}
@@ -251,13 +258,21 @@ void BackgroundTileEditor::setTiles(const QList<Tile> &tiles)
 		if (depthBigs.size() == 1) {
 			_depthTuningInput->setValue(*depthBigs.begin());
 			_depthTuningInput->setEnabled(layerID == 1);
-			_tileEditorLayout->labelForField(_depthTuningInput)->setEnabled(layerID == 1);
 		} else {
 			_depthTuningInput->setValue(0);
 			_depthTuningInput->setEnabled(false);
-			_tileEditorLayout->labelForField(_depthTuningInput)->setEnabled(false);
 		}
-		_depthInput->blockSignals(false);
+		_tileEditorLayout->labelForField(_depthTuningInput)->setEnabled(_depthTuningInput->isEnabled());
+		
+		_depthTuningAutoInput->blockSignals(true);
+		_depthTuningAutoInput->setChecked(depthBigsManual.size() != 1 || !(*depthBigsManual.begin()));
+		_depthTuningAutoInput->setEnabled(_depthTuningInput->isEnabled());
+		if (_depthTuningAutoInput->isChecked()) {
+			_depthTuningInput->setEnabled(false);
+		}
+		_tileEditorLayout->labelForField(_depthTuningAutoInput)->setEnabled(_depthTuningAutoInput->isEnabled());
+		_depthTuningAutoInput->blockSignals(false);
+		_depthTuningInput->blockSignals(false);
 	}
 }
 
@@ -443,6 +458,38 @@ void BackgroundTileEditor::updateDepth(int value)
 		}
 	}
 
+	emit changed(_tiles);
+}
+
+void BackgroundTileEditor::disableDepthTuningInput(bool disabled)
+{
+	_depthTuningInput->setEnabled(!disabled);
+
+	for (Tile &tile: _tiles) {
+		tile.manualIDBig = !disabled;
+		
+		if (!_backgroundFile->setTile(tile)) {
+			qWarning() << "BackgroundTileEditor::updateDepth tile not found" << tile.tileID;
+		}
+	}
+
+	emit changed(_tiles);
+}
+
+void BackgroundTileEditor::updateDepthTuning(int depth)
+{
+	if (depth < 0) {
+		return;
+	}
+
+	for (Tile &tile: _tiles) {
+		tile.IDBig = depth;
+		
+		if (!_backgroundFile->setTile(tile)) {
+			qWarning() << "BackgroundTileEditor::updateDepth tile not found" << tile.tileID;
+		}
+	}
+	
 	emit changed(_tiles);
 }
 

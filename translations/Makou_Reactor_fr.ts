@@ -331,6 +331,10 @@ Voulez-vous vraiment continuer ?</translation>
         <source>Delete selected tiles</source>
         <translation>Supprimer les tuiles sélectionnées</translation>
     </message>
+    <message>
+        <source>Depth fine tune auto</source>
+        <translation>Profondeur plus précis auto</translation>
+    </message>
 </context>
 <context>
     <name>CLI</name>
@@ -8288,12 +8292,12 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
     <name>main</name>
     <message>
         <source>Error</source>
-        <translation>Erreur</translation>
+        <translation type="vanished">Erreur</translation>
     </message>
     <message>
         <source>The file &apos;var.cfg&apos; could not be loaded.
 Make sure it is valid or delete it.</source>
-        <translation>Le fichier &apos;var.cfg&apos; n&apos;a pas pu être chargé.
+        <translation type="vanished">Le fichier &apos;var.cfg&apos; n&apos;a pas pu être chargé.
 Vérifiez que ce fichier est valide ou supprimez-le.</translation>
     </message>
 </context>

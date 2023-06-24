@@ -22,8 +22,8 @@
 struct Tile {
 	qint16 dstX, dstY;
 	quint8 srcX, srcY;
-	quint8 paletteID;
 	quint16 ID;
+	quint8 paletteID;
 	quint8 param, state;
 	bool blending;
 	quint8 typeTrans, size;
@@ -34,6 +34,7 @@ struct Tile {
 	quint16 tileID;
 	quint32 IDBig; // Only on PC
 	quint8 unknown7; // Only on PC (unused)
+	bool manualIDBig;
 	void calcIDBig();
 };
 
