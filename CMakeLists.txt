@@ -221,7 +221,6 @@ set(PROJECT_SOURCES
     "src/core/field/TutFileStandard.cpp"
     "src/core/field/TutFileStandard.h"
     "src/main.cpp"
-    "src/txt.cpp"
     "src/widgets/AboutDialog.cpp"
     "src/widgets/AboutDialog.h"
     "src/widgets/AnimEditorDialog.cpp"
@@ -484,7 +483,6 @@ set(PROJECT_CLI_SOURCES
     "src/core/field/TutFileStandard.cpp"
     "src/core/field/TutFileStandard.h"
     "src/main.cpp"
-    "src/txt.cpp"
 )
 
 if(APPLE)
