@@ -16,10 +16,12 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "TextPreview.h"
-#include "core/FF7String.h"
 #include "Data.h"
 #include "core/Config.h"
 #include "core/FF7Font.h"
+
+#include <FF7Text>
+#include <FF7Char>
 
 QTimer TextPreview::timer;
 int TextPreview::curFrame10 = 0;
@@ -48,23 +50,14 @@ TextPreview::TextPreview(QWidget *parent) :
 
 void TextPreview::fillNames()
 {
-	QStringList dataNames = Data::char_names;
-	for (int i=0; i<9; ++i) {
-		QString customName = Config::value(QString("customCharName%1").arg(i)).toString();
-		if (!customName.isEmpty()) {
-			dataNames.replace(i, customName);
-		}
+	FF7Text::setJapanese(Config::value("jp_txt", false).toBool());
+	qDebug() << FF7Text::isJapanese();
+	for (int i=0; i<12; ++i) {
+		if(i < 9)
+			names.append(FF7Text::toFF7(Config::value(QStringLiteral("customCharName%1").arg(i), FF7Char::defaultName(i)).toString()));
+		else
+			names.append(FF7Text::toFF7(tr("Member %1").arg(QString::number(i-8))));
 	}
-	dataNames.replace(9, tr("Member 1"));
-	dataNames.replace(10, tr("Member 2"));
-	dataNames.replace(11, tr("Member 3"));
-//	bool jp = Config::value("jp_txt", false).toBool();
-//	Config::setValue("jp_txt", false);
-
-	for (int i = 0; i < 12; ++i) {
-		names.append(FF7String(dataNames.at(i), false).data());
-	}
-//	Config::setValue("jp_txt", jp);
 }
 
 void TextPreview::updateNames()
@@ -400,7 +393,7 @@ bool TextPreview::drawTextArea(QPainter *painter)
 				letter(&x, &y, charId, painter, 1);
 			}
 		} else if (charId>=0xea && charId<=0xf5) {
-			word(&x, &y, names.at(charId-0xea), painter);
+			word(&x, &y, names.at(charId-0xea), painter, jp ? 1 : 0);
 		} else if (charId>=0xf6 && charId<=0xf9) {
 			painter->drawPixmap(x, y - 2, getIconImage(charId-0xf6));
 			x += 17;
