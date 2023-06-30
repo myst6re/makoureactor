@@ -16,7 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "FontWidget.h"
-#include "core/FF7Text.h"
+#include "core/FF7String.h"
 #include "core/FF7Font.h"
 #include <TexFile>
 
@@ -158,10 +158,10 @@ void FontWidget::setLetter(int i)
 	if (fontGrid->currentTable() <= 5) {
 		if (ff7Font) {
 			//TODO: ff7Font
-//			textLetter->setText(FF7Text(ba.append(char(i)), ff7Font->tables()));
+//			textLetter->setText(FF7String(ba.append(char(i)), ff7Font->tables()));
 		} else {
 			//TODO: jp
-			textLetter->setText(FF7Text(ba.append(char(i))).text(false));
+			textLetter->setText(FF7String(ba.append(char(i))).text(false));
 		}
 		if (fontLetter->windowBinFile() && fontLetter->isLetterSizeEditable()) {
 			widthLetter->setValue(

@@ -19,21 +19,21 @@
 
 #include <QtCore>
 
-class FF7Text
+class FF7String
 {
 public:
-	explicit FF7Text(QByteArrayView data = QByteArrayView());
-	FF7Text(const QString &text, bool jp);
+	explicit FF7String(QByteArrayView data = QByteArrayView());
+	FF7String(const QString &text, bool jp);
 	const QByteArray &data() const;
 	QString text(bool jp, bool simplified=false) const;
 	void setText(const QString &text, bool jp);
 	bool contains(const QRegularExpression &regExp) const;
 	qsizetype indexOf(const QRegularExpression &regExp, qsizetype from, qsizetype &size) const;
 	qsizetype lastIndexOf(const QRegularExpression &regExp, qsizetype &from, qsizetype &size) const;
-	inline bool operator ==(const FF7Text &t2) const {
+	inline bool operator ==(const FF7String &t2) const {
 		return data() == t2.data();
 	}
-	inline bool operator !=(const FF7Text &t2) const {
+	inline bool operator !=(const FF7String &t2) const {
 		return data() != t2.data();
 	}
 

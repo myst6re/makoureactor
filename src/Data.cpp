@@ -26,7 +26,7 @@
 #include <FF7Char>
 #include "Data.h"
 #include "core/Config.h"
-#include "core/FF7Text.h"
+#include "core/FF7String.h"
 #include "core/SystemColor.h"
 
 QStringList Data::char_names;
@@ -592,7 +592,7 @@ void Data::fill(const QByteArray &data, int pos, int dataSize, QStringList &name
 
 	i = 0;
 	for (quint16 position : positions) {
-		names.append(FF7Text(QByteArrayView(constData + pos + position, positions.at(i + 1) - position)).text(false, true));
+		names.append(FF7String(QByteArrayView(constData + pos + position, positions.at(i + 1) - position)).text(false, true));
 		++i;
 		if (i == count) {
 			break;

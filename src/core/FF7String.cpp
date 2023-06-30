@@ -15,26 +15,26 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#include "FF7Text.h"
+#include "FF7String.h"
 #include "Config.h"
 
-FF7Text::FF7Text(QByteArrayView data)
+FF7String::FF7String(QByteArrayView data)
 {
 	qsizetype index = data.indexOf('\xFF');
 	_data = (index != -1 ? data.first(index) : data).toByteArray();
 }
 
-FF7Text::FF7Text(const QString &text, bool jp)
+FF7String::FF7String(const QString &text, bool jp)
 {
 	setText(text, jp);
 }
 
-const QByteArray &FF7Text::data() const
+const QByteArray &FF7String::data() const
 {
 	return _data;
 }
 
-QString FF7Text::text(bool jp, bool simplified) const
+QString FF7String::text(bool jp, bool simplified) const
 {
 	QString trad;
 //	bool jp = Config::value("jp_txt", false).toBool();
@@ -190,7 +190,7 @@ QString FF7Text::text(bool jp, bool simplified) const
 	return trad;
 }
 
-void FF7Text::setText(const QString &string, bool jp)
+void FF7String::setText(const QString &string, bool jp)
 {
 	QChar comp;
 	qsizetype stringSize = string.size();
@@ -394,33 +394,33 @@ void FF7Text::setText(const QString &string, bool jp)
 	}
 }
 
-QString FF7Text::getCaract(quint8 ord, quint8 table)
+QString FF7String::getCaract(quint8 ord, quint8 table)
 {
 	switch (table) {
 	case 2:
-		return QString::fromUtf8(FF7Text::caract_jp[ord]);
+		return QString::fromUtf8(FF7String::caract_jp[ord]);
 	case 3:
-		return QString::fromUtf8(FF7Text::caract_jp_fa[ord]);
+		return QString::fromUtf8(FF7String::caract_jp_fa[ord]);
 	case 4:
-		return QString::fromUtf8(FF7Text::caract_jp_fb[ord]);
+		return QString::fromUtf8(FF7String::caract_jp_fb[ord]);
 	case 5:
-		return QString::fromUtf8(FF7Text::caract_jp_fc[ord]);
+		return QString::fromUtf8(FF7String::caract_jp_fc[ord]);
 	case 6:
-		return QString::fromUtf8(FF7Text::caract_jp_fd[ord]);
+		return QString::fromUtf8(FF7String::caract_jp_fd[ord]);
 	case 7:
-		return QString::fromUtf8(FF7Text::caract_jp_fe[ord]);
+		return QString::fromUtf8(FF7String::caract_jp_fe[ord]);
 	default:
-		return QString::fromUtf8(FF7Text::caract[ord]);
+		return QString::fromUtf8(FF7String::caract[ord]);
 	}
 }
 
-bool FF7Text::contains(const QRegularExpression &regExp) const
+bool FF7String::contains(const QRegularExpression &regExp) const
 {
 	return text(Config::value("jp_txt", false).toBool())
 	        .contains(regExp);
 }
 
-qsizetype FF7Text::indexOf(const QRegularExpression &regExp, qsizetype from, qsizetype &size) const
+qsizetype FF7String::indexOf(const QRegularExpression &regExp, qsizetype from, qsizetype &size) const
 {
 	QString t = text(Config::value("jp_txt", false).toBool());
 	qsizetype offset = from < 0 ? t.size() - from : from;
@@ -431,7 +431,7 @@ qsizetype FF7Text::indexOf(const QRegularExpression &regExp, qsizetype from, qsi
 	return match.capturedStart();
 }
 
-qsizetype FF7Text::lastIndexOf(const QRegularExpression &regExp, qsizetype &from, qsizetype &size) const
+qsizetype FF7String::lastIndexOf(const QRegularExpression &regExp, qsizetype &from, qsizetype &size) const
 {
 	QString t = text(Config::value("jp_txt", false).toBool());
 	qsizetype offset = from < 0 ? t.size() - from : from;

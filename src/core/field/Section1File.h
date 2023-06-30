@@ -20,7 +20,7 @@
 #include <QtCore>
 #include "FieldPart.h"
 #include "GrpScript.h"
-#include "../FF7Text.h"
+#include "../FF7String.h"
 #include "TutFileStandard.h"
 
 class Section1File : public FieldPart
@@ -79,12 +79,12 @@ public:
 	void cleanTexts();
 	void autosizeTextWindows();
 
-	const QList<FF7Text> &texts() const;
+	const QList<FF7String> &texts() const;
 	qsizetype textCount() const;
 	inline static int maxTextCount() { return 256; }
-	const FF7Text &text(int textID) const;
-	void setText(int textID, const FF7Text &text);
-	bool insertText(int textID, const FF7Text &text);
+	const FF7String &text(int textID) const;
+	void setText(int textID, const FF7String &text);
+	bool insertText(int textID, const FF7String &text);
 	bool replaceText(const QRegularExpression &search, const QString &after, int textID, int from);
 	void deleteText(int textID);
 	void clearTexts();
@@ -102,7 +102,7 @@ private:
 	QString _author;
 	QByteArray _empty;
 	QList<GrpScript> _grpScripts;
-	QList<FF7Text> _texts;
+	QList<FF7String> _texts;
 	quint16 _scale;
 	quint16 _version;
 };

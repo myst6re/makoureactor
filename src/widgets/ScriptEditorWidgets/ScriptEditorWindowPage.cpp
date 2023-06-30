@@ -41,7 +41,7 @@ void ScriptEditorWindowPage::build()
 	previewText = new QComboBox(this);
 	previewText->addItem(tr("[Keep empty window]"));
 	bool jp = Config::value("jp_txt", false).toBool();
-	for (const FF7Text &t : scriptsAndTexts()->texts()) {
+	for (const FF7String &t : scriptsAndTexts()->texts()) {
 		previewText->addItem(previewText->fontMetrics().elidedText(t.text(jp, true).simplified(), Qt::ElideRight, 640));
 	}
 	previewText->setMaximumWidth(textPreview->width() / 2);
@@ -624,7 +624,7 @@ void ScriptEditorWindowNumDisplayPage::updatePreviewTextList()
 
 	bool jp = Config::value("jp_txt", false).toBool();
 	quint8 textID = 0, windowID = quint8(winID->value());
-	for (const FF7Text &t : scriptsAndTexts()->texts()) {
+	for (const FF7String &t : scriptsAndTexts()->texts()) {
 		if (text2win.contains(textID) && (text2win.value(textID) & 0xFF) == windowID) {
 			previewText->addItem(previewText->fontMetrics().elidedText(t.text(jp, true).simplified(), Qt::ElideRight, 640), textID);
 		}

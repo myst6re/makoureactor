@@ -17,7 +17,7 @@
  ****************************************************************************/
 #include "TutFile.h"
 #include "../Config.h"
-#include "../FF7Text.h"
+#include "../FF7String.h"
 
 TutFile::TutFile(Field *field) :
 	FieldPart(field)
@@ -152,7 +152,7 @@ QString TutFile::parseScripts(int tutID, bool *warnings) const
 			}
 
 			ret.append(QString("TEXT(\"%1\")")
-					   .arg(FF7Text(textData).text(jp).replace('"', "\\\"")));
+					   .arg(FF7String(textData).text(jp).replace('"', "\\\"")));
 
 			if (endOfText != -1) {
 				if (endOfText + 1 > i) {
@@ -227,7 +227,7 @@ bool TutFile::parseText(int tutID, const QString &tuto)
 			} else {
 				rawLine.append("\n");
 			}
-			ret.append(FF7Text(rawLine, jp).data());
+			ret.append(FF7String(rawLine, jp).data());
 			if (!multilineText) {
 				ret.append('\xff');
 			}
@@ -266,7 +266,7 @@ bool TutFile::parseText(int tutID, const QString &tuto)
 			}
 
 			ret.append('\x10');
-			ret.append(FF7Text(line.mid(6).replace("\\\"", "\""), jp).data());
+			ret.append(FF7String(line.mid(6).replace("\\\"", "\""), jp).data());
 
 			if (!multilineText) {
 				ret.append('\xff');
@@ -298,7 +298,7 @@ bool TutFile::parseText(int tutID, const QString &tuto)
 			}
 		} else { // Compatibility Makou Reactor <= v1.6
 			ret.append('\x10');
-			ret.append(FF7Text(rawLine, jp).data()).append('\xff');
+			ret.append(FF7String(rawLine, jp).data()).append('\xff');
 		}
 	}
 
@@ -328,11 +328,11 @@ void TutFile::testParsing()
 	QByteArray moveBigValues("\x12\xFF\xFF\xFF\xFF", 5);QString moveBigValuesResult = "MOVE(65535,65535)\n";
 	// Text
 	QByteArray textTooShort1("\x10", 1);QString textTooShort1Result("TEXT(\"\")\n");
-	QByteArray textTooShort2("\x10", 1);textTooShort2 += FF7Text("A", false).data();QString textTooShort2Result("TEXT(\"A\")\n");
-	QByteArray textTooShort3("\x10", 1);textTooShort3 += FF7Text("A", false).data() + QByteArray("\xFF");QString textTooShort3Result("TEXT(\"A\")\n");
-	QByteArray textWithQuotes1("\x10", 1);textWithQuotes1 += FF7Text("A\"B", false).data() + QByteArray("\xFF");QString textWithQuotes1Result("TEXT(\"A\\\"B\")\n");
-	QByteArray textWithQuotes2("\x10", 1);textWithQuotes2 += FF7Text("A\\\"B", false).data() + QByteArray("\xFF");QString textWithQuotes2Result("TEXT(\"A\\\\\"B\")\n");
-	QByteArray textMultiLine1("\x10", 1);textMultiLine1 += FF7Text("A\nB", false).data() + QByteArray("\xFF");QString textMultiLine1Result("TEXT(\"A\nB\")\n");
+	QByteArray textTooShort2("\x10", 1);textTooShort2 += FF7String("A", false).data();QString textTooShort2Result("TEXT(\"A\")\n");
+	QByteArray textTooShort3("\x10", 1);textTooShort3 += FF7String("A", false).data() + QByteArray("\xFF");QString textTooShort3Result("TEXT(\"A\")\n");
+	QByteArray textWithQuotes1("\x10", 1);textWithQuotes1 += FF7String("A\"B", false).data() + QByteArray("\xFF");QString textWithQuotes1Result("TEXT(\"A\\\"B\")\n");
+	QByteArray textWithQuotes2("\x10", 1);textWithQuotes2 += FF7String("A\\\"B", false).data() + QByteArray("\xFF");QString textWithQuotes2Result("TEXT(\"A\\\\\"B\")\n");
+	QByteArray textMultiLine1("\x10", 1);textMultiLine1 += FF7String("A\nB", false).data() + QByteArray("\xFF");QString textMultiLine1Result("TEXT(\"A\nB\")\n");
 
 	QList<QByteArray> tutos;
 	tutos << pauseTooShort << pauseAlone <<

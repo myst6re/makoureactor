@@ -449,7 +449,7 @@ void FieldArchive::validateOneLineSize()
 							FF7Window window;
 							opcodeWindow->getWindow(window);
 							if (opcode.getTextID() < scriptsAndTexts->textCount()) {
-								FF7Text text = scriptsAndTexts->text(opcode.getTextID());
+								FF7String text = scriptsAndTexts->text(opcode.getTextID());
 								QSize optimSize = FF7Font::calcSize(text.data());
 								if (!text.data().isEmpty() && !text.contains(QRegularExpression("\n")) && (window.w != optimSize.width() || window.h != optimSize.height())) {
 									qWarning() << name << grpScriptID << grp.name() << grp.scriptName(scriptID) << opcodeID << "width=" << window.w << "height=" << window.h << "better size=" << optimSize.width() << optimSize.height();
@@ -615,7 +615,7 @@ void FieldArchive::printTexts(const QString &filename, bool usedTexts)
 			          .arg(f->inf()->mapName()).toUtf8());
 
 			quint8 textID = 0;
-			for (const FF7Text &text : scriptsAndTexts->texts()) {
+			for (const FF7String &text : scriptsAndTexts->texts()) {
 				if ((!usedTexts || listUsedTexts.contains(textID)) && !text.data().isEmpty()) {
 					deb.write(QString("%1\n\n")
 					          .arg(text.text(false)).toUtf8());
@@ -653,7 +653,7 @@ void FieldArchive::printTextsDir(const QString &dirname, bool usedTexts)
 			QSet<quint8> listUsedTexts = usedTexts ? scriptsAndTexts->listUsedTexts() : QSet<quint8>();
 
 			quint8 textID = 0;
-			for (const FF7Text &text : scriptsAndTexts->texts()) {
+			for (const FF7String &text : scriptsAndTexts->texts()) {
 				if (!usedTexts || listUsedTexts.contains(textID)) {
 					deb.write(QString("%1\n\n")
 					          .arg(text.text(false)).toUtf8());
@@ -701,8 +701,8 @@ void FieldArchive::compareTexts(FieldArchive *other)
 			}
 
 			int textID = 0;
-			for (const FF7Text &text1 : scriptsAndTexts1->texts()) {
-				const FF7Text &text2 = scriptsAndTexts2->text(textID);
+			for (const FF7String &text1 : scriptsAndTexts1->texts()) {
+				const FF7String &text2 = scriptsAndTexts2->text(textID);
 				if (text1 != text2) {
 					QStringList lines1 = text1.text(false).split("\n"),
 								lines2 = text2.text(false).split("\n");
@@ -1421,7 +1421,7 @@ void FieldArchive::searchAll()
 				if (out.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
 
 					int textID = 0;
-					for (const FF7Text &text : scriptsAndTexts->texts()) {
+					for (const FF7String &text : scriptsAndTexts->texts()) {
 						out.write(QString("=== Texte %1 ===\n").arg(textID++).toLatin1());
 						out.write(text.text(false).toLatin1());
 						out.write("\n");

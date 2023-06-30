@@ -16,7 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "TextPreview.h"
-#include "core/FF7Text.h"
+#include "core/FF7String.h"
 #include "Data.h"
 #include "core/Config.h"
 #include "core/FF7Font.h"
@@ -62,7 +62,7 @@ void TextPreview::fillNames()
 //	Config::setValue("jp_txt", false);
 
 	for (int i = 0; i < 12; ++i) {
-		names.append(FF7Text(dataNames.at(i), false).data());
+		names.append(FF7String(dataNames.at(i), false).data());
 	}
 //	Config::setValue("jp_txt", jp);
 }

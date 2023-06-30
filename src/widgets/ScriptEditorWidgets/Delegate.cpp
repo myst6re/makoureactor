@@ -140,7 +140,7 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
 		comboBox->completer()->setCompletionMode(QCompleter::PopupCompletion);
 		comboBox->completer()->setFilterMode(Qt::MatchContains);
 		bool jp = Config::value("jp_txt", false).toBool();
-		for (const FF7Text &t : _scriptsAndTexts->texts()) {
+		for (const FF7String &t : _scriptsAndTexts->texts()) {
 			comboBox->addItem(comboBox->fontMetrics().elidedText(t.text(jp, true).simplified(), Qt::ElideRight, 640));
 		}
 		return comboBox;
