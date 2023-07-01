@@ -329,12 +329,13 @@ UnusedSpaceInTexturePC BackgroundTexturesPC::findFirstUnusedSpaceInTextures(cons
 	}
 
 	QMap<quint8, QBitArray> usedTiles;
+	const quint8 mask = size == 32 ? 0x7 : 0xF, move = size == 32 ? 3 : 4;
 
 	for (const Tile &tile: tiles) {
 		if (tile.depth == depth && tile.size == size) {
-			quint8 num = (tile.srcX / size) | ((tile.srcY / size) << 4);
+			quint8 num = (tile.srcX / size) | ((tile.srcY / size) << move);
 			if (!usedTiles.contains(tile.textureID)) {
-				usedTiles.insert(tile.textureID, QBitArray(256));
+				usedTiles.insert(tile.textureID, QBitArray(size == 32 ? 64 : 256));
 			}
 			usedTiles[tile.textureID][num] = true;
 		}
@@ -345,11 +346,11 @@ UnusedSpaceInTexturePC BackgroundTexturesPC::findFirstUnusedSpaceInTextures(cons
 		it.next();
 		const QBitArray &bitArray = it.value();
 		
-		for (quint16 num = 0; num < 256; ++num) {
+		for (quint16 num = 0; num < bitArray.size(); ++num) {
 			if (!bitArray.at(num)) {
 				ret.texID = it.key();
-				ret.x = (num & 0xF) * size;
-				ret.y = ((num >> 4) & 0xF) * size;
+				ret.x = (num & mask) * size;
+				ret.y = ((num >> move) & mask) * size;
 				ret.valid = true;
 				return ret;
 			}
