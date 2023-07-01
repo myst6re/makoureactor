@@ -42,8 +42,8 @@ void Section1File::initEmpty()
 	_scale = 512;
 	_version = 0x0502;
 
-	_texts.append(FF7Text(QObject::tr("Map name"), false));
-	_texts.append(FF7Text(QObject::tr("Hello world!"), false));
+	_texts.append(FF7String(QObject::tr("Map name"), false));
+	_texts.append(FF7String(QObject::tr("Hello world!"), false));
 
 	QList<Script> scripts;
 	QList<Opcode> opcodes;
@@ -281,7 +281,7 @@ bool Section1File::open(const QByteArray &data)
 				}
 
 				// FIXME: possible hidden data between 0xFF and posEnd - posBeg
-				_texts.append(FF7Text(QByteArrayView(constData + posTexts + posBeg, posEnd - posBeg)));
+				_texts.append(FF7String(QByteArrayView(constData + posTexts + posBeg, posEnd - posBeg)));
 				posBeg = posEnd;
 			}
 			if (dataSize < sizeTextSection) {
@@ -289,7 +289,7 @@ bool Section1File::open(const QByteArray &data)
 				return false;
 			}
 			// FIXME: possible hidden data between 0xFF and posEnd - posBeg
-			_texts.append(FF7Text(QByteArrayView(constData + posTexts + posBeg, sizeTextSection - posBeg)));
+			_texts.append(FF7String(QByteArrayView(constData + posTexts + posBeg, sizeTextSection - posBeg)));
 		}
 	}
 
@@ -347,7 +347,7 @@ QByteArray Section1File::save() const
 
 	quint16 newNbText = textCount();
 
-	for (const FF7Text &text : texts()) {
+	for (const FF7String &text : texts()) {
 		pos32 = 2 + newNbText * 2 + allTexts.size();
 		if (pos32 > 65535) {
 			qWarning() << "Section1File::save script + text size overflow";
@@ -404,7 +404,7 @@ bool Section1File::exporter(QIODevice *device, ExportFormat format)
 			return false;
 		}
 		int i=0;
-		for (const FF7Text &text : texts()) {
+		for (const FF7String &text : texts()) {
 			device->write(QString("---TEXT%1---\n%2\n")
 						  .arg(i++, 3, 10, QChar('0'))
 						  .arg(text.text(jp))
@@ -424,7 +424,7 @@ bool Section1File::exporter(QIODevice *device, ExportFormat format)
 		stream.writeAttribute("name", field()->name());
 		stream.writeStartElement("texts");
 		int id=0;
-		for (const FF7Text &text : texts()) {
+		for (const FF7String &text : texts()) {
 			stream.writeStartElement("text");
 			stream.writeAttribute("id", QString::number(id));
 			stream.writeCharacters(text.text(jp));
@@ -802,13 +802,13 @@ bool Section1File::searchTextP(const QRegularExpression &text, int &textID, qsiz
 bool Section1File::replaceText(const QRegularExpression &search, const QString &after, int textID, int from)
 {
 	bool jp = Config::value("jp_txt", false).toBool();
-	FF7Text beforeT = text(textID);
+	FF7String beforeT = text(textID);
 	QString before = beforeT.text(jp);
 	QRegularExpressionMatch match = search.match(before, from);
 
 	if (match.capturedStart() == from) {
 		before.replace(from, match.capturedLength(), after);
-		setText(textID, FF7Text(before, jp));
+		setText(textID, FF7String(before, jp));
 		return true;
 	}
 	return false;
@@ -909,7 +909,7 @@ void Section1File::cleanTexts()
 
 	for (int textID = 0; textID < _texts.size(); ++textID) {
 		if (!usedTexts.contains(quint8(textID))) {
-			_texts[textID] = FF7Text();
+			_texts[textID] = FF7String();
 			setModified(true);
 		}
 	}
@@ -989,7 +989,7 @@ void Section1File::autosizeTextWindows()
 //		group.listWindows(groupID++, windows, text2win);
 //}
 
-const QList<FF7Text> &Section1File::texts() const
+const QList<FF7String> &Section1File::texts() const
 {
 	return _texts;
 }
@@ -999,12 +999,12 @@ qsizetype Section1File::textCount() const
 	return _texts.size();
 }
 
-const FF7Text &Section1File::text(int textID) const
+const FF7String &Section1File::text(int textID) const
 {
 	return _texts.at(textID);
 }
 
-void Section1File::setText(int textID, const FF7Text &text)
+void Section1File::setText(int textID, const FF7String &text)
 {
 	if (textID >= 0 && textID < _texts.size()) {
 		_texts.replace(textID, text);
@@ -1012,7 +1012,7 @@ void Section1File::setText(int textID, const FF7Text &text)
 	}
 }
 
-bool Section1File::insertText(int textID, const FF7Text &text)
+bool Section1File::insertText(int textID, const FF7String &text)
 {
 	if (textCount() < maxTextCount()) {
 		_texts.insert(textID, text);

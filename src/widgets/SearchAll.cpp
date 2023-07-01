@@ -172,7 +172,7 @@ QTreeWidgetItem *SearchAll::createItemText(int mapID, int textID, int index, int
 	if (_fieldArchive) {
 		Field *f = _fieldArchive->field(mapID);
 		if (f) {
-			const FF7Text &text = f->scriptsAndTexts()->text(textID);
+			const FF7String &text = f->scriptsAndTexts()->text(textID);
 			item->setText(1, text.text(Config::value("jp_txt", false).toBool(), true));
 		}
 	}

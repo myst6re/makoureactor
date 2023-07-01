@@ -6400,19 +6400,23 @@ Are you sure you want to continue?</source>
         <source>Member 1</source>
         <oldsource>Membre 1</oldsource>
         <translatorcomment>Member 1</translatorcomment>
-        <translation type="unfinished">メンバー 1</translation>
+        <translation type="obsolete">メンバー 1</translation>
     </message>
     <message>
         <source>Member 2</source>
         <oldsource>Membre 2</oldsource>
         <translatorcomment>Member 2</translatorcomment>
-        <translation type="unfinished">メンバー 2</translation>
+        <translation type="obsolete">メンバー 2</translation>
     </message>
     <message>
         <source>Member 3</source>
         <oldsource>Membre 3</oldsource>
         <translatorcomment>Member 3</translatorcomment>
-        <translation type="unfinished">メンバー 3</translation>
+        <translation type="obsolete">メンバー 3</translation>
+    </message>
+    <message>
+        <source>Member %1</source>
+        <translation type="unfinished">メンバー %1</translation>
     </message>
 </context>
 <context>
@@ -7464,12 +7468,12 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
     <name>main</name>
     <message>
         <source>Error</source>
-        <translation type="obsolete">エラー</translation>
+        <translation type="unfinished">エラー</translation>
     </message>
     <message>
         <source>The file &apos;var.cfg&apos; could not be loaded.
 Make sure it is valid or delete it.</source>
-        <translation type="obsolete">ファイル &apos;var.cfg&apos; が読み込めません。
+        <translation type="unfinished">ファイル &apos;var.cfg&apos; が読み込めません。
 ファイルが有効か確認するか、または削除してください。。</translation>
     </message>
 </context>

@@ -16,7 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "TextManager.h"
-#include "core/FF7Text.h"
+#include "core/FF7String.h"
 #include "TextHighlighter.h"
 #include "core/Config.h"
 #include "Data.h"
@@ -326,11 +326,11 @@ void TextManager::setTextChanged()
 
 	QString newText = textEdit->toPlainText();
 	int textId = item->data(Qt::UserRole).toInt();
-	const FF7Text &t = scriptsAndTexts->text(textId);
+	const FF7String &t = scriptsAndTexts->text(textId);
 	bool jp = Config::value("jp_txt", false).toBool();
 
 	if (newText != t.text(jp)) {
-		scriptsAndTexts->setText(textId, FF7Text(newText, jp));
+		scriptsAndTexts->setText(textId, FF7String(newText, jp));
 		textPreview->setText(t.data());
 		changeTextPreviewPage();
 		changeTextPreviewWin();
@@ -352,7 +352,7 @@ void TextManager::selectText(QListWidgetItem *item, QListWidgetItem *)
 	}
 
 	int textID = item->data(Qt::UserRole).toInt();
-	const FF7Text &t = scriptsAndTexts->text(textID);
+	const FF7String &t = scriptsAndTexts->text(textID);
 	textPreview->resetCurrentWin();
 	textPreview->setWins(getWindows(textID));
 	textPreview->setText(t.data());
@@ -479,7 +479,7 @@ void TextManager::addText()
 	QListWidgetItem *item = liste1->currentItem();
 	int row = !item ? int(scriptsAndTexts->textCount()) : item->data(Qt::UserRole).toInt() + 1;
 	liste1->blockSignals(true);
-	scriptsAndTexts->insertText(row, FF7Text());
+	scriptsAndTexts->insertText(row, FF7String());
 	usedTexts = scriptsAndTexts->listUsedTexts();
 	dispUnusedText->setChecked(true);
 	showList();

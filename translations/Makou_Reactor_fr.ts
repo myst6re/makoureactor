@@ -7035,17 +7035,21 @@ Le supprimer remplacera les appels à ce texte par des appels au texte qui suit.
     <message>
         <source>Member 1</source>
         <oldsource>Membre 1</oldsource>
-        <translation>Membre 1</translation>
+        <translation type="vanished">Membre 1</translation>
     </message>
     <message>
         <source>Member 2</source>
         <oldsource>Membre 2</oldsource>
-        <translation>Membre 2</translation>
+        <translation type="vanished">Membre 2</translation>
     </message>
     <message>
         <source>Member 3</source>
         <oldsource>Membre 3</oldsource>
-        <translation>Membre 3</translation>
+        <translation type="vanished">Membre 3</translation>
+    </message>
+    <message>
+        <source>Member %1</source>
+        <translation type="unfinished">Membre %1</translation>
     </message>
 </context>
 <context>
@@ -8292,12 +8296,12 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
     <name>main</name>
     <message>
         <source>Error</source>
-        <translation type="vanished">Erreur</translation>
+        <translation>Erreur</translation>
     </message>
     <message>
         <source>The file &apos;var.cfg&apos; could not be loaded.
 Make sure it is valid or delete it.</source>
-        <translation type="vanished">Le fichier &apos;var.cfg&apos; n&apos;a pas pu être chargé.
+        <translation>Le fichier &apos;var.cfg&apos; n&apos;a pas pu être chargé.
 Vérifiez que ce fichier est valide ou supprimez-le.</translation>
     </message>
 </context>

@@ -104,8 +104,8 @@ set(PROJECT_SOURCES
     "src/core/Config.h"
     "src/core/FF7Font.cpp"
     "src/core/FF7Font.h"
-    "src/core/FF7Text.cpp"
-    "src/core/FF7Text.h"
+    "src/core/FF7String.cpp"
+    "src/core/FF7String.h"
     "src/core/SystemColor.cpp"
     "src/core/SystemColor.h"
     "src/core/Var.cpp"
@@ -221,7 +221,6 @@ set(PROJECT_SOURCES
     "src/core/field/TutFileStandard.cpp"
     "src/core/field/TutFileStandard.h"
     "src/main.cpp"
-    "src/txt.cpp"
     "src/widgets/AboutDialog.cpp"
     "src/widgets/AboutDialog.h"
     "src/widgets/AnimEditorDialog.cpp"
@@ -367,8 +366,8 @@ set(PROJECT_CLI_SOURCES
     "src/core/Config.h"
     "src/core/FF7Font.cpp"
     "src/core/FF7Font.h"
-    "src/core/FF7Text.cpp"
-    "src/core/FF7Text.h"
+    "src/core/FF7String.cpp"
+    "src/core/FF7String.h"
     "src/core/SystemColor.cpp"
     "src/core/SystemColor.h"
     "src/core/Var.cpp"
@@ -484,7 +483,6 @@ set(PROJECT_CLI_SOURCES
     "src/core/field/TutFileStandard.cpp"
     "src/core/field/TutFileStandard.h"
     "src/main.cpp"
-    "src/txt.cpp"
 )
 
 if(APPLE)
