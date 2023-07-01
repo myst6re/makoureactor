@@ -75,8 +75,9 @@ int main(int argc, char *argv[])
 	} else {
 		Config::setValue("lang", QVariant());
 	}
-	if (!app.installTranslator(ff7tkInfo::translations().value(lang))) {
-		qDebug() << "Unable to load ff7tk translation";
+
+	if (!app.installTranslator(ff7tkInfo::translations().value(lang.isEmpty() ? "en" : lang))) {
+			qDebug() << "Unable to load ff7tk translation";
 	}
 
 	if (!Var::load()) {
