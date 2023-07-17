@@ -18,7 +18,6 @@
 #include "SearchAll.h"
 #include "Window.h"
 #include "core/field/FieldArchive.h"
-#include "core/Config.h"
 
 SearchAll::SearchAll(Window *parent) :
     QDialog(parent, Qt::Tool), _fieldArchive(nullptr)
@@ -173,7 +172,7 @@ QTreeWidgetItem *SearchAll::createItemText(int mapID, int textID, int index, int
 		Field *f = _fieldArchive->field(mapID);
 		if (f) {
 			const FF7String &text = f->scriptsAndTexts()->text(textID);
-			item->setText(1, text.text(Config::value("jp_txt", false).toBool(), true));
+			item->setText(1, text.text());
 		}
 	}
 

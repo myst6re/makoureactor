@@ -20,8 +20,9 @@
 #include <QtCore>
 #include "FieldPart.h"
 #include "GrpScript.h"
-#include "../FF7String.h"
 #include "TutFileStandard.h"
+
+#include <FF7String>
 
 class Section1File : public FieldPart
 {

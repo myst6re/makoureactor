@@ -402,8 +402,6 @@ QByteArray Section1File::save() const
 
 bool Section1File::exporter(QIODevice *device, ExportFormat format)
 {
-	bool jp = Config::value("jp_txt", false).toBool();
-
 	switch (format) {
 	case TXTText: {
 		if (!device->open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
@@ -413,7 +411,7 @@ bool Section1File::exporter(QIODevice *device, ExportFormat format)
 		for (const FF7String &text : texts()) {
 			device->write(QString("---TEXT%1---\n%2\n")
 						  .arg(i++, 3, 10, QChar('0'))
-						  .arg(text.text(jp))
+						  .arg(text.text())
 						  .toUtf8());
 		}
 		device->close();
@@ -433,7 +431,7 @@ bool Section1File::exporter(QIODevice *device, ExportFormat format)
 		for (const FF7String &text : texts()) {
 			stream.writeStartElement("text");
 			stream.writeAttribute("id", QString::number(id));
-			stream.writeCharacters(text.text(jp));
+			stream.writeCharacters(text.text());
 			stream.writeEndElement(); // /text
 			++id;
 		}
@@ -809,7 +807,7 @@ bool Section1File::replaceText(const QRegularExpression &search, const QString &
 {
 	bool jp = Config::value("jp_txt", false).toBool();
 	FF7String beforeT = text(textID);
-	QString before = beforeT.text(jp);
+	QString before = beforeT.text();
 	QRegularExpressionMatch match = search.match(before, from);
 
 	if (match.capturedStart() == from) {

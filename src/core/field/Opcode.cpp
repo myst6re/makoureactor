@@ -4933,7 +4933,7 @@ QString Opcode::_groupScript(quint8 param, const Section1File *scriptsAndTexts)
 QString Opcode::_text(quint8 textID, const Section1File *scriptsAndTexts)
 {
 	if (textID < scriptsAndTexts->textCount()) {
-		QString t = scriptsAndTexts->text(textID).text(Config::value("jp_txt", false).toBool(), true).simplified();
+		QString t = scriptsAndTexts->text(textID).text().simplified();
 		if (t.size() > 70) {
 			t = t.left(35) % QString("...") % t.right(35);
 		}

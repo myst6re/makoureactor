@@ -75,7 +75,7 @@ add_compile_definitions(
 
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets OpenGLWidgets Svg OpenGL LinguistTools Core5Compat Xml Quick REQUIRED)
 
-set(REQUIRED_FF7TK_VERSION 0.83.1.0)
+set(REQUIRED_FF7TK_VERSION 0.83.3)
 find_package(ff7tk ${REQUIRED_FF7TK_VERSION} CONFIG REQUIRED COMPONENTS ff7tk fftkData ff7tkQtWidgets ff7tkFormats ff7tkUtils)
 
 find_package(ZLIB REQUIRED)
@@ -104,8 +104,6 @@ set(PROJECT_SOURCES
     "src/core/Config.h"
     "src/core/FF7Font.cpp"
     "src/core/FF7Font.h"
-    "src/core/FF7String.cpp"
-    "src/core/FF7String.h"
     "src/core/SystemColor.cpp"
     "src/core/SystemColor.h"
     "src/core/Var.cpp"
@@ -366,8 +364,6 @@ set(PROJECT_CLI_SOURCES
     "src/core/Config.h"
     "src/core/FF7Font.cpp"
     "src/core/FF7Font.h"
-    "src/core/FF7String.cpp"
-    "src/core/FF7String.h"
     "src/core/SystemColor.cpp"
     "src/core/SystemColor.h"
     "src/core/Var.cpp"

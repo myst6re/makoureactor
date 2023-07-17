@@ -32,6 +32,8 @@
 #include "widgets/OperationsManager.h"
 #include "widgets/EmptyFieldWidget.h"
 
+#include <FF7Text>
+
 Window::Window() :
     fieldArchive(nullptr), field(nullptr), firstShow(true), varDialog(nullptr),
     _textDialog(nullptr), _modelManager(nullptr), _tutManager(nullptr), _walkmeshManager(nullptr),
@@ -130,6 +132,8 @@ Window::Window() :
 	actionJp_txt = menu->addAction(tr("&Japanese Characters"), this, &Window::jpText);
 	actionJp_txt->setCheckable(true);
 	actionJp_txt->setChecked(Config::value("jp_txt", false).toBool());
+	FF7Text::setJapanese(actionJp_txt->isChecked());
+	connect(actionJp_txt, &QAction::toggled, FF7Text::get(), &FF7Text::setJapanese);
 
 	menuLang = menu->addMenu(tr("&Language"));
 	QDir dir(Config::programLanguagesDir());
@@ -267,6 +271,7 @@ Window::Window() :
 
 	restoreState(Config::value("windowState").toByteArray());
 	restoreGeometry(Config::value("windowGeometry").toByteArray());
+
 
 	closeFile();
 }

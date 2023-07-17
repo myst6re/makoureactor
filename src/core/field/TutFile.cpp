@@ -17,7 +17,8 @@
  ****************************************************************************/
 #include "TutFile.h"
 #include "../Config.h"
-#include "../FF7String.h"
+
+#include <FF7String>
 
 TutFile::TutFile(Field *field) :
 	FieldPart(field)
@@ -100,7 +101,6 @@ QString TutFile::parseScripts(int tutID, bool *warnings) const
 	const char *constTuto = tuto.constData();
 	QString ret;
 	QByteArrayView textData;
-	bool jp = Config::value("jp_txt", false).toBool();
 	int i=0, size = tuto.size(), endOfText;
 
 	if (warnings) {
@@ -152,7 +152,7 @@ QString TutFile::parseScripts(int tutID, bool *warnings) const
 			}
 
 			ret.append(QString("TEXT(\"%1\")")
-					   .arg(FF7String(textData).text(jp).replace('"', "\\\"")));
+					   .arg(FF7String(textData).text().replace('"', "\\\"")));
 
 			if (endOfText != -1) {
 				if (endOfText + 1 > i) {
