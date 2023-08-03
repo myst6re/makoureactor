@@ -197,6 +197,12 @@ bool Section1File::open(const QByteArray &data)
 
 	// On the Android version, posTexts can be after posAKAO
 	quint16 posAfterScripts = quint16(qMin(posAKAO, quint32(posTexts)));
+	qsizetype posAfterScriptsAndroid = -1;
+	
+	// Try to detect "posAfterScripts" with more accuracy
+	if (posAKAO < quint32(posTexts) && posTexts + 4 < dataSize) {
+		posAfterScriptsAndroid = data.lastIndexOf(QByteArrayView(constData + posTexts, 4), posAKAO);
+	}
 
 	for (quint8 i = 0; i < nbScripts; ++i) {
 		const char *grpName = constData + cur + 8 * i;
@@ -210,7 +216,7 @@ bool Section1File::open(const QByteArray &data)
 
 			// Add offset at the end
 			if (i == nbScripts - 1) {
-				positions[scriptCount] = posAfterScripts;
+				positions[scriptCount] = posAfterScriptsAndroid >= positions[scriptCount - 1] ? posAfterScriptsAndroid : posAfterScripts;
 			} else {
 				memcpy(&pos, constData + posScripts + scriptCount * 2 * (i + 1), 2);
 
@@ -223,7 +229,7 @@ bool Section1File::open(const QByteArray &data)
 						emptyGrps++;
 					}
 					if (i + emptyGrps == nbScripts) {
-						positions[scriptCount] = posAfterScripts;
+						positions[scriptCount] = posAfterScriptsAndroid >= positions[scriptCount - 1] ? posAfterScriptsAndroid : posAfterScripts;
 					} else {
 						positions[scriptCount] = pos;
 					}
