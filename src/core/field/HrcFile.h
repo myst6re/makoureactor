@@ -30,6 +30,7 @@ public:
 		QMultiMap<int, QStringList> rsdFiles;
 		return read(skeleton, rsdFiles);
 	}
+	bool readHeader(int &boneCount) const;
 	bool read(FieldModelSkeleton &skeleton, QMultiMap<int, QStringList> &rsdFiles) const;
 	bool write(const FieldModelSkeleton &skeleton) const;
 };

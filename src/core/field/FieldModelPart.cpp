@@ -236,6 +236,19 @@ QImage FieldModelGroup::toImage() const
 	return image;
 }
 
+QSet<QRgb> FieldModelGroup::uniqueColors() const
+{
+	QSet<QRgb> ret;
+
+	for (Poly *poly: _polys) {
+		for (const QRgb &color: poly->colors()) {
+			ret.insert(color);
+		}
+	}
+
+	return ret;
+}
+
 FieldModelPart::FieldModelPart()
 {
 }
@@ -302,4 +315,31 @@ QImage FieldModelPart::toImage(int width, int height) const
 	}
 
 	return image;
+}
+
+int FieldModelPart::commonColorCount(const FieldModelPart &other) const
+{
+	int count = _groups.size();
+
+	if (other.groups().size() != count) {
+		qDebug() << "FieldModelPart::commonColorCount different group count" << other.groups().size() << count;
+		
+		return -1;
+	}
+
+	int ret = 0;
+
+	for (int i = 0; i < count; ++i) {
+		FieldModelGroup *group = _groups.at(i),
+		    *otherGroup = other.groups().at(i);
+		
+		QSet<QRgb> colors = group->uniqueColors(),
+		    colorsOther = otherGroup->uniqueColors();
+
+		colors.intersect(colorsOther);
+
+		ret += colors.size();
+	}
+
+	return ret;
 }

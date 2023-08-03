@@ -74,6 +74,7 @@ public:
 	FieldModelInfosPC modelInfos(int modelID) const;
 	void setModelInfos(int modelID, const FieldModelInfosPC &modelInfos);
 	void insertModelInfos(int modelID, const FieldModelInfosPC &modelInfos);
+	static QStringList mainAnimationNames(const QString &hrcName);
 private:
 	QStringList model_nameChar;
 	QStringList model_nameHRC;

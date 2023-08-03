@@ -27,6 +27,8 @@ class ModelManagerPS : public ModelManager
 	Q_OBJECT
 public:
 	ModelManagerPS(QWidget *parent = nullptr);
+private slots:
+	void exportAnim();
 protected:
 	QList<QStringList> modelNames() const override;
 	QList<QTreeWidgetItem *> animItems(int modelID) const override;

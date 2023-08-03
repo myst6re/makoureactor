@@ -121,7 +121,7 @@ FieldArchive::~FieldArchive()
 FieldArchiveIO::ErrorCode FieldArchive::open()
 {
 	if (!_io)	return FieldArchiveIO::Invalid;
-//	qDebug() << "FieldArchive::open()";
+
 	clear();
 
 	FieldArchiveIO::ErrorCode error = _io->open(observer());
@@ -144,8 +144,6 @@ FieldArchiveIO::ErrorCode FieldArchive::open()
 		}
 		++fieldID;
 	}
-
-//	qDebug() << "/FieldArchive::open()";
 
 	return FieldArchiveIO::Ok;
 }

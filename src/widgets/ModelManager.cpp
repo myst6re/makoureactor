@@ -171,9 +171,10 @@ void ModelManager::showModelInfos(QTreeWidgetItem *item, QTreeWidgetItem *previo
 	}
 
 	showModelInfos2(modelID);
-
-	if (modelAnims->topLevelItemCount() > 0)
+	
+	if (modelAnims->topLevelItemCount() > 0) {
 		modelAnims->setCurrentItem(modelAnims->topLevelItem(0));
+	}
 }
 
 void ModelManager::showModelInfos2(int row)

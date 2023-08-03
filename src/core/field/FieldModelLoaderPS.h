@@ -22,6 +22,8 @@
 #include "FieldModelLoaderPC.h"
 #include "BsxFile.h"
 
+class CharArchive;
+
 struct FieldModelLoaderStruct {
 	quint8 faceID, bonesCount, partsCount, animationCount;
 	quint8 unknown1, unknown2, unknown3, modelID;
@@ -41,7 +43,7 @@ public:
 	void setUnknown(int modelID, quint16 unknown) override;
 	const FieldModelLoaderStruct &model(int modelID) const;
 	void setModel(int modelID, const FieldModelLoaderStruct &modelLoader);
-	FieldModelLoaderPC toPC(BsxFile *bsx, bool *ok) const;
+	FieldModelLoaderPC toPC(BsxFile *bsx, CharArchive *charArchive, bool *ok) const;
 private:
 	QList<FieldModelLoaderStruct> _modelLoaders;
 };

@@ -47,7 +47,6 @@ private:
 	void pasteModels(int modelID);
 
 	QLineEdit *modelName;
-	QToolBar *toolBar2;
 	QAction *copyModelAction, *cutModelAction, *pasteModelAction;
 	QList<FieldModelInfosPC> _copiedModels;
 	bool copied;

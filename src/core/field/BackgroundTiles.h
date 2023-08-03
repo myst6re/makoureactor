@@ -19,6 +19,8 @@
 
 #include <QtCore>
 
+class CaFile;
+
 struct Tile {
 	qint16 dstX, dstY;
 	quint8 srcX, srcY;
@@ -35,7 +37,7 @@ struct Tile {
 	quint32 IDBig; // Only on PC
 	quint8 unknown7; // Only on PC (unused)
 	bool manualIDBig;
-	void calcIDBig();
+	void calcIDBig(CaFile *ca = nullptr);
 };
 
 struct LayerParam {

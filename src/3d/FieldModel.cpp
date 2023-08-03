@@ -20,7 +20,7 @@
 
 FieldModel::FieldModel(QWidget *parent) :
 	QOpenGLWidget(parent), blockAll(false), distance(-0.25/*-35*/),
-    animationID(0), currentFrame(0), animated(true), data(nullptr),
+    currentFrame(0), animated(true), data(nullptr),
 	xRot(270*16), yRot(90*16), zRot(0), gpuRenderer(nullptr)
 {
 	connect(&timer, &QTimer::timeout, this, &FieldModel::animate);
@@ -46,11 +46,10 @@ void FieldModel::clear()
 	update();
 }
 
-void FieldModel::setFieldModelFile(FieldModelFile *fieldModel, int animID)
+void FieldModel::setFieldModelFile(FieldModelFile *fieldModel)
 {
 	currentFrame = 0;
 	data = fieldModel;
-	animationID = animID;
 	if (data && data->isValid()) {
 		update();
 		updateTimer();
@@ -61,15 +60,6 @@ void FieldModel::setIsAnimated(bool animate)
 {
 	animated = animate;
 	updateTimer();
-}
-
-void FieldModel::setAnimationID(int animID)
-{
-	if (animationID != animID) {
-		animationID = animID;
-		update();
-		updateTimer();
-	}
 }
 
 void FieldModel::updateTimer()
@@ -88,9 +78,7 @@ int FieldModel::boneCount() const
 
 int FieldModel::frameCount() const
 {
-	return data && animationID < data->animationCount()
-			? data->animation(animationID).frameCount()
-			: 0;
+	return data && data->isValid() ? data->currentAnimation().frameCount() : 0;
 }
 
 void FieldModel::drawP(Renderer *gpuRenderer, FieldModelFile *data, float scale, const FieldModelBone &bone, float globalColor[3])
@@ -257,7 +245,7 @@ void FieldModel::resizeGL(int width, int height)
 	gpuRenderer->setViewport(0, 0, width, height);
 }
 
-void FieldModel::paintModel(Renderer *gpuRenderer, FieldModelFile *data, int animationID, int currentFrame, float scale, QMatrix4x4 initialModelMatrix)
+void FieldModel::paintModel(Renderer *gpuRenderer, FieldModelFile *data, int currentFrame, float scale, QMatrix4x4 initialModelMatrix)
 {
 	if (!data || !data->isValid() || scale == 0.0f || !gpuRenderer || gpuRenderer->hasError()) {
 		return;
@@ -277,12 +265,8 @@ void FieldModel::paintModel(Renderer *gpuRenderer, FieldModelFile *data, int ani
 		drawP(gpuRenderer, data, scale, data->bone(0), globalColor);
 		return;
 	}
-
-	if (animationID >= data->animationCount()) {
-		return;
-	}
-
-	QList<PolyVertex> rot = data->animation(animationID).rotations(currentFrame);
+	
+	QList<PolyVertex> rot = data->currentAnimation().rotations(currentFrame);
 
 	QMatrix4x4 mModel = initialModelMatrix;
 	QStack<int> boneStack;

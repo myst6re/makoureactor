@@ -42,14 +42,17 @@ public:
 	inline void setFilename(const QString &filename) {
 		_io->setFileName(filename);
 	}
-	QStringList hrcFiles() const;
-	QStringList aFiles(int boneCount = -1);
+	QStringList hrcFiles(int boneCount = -1, int partCount = -1);
+	QStringList aFiles(int boneCount = -1, int frameCount = -1);
 	QIODevice *fileIO(const QString &filename);
 
 private:
 	bool openAnimBoneCount();
+	bool openHrcBoneAndPartCount();
 	Lgp *_io;
+	QMultiHash<quint64, QString> _animBoneAndFrameCount;
 	QMultiHash<int, QString> _animBoneCount;
+	QMultiHash<quint64, QString> _hrcBoneAndPartCount;
 	bool _delete;
 	static CharArchive *_instance;
 };

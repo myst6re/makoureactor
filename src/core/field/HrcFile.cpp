@@ -27,16 +27,16 @@ HrcFile::~HrcFile()
 {
 }
 
-bool HrcFile::read(FieldModelSkeleton &skeleton, QMultiMap<int, QStringList> &rsdFiles) const
+bool HrcFile::readHeader(int &boneCount) const
 {
 	if (!canRead()) {
 		return false;
 	}
-
+	
 	bool ok;
 	QString line;
-	int boneCount = 0;
-
+	boneCount = 0;
+	
 	do {
 		line = QString::fromLatin1(device()->readLine()).trimmed();
 		if (line.startsWith(":BONES ")) {
@@ -51,11 +51,23 @@ bool HrcFile::read(FieldModelSkeleton &skeleton, QMultiMap<int, QStringList> &rs
 			break;
 		}
 	} while (device()->canReadLine());
+	
+	return boneCount != 0;
+}
 
-	if (boneCount == 0) {
+bool HrcFile::read(FieldModelSkeleton &skeleton, QMultiMap<int, QStringList> &rsdFiles) const
+{
+	if (!canRead()) {
+		return false;
+	}
+	int boneCount = 0;
+	
+	if (!readHeader(boneCount)) {
 		return false;
 	}
 
+	bool ok;
+	QString line;
 	int nbP, lineType = 0;
 	int boneID = 0;
 	FieldModelBone bone(0, 0);

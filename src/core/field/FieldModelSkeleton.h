@@ -55,6 +55,7 @@ public:
 	}
 
 	QImage toImage(int width, int height) const;
+	int commonColorCount(const FieldModelBone &other) const;
 private:
 	float _size;
 	int _parent;

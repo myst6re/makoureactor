@@ -28,8 +28,10 @@ class FieldModelFilePC : public FieldModelFile
 public:
 	FieldModelFilePC();
 	inline bool translateAfter() const override { return true; }
+	bool isValid() const override;
 	void clear() override;
 	quint8 load(CharArchive *charLgp, const QString &hrc, const QString &a, bool animate = true);
+	quint8 load(CharArchive *charLgp, const QString &hrc, QStringList &textureFiles);
 	quint8 loadPart(CharArchive *charLgp, const QString &rsd);
 	quint8 load(const QString &hrc, const QString &a, bool animate = true);
 	inline qsizetype loadedTextureCount() const {
@@ -42,6 +44,9 @@ public:
 		return reinterpret_cast<void *>(quint64(static_cast<FieldModelTextureRefPC *>(group->textureRef())->id()));
 	}
 	QHash<void *, QImage> loadedTextures() override;
+	inline const FieldModelAnimation &currentAnimation() const override {
+		return _animation;
+	}
 private:
 	Q_DISABLE_COPY(FieldModelFilePC)
 	bool openSkeleton(const QString &hrcFileName, QMultiMap<int, QStringList> &rsdFiles);
@@ -52,4 +57,5 @@ private:
 	QImage openTexture(const QString &texFileName);
 	CharArchive *_charLgp;
 	QHash<quint64, QImage> _loadedTex;
+	FieldModelAnimation _animation;
 };

@@ -31,7 +31,13 @@ FieldModelFilePC::FieldModelFilePC() :
 void FieldModelFilePC::clear()
 {
 	_loadedTex.clear();
+	_animation.clear();
 	FieldModelFile::clear();
+}
+
+bool FieldModelFilePC::isValid() const
+{
+	return FieldModelFile::isValid() || (!_animation.isEmpty() && !_skeleton.isEmpty());
 }
 
 void FieldModelFilePC::openTextures(const QStringList &textureFiles)
@@ -51,42 +57,52 @@ void FieldModelFilePC::openTextures(const QStringList &textureFiles)
 
 quint8 FieldModelFilePC::load(CharArchive *charLgp, const QString &hrc, const QString &a, bool animate)
 {
-	if (hrc.isEmpty() || a.isEmpty() || !charLgp->isOpen()) {
+	QStringList textureFiles;
+	
+	quint8 ret = load(charLgp, hrc, textureFiles);
+	
+	if (ret != 1) {
+		return ret;
+	}
+
+	qsizetype index = a.lastIndexOf('.');
+	QString aFilename = index > -1 ? a.left(index) : a;
+	
+	if (openAnimation(aFilename % ".a", animate) || _skeleton.boneCount() == 1) {
+		openTextures(textureFiles);
+		
+		return true;
+	} else {
+		qWarning() << "FieldModelFilePC::load error animation" << hrc << aFilename;
+	}
+
+	return false;
+}
+
+quint8 FieldModelFilePC::load(CharArchive *charLgp, const QString &hrc, QStringList &textureFiles)
+{
+	if (hrc.isEmpty() || !charLgp->isOpen()) {
 		return 2;
 	}
 	_charLgp = charLgp;
-
-	QString hrcFilename, aFilename;
-	qsizetype index;
-
-	index = hrc.lastIndexOf('.');
-	hrcFilename = index > -1 ? hrc.left(index) : hrc;
-	index = a.lastIndexOf('.');
-	aFilename = index > -1 ? a.left(index) : a;
-
+	
+	qsizetype index = hrc.lastIndexOf('.');
+	QString hrcFilename = index > -1 ? hrc.left(index) : hrc;
+	
 	clear();
-
+	
 	QMultiMap<int, QStringList> rsdFiles;
-
+	
 	if (openSkeleton(hrcFilename % ".hrc", rsdFiles)) {
-		QStringList textureFiles;
-
 		if (openMesh(rsdFiles, textureFiles)) {
-
-			if (openAnimation(aFilename % ".a", animate) || _skeleton.boneCount() == 1) {
-				openTextures(textureFiles);
-
-				return true;
-			} else {
-				qWarning() << "FieldModelFilePC::load error animation" << hrcFilename << aFilename;
-			}
-		} else {
-			qWarning() << "FieldModelFilePC::load error mesh" << hrcFilename;
+			return true;
 		}
+
+		qWarning() << "FieldModelFilePC::load error mesh" << hrcFilename;
 	} else {
 		qWarning() << "FieldModelFilePC::load error skeleton" << hrcFilename;
 	}
-
+	
 	return false;
 }
 
@@ -139,7 +155,7 @@ bool FieldModelFilePC::openAnimation(const QString &aFileName, bool animate)
 	FieldModelAnimation animation;
 	AFile io(_charLgp->fileIO(aFileName));
 	if (io.read(animation, animate ? -1 : 1)) {
-		_animations.append(animation);
+		_animation = animation;
 		return true;
 	}
 	return false;

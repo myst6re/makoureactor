@@ -1803,6 +1803,34 @@ Certains scripts peuvent y faire référence !</translation>
         <source>Light</source>
         <translation type="vanished">Lumière</translation>
     </message>
+    <message>
+        <source>Export animation</source>
+        <translation>Exporter animation</translation>
+    </message>
+    <message>
+        <source>FF7 PC animation file (*.a)</source>
+        <translation>FF7 PC fichier animation (*.a)</translation>
+    </message>
+    <message>
+        <source>Cannot convert</source>
+        <translation>Impossible de convertir</translation>
+    </message>
+    <message>
+        <source>This animation cannot be converted to PC format</source>
+        <translation>Cette animation ne peut pas être convertie au format PC</translation>
+    </message>
+    <message>
+        <source>Cannot export</source>
+        <translation>Impossible d&apos;exporter</translation>
+    </message>
+    <message>
+        <source>The destination file cannot be opened for writing</source>
+        <translation>Le fichier de destination ne peut pas être ouvert pour écriture</translation>
+    </message>
+    <message>
+        <source>Unable to write into the destination file</source>
+        <translation>Impossible d&apos;écrire dans le fichier de destination</translation>
+    </message>
 </context>
 <context>
     <name>Opcode</name>
@@ -7049,7 +7077,7 @@ Le supprimer remplacera les appels à ce texte par des appels au texte qui suit.
     </message>
     <message>
         <source>Member %1</source>
-        <translation type="unfinished">Membre %1</translation>
+        <translation>Membre %1</translation>
     </message>
 </context>
 <context>

@@ -17,6 +17,7 @@
  ****************************************************************************/
 #include "CharArchive.h"
 #include "AFile.h"
+#include "HrcFile.h"
 #include "Data.h"
 
 CharArchive::CharArchive() :
@@ -59,10 +60,16 @@ void CharArchive::close()
 	_io->clear();
 	_io->close();
 	_animBoneCount.clear();
+	_animBoneAndFrameCount.clear();
+	_hrcBoneAndPartCount.clear();
 }
 
-QStringList CharArchive::hrcFiles() const
+QStringList CharArchive::hrcFiles(int boneCount, int partCount)
 {
+	if (boneCount >= 0 && openHrcBoneAndPartCount()) {
+		return _hrcBoneAndPartCount.values(quint64(boneCount) | (quint64(partCount) << 32));
+	}
+	
 	QStringList files, f = _io->fileList();
 
 	for (const QString &file : f) {
@@ -74,8 +81,11 @@ QStringList CharArchive::hrcFiles() const
 	return files;
 }
 
-QStringList CharArchive::aFiles(int boneCount)
+QStringList CharArchive::aFiles(int boneCount, int frameCount)
 {
+	if (boneCount >= 0 && frameCount >= 0 && openAnimBoneCount()) {
+		return _animBoneAndFrameCount.values(quint64(boneCount) | (quint64(frameCount) << 32));
+	}
 	if (boneCount >= 0 && openAnimBoneCount()) {
 		return _animBoneCount.values(boneCount);
 	}
@@ -96,14 +106,60 @@ QIODevice *CharArchive::fileIO(const QString &filename)
 	return _io->file(filename.toLower());
 }
 
+bool CharArchive::openHrcBoneAndPartCount()
+{
+	if (!isOpen()) {
+		qWarning() << "CharArchive::openHrcBoneAndPartCount" << "archive not opened";
+		return false;
+	}
+	
+	if (!_hrcBoneAndPartCount.empty()) {
+		return true;
+	}
+	
+	LgpIterator it = _io->iterator();
+	while (it.hasNext()) {
+		it.next();
+		const QString &fileName = it.fileName();
+		if (fileName.endsWith(".hrc", Qt::CaseInsensitive)) {
+			QIODevice *hrcFile = it.file();
+			if (hrcFile && hrcFile->open(QIODevice::ReadOnly)) {
+				HrcFile h(hrcFile);
+				FieldModelSkeleton skeleton;
+				QMultiMap<int, QStringList> rsdFiles;
+				
+				if (!h.read(skeleton, rsdFiles)) {
+					qWarning() << "CharArchive::openHrcBoneAndPartCount" << "hrc error" << fileName;
+					continue;
+				}
+				
+				int partCount = 0;
+				
+				for (const QStringList &rsds: qAsConst(rsdFiles)) {
+					partCount += rsds.size();
+				}
+				
+				_hrcBoneAndPartCount.insert(quint64(skeleton.boneCount()) | (quint64(partCount) << 32),
+				                            fileName.left(fileName.size() - 4).toUpper());
+			} else {
+				return false;
+			}
+		}
+	}
+	
+	return true;
+}
+
 bool CharArchive::openAnimBoneCount()
 {
 	if (!isOpen()) {
 		qWarning() << "CharArchive::openAnimBoneCount" << "archive not opened";
 		return false;
 	}
-
-	_animBoneCount.clear();
+	
+	if (!_animBoneAndFrameCount.empty()) {
+		return true;
+	}
 
 	LgpIterator it = _io->iterator();
 	while (it.hasNext()) {
@@ -119,8 +175,10 @@ bool CharArchive::openAnimBoneCount()
 					qWarning() << "CharArchive::openAnimBoneCount" << "animation error" << fileName;
 					continue;
 				}
-
-				_animBoneCount.insert(int(header.boneCount), fileName.left(fileName.size()-2).toUpper());
+				
+				QString aName = fileName.left(fileName.size() - 2).toUpper();
+				_animBoneCount.insert(int(header.boneCount), aName);
+				_animBoneAndFrameCount.insert(quint64(header.boneCount) | (quint64(header.framesCount) << 32), aName);
 			} else {
 				return false;
 			}

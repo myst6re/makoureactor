@@ -231,6 +231,11 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCLgp::save2(const QString &path, Archiv
 			return Invalid;
 		}
 	}
+	
+	// Reopen archive
+	if (!_lgp.isOpen() && !_lgp.open()) {
+		return ErrorOpening;
+	}
 
 	this->observer = nullptr;
 

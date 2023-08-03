@@ -17,13 +17,17 @@
  ****************************************************************************/
 #include "ModelManagerPS.h"
 #include "core/Config.h"
-#include "Data.h"
+#include "core/field/AFile.h"
 
 ModelManagerPS::ModelManagerPS(QWidget *parent) :
     ModelManager(parent)
 {
 	modelAnims->setColumnCount(1);
 	modelAnims->setHeaderLabels(QStringList() << tr("Animation"));
+
+	toolBar2 = new QToolBar();
+	toolBar2->setIconSize(QSize(14, 14));
+	toolBar2->addAction(QIcon::fromTheme(QStringLiteral("document-export")), QString(), this, &ModelManagerPS::exportAnim);
 
 	QGridLayout *frameLayout = new QGridLayout(modelFrame);
 	frameLayout->addWidget(new QLabel(tr("Unknown")), 0, 0);
@@ -34,7 +38,8 @@ ModelManagerPS::ModelManagerPS(QWidget *parent) :
 	frameLayout->addWidget(modelGlobalColorWidget, 2, 1);
 	frameLayout->addWidget(new QLabel(tr("Directional light")), 3, 0);
 	frameLayout->addLayout(modelColorsLayout, 4, 0, 1, 2);
-	frameLayout->addWidget(modelAnims, 0, 2, 6, 1);
+	frameLayout->addWidget(toolBar2, 0, 2);
+	frameLayout->addWidget(modelAnims, 1, 2, 5, 1);
 	frameLayout->addWidget(modelWidget, 0, 3, 6, 1);
 	frameLayout->setRowStretch(5, 1);
 
@@ -109,4 +114,55 @@ quint16 ModelManagerPS::modelScale(int modelID) const
 void ModelManagerPS::setModelScale(int modelID, quint16 scale)
 {
 	field()->fieldModel(modelID, 0)->setScale(scale);
+}
+
+void ModelManagerPS::exportAnim()
+{
+	int modelID = currentModelID();
+	if (modelID < 0) {
+		return;
+	}
+
+	QTreeWidgetItem *item = modelAnims->currentItem();
+	if (item == nullptr) {
+		return;
+	}
+
+	int animID = currentAnimID(item);
+	if (animID < 0) {
+		return;
+	}
+	
+	QString filePath = QString("%1/%2-model-%3-animation-%4.a")
+	                       .arg(
+	                           Config::value("exportPath").toString().isEmpty() ? field()->io()->directory() : Config::value("exportPath").toString(),
+	                           field()->name()
+	                       )
+	                       .arg(modelID)
+	                       .arg(animID);
+	filePath = QFileDialog::getSaveFileName(this, tr("Export animation"), filePath, tr("FF7 PC animation file (*.a)"));
+	
+	if (filePath.isNull()) {
+		return;
+	}
+	
+	bool ok = false;
+	FieldModelAnimation animation = field()->fieldModel(modelID)->animation(animID).toPC(&ok);
+	
+	if (!ok) {
+		QMessageBox::warning(this, tr("Cannot convert"), tr("This animation cannot be converted to PC format"));
+		return;
+	}
+	
+	QFile file(filePath);
+	if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+		QMessageBox::warning(this, tr("Cannot export"), tr("The destination file cannot be opened for writing"));
+		return;
+	}
+
+	AFile a(&file);
+	if (!a.write(animation)) {
+		QMessageBox::warning(this, tr("Cannot export"), tr("Unable to write into the destination file"));
+		return;
+	}
 }

@@ -583,3 +583,33 @@ void FieldModelLoaderPC::insertModelInfos(int modelID,
 	model_global_color.insert(modelID, modelInfos.globalColor);
 	setModified(true);
 }
+
+QStringList FieldModelLoaderPC::mainAnimationNames(const QString &hrcName)
+{
+	if (hrcName == "AAAA") { // Cloud
+		return QStringList() << "ACFE" << "AAFF" << "AAGA"; // Standing, walking, running
+	}
+	if (hrcName == "AAGB") { // Tifa
+		return QStringList() << "ABCD" << "ABCE" << "ABCF"; // Standing, walking, running
+	}
+	if (hrcName == "ACGD") { // Barret
+		return QStringList() << "ADCB" << "ADCC" << "ADCD"; // Standing, walking, running
+	}
+	if (hrcName == "ADDA") { // Red XIII
+		return QStringList() << "AEAE" << "AEAF" << "AEBA"; // Standing, walking, running
+	}
+	if (hrcName == "ABJB") { // Yuffie
+		return QStringList() << "ACFB" << "ACFC" << "ACFD"; // Standing, walking, running
+	}
+	if (hrcName == "AEBC") { // Cait Sith
+		return QStringList() << "AEHA" << "AEHB" << "AEHC"; // Standing, walking, running
+	}
+	if (hrcName == "AEHD") { // Vincent
+		return QStringList() << "AFDF" << "AFEA" << "AFEB"; // Standing, walking, running
+	}
+	if (hrcName == "ABDA") { // Cid
+		return QStringList() << "ABIE" << "ABIF" << "ABJA"; // Standing, walking, running
+	}
+	
+	return QStringList();
+}

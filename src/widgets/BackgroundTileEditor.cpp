@@ -484,6 +484,7 @@ void BackgroundTileEditor::updateDepthTuning(int depth)
 
 	for (Tile &tile: _tiles) {
 		tile.IDBig = depth;
+		tile.manualIDBig = true;
 		
 		if (!_backgroundFile->setTile(tile)) {
 			qWarning() << "BackgroundTileEditor::updateDepth tile not found" << tile.tileID;

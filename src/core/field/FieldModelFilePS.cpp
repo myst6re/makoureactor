@@ -24,23 +24,31 @@
 #include "BsxFile.h"
 
 FieldModelFilePS::FieldModelFilePS() :
-    FieldModelFile(),
+    FieldModelFile(), _currentAnimationId(-1),
     _currentField(nullptr), _currentModelID(-1),
     _scale(0), _isModified(false)
 {
 }
 
+bool FieldModelFilePS::isValid() const
+{
+	return FieldModelFile::isValid() || (_currentAnimationId >= 0 && _currentAnimationId < _animations.size() && !_skeleton.isEmpty());
+}
+
 void FieldModelFilePS::clear()
 {
+	qDebug() << "FieldModelFilePS::clear" << _currentModelID << _currentAnimationId;
 	_loadedTex.clear();
+	_animations.clear();
 	_textures = FieldModelTexturesPS();
 	FieldModelFile::clear();
+	_currentAnimationId = -1;
 	_isModified = false;
 }
 
-bool FieldModelFilePS::load(FieldPS *currentField, int modelID, int animationID, bool animate)
+bool FieldModelFilePS::load(FieldPS *currentField, int modelID)
 {
-	Q_UNUSED(animate)
+	qDebug() << "FieldModelFilePS::load" << modelID;
 	quint8 modelGlobalId = 0;
 	bool modelIdIsValid = currentField->fieldModelLoader()->isOpen() && modelID < currentField->fieldModelLoader()->modelCount();
 	FieldModelFilePS modelBcx;
@@ -48,6 +56,7 @@ bool FieldModelFilePS::load(FieldPS *currentField, int modelID, int animationID,
 	_isModified = false;
 	_currentField = currentField;
 	_currentModelID = modelID;
+	_currentAnimationId = 0;
 
 	if (modelIdIsValid) {
 		modelGlobalId = currentField->fieldModelLoader()->model(modelID).modelID;
@@ -80,8 +89,10 @@ bool FieldModelFilePS::load(FieldPS *currentField, int modelID, int animationID,
 
 			BcxFile bcx(&ioBcx);
 			if (!bcx.read(modelBcx)) {
+				qWarning() << "FieldModelFilePS::load cannot read bcx file" << fileName;
 				return false;
 			}
+			modelBcx.setCurrentAnimationId(0);
 		}
 	}
 
@@ -157,11 +168,8 @@ bool FieldModelFilePS::load(FieldPS *currentField, int modelID, int animationID,
 		}
 		setSkeleton(modelBcx.skeleton());
 		setAnimations(modelBcx.animations() + animations());
+		qDebug() << "animations" << animations().size();
 		modelBcx.setSkeleton(FieldModelSkeleton());
-	}
-	// FIXME: only selected animation -> not optimal
-	if (animationID < animationCount()) {
-		setAnimations(QList<FieldModelAnimation>() << animation(animationID));
 	}
 
 	return true;

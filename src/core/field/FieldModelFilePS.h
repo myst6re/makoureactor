@@ -29,6 +29,7 @@ class FieldModelFilePS : public FieldModelFile
 {
 public:
 	FieldModelFilePS();
+	bool isValid() const override;
 	void clear() override;
 	inline bool isModified() const {
 		return _isModified;
@@ -72,7 +73,26 @@ public:
 			_isModified = true;
 		}
 	}
-	bool load(FieldPS *currentField, int modelID, int animationID, bool animate);
+	inline const QList<FieldModelAnimation> &animations() const {
+		return _animations;
+	}
+	inline void setAnimations(const QList<FieldModelAnimation> &animations) {
+		_animations = animations;
+	}
+	inline qsizetype animationCount() const {
+		return _animations.size();
+	}
+	inline const FieldModelAnimation &animation(int animationID) const {
+		return _animations.at(animationID);
+	}
+	inline void setCurrentAnimationId(qsizetype animationId) {
+		_currentAnimationId = animationId;
+	}
+	inline const FieldModelAnimation &currentAnimation() const override {
+		return _animations.at(_currentAnimationId);
+	}
+	bool load(FieldPS *currentField, int modelID);
+	void setCurrentAnimation(int animationID);
 	QImage loadedTexture(FieldModelGroup *group) override;
 	inline void *textureIdForGroup(FieldModelGroup *group) const override {
 		return reinterpret_cast<void *>(group);
@@ -82,6 +102,8 @@ public:
 private:
 	Q_DISABLE_COPY(FieldModelFilePS)
 	QList<FieldModelColorDir> _colors;
+	QList<FieldModelAnimation> _animations;
+	qsizetype _currentAnimationId;
 	FieldPS *_currentField;
 	QHash<FieldModelGroup *, QImage> _loadedTex;
 	FieldModelTexturesPS _textures;

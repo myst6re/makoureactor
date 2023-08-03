@@ -17,8 +17,9 @@
  ****************************************************************************/
 #include "BackgroundTiles.h"
 #include "BackgroundTextures.h"
+#include "CaFile.h"
 
-void Tile::calcIDBig()
+void Tile::calcIDBig(CaFile *ca)
 {
 	if (manualIDBig) {
 		return;
@@ -31,6 +32,61 @@ void Tile::calcIDBig()
 		IDBig = 10000 * ID;
 	} else if (ID >= 4095) {
 		IDBig = 9998999;
+	} else if (ca != nullptr) {
+		/* float sourceDir[3]; // [esp+44h] [ebp-58h] BYREF
+		float camera_structure_copy[16]; // [esp+50h] [ebp-4Ch] BYREF
+		int caMatrixX = 160, caMatrixY = 90; // FIXME
+		Camera camera = ca->camera(0);
+		
+		sourceDir[0] = (((double)dstX - caMatrixX) * 4 * ID / camera.camera_zoom) - (double)camera.camera_position[0];
+		sourceDir[1] = (((double)dstY - caMatrixY) * 4 * ID / camera.camera_zoom) - (double)camera.camera_position[1];
+		sourceDir[2] = 4 * ID - (double)camera.camera_position[2];
+		
+		// matrix view: 1.000000, 0.000000, -0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 0.000000, 1.000000
+		// matrix projection: 0.700000, 0.000000, 0.000000, 0.000000, 0.000000, -1.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.438642, 0.437956, 0.000000, 0.000000, -21.932079, 0.000000, 
+		
+		camera_structure_copy[0] = (double)*camera_axis_and_position / 4096.0;
+		camera_structure_copy[1] = (double)camera_axis_and_position[1] / 4096.0;
+		camera_structure_copy[2] = (double)camera_axis_and_position[2] / 4096.0;
+		camera_structure_copy[4] = (double)camera_axis_and_position[3] / 4096.0;
+		camera_structure_copy[5] = (double)camera_axis_and_position[4] / 4096.0;
+		camera_structure_copy[6] = (double)camera_axis_and_position[5] / 4096.0;
+		camera_structure_copy[8] = (double)camera_axis_and_position[6] / 4096.0;
+		camera_structure_copy[9] = (double)camera_axis_and_position[7] / 4096.0;
+		camera_structure_copy[10] = (double)camera_axis_and_position[8] / 4096.0;
+		camera_structure_copy[3] = float_div_by_one(*(_DWORD *)(camera_axis_and_position + 9));
+		camera_structure_copy[7] = float_div_by_one(*(_DWORD *)(camera_axis_and_position + 11));
+		camera_structure_copy[11] = float_div_by_one(*(_DWORD *)(camera_axis_and_position + 13));
+		camera_structure_copy[12] = 0.0;
+		camera_structure_copy[13] = 0.0;
+		camera_structure_copy[14] = 0.0;
+		camera_structure_copy[15] = 1.0;
+		
+		sub_67C323(camera_structure_copy);
+		matrix_vector_multiplication(camera_structure_copy, sourceDir, matrice_out);
+		
+		field_bg_camera_to_float(camera_axis_and_position, camera_with_floats);
+		camera_with_floats[12] = (float)*(int *)(camera_axis_and_position + 9);
+		camera_with_floats[13] = (float)*(int *)(camera_axis_and_position + 11);
+		camera_with_floats[14] = (float)*(int *)(camera_axis_and_position + 13);
+		camera_with_floats[15] = 1.0;
+		
+		float v55[16]; // [esp+0h] [ebp-44h] BYREF
+		float in[4];
+		float out[4];
+		int result; // [esp+40h] [ebp-4h]
+		
+		result = 0;
+		if ( sub_67CEA3(camera_with_floats, v55) )
+		{
+			sub_66CDE0(v55, matrice_out, in);
+			field_bg_z_computation_related_sub_67B997(in, out);
+			if ( in[3] > 0.0 ) {
+				result = 1;
+			}
+		} */
+		// FIXME: approximation
+		IDBig = quint32((float(ID) / 4096.0f) * 10000000.0);
 	} else {
 		// FIXME: approximation
 		IDBig = quint32((float(ID) / 4096.0f) * 10000000.0);
@@ -441,7 +497,7 @@ void BackgroundTiles::setZLayer1(quint16 oldZ, quint16 newZ)
 bool BackgroundTiles::replace(const Tile &tile)
 {
 	for (Tile &t : *this) {
-		if (t.tileID == tile.tileID) {
+		if (t.tileID == tile.tileID && t.layerID == tile.layerID) {
 			t = tile;
 			return true;
 		}

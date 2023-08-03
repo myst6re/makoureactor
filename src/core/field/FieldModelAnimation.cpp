@@ -17,6 +17,86 @@
  ****************************************************************************/
 #include "FieldModelAnimation.h"
 
-FieldModelAnimation::FieldModelAnimation()
+FieldModelAnimation::FieldModelAnimation() : _initialRot()
 {
+}
+
+int FieldModelAnimation::commonRotationCount(const FieldModelAnimation &other) const
+{
+	if (other.frameCount() != frameCount()) {
+		return -1;
+	}
+	
+	int bones = 0, bonesStart = 0, bonesOtherStart = 0;
+	
+	if (other.boneCount() != boneCount()) {
+		if (other.boneCount() + 1 == boneCount()) {
+			bonesStart = 1;
+			bones = other.boneCount();
+		} else if (other.boneCount() == boneCount() + 1) {
+			bonesOtherStart = 1;
+			bones = boneCount();
+		} else {
+			return -1;
+		}
+	}
+	
+	int count = frameCount();
+	int ret = 0;
+	
+	for (int frame = 0; frame < count; ++frame) {
+		QList<PolyVertex> rotations = _framesRot.value(frame);
+
+		for (int i = 0; i < bones; ++i) {
+			PolyVertex left = rotations.at(bonesStart + i),
+			    right = other.rotations(frame).at(bonesOtherStart + i);
+			
+			if (left.x == right.x && left.y == right.y && left.z == right.z && (left.x != 0 || left.y != 0 || left.z != 0)) {
+				ret += 1;
+			}
+		}
+	}
+	
+	return ret;
+}
+
+
+FieldModelAnimation FieldModelAnimation::toPC(bool *ok) const
+{
+	*ok = false;
+	
+	FieldModelAnimation ret;
+	
+	if (isEmpty()) {
+		*ok = true;
+		return ret;
+	} 
+	
+	int count = boneCount() - 1;
+	
+	if (count <= 0) {
+		return ret;
+	}
+	
+	ret.setInitialRot(_framesRot[0].at(0));
+	
+	int frames = frameCount();
+	
+	for (int f = 0; f < frames; ++f) {
+		QList<PolyVertex> rots = rotations(f);
+		rots.removeFirst();
+		ret.insertFrame(f, rots, QList<PolyVertex>() << translations(f).at(0));
+	}
+	
+	*ok = true;
+	
+	return ret;
+}
+
+FieldModelAnimation FieldModelAnimation::toPS(bool *ok) const
+{
+	*ok = false;
+	// TODO
+	
+	return *this;
 }

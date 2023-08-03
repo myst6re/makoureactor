@@ -775,10 +775,10 @@ bool BsxFile::readAnimation(const FieldModelAnimationPSHeader &header, FieldMode
 					qWarning() << "BsxFile::readAnimation error 5";
 					return false;
 				}
-
-				rot.x = 360.0f * (quint8)rotChar / 255.0f;
+				
+				rot.x = 360.0f * quint8(rotChar) / 256.0f;
 			} else {
-				rot.x = 360.0f * frameTrans.rx / 255.0f;
+				rot.x = 360.0f * frameTrans.rx / 256.0f;
 			}
 
 			if (frameTrans.flag & 0x02) {
@@ -792,10 +792,10 @@ bool BsxFile::readAnimation(const FieldModelAnimationPSHeader &header, FieldMode
 					qWarning() << "BsxFile::readAnimation error 7";
 					return false;
 				}
-
-				rot.y = 360.0f * (quint8)rotChar / 255.0f;
+				
+				rot.y = 360.0f * quint8(rotChar) / 256.0f;
 			} else {
-				rot.y = 360.0f * frameTrans.ry / 255.0f;
+				rot.y = 360.0f * frameTrans.ry / 256.0f;
 			}
 
 			if (frameTrans.flag & 0x04) {
@@ -809,10 +809,10 @@ bool BsxFile::readAnimation(const FieldModelAnimationPSHeader &header, FieldMode
 					qWarning() << "BsxFile::readAnimation error 9";
 					return false;
 				}
-
-				rot.z = 360.0f * (quint8)rotChar / 255.0f;
+				
+				rot.z = 360.0f * quint8(rotChar) / 256.0f;
 			} else {
-				rot.z = 360.0f * frameTrans.rz / 255.0f;
+				rot.z = 360.0f * frameTrans.rz / 256.0f;
 			}
 
 			// (translation)

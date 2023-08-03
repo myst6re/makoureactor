@@ -30,21 +30,20 @@ public:
 	FieldModel(QWidget *parent = nullptr);
 	virtual ~FieldModel() override;
 	void setIsAnimated(bool animate);
-	void setAnimationID(int animID);
 	void clear();
 	inline bool hasError() const {
 		return gpuRenderer && gpuRenderer->hasError();
 	}
 	int boneCount() const;
 	int frameCount() const;
-	static void paintModel(Renderer *gpuRenderer, FieldModelFile *data, int animationID, int currentFrame=0, float scale=1.0f, QMatrix4x4 initialModelMatrix = QMatrix4x4());
+	static void paintModel(Renderer *gpuRenderer, FieldModelFile *data, int currentFrame = 0, float scale = 1.0f, QMatrix4x4 initialModelMatrix = QMatrix4x4());
 public slots:
-	void setFieldModelFile(FieldModelFile *fieldModel, int animationID = 0);
+	void setFieldModelFile(FieldModelFile *fieldModel);
 private slots:
 	void animate();
 private:
 	void updateTimer();
-	inline void paintModel() { paintModel(gpuRenderer, data, animationID, currentFrame); }
+	inline void paintModel() { paintModel(gpuRenderer, data, currentFrame); }
 	static void drawP(Renderer *gpuRenderer, FieldModelFile *data, float scale, const FieldModelBone &bone, float globalColor[3]);
 	bool setXRotation(int angle);
 	bool setYRotation(int angle);
@@ -53,7 +52,6 @@ private:
 
 	bool blockAll;
 	double distance;
-	int animationID;
 	int currentFrame;
 	bool animated;
 

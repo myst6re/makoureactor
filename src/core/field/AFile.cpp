@@ -60,16 +60,19 @@ bool AFile::read(FieldModelAnimation &animation, int maxFrames) const
 	}
 
 	for (qint64 i = 0; i < header.framesCount; ++i) {
-		if (!device()->seek(device()->pos() + 12)) {
+		if (device()->read((char *)&rot, 12) != 12) {
 			return false;
 		}
+
+		animation.setInitialRot(rot);
+
 		if (device()->read((char *)&trans, 12) != 12) {
 			return false;
 		}
 
-		trans.x = trans.x / MODEL_SCALE_PC;
-		trans.y = trans.y / MODEL_SCALE_PC;
-		trans.z = trans.z / MODEL_SCALE_PC;
+		trans.x /= MODEL_SCALE_PC;
+		trans.y /= MODEL_SCALE_PC;
+		trans.z /= MODEL_SCALE_PC;
 
 		QList<PolyVertex> rotationCoords;
 
@@ -87,8 +90,51 @@ bool AFile::read(FieldModelAnimation &animation, int maxFrames) const
 
 bool AFile::write(const FieldModelAnimation &animation) const
 {
-	Q_UNUSED(animation)
-	// TODO
-	return false;
-}
+	if (!canWrite()) {
+		return false;
+	}
+	
+	AHeader header;
+	header.version = 1;
+	header.framesCount = animation.frameCount();
+	header.boneCount = animation.boneCount();
+	header.rotationOrder[0] = 1;
+	header.rotationOrder[1] = 0;
+	header.rotationOrder[2] = 2;
+	header.unused = 0;
+	header.runtimeData[0] = 0;
+	header.runtimeData[1] = 0;
+	header.runtimeData[2] = 0;
+	header.runtimeData[3] = 0;
+	header.runtimeData[4] = 0;
+	
+	if (device()->write((const char *)&header, sizeof(AHeader)) != sizeof(AHeader)) {
+		return false;
+	}
+	
+	for (qint64 i = 0; i < header.framesCount; ++i) {
+		if (device()->write((const char *)&animation.initialRot(), 12) != 12) {
+			return false;
+		}
+		
+		PolyVertex trans = animation.translations(i).at(0);
 
+		trans.x *= MODEL_SCALE_PC;
+		trans.y *= MODEL_SCALE_PC;
+		trans.z *= MODEL_SCALE_PC;
+		
+		if (device()->write((const char *)&trans, 12) != 12) {
+			return false;
+		}
+		
+		for (quint32 j = 0; j < header.boneCount; ++j) {
+			const PolyVertex &rot = animation.rotations(i).at(j);
+			
+			if (device()->write((const char *)&rot, 12) != 12) {
+				return false;
+			}
+		}
+	}
+	
+	return true;
+}

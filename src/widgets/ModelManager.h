@@ -53,6 +53,7 @@ protected:
 
 	QTreeWidget *models;
 	QFrame *modelFrame;
+	QToolBar *toolBar2;
 	QSpinBox *modelUnknown;
 	QSpinBox *modelScaleWidget;
 	ColorDisplay *modelGlobalColorWidget;

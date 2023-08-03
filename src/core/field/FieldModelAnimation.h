@@ -31,6 +31,12 @@ public:
 	inline QList<PolyVertex> translations(int frame) const {
 		return _framesTrans.value(frame);
 	}
+	const PolyVertex &initialRot() const {
+		return _initialRot;
+	}
+	void setInitialRot(const PolyVertex &rot) {
+		_initialRot = rot;
+	}
 	inline void insertFrame(int frame, const QList<PolyVertex> &rotations,
 	                        const QList<PolyVertex> &translations) {
 		_framesRot.insert(frame, rotations);
@@ -49,6 +55,10 @@ public:
 	inline bool isEmpty() const {
 		return _framesRot.isEmpty();
 	}
+	int commonRotationCount(const FieldModelAnimation &other) const;
+	FieldModelAnimation toPC(bool *ok) const;
+	FieldModelAnimation toPS(bool *ok) const;
 private:
+	PolyVertex _initialRot;
 	QHash<int, QList<PolyVertex> > _framesRot, _framesTrans;
 };

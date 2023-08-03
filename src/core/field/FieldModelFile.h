@@ -30,6 +30,8 @@ public:
 	virtual void clear();
 	virtual bool isValid() const;
 	virtual bool translateAfter() const=0;
+	QByteArray signature() const; // To identify the model between PC and PS vesions
+	int commonColorCount(const FieldModelFile &other) const;
 
 	inline const FieldModelSkeleton &skeleton() const {
 		return _skeleton;
@@ -43,18 +45,7 @@ public:
 	inline qsizetype boneCount() const {
 		return _skeleton.boneCount();
 	}
-	inline const QList<FieldModelAnimation> &animations() const {
-		return _animations;
-	}
-	inline void setAnimations(const QList<FieldModelAnimation> &animations) {
-		_animations = animations;
-	}
-	inline qsizetype animationCount() const {
-		return _animations.size();
-	}
-	inline const FieldModelAnimation &animation(int animationID) const {
-		return _animations.at(animationID);
-	}
+	virtual const FieldModelAnimation &currentAnimation() const=0;
 	virtual QImage loadedTexture(FieldModelGroup *group)=0;
 	virtual void *textureIdForGroup(FieldModelGroup *group) const=0;
 	virtual QHash<void *, QImage> loadedTextures()=0;
@@ -62,5 +53,4 @@ private:
 	Q_DISABLE_COPY(FieldModelFile)
 protected:
 	FieldModelSkeleton _skeleton;
-	QList<FieldModelAnimation> _animations;
 };

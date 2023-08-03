@@ -1589,6 +1589,34 @@ Some scripts can refer to it!</source>
         <source>Light</source>
         <translation type="obsolete">光源</translation>
     </message>
+    <message>
+        <source>Export animation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>FF7 PC animation file (*.a)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot convert</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This animation cannot be converted to PC format</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot export</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The destination file cannot be opened for writing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unable to write into the destination file</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Opcode</name>
@@ -6416,7 +6444,7 @@ Are you sure you want to continue?</source>
     </message>
     <message>
         <source>Member %1</source>
-        <translation type="unfinished">メンバー %1</translation>
+        <translation>メンバー %1</translation>
     </message>
 </context>
 <context>

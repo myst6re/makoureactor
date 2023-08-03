@@ -92,6 +92,8 @@ FieldModelLoaderPS *FieldPS::fieldModelLoader(bool open)
 
 FieldModelFilePS *FieldPS::fieldModel(int modelID, int animationID, bool animate, bool open)
 {
+	Q_UNUSED(animate)
+	
 	_models.resize(modelID + 1);
 
 	if (_models[modelID] == nullptr) {
@@ -103,7 +105,9 @@ FieldModelFilePS *FieldPS::fieldModel(int modelID, int animationID, bool animate
 		for (FieldModelFilePS *model: qAsConst(_models)) {
 			if (model != nullptr && !model->isModified()) {
 				if (i == modelID) {
-					model->load(this, modelID, animationID, animate);
+					if (!model->load(this, modelID)) {
+						qWarning() << "Cannot load model" << modelID;
+					}
 				} else {
 					model->clear();
 				}
@@ -111,8 +115,12 @@ FieldModelFilePS *FieldPS::fieldModel(int modelID, int animationID, bool animate
 			++i;
 		}
 	}
+	
+	FieldModelFilePS *ret = _models[modelID];
 
-	return _models[modelID];
+	ret->setCurrentAnimationId(animationID);
+
+	return ret;
 }
 
 QByteArray FieldPS::saveHeader() const

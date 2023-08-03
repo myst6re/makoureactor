@@ -44,6 +44,9 @@ public:
 	const PolyVertex &vertex(int id) const;
 	const QRgb &color() const;
 	QRgb color(int id) const;
+	inline const QList<QRgb> &colors() const {
+		return _colors;
+	}
 	const TexCoord &texCoord(int id) const;
 	void setTexCoord(int id, const TexCoord &texCoord);
 	bool isMonochrome() const;
@@ -96,6 +99,7 @@ public:
 	void removeSpriting(float texWidth, float texHeight) const;
 	void setFloatCoords(float texWidth, float texHeight) const;
 	QImage toImage() const;
+	QSet<QRgb> uniqueColors() const;
 private:
 	FieldModelTextureRef *_textureRef;
 	QList<Poly *> _polys;
@@ -115,6 +119,7 @@ public:
 	}
 	QString toString() const;
 	QImage toImage(int width, int height) const;
+	int commonColorCount(const FieldModelPart &other) const;
 protected:
 	QList<FieldModelGroup *> _groups;
 };

@@ -42,6 +42,34 @@ QImage FieldModelBone::toImage(int width, int height) const
 	return image;
 }
 
+int FieldModelBone::commonColorCount(const FieldModelBone &other) const
+{
+	int count = _parts.size();
+
+	if (other.parts().size() != count) {
+		qDebug() << "FieldModelBone::commonColorCount different part count" << other.parts().size() << count;
+		
+		return -1;
+	}
+
+	int ret = 0;
+
+	for (int i = 0; i < count; ++i) {
+		FieldModelPart *part = _parts.at(i),
+		    *otherPart = other.parts().at(i);
+		
+		int common = part->commonColorCount(*otherPart);
+		
+		if (common < 0) {
+			return -1;
+		}
+
+		ret += common;
+	}
+
+	return ret;
+}
+
 FieldModelSkeleton::FieldModelSkeleton()
 {
 }

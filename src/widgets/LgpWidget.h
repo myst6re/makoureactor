@@ -21,7 +21,7 @@
 #include <Lgp>
 #include "ArchivePreview.h"
 #include "core/field/FieldModelFilePC.h"
-
+/*
 class IconThread : public QThread
 {
 	Q_OBJECT
@@ -42,7 +42,7 @@ private:
 
 	QQueue<QString> _files;
 	QMap<QString, QIcon> cacheIcon;
-};
+};*/
 
 class LgpDirectoryItem;
 

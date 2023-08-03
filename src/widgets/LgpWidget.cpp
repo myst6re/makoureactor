@@ -20,7 +20,7 @@
 #include <TimFile>
 #include <TexFile>
 #include "core/field/CharArchive.h"
-
+/*
 IconThread::IconThread(QObject *parent) :
       QThread(parent), abort(false)
 {
@@ -84,7 +84,7 @@ void IconThread::run()
 			}
 		}
 	}
-}
+}*/
 
 LgpDirectoryItem *LgpItem::root()
 {
@@ -122,7 +122,7 @@ int LgpItem::id() const
 qint64 LgpFileItem::fileSize()
 {
 	QIODevice *io = file();
-	if (io->open(QIODevice::ReadOnly)) {
+	if (io && io->open(QIODevice::ReadOnly)) {
 		return io->size();
 	}
 	return -1;

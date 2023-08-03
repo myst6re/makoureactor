@@ -96,10 +96,10 @@ int main(int argc, char *argv[])
 		return -1;
 	} */
 
-	Window *window = new Window;
-	window->show();
+	Window window;
+	window.show();
 	if (argc > 1) {
-		window->openFile(app.arguments().at(1));
+		window.openFile(app.arguments().at(1));
 	}
 #endif
 

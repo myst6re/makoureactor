@@ -369,7 +369,7 @@ void WalkmeshWidget::paintGL()
 							mModel.rotate(-360.0f * direction / 256.0f, 0.0, 1.0, 0.0);
 						}
 						
-						FieldModel::paintModel(gpuRenderer, fieldModel, 0, 0, 8.0f, mModel);
+						FieldModel::paintModel(gpuRenderer, fieldModel, 0, 8.0f, mModel);
 					}
 				}
 			}

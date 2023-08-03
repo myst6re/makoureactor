@@ -838,7 +838,7 @@ void Search::findAll()
 QRegularExpression Search::buildRegExp(const QString &lineEditText, bool caseSensitive, bool useRegexp)
 {
 	return QRegularExpression(useRegexp ? lineEditText : QRegularExpression::escape(lineEditText),
-	                          caseSensitive ? QRegularExpression::PatternOptions() :QRegularExpression::CaseInsensitiveOption);
+	                          caseSensitive ? QRegularExpression::PatternOptions() : QRegularExpression::CaseInsensitiveOption);
 }
 
 void Search::setSearchValues()

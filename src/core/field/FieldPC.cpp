@@ -19,6 +19,7 @@
 #include "FieldPC.h"
 #include "BackgroundFilePC.h"
 #include "FieldModelLoaderPS.h"
+#include "CharArchive.h"
 
 FieldPC::FieldPC(const QString &name, FieldArchiveIO *io) :
 	Field(name, io), _model(nullptr)
@@ -155,7 +156,7 @@ bool FieldPC::importModelLoader(const QByteArray &sectionData, bool isPSField, Q
 
 		BsxFile bsx(&bsxDeviceDec);
 		bool ok;
-		*modelLoader = modelLoaderPS.toPC(&bsx, &ok);
+		*modelLoader = modelLoaderPS.toPC(&bsx, CharArchive::instance(), &ok);
 
 		if (!ok) {
 			return false;

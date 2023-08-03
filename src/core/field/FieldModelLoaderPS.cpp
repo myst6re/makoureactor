@@ -16,7 +16,11 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "FieldModelLoaderPS.h"
+#include "CharArchive.h"
 #include "Field.h"
+#include "FieldModelFilePC.h"
+#include "AFile.h"
+#include <TexFile>
 
 FieldModelLoaderPS::FieldModelLoaderPS(Field *field) :
 	FieldModelLoader(field)
@@ -139,7 +143,7 @@ void FieldModelLoaderPS::setModel(int modelID, const FieldModelLoaderStruct &mod
 	}
 }
 
-FieldModelLoaderPC FieldModelLoaderPS::toPC(BsxFile *bsx, bool *ok) const
+FieldModelLoaderPC FieldModelLoaderPS::toPC(BsxFile *bsx, CharArchive *charArchive, bool *ok) const
 {
 	FieldModelLoaderPC ret(field());
 
@@ -148,8 +152,9 @@ FieldModelLoaderPC FieldModelLoaderPS::toPC(BsxFile *bsx, bool *ok) const
 
 	for (const FieldModelLoaderStruct &psLoader : _modelLoaders) {
 		FieldModelFilePS modelFile;
+		qDebug() << "modelID" << psLoader.faceID << psLoader.unknown1 << psLoader.unknown2 << psLoader.unknown3 << psLoader.bonesCount;
 
-		if (!bsx->seek(psLoader.modelID)) {
+		if (!bsx->seek(i)) {
 			*ok = false;
 			return ret;
 		}
@@ -160,6 +165,7 @@ FieldModelLoaderPC FieldModelLoaderPS::toPC(BsxFile *bsx, bool *ok) const
 		}
 
 		QString fileName;
+		bool isMainModel = true;
 
 		switch (psLoader.modelID) {
 		case 1:    fileName = "AAAA";    break; // Cloud
@@ -172,15 +178,77 @@ FieldModelLoaderPC FieldModelLoaderPS::toPC(BsxFile *bsx, bool *ok) const
 		case 8:    fileName = "AEBC";    break; // Cait Sith
 		case 9:    fileName = "AEHD";    break; // Vincent
 		default:
-			// FIXME: not the same model
-			fileName = "AAAA";
+			isMainModel = false;
+			fileName = "AAAA"; // AAAA: Cloud
+			if (charArchive != nullptr) {
+				QByteArray psIdentifier = modelFile.signature();
+				QStringList hrcFiles = charArchive->hrcFiles(std::max(1, psLoader.bonesCount - 1), psLoader.partsCount);
+				QHash<QString, int> matchingFileNames;
+
+				for (const QString &hrc: qAsConst(hrcFiles)) {
+					FieldModelFilePC modelFilePC;
+					QStringList textureNames;
+					modelFilePC.load(charArchive, hrc, textureNames);
+					QByteArray identifier = modelFilePC.signature();
+					
+					if (identifier == psIdentifier) {
+						int commonColorCount = modelFile.commonColorCount(modelFilePC);
+						matchingFileNames.insert(hrc, commonColorCount);
+					}
+				}
+				
+				if (matchingFileNames.size() > 1) {
+					int maxCommonColorCount = -1;
+					
+					QHashIterator<QString, int> it(matchingFileNames);
+					while (it.hasNext()) {
+						it.next();
+						int commonColorCount = it.value();
+						
+						if (commonColorCount > maxCommonColorCount) { // FIXME: approximation
+							maxCommonColorCount = commonColorCount;
+							fileName = it.key();
+						}
+					}
+				}
+			}
 			break;
 		}
 
 		ret.insertModel(i, fileName + ".HRC");
+		
+		QStringList mainAnimationNames;
+		
+		if (isMainModel) {
+			mainAnimationNames = FieldModelLoaderPC::mainAnimationNames(fileName);
+		}
 
 		for (int j = 0; j < psLoader.animationCount; ++j) {
-			ret.insertAnim(i, j, "ACFE");
+			// ACFE: Cloud standing animation
+			QString animationName = "ACFE";
+			int animationId = isMainModel ? j - 3 : j;
+			
+			if (animationId >= 0 && charArchive != nullptr && animationId < modelFile.animationCount()) {
+				FieldModelAnimation animationPs = modelFile.animation(animationId);
+				QStringList aFiles = charArchive->aFiles(std::max(1, psLoader.bonesCount - 1), animationPs.frameCount());
+				int maxCommonRotationCount = -1;
+
+				for (const QString &aFile: aFiles) {
+					FieldModelAnimation animation;
+					AFile io(charArchive->fileIO(aFile % ".a"));
+					if (io.read(animation, -1)) {
+						int commonRotationCount = animationPs.commonRotationCount(animation);
+						
+						if (commonRotationCount > maxCommonRotationCount) { // FIXME: approximation
+							maxCommonRotationCount = commonRotationCount;
+							animationName = aFile;
+						}
+					}
+				}
+			} else if (animationId < 0 && j < mainAnimationNames.size()) {
+				animationName = mainAnimationNames.at(j);
+			}
+			ret.insertAnim(i, j, animationName);
 			ret.setAnimUnknown(i, j, 1);
 		}
 
