@@ -163,6 +163,8 @@ void FontWidget::setLetter(int i)
 			//TODO: jp
 			textLetter->setText(FF7String(ba.append(char(i))).text(false));
 		}
+		widthLetter->blockSignals(true);
+		leftPaddingLetter->blockSignals(true);
 		if (fontLetter->windowBinFile() && fontLetter->isLetterSizeEditable()) {
 			widthLetter->setValue(
 			    fontLetter->windowBinFile()->charWidth(
@@ -182,6 +184,8 @@ void FontWidget::setLetter(int i)
 			widthLetter->setEnabled(false);
 			leftPaddingLetter->setEnabled(false);
 		}
+		widthLetter->blockSignals(false);
+		leftPaddingLetter->blockSignals(false);
 	}
 	resetButton2->setEnabled(false);
 }
@@ -234,7 +238,7 @@ void FontWidget::exportFont()
 		return;
 	}
 
-	if (selectedFilter == binF) {
+	if (selectedFilter == binF && windowBinFile) {
 		QByteArray data;
 		if (windowBinFile->save(data)) {
 			QFile f(path);
@@ -294,6 +298,8 @@ void FontWidget::importFont()
 	QStringList filter;
 	if (windowBinFile) {
 		filter.append(binF = tr("FF7 font file (*.bin)"));
+	} else {
+		return;
 	}
 	QString selectedFilter;
 
