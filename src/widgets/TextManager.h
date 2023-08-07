@@ -39,6 +39,7 @@ signals:
 	void opcodeModified(int groupID, int scriptID, int opcodeID);
 public slots:
 	void updateFromScripts();
+	void updateNames();
 private slots:
 	void selectText(QListWidgetItem *item, QListWidgetItem *previous = nullptr);
 	void showList();

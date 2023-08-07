@@ -427,6 +427,11 @@ void TextManager::updateFromScripts()
 	}
 }
 
+void TextManager::updateNames()
+{
+	textPreview->updateNames();
+}
+
 void TextManager::gotoText(int textID, qsizetype from, qsizetype size)
 {
 	for (int i=0; i<liste1->count(); ++i) {

@@ -1633,6 +1633,7 @@ void Window::textManager(int textID, int from, int size, bool activate)
 		connect(_textDialog, &TextManager::modified, this, [&] {setModified(true);});
 		connect(_textDialog, &TextManager::opcodeModified, _scriptManager, &ScriptManager::refreshOpcode);
 		connect(_scriptManager, &ScriptManager::changed, _textDialog, &TextManager::updateFromScripts);
+		connect(actionJp_txt, &QAction::triggered, _textDialog, &TextManager::updateNames);
 	}
 
 	if (field && field->scriptsAndTexts()->isOpen()) {
