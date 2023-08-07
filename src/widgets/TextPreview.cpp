@@ -22,6 +22,7 @@
 
 #include <FF7Text>
 #include <FF7Char>
+#include <ff7tkInfo>
 
 QTimer TextPreview::timer;
 int TextPreview::curFrame10 = 0;
@@ -51,10 +52,11 @@ TextPreview::TextPreview(QWidget *parent) :
 void TextPreview::fillNames()
 {
 	FF7Text::setJapanese(Config::value("jp_txt", false).toBool());
-	qDebug() << FF7Text::isJapanese();
+	QString lang = Config::value("jp_txt", false).toBool() ? QStringLiteral("ja") : QStringLiteral("en");
 	for (int i=0; i<12; ++i) {
 		if(i < 9)
-			names.append(FF7Text::toFF7(Config::value(QStringLiteral("customCharName%1").arg(i), FF7Char::defaultName(i)).toString()));
+			names.append(FF7Text::toFF7(Config::value(QStringLiteral("customCharName%1").arg(i)
+													, ff7tkInfo::translations().value(lang)->translate("FF7Char", FF7Char::defaultName(i).toLatin1())).toString()));
 		else
 			names.append(FF7Text::toFF7(tr("Member %1").arg(QString::number(i-8))));
 	}
