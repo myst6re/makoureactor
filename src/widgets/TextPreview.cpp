@@ -27,9 +27,9 @@
 QTimer TextPreview::timer;
 int TextPreview::curFrame10 = 0;
 bool TextPreview::curFrame = true;
-int TextPreview::startMulticolor = DARKGREY;
+int TextPreview::startMulticolor = int(WindowBinFile::DarkGrey);
 int TextPreview::multicolor = -1;
-int TextPreview::fontColor = WHITE;
+WindowBinFile::FontColor TextPreview::fontColor = WindowBinFile::White;
 QImage TextPreview::fontImage;
 
 TextPreview::TextPreview(QWidget *parent) :
@@ -53,12 +53,20 @@ void TextPreview::fillNames()
 {
 	FF7Text::setJapanese(Config::value("jp_txt", false).toBool());
 	QString lang = Config::value("jp_txt", false).toBool() ? QStringLiteral("ja") : QStringLiteral("en");
-	for (int i=0; i<12; ++i) {
-		if(i < 9)
-			names.append(FF7Text::toFF7(Config::value(QStringLiteral("customCharName%1").arg(i)
-													, ff7tkInfo::translations().value(lang)->translate("FF7Char", FF7Char::defaultName(i).toLatin1())).toString()));
-		else
-			names.append(FF7Text::toFF7(tr("Member %1").arg(QString::number(i-8))));
+	QTranslator *translator = ff7tkInfo::translations().value(lang);
+	for (int i = 0; i < 12; ++i) {
+		if (i < 9) {
+			QString defaultName = FF7Char::defaultName(i);
+			if (translator != nullptr) {
+				QString translatedName = translator->translate("FF7Char", defaultName.toLatin1());
+				if (!translatedName.isEmpty()) {
+					defaultName = translatedName;
+				}
+			}
+			names.append(FF7Text::toFF7(Config::value(QStringLiteral("customCharName%1").arg(i), defaultName).toString()));
+		} else {
+			names.append(FF7Text::toFF7(tr("Member %1").arg(QString::number(i - 8))));
+		}
 	}
 }
 
@@ -88,12 +96,10 @@ void TextPreview::setReadOnly(bool ro)
 
 void TextPreview::setWins(const QList<FF7Window> &windows, bool update)
 {
-//	qDebug() << "TextPreview::setWins()";
 	ff7Windows = windows;
 	if (update) {
 		this->update();
 	}
-	//qDebug() << "type" << window.type << "x" << window.x << "y" << window.y << "u1" << window.u1;
 }
 
 void TextPreview::resetCurrentWin()
@@ -137,7 +143,6 @@ qsizetype TextPreview::winCount() const
 void TextPreview::nextWin()
 {
 	if (_currentWin + 1 < ff7Windows.size()) {
-//		qDebug() << "TextPreview::nextWin()";
 		++_currentWin;
 		update();
 	}
@@ -146,7 +151,6 @@ void TextPreview::nextWin()
 void TextPreview::prevWin()
 {
 	if (_currentWin > 0) {
-//		qDebug() << "TextPreview::prevWin()";
 		--_currentWin;
 		update();
 	}
@@ -159,7 +163,6 @@ void TextPreview::clearWin()
 
 void TextPreview::setText(const QByteArray &textData, bool reset)
 {
-//	qDebug() << "TextPreview::setText()";
 	ff7Text = textData;
 	if (reset) {
 		_currentPage = 0;
@@ -180,7 +183,6 @@ qsizetype TextPreview::pageCount() const
 void TextPreview::nextPage()
 {
 	if (_currentPage + 1 < pagesPos.size()) {
-//		qDebug() << "TextPreview::nextPage()";
 		++_currentPage;
 		update();
 	}
@@ -189,7 +191,6 @@ void TextPreview::nextPage()
 void TextPreview::prevPage()
 {
 	if (_currentPage > 0) {
-//		qDebug() << "TextPreview::prevPage()";
 		--_currentPage;
 		update();
 	}
@@ -197,8 +198,6 @@ void TextPreview::prevPage()
 
 void TextPreview::calcSize()
 {
-//	qDebug() << "TextPreview::calcSize()";
-
 	QSize size = FF7Font::calcSize(ff7Text, pagesPos);
 	maxW = size.width();
 	maxH = size.height();
@@ -213,8 +212,6 @@ QSize TextPreview::getCalculatedSize() const
 
 void TextPreview::animate()
 {
-//	qDebug() << "TextPreview::animate()";
-
 	curFrame = !curFrame;
 	curFrame10 = (curFrame10 + 1) % 10;
 	--startMulticolor;
@@ -333,7 +330,7 @@ bool TextPreview::drawTextArea(QPainter *painter)
 	FF7Window ff7Window = getWindow();
 	spaced_characters = false;
 	multicolor = -1;
-	int savFontColor = fontColor;
+	WindowBinFile::FontColor savFontColor = fontColor;
 	WindowType mode = Normal;
 	int spacedCharsW = Config::value("spacedCharactersWidth", 13).toInt(),
 	    choiceW = Config::value("choiceWidth", 10).toInt(),
@@ -362,9 +359,9 @@ bool TextPreview::drawTextArea(QPainter *painter)
 	drawWindow(painter, mode);
 
 	/* Text */
-	setFontColor(WHITE);
+	setFontColor(WindowBinFile::White);
 
-	int line = 0, x = 8, y = 6;
+	int x = 8, y = 6;
 	int start = pagesPos.value(_currentPage, 0);
 	qsizetype size = ff7Text.size();
 
@@ -374,7 +371,6 @@ bool TextPreview::drawTextArea(QPainter *painter)
 		if (charId==0xff || charId==0xe8 || charId==0xe9) { //end | NewPage | NewPage2
 			break;
 		} else if (charId==0xe7) { //\n
-			++line;
 			x = 8;
 			y += 16;
 			if (y > maxH-16)	break;
@@ -420,7 +416,7 @@ bool TextPreview::drawTextArea(QPainter *painter)
 				break;
 			case 0xfe:
 				if (charId2 >= 0xd2 && charId2 <= 0xd9) {
-					setFontColor(charId2-0xd2, blink && !curFrame);
+					setFontColor(WindowBinFile::FontColor(charId2 - 0xd2), blink && !curFrame);
 				} else if (charId2 == 0xda) {
 					useTimer = true;
 					blink = !blink;
@@ -588,8 +584,8 @@ void TextPreview::wheelEvent(QWheelEvent *event)
 {
 	int numDegrees = event->angleDelta().y() / 8,
 			numSteps = numDegrees / 15;
-
-	if (numDegrees > 0) {
+	
+	if (numDegrees != 0) {
 		int oldPage = _currentPage;
 
 		if (numSteps > 0) {
@@ -619,7 +615,7 @@ void TextPreview::letter(int *x, int *y, quint8 charId, QPainter *painter, quint
 	}
 
 	if (multicolor != -1) {
-		setFontColor(multicolor);
+		setFontColor(WindowBinFile::FontColor(multicolor));
 		multicolor = (multicolor + 1) % 8;
 	}
 
@@ -639,19 +635,19 @@ QImage TextPreview::letterImage(quint8 tableId, quint8 charId)
 {
 	if (Data::windowBin.isValid() &&
 			(tableId != 0 || !Data::windowBin.isJp())) {
-		return Data::windowBin.letter(tableId == 0 ? 0 : tableId - 1, charId, WindowBinFile::FontColor(fontColor));
+		return Data::windowBin.letter(tableId == 0 ? 0 : tableId - 1, charId, fontColor);
 	} else {
 		int charIdImage = charId + posTable[tableId];
 		return fontImage.copy((charIdImage%21)*12, (charIdImage/21)*12, 12, 12);
 	}
 }
 
-void TextPreview::setFontColor(int id, bool blink)
+void TextPreview::setFontColor(WindowBinFile::FontColor color, bool blink)
 {
 	if (!Data::windowBin.isValid()) {
-		fontImage.setColorTable(fontPalettes[blink ? DARKGREY : id]);
+		fontImage.setColorTable(fontPalettes[blink ? WindowBinFile::DarkGrey : color]);
 	}
-	fontColor = id;
+	fontColor = color;
 }
 
 QList<QRgb> TextPreview::fontPalettes[8] = {

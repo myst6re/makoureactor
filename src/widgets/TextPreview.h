@@ -19,15 +19,7 @@
 
 #include <QtWidgets>
 #include "core/field/Opcode.h"
-
-#define DARKGREY 0
-#define DARKBLUE 1
-#define RED      2
-#define PURPLE   3
-#define GREEN    4
-#define CYAN     5
-#define YELLOW   6
-#define WHITE    7
+#include <WindowBinFile>
 
 class TextPreview : public QWidget
 {
@@ -85,12 +77,12 @@ private:
 
 	static int startMulticolor;
 	static int multicolor;
-	static int fontColor;
+	static WindowBinFile::FontColor fontColor;
 	static QImage fontImage;
 	void letter(int *x, int *y, quint8 charId, QPainter *painter, quint8 tableId = 0);
 	void word(int *x, int *y, const QByteArray &charIds, QPainter *painter, quint8 tableId = 0);
 	static QImage letterImage(quint8 tableId, quint8 charId);
-	static void setFontColor(int id, bool blink=false);
+	static void setFontColor(WindowBinFile::FontColor color, bool blink = false);
 	static QList<QRgb> fontPalettes[8];
 	static QTimer timer;
 	static quint16 posTable[7];
