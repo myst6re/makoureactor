@@ -18,7 +18,7 @@
 #pragma once
 
 #include <WindowBinFile>
-#include "FF7String.h"
+#include <FF7String>
 
 class FF7Font
 {

@@ -16,11 +16,12 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "TextManager.h"
-#include "core/FF7String.h"
 #include "TextHighlighter.h"
 #include "core/Config.h"
 #include "Data.h"
 
+#include <FF7Text>
+#include <FF7String>
 #include <ListWidget>
 #include <FF7Char>
 
@@ -157,7 +158,7 @@ TextManager::TextManager(QWidget *parent) :
 	action = menu2->addAction(tr("Memory access"));
 	action->setData("{MEMORY:var[1][0];size=1}");
 	action = menu2->addAction(tr("New Page²"));
-	action->setData("{NEW PAGE 2}");
+	action->setData("\n{NEW PAGE 2}\n");
 	action = toolBar2->addAction(tr("Others"));
 	action->setMenu(menu2);
 
@@ -329,7 +330,7 @@ void TextManager::setTextChanged()
 	const FF7String &t = scriptsAndTexts->text(textId);
 	bool jp = Config::value("jp_txt", false).toBool();
 
-	if (newText != t.text(jp)) {
+	if (newText != t.text()) {
 		scriptsAndTexts->setText(textId, FF7String(newText, jp));
 		textPreview->setText(t.data());
 		changeTextPreviewPage();
@@ -356,7 +357,7 @@ void TextManager::selectText(QListWidgetItem *item, QListWidgetItem *)
 	textPreview->resetCurrentWin();
 	textPreview->setWins(getWindows(textID));
 	textPreview->setText(t.data());
-	textEdit->setPlainText(t.text(Config::value("jp_txt", false).toBool()));
+	textEdit->setPlainText(FF7Text::toPC(t.data()));
 	changeTextPreviewPage();
 	changeTextPreviewWin();
 }

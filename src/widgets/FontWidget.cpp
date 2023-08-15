@@ -16,9 +16,12 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "FontWidget.h"
-#include "core/FF7String.h"
 #include "core/FF7Font.h"
 #include <TexFile>
+
+#include <FF7Text>
+
+//#include <FF7String>
 
 FontWidget::FontWidget(QWidget *parent) :
     QWidget(parent), ff7Font(nullptr)
@@ -161,7 +164,7 @@ void FontWidget::setLetter(int i)
 //			textLetter->setText(FF7String(ba.append(char(i)), ff7Font->tables()));
 		} else {
 			//TODO: jp
-			textLetter->setText(FF7String(ba.append(char(i))).text(false));
+			textLetter->setText(FF7Text::toPC(ba.append(char(i))));
 		}
 		widthLetter->blockSignals(true);
 		leftPaddingLetter->blockSignals(true);
