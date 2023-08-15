@@ -33,15 +33,14 @@ WindowBinFile::FontColor TextPreview::fontColor = WindowBinFile::White;
 QImage TextPreview::fontImage;
 
 TextPreview::TextPreview(QWidget *parent) :
-	QWidget(parent), _currentPage(0), _currentWin(0),
-	acceptMove(false), readOnly(false)
+      QWidget(parent), _currentPage(0), _currentWin(0), maxW(0), maxH(0),
+      acceptMove(false), readOnly(false)
 {
 	pagesPos.append(0);
 
 	connect(&timer, &QTimer::timeout, this, &TextPreview::animate);
 
 	setFixedSize(320, 224);
-	clear();
 
 	if (names.isEmpty()) {
 		fontImage = QImage(":/images/font.png");
