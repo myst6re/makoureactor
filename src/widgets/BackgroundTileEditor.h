@@ -48,6 +48,8 @@ private slots:
 	void updateDepth(int value);
 	void disableDepthTuningInput(bool disabled);
 	void updateDepthTuning(int value);
+	void exportImage();
+	void importImage();
 	void removeTiles();
 private:
 	ImageGridWidget *_tileWidget;
@@ -62,6 +64,7 @@ private:
 	QWidget *_formPage;
 	QWidget *_createPage;
 	QSpinBox *_createDepthInput;
+	QPushButton *_exportButton, *_importButton;
 
 	BackgroundFile *_backgroundFile;
 	QList<Tile> _tiles;

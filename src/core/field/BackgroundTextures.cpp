@@ -112,11 +112,6 @@ bool BackgroundTextures::setTile(const Tile &tile, const QList<uint> &indexOrCol
 
 QImage BackgroundTextures::toImage(const Tile &tile, const Palettes &palettes) const
 {
-	QImage image(tile.size, tile.size, QImage::Format_ARGB32);
-	image.fill(0xFF000000);
-
-	QRgb *pixels = reinterpret_cast<QRgb *>(image.bits());
-
 	QList<uint> indexOrColorList = this->tile(tile);
 
 	if (indexOrColorList.isEmpty()) {
@@ -134,19 +129,28 @@ QImage BackgroundTextures::toImage(const Tile &tile, const Palettes &palettes) c
 	} else if (depth != 2) {
 		return QImage();
 	}
+	
+	QImage image(tile.size, tile.size, palette == nullptr ? QImage::Format_ARGB32 : QImage::Format_Indexed8);
 
-	int i = 0;
-	for (uint indexOrColor : qAsConst(indexOrColorList)) {
-		if (palette == nullptr) {
+	if (palette == nullptr) {
+		QRgb *pixels = reinterpret_cast<QRgb *>(image.bits());
+	
+		int i = 0;
+		for (uint indexOrColor : qAsConst(indexOrColorList)) {
 			if (indexOrColor != 0) {
 				pixels[i] = indexOrColor;
 			}
-		} else {
-			if (palette->notZero(quint8(indexOrColor))) {
-				pixels[i] = palette->color(quint8(indexOrColor));
-			}
+			i += 1;
 		}
-		i += 1;
+	} else {
+		image.setColorTable(palette->colors());
+		uchar *pixels = image.bits();
+
+		int i = 0;
+		for (uint indexOrColor : qAsConst(indexOrColorList)) {
+			pixels[i] = indexOrColor;
+			i += 1;
+		}
 	}
 
 	return image;

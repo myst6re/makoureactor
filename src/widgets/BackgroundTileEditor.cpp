@@ -17,7 +17,9 @@
  ****************************************************************************/
 #include "BackgroundTileEditor.h"
 #include "core/field/BackgroundFile.h"
+#include "core/field/Field.h"
 #include "PsColorDialog.h"
+#include "core/Config.h"
 
 BackgroundTileEditor::BackgroundTileEditor(QWidget *parent)
     : QWidget(parent)
@@ -68,9 +70,13 @@ BackgroundTileEditor::BackgroundTileEditor(QWidget *parent)
 	_tileEditorLayout->addRow(tr("Depth fine tune"), _depthTuningInput);
 
 	QPushButton *removeButton = new QPushButton(tr("Delete selected tiles"), _formPage);
+	_exportButton = new QPushButton(tr("Export image"), _formPage);
+	_importButton = new QPushButton(tr("Import image"), _formPage);
 
 	QVBoxLayout *layout = new QVBoxLayout(_formPage);
 	layout->addWidget(_tileWidget);
+	layout->addWidget(_exportButton);
+	layout->addWidget(_importButton);
 	layout->addLayout(_tileEditorLayout);
 	layout->addWidget(_bgParamGroup);
 	layout->addWidget(removeButton, 0, Qt::AlignRight);
@@ -112,6 +118,8 @@ BackgroundTileEditor::BackgroundTileEditor(QWidget *parent)
 	connect(_depthTuningAutoInput, &QAbstractButton::toggled, this, &BackgroundTileEditor::disableDepthTuningInput);
 	connect(_depthTuningInput, &QSpinBox::valueChanged, this, &BackgroundTileEditor::updateDepthTuning);
 	connect(removeButton, &QPushButton::clicked, this, &BackgroundTileEditor::removeTiles);
+	connect(_exportButton, &QPushButton::clicked, this, &BackgroundTileEditor::exportImage);
+	connect(_importButton, &QPushButton::clicked, this, &BackgroundTileEditor::importImage);
 }
 
 void BackgroundTileEditor::setBackgroundFile(BackgroundFile *backgroundFile)
@@ -176,9 +184,13 @@ void BackgroundTileEditor::setTiles(const QList<Tile> &tiles)
 		if (tiles.size() == 1 && _backgroundFile != nullptr) {
 			_tileWidget->setPixmap(QPixmap::fromImage(_backgroundFile->textures()->toImage(tiles.first(), _backgroundFile->palettes())));
 			_tileWidget->setEnabled(true);
+			_exportButton->setEnabled(true);
+			_importButton->setEnabled(true);
 		} else {
 			_tileWidget->setPixmap(QPixmap());
 			_tileWidget->setEnabled(false);
+			_exportButton->setEnabled(false);
+			_importButton->setEnabled(false);
 		}
 
 		if (params.size() == 1 && layerID > 0) {
@@ -492,6 +504,75 @@ void BackgroundTileEditor::updateDepthTuning(int depth)
 	}
 	
 	emit changed(_tiles);
+}
+
+void BackgroundTileEditor::exportImage()
+{
+	if (_tiles.size() != 1) {
+		return;
+	}
+
+	QString filePath = Config::value("saveBGPath").toString();
+	if (!filePath.isEmpty()) {
+		filePath.append("/");
+	}
+	filePath = QFileDialog::getSaveFileName(this, tr("Export tile image"),
+	                                        QString("%1%2-tile-%3.png").arg(filePath, _backgroundFile->field()->name()).arg(_tiles.first().tileID),
+	                                        tr("PNG image (*.png);;BMP image (*.bmp)"));
+	
+	if (filePath.isNull()) {
+		return;
+	}
+
+	_backgroundFile->textures()->toImage(_tiles.first(), _backgroundFile->palettes()).save(filePath);
+}
+
+void BackgroundTileEditor::importImage()
+{
+	if (_tiles.size() != 1) {
+		return;
+	}
+	
+	QString filePath = Config::value("saveBGPath").toString();
+	filePath = QFileDialog::getOpenFileName(this, tr("Import tile image"), filePath,
+	                             tr("PNG image (*.png);;BMP image (*.bmp)"));
+	
+	if (filePath.isNull()) {
+		return;
+	}
+	
+	QImage pix;
+	pix.load(filePath);
+	
+	if (pix.width() != pix.height() || pix.width() != _tiles.first().size) {
+		QMessageBox::warning(this, tr("Invalid size"), tr("Please import an image with size %1x%1").arg(_tiles.first().size));
+		return;
+	}
+	QList<uint> indexOrColor;
+
+	if (pix.format() == QImage::Format_Indexed8) {
+		const uchar *bits = pix.constBits();
+		for (int y = 0; y < pix.height(); ++y) {
+			for (int x = 0; x < pix.width(); ++x) {
+				indexOrColor.append(*bits);
+				++bits;
+			}
+		}
+	} else {
+		const QRgb *bits = reinterpret_cast<const QRgb *>(pix.constBits());
+		for (int y = 0; y < pix.height(); ++y) {
+			for (int x = 0; x < pix.width(); ++x) {
+				indexOrColor.append(*bits);
+				++bits;
+			}
+		}
+	}
+	
+	_backgroundFile->textures()->setTile(_tiles.first(), indexOrColor);
+	
+	emit changed(_tiles);
+	
+	_tileWidget->setPixmap(QPixmap::fromImage(_backgroundFile->textures()->toImage(_tiles.first(), _backgroundFile->palettes())));
 }
 
 void BackgroundTileEditor::removeTiles()
