@@ -32,7 +32,17 @@ private slots:
 	void setColor(const QColor &color);
 	void setHsv(int h, int s, int v);
 	void setColorFromPalette(const Cell &cell);
+	void setColorFromHtmlCode(const QString &text);
 private:
+	virtual void keyPressEvent(QKeyEvent *event) override
+	{
+		int key = event->key();
+		if (key == Qt::Key_Return || key == Qt::Key_Enter)
+			event->ignore();
+		else
+			QDialog::keyPressEvent(event);
+		
+	}
 	void setLayout();
 
 	QLabel *_topLabel;
@@ -40,6 +50,7 @@ private:
 	QColorPicker *_colorPicker;
 	QColorLuminancePicker *_colorLumniancePicker;
 	QColorShowLabel *_colorShowLabel;
+	QLineEdit *_colorHtmlCode;
 	ImageGridWidget *_imageGrid;
 	QList<QRgb> _palette;
 	QColor _color;

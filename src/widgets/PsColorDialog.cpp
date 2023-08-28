@@ -16,6 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "PsColorDialog.h"
+#include <PsColor>
 
 PsColorDialog::PsColorDialog(const QColor &color, QWidget *parent) :
     QDialog(parent), _imageGrid(nullptr), _index(0)
@@ -32,16 +33,19 @@ PsColorDialog::PsColorDialog(const QColor &color, QWidget *parent) :
 	_colorLumniancePicker->setCol(color.hsvHue(), color.hsvSaturation(), color.value());
 	_colorLumniancePicker->setFixedWidth(20);
 
+	_colorHtmlCode = new QLineEdit(this);
+
 	setLayout();
 
 	connect(_colorPicker, &QColorPicker::newCol, _colorLumniancePicker, [&](int h, int s) { _colorLumniancePicker->setCol(h, s); });
 	connect(_colorLumniancePicker, &QColorLuminancePicker::newHsv, this, &PsColorDialog::setHsv);
+	connect(_colorHtmlCode, &QLineEdit::editingFinished, this, [&]() { setColorFromHtmlCode(_colorHtmlCode->text()); });
 
 	setColor(color);
 }
 
 PsColorDialog::PsColorDialog(const QList<QRgb> &palette, quint8 index, QWidget *parent) :
-    QDialog(parent), _colorPicker(nullptr), _colorLumniancePicker(nullptr), _palette(palette), _index(index)
+    QDialog(parent), _colorPicker(nullptr), _colorLumniancePicker(nullptr), _colorHtmlCode(nullptr), _palette(palette), _index(index)
 {
 	setWindowTitle(tr("Choose a color"));
 	
@@ -84,12 +88,27 @@ void PsColorDialog::setLayout()
 		_layout->addWidget(_colorLumniancePicker, 1, 1);
 	}
 	_layout->addWidget(_colorShowLabel, 2, 0, 1, 2);
-	_layout->addWidget(buttons, 3, 0, 1, 2);
+	if (_colorHtmlCode != nullptr) {
+		QHBoxLayout *layout = new QHBoxLayout;
+		layout->addWidget(new QLabel(tr("HTML code:"), this));
+		layout->addWidget(_colorHtmlCode, 1);
+		_layout->addLayout(layout, 3, 0, 1, 2);
+		//_layout->addWidget(_colorHtmlCode, 3, 0, 1, 2);
+	}
+	_layout->addWidget(buttons, 4, 0, 1, 2);
 	_layout->setRowStretch(1, 1);
 	_layout->setColumnStretch(1, 1);
 
-	connect(buttons, &QDialogButtonBox::accepted, this, &QDialog::accept);	
+	connect(buttons, &QDialogButtonBox::accepted, this, &QDialog::accept);
 	connect(buttons, &QDialogButtonBox::rejected, this, &QDialog::reject);
+}
+
+void PsColorDialog::setColorFromHtmlCode(const QString &text)
+{
+	QColor color = QColor::fromString(text);
+	if (color.isValid()) {
+		setColor(PsColor::fromPsColor(PsColor::toPsColor(color.rgb())));
+	}
 }
 
 uint PsColorDialog::indexOrColor() const
@@ -106,6 +125,11 @@ void PsColorDialog::setColor(const QColor &color)
 {
 	_color = color;
 	_colorShowLabel->setColor(_color);
+	if (_colorHtmlCode != nullptr) {
+		_colorHtmlCode->blockSignals(true);
+		_colorHtmlCode->setText(_color.name().toUpper());
+		_colorHtmlCode->blockSignals(false);
+	}
 }
 
 void PsColorDialog::setColorFromPalette(const Cell &cell)

@@ -70,8 +70,8 @@ BackgroundTileEditor::BackgroundTileEditor(QWidget *parent)
 	_tileEditorLayout->addRow(tr("Depth fine tune"), _depthTuningInput);
 
 	QPushButton *removeButton = new QPushButton(tr("Delete selected tiles"), _formPage);
-	_exportButton = new QPushButton(tr("Export image"), _formPage);
-	_importButton = new QPushButton(tr("Import image"), _formPage);
+	_exportButton = new QPushButton(tr("Export tile image"), _formPage);
+	_importButton = new QPushButton(tr("Import tile image"), _formPage);
 
 	QVBoxLayout *layout = new QVBoxLayout(_formPage);
 	layout->addWidget(_tileWidget);
