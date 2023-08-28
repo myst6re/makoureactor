@@ -105,7 +105,12 @@ void PsColorDialog::setLayout()
 
 void PsColorDialog::setColorFromHtmlCode(const QString &text)
 {
+#if QT_VERSION < QT_VERSION_CHECK(6, 4, 0)
+	QColor color;
+	color.setNamedColor(text);
+#else
 	QColor color = QColor::fromString(text);
+#endif
 	if (color.isValid()) {
 		setColor(PsColor::fromPsColor(PsColor::toPsColor(color.rgb())));
 	}
