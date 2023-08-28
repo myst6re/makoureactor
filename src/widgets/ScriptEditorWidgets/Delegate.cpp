@@ -88,7 +88,7 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
 	int type = index.data(Qt::UserRole + 2).toInt();
 	int value = index.data(Qt::EditRole).toInt();
 	if (type == ScriptEditorGenericList::field_id
-	        && !Data::maplist().isEmpty()) {
+	        && !Data::maplist(_scriptsAndTexts->field()->isPC()).isEmpty()) {
 		QComboBox *comboBox = new QComboBox(parent);
 		comboBox->setEditable(true);
 		comboBox->setInsertPolicy(QComboBox::NoInsert);
@@ -98,7 +98,7 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
 		if (!_scriptsAndTexts->field()->io()->fieldArchive()->mapList().mapNames().empty()) {
 			mapList = &_scriptsAndTexts->field()->io()->fieldArchive()->mapList().mapNames();
 		} else {
-			mapList = &Data::maplist();
+			mapList = &Data::maplist(_scriptsAndTexts->field()->isPC());
 		}
 		int mapId = 0;
 		for (const QString &mapName: *mapList) {
@@ -293,7 +293,7 @@ void SpinBoxDelegate::setEditorData(QWidget *editor,
 		QComboBox *comboBox = static_cast<QComboBox*>(editor);
 		comboBox->setCurrentIndex(comboBox->findData(value));
 	} else if ((type == ScriptEditorGenericList::field_id
-	            && !Data::maplist().isEmpty())
+	            && !Data::maplist(_scriptsAndTexts->field()->isPC()).isEmpty())
 	           || (type == ScriptEditorGenericList::group_id
 	               && _scriptsAndTexts->grpScriptCount() > 0)
 	           || type == ScriptEditorGenericList::personnage_id
@@ -331,7 +331,7 @@ void SpinBoxDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 		QComboBox *comboBox = static_cast<QComboBox*>(editor);
 		value = comboBox->itemData(comboBox->currentIndex()).toInt();
 	} else if ((type == ScriptEditorGenericList::field_id
-	            && !Data::maplist().isEmpty())
+	            && !Data::maplist(_scriptsAndTexts->field()->isPC()).isEmpty())
 	           || (type == ScriptEditorGenericList::group_id
 	               && _scriptsAndTexts->grpScriptCount() > 0)
 	           || type == ScriptEditorGenericList::personnage_id

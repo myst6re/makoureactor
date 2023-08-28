@@ -335,6 +335,26 @@ Voulez-vous vraiment continuer ?</translation>
         <source>Depth fine tune auto</source>
         <translation>Profondeur plus précis auto</translation>
     </message>
+    <message>
+        <source>Export tile image</source>
+        <translation>Exporter image tuile</translation>
+    </message>
+    <message>
+        <source>PNG image (*.png);;BMP image (*.bmp)</source>
+        <translation>Image PNG (*.png);;Image BMP (*.bmp)</translation>
+    </message>
+    <message>
+        <source>Import tile image</source>
+        <translation>Importer image tuile</translation>
+    </message>
+    <message>
+        <source>Invalid size</source>
+        <translation>Taille invalide</translation>
+    </message>
+    <message>
+        <source>Please import an image with size %1x%1</source>
+        <translation>Merci d&apos;importer une image ayant pour taille %1x%1</translation>
+    </message>
 </context>
 <context>
     <name>CLI</name>
@@ -4083,6 +4103,10 @@ Certains scripts peuvent y faire référence !</translation>
     <message>
         <source>16-bit colors:</source>
         <translation>Couleurs 16 bits :</translation>
+    </message>
+    <message>
+        <source>HTML code:</source>
+        <translation>Notation HTML:</translation>
     </message>
 </context>
 <context>

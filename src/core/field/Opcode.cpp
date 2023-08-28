@@ -4984,8 +4984,8 @@ QString Opcode::_field(quint16 mapID, const Section1File *scriptsAndTexts)
 	    && scriptsAndTexts->field()->io() != nullptr
 	    && scriptsAndTexts->field()->io()->fieldArchive() != nullptr) {
 		mapNames = &(scriptsAndTexts->field()->io()->fieldArchive()->mapList().mapNames());
-	} else if (mapID < Data::maplist().size()) {
-		mapNames = &Data::maplist();
+	} else if (mapID < Data::maplist(scriptsAndTexts->field()->isPC()).size()) {
+		mapNames = &Data::maplist(scriptsAndTexts->field()->isPC());
 	}
 
 	if (mapNames != nullptr && mapID < mapNames->size()) {

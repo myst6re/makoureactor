@@ -41,6 +41,7 @@ int Data::currentModelID = -1;
 QStringList *Data::currentHrcNames = nullptr;
 QList<QStringList> *Data::currentAnimNames = nullptr;
 QStringList Data::field_names;
+QStringList Data::field_names_pc;
 QStringList Data::movie_names_cd1;
 QStringList Data::movie_names_cd2;
 QStringList Data::movie_names_cd3;
@@ -559,6 +560,8 @@ bool Data::load()
 		ok = false;
 	}
 
+	Data::openMaplist();
+
 	return ok;
 }
 
@@ -734,36 +737,35 @@ const char *Data::_mapList[788] = {
 };
 
 // Standard mapList
-void Data::openMaplist(bool PC)
+void Data::openMaplist()
 {
 	field_names.clear();
 	for (int i=0; i<788; ++i) {
 		field_names.append(QString::fromUtf8(_mapList[i]));
 	}
 
-	if (PC) {
-		toPCMaplist(field_names);
-	}
+	toPCMaplist(field_names);
 }
 
-void Data::toPCMaplist(QStringList &field_names)
+void Data::toPCMaplist(const QStringList &field_names)
 {
-	field_names[88] = "qa";
-	field_names[89] = "qb";
-	field_names[90] = "qc";
-	field_names[91] = "qd";
-	field_names[92] = "qe";
-	field_names[153] = "min71";
-	field_names[164] = "sbwy4_1";
-	field_names[165] = "sbwy4_2";
-	field_names[166] = "sbwy4_3";
-	field_names[167] = "sbwy4_4";
-	field_names[168] = "sbwy4_5";
-	field_names[169] = "sbwy4_6";
-	field_names[174] = "min51_1";
-	field_names[175] = "min51_2";
-	field_names[586] = "tower5";
-	field_names[735] = "sbwy4_22";
+	field_names_pc = field_names;
+	field_names_pc[88] = "qa";
+	field_names_pc[89] = "qb";
+	field_names_pc[90] = "qc";
+	field_names_pc[91] = "qd";
+	field_names_pc[92] = "qe";
+	field_names_pc[153] = "min71";
+	field_names_pc[164] = "sbwy4_1";
+	field_names_pc[165] = "sbwy4_2";
+	field_names_pc[166] = "sbwy4_3";
+	field_names_pc[167] = "sbwy4_4";
+	field_names_pc[168] = "sbwy4_5";
+	field_names_pc[169] = "sbwy4_6";
+	field_names_pc[174] = "min51_1";
+	field_names_pc[175] = "min51_2";
+	field_names_pc[586] = "tower5";
+	field_names_pc[735] = "sbwy4_22";
 }
 
 const char *Data::musicList[100] =

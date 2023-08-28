@@ -326,6 +326,26 @@ Are you sure you want to continue?</source>
         <source>Depth fine tune auto</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Export tile image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PNG image (*.png);;BMP image (*.bmp)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import tile image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please import an image with size %1x%1</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CLI</name>
@@ -3581,6 +3601,10 @@ Some scripts can refer to it!</source>
     </message>
     <message>
         <source>16-bit colors:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>HTML code:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

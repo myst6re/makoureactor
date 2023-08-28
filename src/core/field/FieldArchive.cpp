@@ -133,10 +133,6 @@ FieldArchiveIO::ErrorCode FieldArchive::open()
 		return FieldArchiveIO::FieldNotFound;
 	}
 
-	if (Data::maplist().isEmpty()) {
-		Data::openMaplist(_io->isPC());
-	}
-
 	int fieldID = 0;
 	for (Field *f : qAsConst(fileList)) {
 		if (f != nullptr) {
@@ -266,7 +262,7 @@ int FieldArchive::appendField(Field *field)
 	qsizetype mapId = _mapList.mapNames().indexOf(field->name());
 	if (mapId < 0) {
 		if (_mapList.mapNames().isEmpty()) {
-			mapId = Data::maplist().indexOf(field->name());
+			mapId = Data::maplist(field->isPC()).indexOf(field->name());
 		}
 		if (mapId < 0) {
 			mapId = 1200 + (fileList.isEmpty() ? 0 : fileList.lastKey() + 1);
@@ -1943,6 +1939,6 @@ QString FieldArchive::mapName(int mapID) const
 	if (mapID < _mapList.mapNames().size()) {
 		return _mapList.mapNames().at(mapID);
 	}
-
-	return Data::mapName(mapID);
+	
+	return Data::mapName(mapID, isPC());
 }

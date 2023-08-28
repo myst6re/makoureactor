@@ -53,14 +53,14 @@ public:
 	static int loadKernel2Bin();
 	static int loadWindowBin();
 	static bool load();
-	static void openMaplist(bool PC = false);
-	static void toPCMaplist(QStringList &field_names);
+	static void openMaplist();
+	static void toPCMaplist(const QStringList &field_names);
 	static QColor color(Color color);
-	inline static const QStringList &maplist() {
-		return field_names;
+	inline static const QStringList &maplist(bool PC) {
+		return PC ? field_names_pc : field_names;
 	}
-	inline static QString mapName(int i) {
-		return field_names.value(i);
+	inline static QString mapName(int i, bool PC) {
+		return (PC ? field_names_pc : field_names).value(i);
 	}
 	static QStringList char_names;
 	static QStringList key_names;
@@ -98,7 +98,7 @@ private:
 	static QString ff7Path(const QMap<FF7Version, QString> &pathList);
 	static QMap<Data::FF7Version, QString> ff7PathList(QString (*searchFF7Path)(FF7Version));
 	static void fill(const QByteArray &data, int pos, int dataSize, QStringList &names);
-	static QStringList field_names;
+	static QStringList field_names, field_names_pc;
 	static QString ff7DataPath_cache;
 	static QString ff7AppPath_cache;
 	static QString ff7RereleasePath_cache;
