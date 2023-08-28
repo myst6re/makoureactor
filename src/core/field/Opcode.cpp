@@ -17,7 +17,6 @@
  ****************************************************************************/
 #include "Opcode.h"
 #include "Section1File.h"
-#include "core/Config.h"
 #include "core/Var.h"
 #include "Data.h"
 #include "Field.h"
@@ -1327,7 +1326,7 @@ bool Opcode::setJump(qint32 jump)
 	if (realJump > 255) {
 		return setLongJump(quint16(std::min(realJump, 65535)));
 	}
-
+	
 	return setShortJump(quint8(std::max(realJump, 0)));
 }
 
@@ -4984,8 +4983,8 @@ QString Opcode::_field(quint16 mapID, const Section1File *scriptsAndTexts)
 	    && scriptsAndTexts->field()->io() != nullptr
 	    && scriptsAndTexts->field()->io()->fieldArchive() != nullptr) {
 		mapNames = &(scriptsAndTexts->field()->io()->fieldArchive()->mapList().mapNames());
-	} else if (mapID < Data::maplist(scriptsAndTexts->field()->isPC()).size()) {
-		mapNames = &Data::maplist(scriptsAndTexts->field()->isPC());
+	} else if (mapID < Data::maplist(false).size()) {
+		mapNames = &Data::maplist(false);
 	}
 
 	if (mapNames != nullptr && mapID < mapNames->size()) {
@@ -5212,7 +5211,7 @@ QString Opcode::_var(const quint8 value[3], quint8 bank1, quint8 bank2, quint8 b
 	return QString::number(value[0] | (value[1] << 8) | (value[2] << 16));
 }
 
-QString Opcode::_var(const quint8 value[], quint8 bank1, quint8 bank2, quint8 bank3, quint8 bank4)
+QString Opcode::_var(const quint8 value[4], quint8 bank1, quint8 bank2, quint8 bank3, quint8 bank4)
 {
 	if (bank1 > 0 || bank2 > 0 || bank3 > 0 || bank4 > 0) {
 		return Opcode::tr("%1 and %2 and %3 and %4")

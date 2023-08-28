@@ -602,7 +602,7 @@ void ScriptEditorIfPage::setOpcode(const Opcode &opcode)
 	addJump = false;
 	
 	FF7If i = FF7If();
-	Q_ASSERT(opcode.ifStruct(i));
+	opcode.ifStruct(i);
 	bool isLongValue = i.size != FF7Var::Byte,
 	        isSignedValue = i.size == FF7Var::SignedWord;
 

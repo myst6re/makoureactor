@@ -164,7 +164,7 @@ void ScriptEditorBinaryOpPage::setOpcode(const Opcode &opcode)
 	}
 
 	FF7BinaryOperation opcodeBinaryOperation = FF7BinaryOperation();
-	Q_ASSERT(opcode.binaryOperation(opcodeBinaryOperation));
+	opcode.binaryOperation(opcodeBinaryOperation);
 
 	var->setVar(opcodeBinaryOperation.bank1, opcodeBinaryOperation.var);
 
@@ -465,7 +465,7 @@ void ScriptEditorUnaryOpPage::setOpcode(const Opcode &opcode)
 	}
 
 	FF7UnaryOperation opcodeUnaryOperation = FF7UnaryOperation();
-	Q_ASSERT(opcode.unaryOperation(opcodeUnaryOperation));
+	opcode.unaryOperation(opcodeUnaryOperation);
 
 	var->setVar(opcodeUnaryOperation.bank2, opcodeUnaryOperation.var);
 	if (opcodeUnaryOperation.isLong) {
@@ -575,7 +575,7 @@ void ScriptEditorUnaryOpPage::changeCurrentOpcode(int index)
 		emit opcodeChanged();
 
 		FF7UnaryOperation opcodeUnaryOperation = FF7UnaryOperation();
-		Q_ASSERT(opcode().unaryOperation(opcodeUnaryOperation));
+		opcode().unaryOperation(opcodeUnaryOperation);
 
 		type1->blockSignals(true);
 		type2->blockSignals(true);
@@ -672,7 +672,7 @@ void ScriptEditorBitOpPage::setOpcode(const Opcode &opcode)
 	}
 
 	FF7BitOperation opcodeBitOperation = FF7BitOperation();
-	Q_ASSERT(opcode.bitOperation(opcodeBitOperation));
+	opcode.bitOperation(opcodeBitOperation);
 
 	var->setVar(opcodeBitOperation.bank1, opcodeBitOperation.var);
 	position->setVarOrValue(opcodeBitOperation.bank2, opcodeBitOperation.position);
