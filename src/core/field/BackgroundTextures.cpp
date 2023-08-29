@@ -85,7 +85,7 @@ bool BackgroundTextures::setTile(const Tile &tile, const QList<uint> &indexOrCol
 	}
 	int lastByte = qMin(origin + tile.size * texWidth, maxByte),
 	        index = 0;
-
+	
 	for (int i = origin; i < lastByte; ++i) {
 		if (depth == 0) {
 			data()[i] = indexOrColor.at(index) | (indexOrColor.at(index + 1) << 4);
@@ -307,20 +307,31 @@ int BackgroundTexturesPC::originInData(const Tile &tile) const
 
 QRgb BackgroundTexturesPC::directColor(quint16 color) const
 {
+	/* if (color == 0x821) {
+		return qRgb(8, 0, 16);
+	}
+	
+	// FIXME: this is the official formula in the PC port of FF7, but it is buggy because two colors overlap
+	quint32 buggy = (color & 0x1F) | ((color & 0x7E0) >> 1) | ((color & 0xF800) >> 1);
+
+	quint8 b = buggy & 31,
+	       g = (buggy >> 5) & 31,
+	       r = (buggy >> 10) & 31;
+	*/
 	quint8 b = color & 31,
 	       g = (color >> 6) & 31,
-	       r = color >> 11;
-
+	       r = color >> 11,
+	       flag = (color >> 5) & 1;
+	
 	// special PC RGB16 color
-	return qRgba((r << 3) + (r >> 2), (g << 3) + (g >> 2), (b << 3) + (b >> 2), color == 0 ? 0 : 255);
+	return qRgba((r << 3) + (r >> 2), (g << 3) + (g >> 2), (b << 3) + (b >> 2), flag ? 254 : 255);
 }
 
 quint16 BackgroundTexturesPC::fromQRgb(QRgb color) const
 {
-	// alpha ignored!
 	return ((qRound(qRed(color) / COEFF_COLOR) & 31) << 11) |
-			((qRound(qGreen(color) / COEFF_COLOR) & 31) << 6) |
-			(qRound(qBlue(color) / COEFF_COLOR) & 31) | (1 << 5); // special PC RGB16 color
+	       ((qRound(qGreen(color) / COEFF_COLOR) & 31) << 6) |
+	       (qRound(qBlue(color) / COEFF_COLOR) & 31) | ((qAlpha(color) != 255 ? 1 : 0) << 5); // special PC RGB16 color
 }
 
 UnusedSpaceInTexturePC BackgroundTexturesPC::findFirstUnusedSpaceInTextures(const BackgroundTiles &tiles, quint8 depth, quint8 size)

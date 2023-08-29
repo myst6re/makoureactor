@@ -295,20 +295,20 @@ void BackgroundTileEditor::choosePixelColor(const Cell &cell)
 	}
 
 	const QPixmap &pixmap = _tileWidget->pixmap();
-	QImage image = pixmap.toImage();
 	QList<QRgb> colors;
-	quint8 paletteIndex = 0;
+
+	QList<uint> indexes = _backgroundFile->textures()->tile(_tiles.first());
+	qsizetype i = cell.x() + cell.y() * pixmap.width();
+	if (i >= indexes.size()) {
+		return;
+	}
+	uint indexOrColor = indexes.at(i);
 
 	if (_paletteIdInput->isEnabled() && _paletteIdInput->isVisible()) {
 		colors = _backgroundFile->palettes().value(_paletteIdInput->value())->colors();
-		QList<uint> indexes = _backgroundFile->textures()->tile(_tiles.first());
-		qsizetype i = cell.x() + cell.y() * pixmap.width();
-		if (i < indexes.size()) {
-			paletteIndex = quint8(indexes.at(i));
-		}
 	}
-
-	PsColorDialog *dialog = !colors.isEmpty() ? new PsColorDialog(colors, paletteIndex, this) : new PsColorDialog(image.pixel(cell), this);
+	
+	PsColorDialog *dialog = !colors.isEmpty() ? new PsColorDialog(colors, quint8(indexOrColor), this) : new PsColorDialog(QColor::fromRgba(QRgb(indexOrColor)), this);
 	if (dialog->exec() == QDialog::Accepted) {
 		uint indexOrColor = dialog->indexOrColor();
 		qsizetype i = cell.x() + cell.y() * pixmap.width();
@@ -328,6 +328,8 @@ void BackgroundTileEditor::choosePixelColor(const Cell &cell)
 		}
 
 		if (modified) {
+			_backgroundFile->setModified(_backgroundFile->field()->isPC());
+
 			emit changed(_tiles);
 	
 			_tileWidget->setPixmap(QPixmap::fromImage(_backgroundFile->textures()->toImage(_tiles.first(), _backgroundFile->palettes())));
@@ -569,6 +571,7 @@ void BackgroundTileEditor::importImage()
 	}
 	
 	_backgroundFile->textures()->setTile(_tiles.first(), indexOrColor);
+	_backgroundFile->setModified(_backgroundFile->field()->isPC());
 	
 	emit changed(_tiles);
 	

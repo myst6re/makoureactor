@@ -34,6 +34,7 @@ PsColorDialog::PsColorDialog(const QColor &color, QWidget *parent) :
 	_colorLumniancePicker->setFixedWidth(20);
 
 	_colorHtmlCode = new QLineEdit(this);
+	_alphaFlag = new QCheckBox(tr("Buggy alpha flag"), this);
 
 	setLayout();
 
@@ -45,7 +46,8 @@ PsColorDialog::PsColorDialog(const QColor &color, QWidget *parent) :
 }
 
 PsColorDialog::PsColorDialog(const QList<QRgb> &palette, quint8 index, QWidget *parent) :
-    QDialog(parent), _colorPicker(nullptr), _colorLumniancePicker(nullptr), _colorHtmlCode(nullptr), _palette(palette), _index(index)
+    QDialog(parent), _colorPicker(nullptr), _colorLumniancePicker(nullptr), _colorHtmlCode(nullptr),
+      _alphaFlag(nullptr), _palette(palette), _index(index)
 {
 	setWindowTitle(tr("Choose a color"));
 	
@@ -95,7 +97,10 @@ void PsColorDialog::setLayout()
 		_layout->addLayout(layout, 3, 0, 1, 2);
 		//_layout->addWidget(_colorHtmlCode, 3, 0, 1, 2);
 	}
-	_layout->addWidget(buttons, 4, 0, 1, 2);
+	if (_alphaFlag != nullptr) {
+		_layout->addWidget(_alphaFlag, 4, 0, 1, 2);
+	}
+	_layout->addWidget(buttons, 5, 0, 1, 2);
 	_layout->setRowStretch(1, 1);
 	_layout->setColumnStretch(1, 1);
 
@@ -118,7 +123,17 @@ void PsColorDialog::setColorFromHtmlCode(const QString &text)
 
 uint PsColorDialog::indexOrColor() const
 {
-	return _imageGrid != nullptr ? _index : _color.rgb();
+	if (_imageGrid != nullptr) {
+		return _index;
+	}
+
+	QRgb rgb = _color.rgb();
+
+	if (_alphaFlag->isChecked()) {
+		return qRgba(qRed(rgb), qGreen(rgb), qBlue(rgb), 254);
+	}
+
+	return qRgba(qRed(rgb), qGreen(rgb), qBlue(rgb), 255);
 }
 
 void PsColorDialog::setHsv(int h, int s, int v)
@@ -129,11 +144,15 @@ void PsColorDialog::setHsv(int h, int s, int v)
 void PsColorDialog::setColor(const QColor &color)
 {
 	_color = color;
+	_color.setAlpha(255);
 	_colorShowLabel->setColor(_color);
 	if (_colorHtmlCode != nullptr) {
 		_colorHtmlCode->blockSignals(true);
 		_colorHtmlCode->setText(_color.name().toUpper());
 		_colorHtmlCode->blockSignals(false);
+	}
+	if (_alphaFlag != nullptr) {
+		_alphaFlag->setChecked(color.alpha() != 255);
 	}
 }
 

@@ -51,6 +51,7 @@ private:
 	QColorLuminancePicker *_colorLumniancePicker;
 	QColorShowLabel *_colorShowLabel;
 	QLineEdit *_colorHtmlCode;
+	QCheckBox *_alphaFlag;
 	ImageGridWidget *_imageGrid;
 	QList<QRgb> _palette;
 	QColor _color;

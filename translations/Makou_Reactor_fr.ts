@@ -4108,6 +4108,10 @@ Certains scripts peuvent y faire référence !</translation>
         <source>HTML code:</source>
         <translation>Notation HTML:</translation>
     </message>
+    <message>
+        <source>Buggy alpha flag</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PsfDialog</name>

@@ -134,7 +134,7 @@ QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles, const QRect 
 		for (uint indexOrColor : qAsConst(indexOrColorList)) {
 			if (palette == nullptr) {
 				if (indexOrColor != 0) {
-					pixels[baseX + right + top] = indexOrColor;
+					pixels[baseX + right + top] = qRgb(qRed(indexOrColor), qGreen(indexOrColor), qBlue(indexOrColor));
 				}
 			} else {
 				if (palette->notZero(quint8(indexOrColor))) {

@@ -3607,6 +3607,10 @@ Some scripts can refer to it!</source>
         <source>HTML code:</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Buggy alpha flag</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PsfDialog</name>

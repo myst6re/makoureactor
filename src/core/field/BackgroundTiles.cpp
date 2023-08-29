@@ -338,7 +338,7 @@ QMap<LayerParam, quint8> BackgroundTiles::usedParams(bool *layerExists, QSet<qui
 	
 	if (effectLayers != nullptr) {
 		for (quint8 layer = 0; layer < 3; ++layer) {
-			for (const QMap< DstTex, QList<quint16> > &dst: collectEffectLayerTexPos[layer]) {
+			for (const QMap< DstTex, QList<quint16> > &dst: qAsConst(collectEffectLayerTexPos[layer])) {
 				qsizetype maxSize = -1;
 				for (const QList<quint16> &tileIDs: dst) {
 					if (tileIDs.size() > maxSize) {
