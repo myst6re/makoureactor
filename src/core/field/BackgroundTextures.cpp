@@ -318,17 +318,35 @@ QRgb BackgroundTexturesPC::directColor(quint16 color) const
 	       g = (buggy >> 5) & 31,
 	       r = (buggy >> 10) & 31;
 	*/
+	// Special alpha case
+	if (color == 0x821) {
+		return qRgba(0, 0, 0, 254);
+	}
+
+	if (color == 0x0) {
+		return qRgba(0, 0, 0, 0);
+	}
+
 	quint8 b = color & 31,
 	       g = (color >> 6) & 31,
 	       r = color >> 11,
 	       flag = (color >> 5) & 1;
-	
+
 	// special PC RGB16 color
 	return qRgba((r << 3) + (r >> 2), (g << 3) + (g >> 2), (b << 3) + (b >> 2), flag ? 254 : 255);
 }
 
 quint16 BackgroundTexturesPC::fromQRgb(QRgb color) const
 {
+	if (color == 0x0) {
+		return 0x0;
+	}
+	
+	// Special alpha case
+	if ((color & 0xFFFFFF) == 0x000000 && qAlpha(color) != 0xFF) {
+		return 0x821;
+	}
+
 	return ((qRound(qRed(color) / COEFF_COLOR) & 31) << 11) |
 	       ((qRound(qGreen(color) / COEFF_COLOR) & 31) << 6) |
 	       (qRound(qBlue(color) / COEFF_COLOR) & 31) | ((qAlpha(color) != 255 ? 1 : 0) << 5); // special PC RGB16 color
