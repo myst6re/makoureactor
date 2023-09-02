@@ -20,6 +20,7 @@
 #include "core/field/Field.h"
 #include "PsColorDialog.h"
 #include "core/Config.h"
+#include "QColorPicker.h"
 
 BackgroundTileEditor::BackgroundTileEditor(QWidget *parent)
     : QWidget(parent)
@@ -98,8 +99,12 @@ BackgroundTileEditor::BackgroundTileEditor(QWidget *parent)
 	_tileCreateLayout->addRow(tr("Color type"), _colorTypeInput);
 	_tileCreateLayout->addRow(tr("Depth (Z)"), _createDepthInput);
 
+	_colorShowLabel = new QColorShowLabel(_createPage);
+	_colorShowLabel->setMinimumHeight(60);
+
 	QVBoxLayout *createPageLayout = new QVBoxLayout(_createPage);
 	createPageLayout->addLayout(_tileCreateLayout);
+	createPageLayout->addWidget(_colorShowLabel);
 	createPageLayout->addWidget(createButton, 0, Qt::AlignRight);
 	createPageLayout->addStretch(1);
 
@@ -120,6 +125,8 @@ BackgroundTileEditor::BackgroundTileEditor(QWidget *parent)
 	connect(removeButton, &QPushButton::clicked, this, &BackgroundTileEditor::removeTiles);
 	connect(_exportButton, &QPushButton::clicked, this, &BackgroundTileEditor::exportImage);
 	connect(_importButton, &QPushButton::clicked, this, &BackgroundTileEditor::importImage);
+	connect(_colorShowLabel, &QColorShowLabel::clicked, this, &BackgroundTileEditor::selectNewColor);
+	connect(_colorTypeInput, &QComboBox::currentIndexChanged, this, &BackgroundTileEditor::updateColorShowEnabled);
 }
 
 void BackgroundTileEditor::setBackgroundFile(BackgroundFile *backgroundFile)
@@ -168,6 +175,7 @@ void BackgroundTileEditor::setTiles(const QList<Tile> &tiles)
 
 		_colorTypeInput->setCurrentIndex(_colorTypeInput->findData(2));
 		_colorTypeInput->setEnabled(true);
+		updateColorShowEnabled();
 		_tileCreateLayout->labelForField(_colorTypeInput)->setEnabled(true);
 		if (layerID == 1) {
 			_createDepthInput->setValue(!depths.isEmpty() ? *depths.begin() : 0);
@@ -373,7 +381,11 @@ void BackgroundTileEditor::createTile()
 			if (tile.layerID == 1) {
 				tile.ID = quint16(_createDepthInput->value());
 			}
-			if (!_backgroundFile->addTile(tile)) {
+			uint colorOrIndex = 0;
+			if (tile.depth == 2) {
+				colorOrIndex = _colorShowLabel->color().rgba();
+			}
+			if (!_backgroundFile->addTile(tile, colorOrIndex)) {
 				QMessageBox::warning(this, tr("No more space"), tr("No more space available in the file for a new Tile"));
 			} else {
 				modifiedTiles.append(tile);
@@ -590,4 +602,18 @@ void BackgroundTileEditor::removeTiles()
 	emit changed(_tiles);
 
 	setTiles(_tiles);
+}
+
+void BackgroundTileEditor::selectNewColor()
+{
+	PsColorDialog *dialog = new PsColorDialog(QColor::fromRgba(qRgb(0, 0, 0)), this);
+	if (dialog->exec() == QDialog::Accepted) {
+		uint indexOrColor = dialog->indexOrColor();
+		_colorShowLabel->setColor(QColor::fromRgba(indexOrColor));
+	}
+}
+
+void BackgroundTileEditor::updateColorShowEnabled()
+{
+	_colorShowLabel->setEnabled(_colorTypeInput->currentData().toInt() == 2);
 }

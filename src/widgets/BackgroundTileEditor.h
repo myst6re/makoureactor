@@ -22,6 +22,7 @@
 #include "core/field/BackgroundTiles.h"
 
 class BackgroundFile;
+class QColorShowLabel;
 
 class BackgroundTileEditor : public QWidget
 {
@@ -51,6 +52,8 @@ private slots:
 	void exportImage();
 	void importImage();
 	void removeTiles();
+	void selectNewColor();
+	void updateColorShowEnabled();
 private:
 	ImageGridWidget *_tileWidget;
 	QGroupBox *_bgParamGroup;
@@ -65,6 +68,7 @@ private:
 	QWidget *_createPage;
 	QSpinBox *_createDepthInput;
 	QPushButton *_exportButton, *_importButton;
+	QColorShowLabel *_colorShowLabel;
 
 	BackgroundFile *_backgroundFile;
 	QList<Tile> _tiles;

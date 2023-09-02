@@ -79,7 +79,7 @@ public:
 	}
 	
 	void setZLayer1(quint16 oldZ, quint16 newZ);
-	virtual bool addTile(Tile &tile, uint colorOrIndex = 0);
+	virtual bool addTile(Tile &tile, uint colorOrIndex = 0xFF000000);
 	virtual bool setTile(Tile &tile);
 	virtual bool removeTile(const Tile &tile);
 

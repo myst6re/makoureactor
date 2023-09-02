@@ -7,9 +7,15 @@ class QColorShowLabel : public QFrame
 	Q_OBJECT
 public:
 	QColorShowLabel(QWidget *parent = nullptr);
+	inline const QColor &color() const {
+		return col;
+	}
 	void setColor(QColor c);
+signals:
+	void clicked();
 protected:
 	void paintEvent(QPaintEvent *event) override;
+	void mousePressEvent(QMouseEvent *event) override;
 private:
 	QColor col;
 };

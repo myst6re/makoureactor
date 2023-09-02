@@ -230,11 +230,12 @@ bool BackgroundFilePC::addTile(Tile &tile, uint colorOrIndex)
 		BackgroundTexturesPCInfos texInfos;
 		texInfos.depth = tile.depth;
 		texInfos.isBigTile = tile.size == 32;
-		textures()->setTex(unusedSpace.texID, QList<uint>(256 * 256, colorOrIndex), texInfos);
-	} else {
 		// Ensure black or first palette index
-		textures()->setTile(tile, QList<uint>(tile.size * tile.size, colorOrIndex));
+		textures()->setTex(unusedSpace.texID, QList<uint>(256 * 256, tile.depth == 2 ? 0xFF000000 : 0), texInfos);
 	}
+
+	// If colorOrIndex not specified, ensure black or first palette index
+	textures()->setTile(tile, QList<uint>(tile.size * tile.size, tile.depth == 2 ? colorOrIndex : (colorOrIndex > 0xFF ? 0 : colorOrIndex)));
 
 	return BackgroundFile::addTile(tile, colorOrIndex);
 }

@@ -41,7 +41,7 @@ public:
 	BackgroundFilePS toPS(FieldPS *field) const;
 	bool repair() override;
 	bool addPalette(const char *data) override;
-	bool addTile(Tile &tile, uint colorOrIndex = 0) override;
+	bool addTile(Tile &tile, uint colorOrIndex = 0xFF000000) override;
 	// Ensure consistency between tile list, textures, and palettes
 	bool compile();
 	bool resize(const QSize &size);

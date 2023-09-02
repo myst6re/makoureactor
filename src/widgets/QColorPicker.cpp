@@ -23,6 +23,13 @@ void QColorShowLabel::paintEvent(QPaintEvent *e)
 	p.fillRect(contentsRect() & e->rect(), col);
 }
 
+void QColorShowLabel::mousePressEvent(QMouseEvent *m)
+{
+	Q_UNUSED(m)
+
+	emit clicked();
+}
+
 int QColorLuminancePicker::y2val(int y)
 {
 	int d = height() - 2 * coff - 1;
