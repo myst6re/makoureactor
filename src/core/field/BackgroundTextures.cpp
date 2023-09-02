@@ -364,7 +364,7 @@ UnusedSpaceInTexturePC BackgroundTexturesPC::findFirstUnusedSpaceInTextures(cons
 	const quint8 mask = size == 32 ? 0x7 : 0xF, move = size == 32 ? 3 : 4;
 
 	for (const Tile &tile: tiles) {
-		if (tile.depth == depth && tile.size == size) {
+		if (this->depth(tile) == depth && tile.size == size) {
 			quint8 num = (tile.srcX / size) | ((tile.srcY / size) << move);
 			if (!usedTiles.contains(tile.textureID)) {
 				usedTiles.insert(tile.textureID, QBitArray(size == 32 ? 64 : 256));
