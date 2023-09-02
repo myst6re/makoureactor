@@ -108,16 +108,20 @@ void QColorLuminancePicker::paintEvent(QPaintEvent *)
 	}
 	
 	QPainter p(this);
-	p.drawPixmap(1, coff, *pix);
-	const QPalette &g = palette();
-	qDrawShadePanel(&p, r, g, true);
-	p.setPen(g.windowText().color());
-	p.setBrush(g.windowText());
-	QPolygon a;
-	int y = val2y(val);
-	a.setPoints(3, w, y, w + 5, y + 5, w + 5, y - 5);
-	p.eraseRect(w, 0, 5, height());
-	p.drawPolygon(a);
+	if (isEnabled()) {
+		p.drawPixmap(1, coff, *pix);
+		const QPalette &g = palette();
+		qDrawShadePanel(&p, r, g, true);
+		p.setPen(g.windowText().color());
+		p.setBrush(g.windowText());
+		QPolygon a;
+		int y = val2y(val);
+		a.setPoints(3, w, y, w + 5, y + 5, w + 5, y - 5);
+		p.eraseRect(w, 0, 5, height());
+		p.drawPolygon(a);
+	} else {
+		p.drawImage(1, coff, pix->toImage().convertToFormat(QImage::Format_Grayscale8));
+	}
 }
 void QColorLuminancePicker::setCol(int h, int s , int v)
 {
@@ -214,11 +218,15 @@ void QColorPicker::paintEvent(QPaintEvent *event)
 	QPainter p(this);
 	drawFrame(&p);
 	QRect r = contentsRect();
-	p.drawPixmap(r.topLeft(), pix);
-	QPoint pt = colPt() + r.topLeft();
-	p.setPen(Qt::black);
-	p.fillRect(pt.x() - 9, pt.y(), 20, 2, Qt::black);
-	p.fillRect(pt.x(), pt.y() - 9, 2, 20, Qt::black);
+	if (isEnabled()) {
+		p.drawPixmap(r.topLeft(), pix);
+		QPoint pt = colPt() + r.topLeft();
+		p.setPen(Qt::black);
+		p.fillRect(pt.x() - 9, pt.y(), 20, 2, Qt::black);
+		p.fillRect(pt.x(), pt.y() - 9, 2, 20, Qt::black);
+	} else {
+		p.drawImage(r.topLeft(), pix.toImage().convertToFormat(QImage::Format_Grayscale8));
+	}
 }
 
 void QColorPicker::resizeEvent(QResizeEvent *ev)

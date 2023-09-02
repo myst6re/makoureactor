@@ -33,6 +33,7 @@ private slots:
 	void setHsv(int h, int s, int v);
 	void setColorFromPalette(const Cell &cell);
 	void setColorFromHtmlCode(const QString &text);
+	void setTransparentEnabled(bool enabled);
 private:
 	virtual void keyPressEvent(QKeyEvent *event) override
 	{
@@ -51,6 +52,7 @@ private:
 	QColorLuminancePicker *_colorLumniancePicker;
 	QColorShowLabel *_colorShowLabel;
 	QLineEdit *_colorHtmlCode;
+	QLabel *_colorHtmlCodeLabel;
 	QCheckBox *_alphaFlag;
 	ImageGridWidget *_imageGrid;
 	QList<QRgb> _palette;

@@ -34,20 +34,23 @@ PsColorDialog::PsColorDialog(const QColor &color, QWidget *parent) :
 	_colorLumniancePicker->setFixedWidth(20);
 
 	_colorHtmlCode = new QLineEdit(this);
-	_alphaFlag = new QCheckBox(tr("Buggy alpha flag"), this);
+	_alphaFlag = new QCheckBox(tr("Transparent"), this);
 
 	setLayout();
 
 	connect(_colorPicker, &QColorPicker::newCol, _colorLumniancePicker, [&](int h, int s) { _colorLumniancePicker->setCol(h, s); });
 	connect(_colorLumniancePicker, &QColorLuminancePicker::newHsv, this, &PsColorDialog::setHsv);
 	connect(_colorHtmlCode, &QLineEdit::editingFinished, this, [&]() { setColorFromHtmlCode(_colorHtmlCode->text()); });
+	connect(_alphaFlag, &QCheckBox::toggled, this, &PsColorDialog::setTransparentEnabled);
 
 	setColor(color);
+
+	_alphaFlag->setChecked(color.alpha() == 0);
 }
 
 PsColorDialog::PsColorDialog(const QList<QRgb> &palette, quint8 index, QWidget *parent) :
     QDialog(parent), _colorPicker(nullptr), _colorLumniancePicker(nullptr), _colorHtmlCode(nullptr),
-      _alphaFlag(nullptr), _palette(palette), _index(index)
+      _colorHtmlCodeLabel(nullptr), _alphaFlag(nullptr), _palette(palette), _index(index)
 {
 	setWindowTitle(tr("Choose a color"));
 	
@@ -85,20 +88,20 @@ void PsColorDialog::setLayout()
 
 	_layout = new QGridLayout(this);
 	_layout->addWidget(_topLabel, 0, 0, 1, _colorPicker != nullptr ? 1 : 2);
-	_layout->addWidget(_colorPicker != nullptr ? static_cast<QWidget *>(_colorPicker) : static_cast<QWidget *>(_imageGrid), 1, 0, 1, _colorPicker != nullptr ? 1 : 2);
-	if (_colorLumniancePicker != nullptr) {
-		_layout->addWidget(_colorLumniancePicker, 1, 1);
+	if (_alphaFlag != nullptr) {
+		_layout->addWidget(_alphaFlag, 1, 0, 1, 2);
 	}
-	_layout->addWidget(_colorShowLabel, 2, 0, 1, 2);
+	_layout->addWidget(_colorPicker != nullptr ? static_cast<QWidget *>(_colorPicker) : static_cast<QWidget *>(_imageGrid), 2, 0, 1, _colorPicker != nullptr ? 1 : 2);
+	if (_colorLumniancePicker != nullptr) {
+		_layout->addWidget(_colorLumniancePicker, 2, 1);
+	}
+	_layout->addWidget(_colorShowLabel, 3, 0, 1, 2);
 	if (_colorHtmlCode != nullptr) {
 		QHBoxLayout *layout = new QHBoxLayout;
-		layout->addWidget(new QLabel(tr("HTML code:"), this));
+		_colorHtmlCodeLabel = new QLabel(tr("HTML code:"), this);
+		layout->addWidget(_colorHtmlCodeLabel);
 		layout->addWidget(_colorHtmlCode, 1);
-		_layout->addLayout(layout, 3, 0, 1, 2);
-		//_layout->addWidget(_colorHtmlCode, 3, 0, 1, 2);
-	}
-	if (_alphaFlag != nullptr) {
-		_layout->addWidget(_alphaFlag, 4, 0, 1, 2);
+		_layout->addLayout(layout, 4, 0, 1, 2);
 	}
 	_layout->addWidget(buttons, 5, 0, 1, 2);
 	_layout->setRowStretch(1, 1);
@@ -130,7 +133,7 @@ uint PsColorDialog::indexOrColor() const
 	QRgb rgb = _color.rgb();
 
 	if (_alphaFlag->isChecked()) {
-		return qRgba(qRed(rgb), qGreen(rgb), qBlue(rgb), 254);
+		return qRgba(qRed(rgb), qGreen(rgb), qBlue(rgb), 0);
 	}
 
 	return qRgba(qRed(rgb), qGreen(rgb), qBlue(rgb), 255);
@@ -151,13 +154,22 @@ void PsColorDialog::setColor(const QColor &color)
 		_colorHtmlCode->setText(_color.name().toUpper());
 		_colorHtmlCode->blockSignals(false);
 	}
-	if (_alphaFlag != nullptr) {
-		_alphaFlag->setChecked(color.alpha() != 255);
-	}
 }
 
 void PsColorDialog::setColorFromPalette(const Cell &cell)
 {
 	_index = cell.x() + cell.y() * 16;
 	setColor(_palette.value(_index));
+}
+
+void PsColorDialog::setTransparentEnabled(bool enabled)
+{
+	_colorPicker->setEnabled(!enabled);
+	_colorLumniancePicker->setEnabled(!enabled);
+	_colorShowLabel->setEnabled(!enabled);
+
+	if (_colorHtmlCode != nullptr) {
+		_colorHtmlCode->setEnabled(!enabled);
+		_colorHtmlCodeLabel->setEnabled(!enabled);
+	}
 }

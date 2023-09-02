@@ -3608,7 +3608,7 @@ Some scripts can refer to it!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Buggy alpha flag</source>
+        <source>Transparent</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -4109,8 +4109,8 @@ Certains scripts peuvent y faire référence !</translation>
         <translation>Notation HTML:</translation>
     </message>
     <message>
-        <source>Buggy alpha flag</source>
-        <translation type="unfinished"></translation>
+        <source>Transparent</source>
+        <translation>Transparent</translation>
     </message>
 </context>
 <context>

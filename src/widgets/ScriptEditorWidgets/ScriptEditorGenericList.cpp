@@ -908,6 +908,8 @@ Opcode ScriptEditorOneVarOrValue::buildOpcode()
 
 void ScriptEditorOneVarOrValue::setOpcode(const Opcode &opcode)
 {
+	ScriptEditorView::setOpcode(opcode);
+
 	VarOrValueWidget::Size size = VarOrValueWidget::Long;
 	bool onlyVar = false;
 	qint8 bank = opcode.bank2();
@@ -940,6 +942,4 @@ void ScriptEditorOneVarOrValue::setOpcode(const Opcode &opcode)
 	}
 	_varOrValue->setOnlyVar(onlyVar);
 	_varOrValue->setVarOrValue(quint8(bank), valueOrAddress);
-
-	ScriptEditorView::setOpcode(opcode);
 }
