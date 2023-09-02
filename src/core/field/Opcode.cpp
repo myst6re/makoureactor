@@ -1276,7 +1276,7 @@ bool Opcode::setJump(qint32 jump)
 	bool oldIsBackJump = isBackJump(),
 	        newIsBackJump = jump < 0;
 
-	if (oldIsBackJump == !newIsBackJump) {
+	if (oldIsBackJump && !newIsBackJump) {
 		// convert to forward
 		switch (id()) {
 		case OpcodeKey::JMPB: {
@@ -1296,7 +1296,7 @@ bool Opcode::setJump(qint32 jump)
 		default:
 			break;
 		}
-	} else if (!oldIsBackJump == newIsBackJump) {
+	} else if (!oldIsBackJump && newIsBackJump) {
 		// convert to back
 		switch (id()) {
 		case OpcodeKey::JMPF: {
