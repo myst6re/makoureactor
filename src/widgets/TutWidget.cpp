@@ -135,7 +135,7 @@ QWidget *TutWidget::buildSoundPage()
 	akaoIDList = new QComboBox(ret);
 	akaoIDList->setEditable(true);
 	int i=0;
-	for (const QString &musicName : qAsConst(Data::music_names)) {
+	for (const QString &musicName : std::as_const(Data::music_names)) {
 		akaoIDList->addItem(tr("%1 - %2 : %3")
 							.arg(i, 2, 10, QChar('0'))
 							.arg(musicName)
@@ -245,7 +245,7 @@ QList<int> TutWidget::selectedRows() const
 {
 	QList<int> ret;
 	QList<QListWidgetItem *> items = list->selectedItems();
-	for (QListWidgetItem *item : qAsConst(items)) {
+	for (QListWidgetItem *item : std::as_const(items)) {
 		ret.append(list->row(item));
 	}
 

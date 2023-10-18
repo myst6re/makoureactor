@@ -185,7 +185,7 @@ FieldModelLoaderPC FieldModelLoaderPS::toPC(BsxFile *bsx, CharArchive *charArchi
 				QStringList hrcFiles = charArchive->hrcFiles(std::max(1, psLoader.bonesCount - 1), psLoader.partsCount);
 				QHash<QString, int> matchingFileNames;
 
-				for (const QString &hrc: qAsConst(hrcFiles)) {
+				for (const QString &hrc: std::as_const(hrcFiles)) {
 					FieldModelFilePC modelFilePC;
 					QStringList textureNames;
 					modelFilePC.load(charArchive, hrc, textureNames);

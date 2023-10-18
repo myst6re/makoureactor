@@ -344,7 +344,7 @@ QString Data::ff7KernelPath()
 			else {
 				QStringList langs;
 				langs << "de" << "en" << "es" << "fr" << "ja";
-				for (const QString &lang : qAsConst(langs)) {
+				for (const QString &lang : std::as_const(langs)) {
 					if (QFile::exists(path + QString("/lang-%1/kernel").arg(lang))) {
 						path.append(QString("/lang-%1/kernel").arg(lang));
 						break;

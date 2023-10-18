@@ -33,7 +33,7 @@ FieldPS::FieldPS(const Field &field) :
 
 FieldPS::~FieldPS()
 {
-	for (FieldModelFilePS *model: qAsConst(_models)) {
+	for (FieldModelFilePS *model: std::as_const(_models)) {
 		if (model) {
 			delete model;
 		}
@@ -102,7 +102,7 @@ FieldModelFilePS *FieldPS::fieldModel(int modelID, int animationID, bool animate
 
 	if (open) {
 		int i = 0;
-		for (FieldModelFilePS *model: qAsConst(_models)) {
+		for (FieldModelFilePS *model: std::as_const(_models)) {
 			if (model != nullptr && !model->isModified()) {
 				if (i == modelID) {
 					if (!model->load(this, modelID)) {
@@ -147,7 +147,7 @@ bool FieldPS::isDatModified() const
 
 bool FieldPS::isBsxModified() const
 {
-	for (FieldModelFilePS *model: qAsConst(_models)) {
+	for (FieldModelFilePS *model: std::as_const(_models)) {
 		if (model && model->isModified()) {
 			return true;
 		}
@@ -185,7 +185,7 @@ bool FieldPS::saveModels(QByteArray &newData, bool compress)
 	BsxFile bsx(&ioBsx);
 
 	int modelID = 0;
-	for (FieldModelFilePS *model: qAsConst(_models)) {
+	for (FieldModelFilePS *model: std::as_const(_models)) {
 		if (model && model->isModified()) {
 			if (!bsx.seek(modelID)) {
 				qWarning() << "FieldPS::saveModels cannot seek to model";

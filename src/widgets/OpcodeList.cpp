@@ -212,7 +212,7 @@ void OpcodeList::enableActions(bool enabled)
 {
 	_toolBar->setEnabled(enabled);
 	QList<QAction *> acts = actions();
-	for (QAction *action : qAsConst(acts)) {
+	for (QAction *action : std::as_const(acts)) {
 		if (action == undo_A || action == redo_A) {
 			continue;
 		}
@@ -851,7 +851,7 @@ void OpcodeList::copy()
 {
 	QList<Opcode> opcodeCopied;
 	QList<int> selIds = selectedIDs();
-	for (int id : qAsConst(selIds)) {
+	for (int id : std::as_const(selIds)) {
 		opcodeCopied.append(_script->opcode(id));
 	}
 
@@ -865,7 +865,7 @@ void OpcodeList::copyText()
 {
 	QMap<int, const QTreeWidgetItem *> listeitems;
 	QList<QTreeWidgetItem *> selItems = selectedItems();
-	for (const QTreeWidgetItem *item : qAsConst(selItems)) {
+	for (const QTreeWidgetItem *item : std::as_const(selItems)) {
 		listeitems.insert(item->data(0, Qt::UserRole).toInt(), item);
 	}
 
@@ -873,7 +873,7 @@ void OpcodeList::copyText()
 	const QTreeWidgetItem *lastitem = nullptr, *parentitem;
 	QStack<const QTreeWidgetItem *> parentitems;
 	int indent = 0;
-	for (const QTreeWidgetItem *item : qAsConst(listeitems)) {
+	for (const QTreeWidgetItem *item : std::as_const(listeitems)) {
 		if (lastitem != nullptr) {
 			parentitem = item->parent();
 			if (parentitem == lastitem) {
@@ -909,7 +909,7 @@ void OpcodeList::paste()
 		QList<int> IDs;
 		int opcodeID = selectedID() + 1, i = opcodeID;
 
-		for (const Opcode &opcode : qAsConst(pastedOpcodes)) {
+		for (const Opcode &opcode : std::as_const(pastedOpcodes)) {
 			IDs.append(i);
 			// TODO: label duplication case
 			_script->insertOpcode(i, opcode);
@@ -982,7 +982,7 @@ QList<int> OpcodeList::selectedIDs()
 {
 	QList<int> list;
 	QList<QTreeWidgetItem *> selItems = selectedItems();
-	for (const QTreeWidgetItem *item : qAsConst(selItems)) {
+	for (const QTreeWidgetItem *item : std::as_const(selItems)) {
 		list.append(item->data(0, Qt::UserRole).toInt());
 	}
 	std::sort(list.begin(), list.end());

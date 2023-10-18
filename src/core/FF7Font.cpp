@@ -120,7 +120,7 @@ void FF7Font::openTxt(const QString &data)
 		return;
 	}
 
-	for (const QString &line : qAsConst(lines)) {
+	for (const QString &line : std::as_const(lines)) {
 		if (line.startsWith("#")) {
 			QRegularExpressionMatch match = nameRegExp.match(line);
 			if (match.hasMatch()) {
@@ -160,7 +160,7 @@ QString FF7Font::saveTxt()
 		data.append("#NAME\t").append(_name).append("\n");
 	}
 
-	for (const QStringList &t : qAsConst(_tables)) {
+	for (const QStringList &t : std::as_const(_tables)) {
 		for (int j=0; j<14; ++j) {
 			for (int i=0; i<16; ++i) {
 				data.append(QString("\"%1\"").arg(t[j*16 + i]));
@@ -231,7 +231,7 @@ bool FF7Font::listFonts()
 	fonts.insert("00", latinFont);
 	fonts.insert("01", jpFont);
 
-	for (const QString &str : qAsConst(stringList)) {
+	for (const QString &str : std::as_const(stringList)) {
 		qsizetype index = str.lastIndexOf('.');
 		fonts.insert(str.left(index), nullptr);
 	}
@@ -311,7 +311,7 @@ bool FF7Font::saveFonts()
 {
 	bool ok = true;
 
-	for (FF7Font *font : qAsConst(fonts)) {
+	for (FF7Font *font : std::as_const(fonts)) {
 		if (font && !font->isReadOnly() && font->isModified()) {
 			QFile f1(font->txtPath());
 			if (f1.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
@@ -571,7 +571,7 @@ int FF7Font::calcFF7StringWidth(const FF7String &ff7String)
 	int width = 0;
 	const QByteArray &data = ff7String.data();
 
-	for (const char &c : qAsConst(data)) {
+	for (const char &c : std::as_const(data)) {
 		if (quint8(c) < 0xe0) {
 			width += charFullWidth(0, c);
 		}

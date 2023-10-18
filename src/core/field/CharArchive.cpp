@@ -135,7 +135,7 @@ bool CharArchive::openHrcBoneAndPartCount()
 				
 				int partCount = 0;
 				
-				for (const QStringList &rsds: qAsConst(rsdFiles)) {
+				for (const QStringList &rsds: std::as_const(rsdFiles)) {
 					partCount += rsds.size();
 				}
 				

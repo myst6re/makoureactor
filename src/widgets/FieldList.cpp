@@ -306,7 +306,7 @@ void FieldList::del()
 
 	blockSignals(true);
 
-	for (QTreeWidgetItem *item : qAsConst(selected)) {
+	for (QTreeWidgetItem *item : std::as_const(selected)) {
 		int mapID = item->data(0, Qt::UserRole).toInt();
 		_fieldArchive->delField(mapID);
 		lastIndex = qMax(lastIndex, indexOfTopLevelItem(item));

@@ -93,7 +93,7 @@ Script Script::splitScriptAtReturn()
 	int gotoLabel = -1;
 	int opcodeID = 0;
 
-	for (const Opcode &opcode : qAsConst(_opcodes)) {
+	for (const Opcode &opcode : std::as_const(_opcodes)) {
 		if (opcode.id() == OpcodeKey::LABEL) {
 			if (gotoLabel != -1 && opcode.op().opcodeLABEL._label == quint32(gotoLabel)) {
 				gotoLabel = -1;
@@ -160,7 +160,7 @@ bool Script::compile(int &opcodeID, QString &errorStr)
 
 	// Search labels
 	opcodeID = 0;
-	for (const Opcode &opcode : qAsConst(_opcodes)) {
+	for (const Opcode &opcode : std::as_const(_opcodes)) {
 		if (opcode.id() == OpcodeKey::LABEL) {
 			if (!labelPositions.contains(opcode.op().opcodeLABEL._label)) {
 				labelPositions.insert(opcode.op().opcodeLABEL._label, pos);
@@ -760,7 +760,7 @@ bool Script::removeTexts()
 {
 	bool modified = false;
 	qsizetype i = 0;
-	for (const Opcode &opcode : qAsConst(_opcodes)) {
+	for (const Opcode &opcode : std::as_const(_opcodes)) {
 		if (opcode.id() != OpcodeKey::ASK
 				&& opcode.id() != OpcodeKey::MPNAM
 				&& opcode.textID() != -1) {

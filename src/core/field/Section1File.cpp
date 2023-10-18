@@ -850,7 +850,7 @@ void Section1File::listModelPositions(QMultiMap<int, FF7Position> &positions) co
 			QList<FF7Position> pos;
 			group.listModelPositions(pos);
 			if (!pos.isEmpty()) {
-				for (const FF7Position &position : qAsConst(pos)) {
+				for (const FF7Position &position : std::as_const(pos)) {
 					positions.insert(modelId, position);
 				}
 			}
@@ -930,7 +930,7 @@ void Section1File::autosizeTextWindows()
 		listWindows(textID, windows);
 		if (!windows.isEmpty()) {
 			QSize size = FF7Font::calcSize(text(textID).data());
-			for (FF7Window win : qAsConst(windows)) {
+			for (FF7Window win : std::as_const(windows)) {
 				if (win.displayType > 0) {
 					continue; // TODO: estimate size for countdown and numerical display
 				}

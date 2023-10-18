@@ -37,7 +37,7 @@ Field::Field(const QString &name) :
 
 Field::~Field()
 {
-	for (FieldPart *part : qAsConst(_parts)) {
+	for (FieldPart *part : std::as_const(_parts)) {
 		if (part) {
 			delete part;
 		}
@@ -215,7 +215,7 @@ void Field::initEmpty()
 {
 	QList<Field::FieldSection> sections = orderOfSections();
 	sections << Akaos;
-	for (const FieldSection &section : qAsConst(sections)) {
+	for (const FieldSection &section : std::as_const(sections)) {
 		FieldPart *p = part(section);
 
 		if (!p) {
@@ -307,7 +307,7 @@ void Field::setSaved()
 	if (_io != nullptr) {
 		_isOpen = false; // Force reopen to refresh positions automatically
 	}
-	for (FieldPart *part : qAsConst(_parts)) {
+	for (FieldPart *part : std::as_const(_parts)) {
 		part->setModified(false);
 	}
 	_oldName.clear();
@@ -331,7 +331,7 @@ bool Field::save(QByteArray &newData, bool compress)
 	// Sections
 	int id=0;
 	QList<Field::FieldSection> fieldSections = orderOfSections();
-	for (const FieldSection &fieldSection : qAsConst(fieldSections)) {
+	for (const FieldSection &fieldSection : std::as_const(fieldSections)) {
 		// Section position
 		quint32 pos = headerSize() + newData.size() + diffSectionPos();
 		toc.append((char *)&pos, 4);
