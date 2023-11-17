@@ -399,7 +399,7 @@ void GrpScriptList::paste()
 		grpScriptID = topLevelItemCount(); // Last position
 	}
 	int i = grpScriptID;
-	for (const GrpScript &GScopied : qAsConst(_grpScriptCopied)) {
+	for (const GrpScript &GScopied : std::as_const(_grpScriptCopied)) {
 		_scripts->insertGrpScript(i++, GScopied);
 	}
 

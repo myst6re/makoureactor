@@ -62,7 +62,7 @@ bool MapList::save(QByteArray &data) const
 	quint16 nbMap = quint16(_mapNames.size());
 	data.append(reinterpret_cast<char *>(&nbMap), 2);
 
-	for (const QString &fieldName : qAsConst(_mapNames)) {
+	for (const QString &fieldName : std::as_const(_mapNames)) {
 		data.append(fieldName.toLatin1()
 		            .leftJustified(32, '\0', true));
 	}

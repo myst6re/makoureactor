@@ -37,7 +37,7 @@ TextHighlighter::TextHighlighter(QTextDocument *parent, bool tut)
 	names << "\\{CLOUD\\}" << "\\{BARRET\\}" << "\\{TIFA\\}" << "\\{AERITH\\}" << "\\{AERIS\\}" << "\\{RED XIII\\}" << "\\{YUFFIE\\}" <<
 			"\\{CAIT SITH\\}" << "\\{VINCENT\\}" << "\\{CID\\}" << "\\{MEMBER 1\\}" << "\\{MEMBER 2\\}" << "\\{MEMBER 3\\}";
 
-	for (const QString &name : qAsConst(names)) {
+	for (const QString &name : std::as_const(names)) {
 		rule.pattern = QRegularExpression(name, QRegularExpression::CaseInsensitiveOption);
 		rule.color = Data::color(Data::ColorGreenForeground);
 		highlightingRules.append(rule);
@@ -49,7 +49,7 @@ TextHighlighter::TextHighlighter(QTextDocument *parent, bool tut)
 			"\\{SPACED CHARACTERS\\}" << "\\{PAUSE\\}" << "\\{PAUSE\\d\\d\\d\\}" << "\\{MEMORY:var\\[(\\d+)\\]\\[(\\d+)\\];size=(\\d+)\\}" <<
 			"\\{CHOICE\\}" << "^\\{NEW PAGE\\}$" << "^\\{NEW PAGE 2\\}$" << "\\{CIRCLE\\}" << "\\{TRIANGLE\\}" << "\\{SQUARE\\}" << "\\{CROSS\\}";
 
-	for (const QString &s : qAsConst(syst)) {
+	for (const QString &s : std::as_const(syst)) {
 		rule.pattern = QRegularExpression(s, QRegularExpression::CaseInsensitiveOption);
 		rule.color = Data::color(Data::ColorBlueForeground);
 		highlightingRules.append(rule);
@@ -58,7 +58,7 @@ TextHighlighter::TextHighlighter(QTextDocument *parent, bool tut)
 	QStringList dchar;
 	dchar << "\\{, \\}" << "\\{\\.\"\\}" << QString::fromUtf8("\\{\xe2\x80\xa6\"\\}");//\xe2\x80\xa6 = "..."
 
-	for (const QString &s : qAsConst(dchar)) {
+	for (const QString &s : std::as_const(dchar)) {
 		rule.pattern = QRegularExpression(s);
 		rule.color = Data::color(Data::ColorGreyForeground);
 		highlightingRules.append(rule);
@@ -69,7 +69,7 @@ TextHighlighter::TextHighlighter(QTextDocument *parent, bool tut)
 		keys << "^\\[UP\\]$" << "^\\[DOWN\\]$" << "^\\[LEFT\\]$" << "^\\[RIGHT\\]$" << "^\\[MENU\\]$" << "^\\[CANCEL\\]$" <<
 				"^\\[CHANGE\\]$" << "^\\[OK\\]$" << "^\\[R1\\]$" << "^\\[R2\\]$" << "^\\[L1\\]$" << "^\\[L2\\]$" << "^\\[START\\]$" << "^\\[SELECT\\]$";
 
-		for (const QString &s : qAsConst(keys)) {
+		for (const QString &s : std::as_const(keys)) {
 			rule.pattern = QRegularExpression(s, QRegularExpression::CaseInsensitiveOption);
 			rule.color = Data::color(Data::ColorPurpleForeground);
 			highlightingRules.append(rule);
@@ -78,7 +78,7 @@ TextHighlighter::TextHighlighter(QTextDocument *parent, bool tut)
 		QStringList op;
 		op << "^\\{FINISH\\}$" << "^\\{NOP\\}$" << "^MOVE\\((\\d+),(\\d+)\\)$" << "^PAUSE\\((\\d+)\\)$";
 
-		for (const QString &s : qAsConst(op)) {
+		for (const QString &s : std::as_const(op)) {
 			rule.pattern = QRegularExpression(s, QRegularExpression::CaseInsensitiveOption);
 			rule.color = Data::color(Data::ColorGreenForeground);
 			highlightingRules.append(rule);
@@ -88,7 +88,7 @@ TextHighlighter::TextHighlighter(QTextDocument *parent, bool tut)
 
 void TextHighlighter::highlightBlock(const QString &text)
 {
-	for (const HighlightingRule &rule : qAsConst(highlightingRules)) {
+	for (const HighlightingRule &rule : std::as_const(highlightingRules)) {
 		QRegularExpressionMatchIterator it = rule.pattern.globalMatch(text);
 		while (it.hasNext()) {
 			QRegularExpressionMatch match = it.next();

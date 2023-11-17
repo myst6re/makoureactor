@@ -306,7 +306,7 @@ void BackgroundEditor::refreshList(int layer)
 			if (layer <= 1) {
 				item->setData(0, Qt::UserRole, 4097);
 
-				for (quint16 id: qAsConst(usedIDsList)) {
+				for (quint16 id: std::as_const(usedIDsList)) {
 					item = new QTreeWidgetItem(QStringList(tr("Section %1").arg(id)), SubLayer);
 					item->setExpanded(false);
 					item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
@@ -524,7 +524,7 @@ void BackgroundEditor::updateSelectedTiles(const QList<Cell> &cells)
 		qDebug() << "updateSelectedTiles" << cellSize << layerID << ID << paramState.param << paramState.state << tiles.size();
 		QPoint shift(_shiftX->value(), _shiftY->value());
 		
-		for (const Tile &tile : qAsConst(tiles)) {
+		for (const Tile &tile : std::as_const(tiles)) {
 			if (layerID >= 1 && !effectTileIds.isEmpty() && !effectTileIds.contains(tile.tileID)) {
 				continue;
 			}

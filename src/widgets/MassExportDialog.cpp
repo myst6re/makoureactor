@@ -81,7 +81,7 @@ MassExportDialog::MassExportDialog(QWidget *parent) :
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addLayout(listLayout, 0, 0, 3 + int(exports.size()), 1);
 	int row = 0;
-	for (FormatSelectionWidget *formatSelection : qAsConst(exports)) {
+	for (FormatSelectionWidget *formatSelection : std::as_const(exports)) {
 		layout->addWidget(formatSelection, row++, 1, 1, 2);
 	}
 	layout->addWidget(new QLabel(tr("Export directory:")), row, 1, 1, 2);
@@ -156,7 +156,7 @@ QList<int> MassExportDialog::selectedFields() const
 
 	QList<QListWidgetItem *> items = fieldList->selectedItems();
 
-	for (QListWidgetItem *item : qAsConst(items)) {
+	for (QListWidgetItem *item : std::as_const(items)) {
 		ids.append(item->data(Qt::UserRole).toInt());
 	}
 

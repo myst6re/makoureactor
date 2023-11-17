@@ -338,7 +338,7 @@ QMap<LayerParam, quint8> BackgroundTiles::usedParams(bool *layerExists, QSet<qui
 	
 	if (effectLayers != nullptr) {
 		for (quint8 layer = 0; layer < 3; ++layer) {
-			for (const QMap< DstTex, QList<quint16> > &dst: qAsConst(collectEffectLayerTexPos[layer])) {
+			for (const QMap< DstTex, QList<quint16> > &dst: std::as_const(collectEffectLayerTexPos[layer])) {
 				qsizetype maxSize = -1;
 				for (const QList<quint16> &tileIDs: dst) {
 					if (tileIDs.size() > maxSize) {
@@ -619,7 +619,7 @@ bool BackgroundTiles::checkOrdering() const
 	}
 
 	QList<int> firstTextureIds, lastTextureIds;
-	for (const TextureCursor &cur: qAsConst(textureCursors)) {
+	for (const TextureCursor &cur: std::as_const(textureCursors)) {
 		firstTextureIds.append(cur.firstTextureId);
 		int last = lastTextureIds.isEmpty() ? -1 : lastTextureIds.last();
 		lastTextureIds.append(cur.lastTextureId);

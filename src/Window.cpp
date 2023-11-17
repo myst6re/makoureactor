@@ -145,7 +145,7 @@ Window::Window() :
 
 	menuLang->addSeparator();
 	QTranslator translator;
-	for (const QString &str : qAsConst(stringList)) {
+	for (const QString &str : std::as_const(stringList)) {
 		if (translator.load(dir.filePath(str))) {
 			action = menuLang->addAction(translator.translate("Window", "English"));
 			QString lang = str.mid(14, 2);
@@ -387,7 +387,7 @@ void Window::changeLanguage(QAction *action)
 {
 	Config::setValue("lang", action->data());
 	QList<QAction *> actions = menuLang->actions();
-	for (QAction *act : qAsConst(actions)) {
+	for (QAction *act : std::as_const(actions)) {
 		act->setChecked(false);
 	}
 

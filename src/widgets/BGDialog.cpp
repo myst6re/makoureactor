@@ -236,7 +236,7 @@ void BGDialog::fillWidgets()
 
 		QList<LayerParam> usedParamsList = usedParams.keys();
 		int index = 0;
-		for (const LayerParam &param : qAsConst(usedParamsList)) {
+		for (const LayerParam &param : std::as_const(usedParamsList)) {
 			parametersWidget->addItem(tr("Parameter %1").arg(param.param), param.param);
 			parametersWidget->setItemData(index, param.layer, Qt::UserRole + 1);
 			++index;
@@ -248,7 +248,7 @@ void BGDialog::fillWidgets()
 		QList<quint16> usedIDsList = usedIDs.values();
 		std::sort(usedIDsList.begin(), usedIDsList.end(), std::greater<>());
 		int sectionID = 0;
-		for (const quint16 ID : qAsConst(usedIDsList)) {
+		for (const quint16 ID : std::as_const(usedIDsList)) {
 			item = new QListWidgetItem(tr("Section %1").arg(sectionID++));
 			item->setData(Qt::UserRole, ID);
 			item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled | Qt::ItemIsSelectable);

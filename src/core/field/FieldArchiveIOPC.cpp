@@ -116,7 +116,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCLgp::open2(ArchiveObserver *observer)
 //	QTime t;t.start();
 
 	i = 0;
-	for (const QString &name : qAsConst(archiveList)) {
+	for (const QString &name : std::as_const(archiveList)) {
 		if (i % freq == 0) {
 			if (observer) {
 				if (observer->observerWasCanceled()) {
@@ -377,7 +377,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCDir::open2(ArchiveObserver *observer)
 	fieldArchive()->setMapList(mapList);
 
 	int i = 0;
-	for (const QString &name : qAsConst(list)) {
+	for (const QString &name : std::as_const(list)) {
 		if (observer) {
 			if (observer->observerWasCanceled()) {
 				return Aborted;

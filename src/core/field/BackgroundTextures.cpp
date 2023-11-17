@@ -136,7 +136,7 @@ QImage BackgroundTextures::toImage(const Tile &tile, const Palettes &palettes) c
 		QRgb *pixels = reinterpret_cast<QRgb *>(image.bits());
 	
 		int i = 0;
-		for (uint indexOrColor : qAsConst(indexOrColorList)) {
+		for (uint indexOrColor : std::as_const(indexOrColorList)) {
 			pixels[i] = indexOrColor;
 			i += 1;
 		}
@@ -145,7 +145,7 @@ QImage BackgroundTextures::toImage(const Tile &tile, const Palettes &palettes) c
 		uchar *pixels = image.bits();
 
 		int i = 0;
-		for (uint indexOrColor : qAsConst(indexOrColorList)) {
+		for (uint indexOrColor : std::as_const(indexOrColorList)) {
 			pixels[i] = indexOrColor;
 			i += 1;
 		}
@@ -451,7 +451,7 @@ QImage BackgroundTexturesPC::toImage(quint8 texID) const
 	img.fill(Qt::black);
 	QRgb *bits = (QRgb *)img.bits();
 
-	for (uint indexOrRgb : qAsConst(indexOrRgbList)) {
+	for (uint indexOrRgb : std::as_const(indexOrRgbList)) {
 		if (infos.depth != 2) {
 			*bits = qRgb(indexOrRgb, indexOrRgb, indexOrRgb);
 		} else {
@@ -494,7 +494,7 @@ QImage BackgroundTexturesPC::toImage(quint8 texID, const BackgroundTiles &tiles,
 				palette = palettes.at(tile.paletteID);
 			}
 
-			for (uint indexOrRgb : qAsConst(indexOrRgbList)) {
+			for (uint indexOrRgb : std::as_const(indexOrRgbList)) {
 //				if (tile.depth == 0) {
 //					bits[pos + y * 256 + x] = qRgb(0, 255, 0);
 //				} else if (tile.depth == 1) {
@@ -721,7 +721,7 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 
 				// Detection of transparency PC flag: true if one of used indexes is transparent
 				const QList<bool> &areZero = palette->areZero();
-				for (uint index : qAsConst(tileData)) {
+				for (uint index : std::as_const(tileData)) {
 					if (areZero.at(int(index))) {
 						palette->setTransparency(true);
 						break;
@@ -773,7 +773,7 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 					int indexOfFirstZero = areZero.indexOf(true, 1);
 					if (firstIsZero || indexOfFirstZero >= 0) {
 						int i = 0;
-						for (const uint index : qAsConst(tileConversion.data)) {
+						for (const uint index : std::as_const(tileConversion.data)) {
 							if (index > 0 && areZero.at(int(index))) {
 								// When the index refer to a transparent color, change this index to 0
 

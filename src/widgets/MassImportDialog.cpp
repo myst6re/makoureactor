@@ -61,7 +61,7 @@ MassImportDialog::MassImportDialog(QWidget *parent) :
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addLayout(listLayout, 0, 0, 3 + imports.size(), 1);
 	int row = 0;
-	for (FormatSelectionWidget *formatSelection : qAsConst(imports)) {
+	for (FormatSelectionWidget *formatSelection : std::as_const(imports)) {
 		layout->addWidget(formatSelection, row++, 1, 1, 2);
 	}
 	layout->addWidget(new QLabel(tr("Source directory:")), row, 1, 1, 2);
@@ -134,7 +134,7 @@ QList<int> MassImportDialog::selectedFields() const
 
 	QList<QListWidgetItem *> items = fieldList->selectedItems();
 
-	for (QListWidgetItem *item : qAsConst(items)) {
+	for (QListWidgetItem *item : std::as_const(items)) {
 		ids.append(item->data(Qt::UserRole).toInt());
 	}
 

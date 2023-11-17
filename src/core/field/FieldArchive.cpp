@@ -134,7 +134,7 @@ FieldArchiveIO::ErrorCode FieldArchive::open()
 	}
 
 	int fieldID = 0;
-	for (Field *f : qAsConst(fileList)) {
+	for (Field *f : std::as_const(fileList)) {
 		if (f != nullptr) {
 			updateFieldLists(f, fieldID);
 		}
@@ -306,7 +306,7 @@ QList<FF7Var> FieldArchive::searchAllVars(QMap<FF7Var, QSet<QString> > &fieldNam
 			QList<FF7Var> fieldVars;
 			field->scriptsAndTexts()->searchAllVars(fieldVars);
 
-			for (const FF7Var &fieldVar : qAsConst(fieldVars)) {
+			for (const FF7Var &fieldVar : std::as_const(fieldVars)) {
 				QSet<QString> names = fieldNames.value(fieldVar);
 				names.insert(field->scriptsAndTexts()->author());
 				fieldNames.insert(fieldVar, names);
@@ -1926,7 +1926,7 @@ bool FieldArchive::importation(const QList<int> &selectedFields, const QString &
 
 void FieldArchive::setSaved()
 {
-	for (Field *field : qAsConst(fileList)) {
+	for (Field *field : std::as_const(fileList)) {
 		if (field != nullptr) {
 			field->setSaved();
 		}

@@ -131,7 +131,7 @@ QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles, const QRect 
 		qint32 top = (area.y() + tile.dstY) * area.width();
 		qint32 baseX = area.x() + tile.dstX;
 
-		for (uint indexOrColor : qAsConst(indexOrColorList)) {
+		for (uint indexOrColor : std::as_const(indexOrColorList)) {
 			if (palette == nullptr) {
 				if (indexOrColor != 0) {
 					pixels[baseX + right + top] = qRgb(qRed(indexOrColor), qGreen(indexOrColor), qBlue(indexOrColor));
@@ -251,7 +251,7 @@ bool BackgroundFile::exportLayers(const QString &dirPath, const QString &extensi
 			                       .arg(field()->name())
 			                       .arg(i == 0 ? 0 : i - 1);
 			if (i == 1) {
-				for (quint16 ID: qAsConst(usedIDs)) {
+				for (quint16 ID: std::as_const(usedIDs)) {
 					exportTiles(dir.filePath(fileName.arg(ID)), tiles().tilesByID(ID));
 				}
 			} else {
