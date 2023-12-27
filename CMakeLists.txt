@@ -75,7 +75,7 @@ add_compile_definitions(
 
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets OpenGLWidgets Svg OpenGL LinguistTools Core5Compat Xml Quick REQUIRED)
 
-set(REQUIRED_FF7TK_VERSION 0.83.3)
+set(REQUIRED_FF7TK_VERSION 1.0.0)
 find_package(ff7tk ${REQUIRED_FF7TK_VERSION} CONFIG REQUIRED COMPONENTS ff7tk fftkData ff7tkQtWidgets ff7tkFormats ff7tkUtils)
 
 find_package(ZLIB REQUIRED)
