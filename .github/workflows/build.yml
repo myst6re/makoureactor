@@ -67,6 +67,7 @@ jobs:
       zlib_path: ${{ github.workspace }}/../zlib-git
       zlib_build_path: ${{ github.workspace }}/../build-zlib-git
       zlib_installation_path: C:/zlib
+      zlib_version: "1.3"
       ff7tk_installation_path: ${{ github.workspace }}/ff7tk
       makoureactor_build_path: ${{ github.workspace }}/../build-makoureactor
       makoureactor_installation_path: ${{ github.workspace }}/../installation-makoureactor
@@ -117,12 +118,12 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ${{ env.zlib_installation_path }}
-        key: ${{ runner.os }}${{ matrix.win_arch }}-zlib
+        key: ${{ runner.os }}${{ matrix.win_arch }}-zlib-${{ env.zlib_version}}
 
     - name: Install Zlib
       if: (runner.os == 'Windows') && (steps.cache-zlib.outputs.cache-hit != 'true')
       run: |
-        git clone -q --depth 1 --single-branch --branch=v1.2.11 https://github.com/madler/zlib ${{ env.zlib_path }}
+        git clone -q --depth 1 --single-branch --branch=v${{ env.zlib_version }} https://github.com/madler/zlib ${{ env.zlib_path }}
         cmake -S${{ env.zlib_path }} -B${{ env.zlib_build_path }} -DCMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }} -DCMAKE_INSTALL_PREFIX=${{ env.zlib_installation_path }}
         cmake --build ${{ env.zlib_build_path }} --target install -j3
 
