@@ -63,7 +63,7 @@ bool FieldSaveIO::setCache()
 	if (_cache.isEmpty()) {
 		if (!_field->save(_cache, true)) {
 			_cache.clear();
-			setErrorString(tr("Cannot save field map %1").arg(_field->name()));
+			setErrorString(tr("Cannot save field map %1: %2").arg(_field->name(), _field->errorString().isEmpty() ? tr("Unknown error") : _field->errorString()));
 			return false;
 		}
 	}

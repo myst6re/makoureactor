@@ -94,19 +94,25 @@ class BackgroundTexturesPC : public BackgroundTextures
 {
 public:
 	enum TextureGroups {
+		// Paletted
 		Paletted = 0,
 		Layer2Paletted = 1,
 		Layer3Paletted = 3,
+		// Palette Blended
 		PalettedBlended = 15,
 		Layer2PalettedBlended = 16,
 		Layer3PalettedBlended = 17,
+		// Paletted Blended Average
 		PalettedBlendedAverage = 24,
+		// Direct color
 		DirectColor = 26,
 		Layer2DirectColor = 27,
 		Layer3DirectColor = 28,
+		// Direct color blended
 		DirectColorBlended = 33,
 		Layer2DirectColorBlended = 34,
 		Layer3DirectColorBlended = 35,
+		// Direct color blended average
 		DirectColorBlendedAverage = 40,
 	};
 

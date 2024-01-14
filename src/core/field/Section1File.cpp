@@ -934,12 +934,9 @@ void Section1File::autosizeTextWindows()
 				if (win.displayType > 0) {
 					continue; // TODO: estimate size for countdown and numerical display
 				}
-				bool isModified;
-				isModified = win.w != size.width() || win.h != size.height();
 				win.w = quint16(size.width());
 				win.h = quint16(size.height());
 				QPoint pos = win.realPos();
-				isModified = isModified || win.x != pos.x() || win.y != pos.y();
 				win.x = qint16(pos.x());
 				win.y = qint16(pos.y());
 

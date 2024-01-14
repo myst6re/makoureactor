@@ -45,6 +45,10 @@ public:
 	// Ensure consistency between tile list, textures, and palettes
 	bool compile();
 	bool resize(const QSize &size);
+	const QString &lastErrorString() const {
+		return _lastError;
+	}
 private:
 	using BackgroundFile::open;
+	QString _lastError;
 };

@@ -64,12 +64,16 @@ public:
 
 	virtual Archive *device()=0;
 	FieldArchive *fieldArchive();
+	const QString &errorString() const {
+		return _errorString;
+	}
 protected:
 	virtual QByteArray fieldData2(Field *field, const QString &extension, bool unlzs)=0;
 	virtual QByteArray fileData2(const QString &fileName)=0;
 
 	virtual ErrorCode open2(ArchiveObserver *observer)=0;
 	virtual ErrorCode save2(const QString &path, ArchiveObserver *observer)=0;
+	QString _errorString;
 private:
 	FieldArchive *_fieldArchive;
 	static QByteArray fieldDataCache, mimDataCache, modelDataCache;

@@ -670,8 +670,11 @@ Other maps can refer to it!</source>
 <context>
     <name>FieldSaveIO</name>
     <message>
-        <source>Cannot save field map %1</source>
-        <oldsource>Cannot save field %1</oldsource>
+        <source>Cannot save field map %1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown error</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3949,6 +3952,27 @@ Make sure it is valid or delete it.</source>
     </message>
     <message>
         <source>Background is broken in this map</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You cannot have more than 15 textures in paletted non-blended mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You cannot have more than 9 textures in paletted blended mode and 11 in paletted blended average mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You cannot have more than 22 textures in direct color non-blended mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You cannot have more than 7 textures in direct color blended mode and 2 in direct color blended average mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot find enough space to save textures of the background.
+%1.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

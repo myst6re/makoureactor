@@ -358,6 +358,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::save2(const QString &path0, Archi
 					QByteArray newData;
 
 					if (!field->save(newData, true)) {
+						_errorString = field->errorString();
 						return Invalid;
 					}
 
@@ -560,6 +561,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSDir::save2(const QString &path, Archiv
 				FieldPS *fieldPS = static_cast<FieldPS *>(field);
 				if (fieldPS->isDatModified()) {
 					qint8 err = fieldPS->save(datPath, true);
+					_errorString = fieldPS->errorString();
 					if (err == 2)	return ErrorOpening;
 					if (err == 1)	return Invalid;
 					if (err != 0)	return NotImplemented;

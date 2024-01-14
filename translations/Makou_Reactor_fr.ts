@@ -745,7 +745,15 @@ D&apos;autres écrans peuvent y référer !</translation>
     <message>
         <source>Cannot save field map %1</source>
         <oldsource>Cannot save field %1</oldsource>
-        <translation>Impossible de sauvegarder l&apos;écran %1</translation>
+        <translation type="vanished">Impossible de sauvegarder l&apos;écran %1</translation>
+    </message>
+    <message>
+        <source>Cannot save field map %1: %2</source>
+        <translation>Impossion de sauvegarder l&apos;écran de jeu %1 : %2</translation>
+    </message>
+    <message>
+        <source>Unknown error</source>
+        <translation>Erreur inconnue</translation>
     </message>
 </context>
 <context>
@@ -4449,6 +4457,28 @@ id=%2
     <message>
         <source>Background is broken in this map</source>
         <translation>Le décor est invalide sur cet écran</translation>
+    </message>
+    <message>
+        <source>You cannot have more than 15 textures in paletted non-blended mode</source>
+        <translation>Vous ne pouvez pas avoir plus de 15 textures en mode palette sans aucune fusion</translation>
+    </message>
+    <message>
+        <source>You cannot have more than 9 textures in paletted blended mode and 11 in paletted blended average mode</source>
+        <translation>Vous ne pouvez pas avoir plus de 9 textures en mode palette avec fusion et 11 textures en mode palette avec le type de fusion &quot;moyenne&quot;</translation>
+    </message>
+    <message>
+        <source>You cannot have more than 22 textures in direct color non-blended mode</source>
+        <translation>Vous ne pouvez pas avoir plus de 22 textures en mode couleur 16 bits sans fusion</translation>
+    </message>
+    <message>
+        <source>You cannot have more than 7 textures in direct color blended mode and 2 in direct color blended average mode</source>
+        <translation>Vous ne pouvez pas avoir plus de 7 textures en mode couleur 16 bits avec fusion et 2 textures en mode couleur 16 bits avec fusion de type &quot;moyenne&quot;</translation>
+    </message>
+    <message>
+        <source>Cannot find enough space to save textures of the background.
+%1.</source>
+        <translation>Impossible d&apos;avoir de l&apos;espace pour sauvegarder les textures du décor.
+%1.</translation>
     </message>
 </context>
 <context>

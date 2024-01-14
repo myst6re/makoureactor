@@ -1250,7 +1250,7 @@ void Window::saveAs(bool currentPath)
 		break;
 	}
 	if (!out.isEmpty()) {
-		QMessageBox::warning(this, tr("Error"), out);
+		QMessageBox::warning(this, tr("Error"), fieldArchive->io()->errorString().isEmpty() ? out : fieldArchive->io()->errorString());
 	}
 }
 
@@ -1354,10 +1354,14 @@ void Window::exportCurrentMap()
 		return;
 	}
 	int error = 4;
+	QString errorString;
 	bool decompressed = selectedFilter == fieldDec;
 	
 	if (field->isModified()) {
 		error = field->save(path, !decompressed);
+		if (error != 0) {
+			errorString = field->errorString();
+		}
 	} else {
 		QString extension;
 		if (selectedFilter == dat) {
@@ -1388,7 +1392,7 @@ void Window::exportCurrentMap()
 		break;
 	}
 	if (!out.isEmpty()) {
-		QMessageBox::warning(this, tr("Error"), out);
+		QMessageBox::warning(this, tr("Error"), errorString.isEmpty() ? out : errorString);
 	}
 }
 

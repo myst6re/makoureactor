@@ -243,7 +243,7 @@ bool BackgroundFilePC::addTile(Tile &tile, uint colorOrIndex)
 struct BackgroundTexturePCInfosAndColors
 {
 	BackgroundTexturePCInfosAndColors(quint32 pos, quint8 depth, quint8 isBigTile) :
-	    indexesOrColors(256 * 256), pos(pos), srcX(0), srcY(0), depth(depth), isBigTile(isBigTile) {}
+	      indexesOrColors(256 * 256), pos(pos), srcX(0), srcY(0), depth(depth), isBigTile(isBigTile) {}
 	BackgroundTexturesPCInfos infos() const {
 		BackgroundTexturesPCInfos ret;
 		ret.pos = pos;
@@ -256,6 +256,17 @@ struct BackgroundTexturePCInfosAndColors
 	quint16 srcX, srcY;
 	quint8 depth, isBigTile;
 };
+
+quint8 findInRange(QList<quint8> &unusedTextureIds, quint8 start, quint8 end)
+{
+	for (quint8 i = start; i < end; ++i) {
+		if (unusedTextureIds.contains(i)) {
+			return unusedTextureIds.takeAt(i);
+		}
+	}
+	
+	return 255;
+}
 
 bool BackgroundFilePC::compile()
 {
@@ -308,7 +319,8 @@ bool BackgroundFilePC::compile()
 
 	while (it.hasNext()) {
 		it.next();
-		quint8 groupId = quint8(it.key());
+		BackgroundTexturesPC::TextureGroups group = it.key();
+		quint8 groupId = quint8(group);
 		QList<BackgroundTexturePCInfosAndColors> &list = it.value();
 		
 		// The game have its way to select the texture number, we do the same
@@ -316,20 +328,84 @@ bool BackgroundFilePC::compile()
 			unusedTextureIds.append(texID);
 			++texID;
 		}
+		
+		for (int j = 0; j < list.size(); ++j) {
+			BackgroundTexturePCInfosAndColors &textureInfAndCol = list[j];
+			
+			while (true) {
+				const uint8_t originalTexId = texID;
+				if (group < BackgroundTexturesPC::PalettedBlended) { // Paletted
+					if (texID >= int(BackgroundTexturesPC::PalettedBlended)) {
+						// Only 15 textures allowed for paletted non blended
+						texID = findInRange(unusedTextureIds, 0, quint8(BackgroundTexturesPC::PalettedBlended));
+					}
+				} else if (group < BackgroundTexturesPC::PalettedBlendedAverage) { // Paletted blended
+					if (texID < int(BackgroundTexturesPC::PalettedBlended) || texID >= int(BackgroundTexturesPC::PalettedBlendedAverage)) {
+						// Only 9 textures allowed for paletted blended
+						texID = findInRange(unusedTextureIds, quint8(BackgroundTexturesPC::PalettedBlended), quint8(BackgroundTexturesPC::PalettedBlendedAverage));
+					}
+				} else if (group < BackgroundTexturesPC::DirectColor) { // Paletted blended average
+					// We can allow extra textures in this case, because the game does not check strictly the bounds
+					if (texID < int(BackgroundTexturesPC::PalettedBlendedAverage) || (texID >= int(BackgroundTexturesPC::DirectColor) && texID < int(BackgroundTexturesPC::DirectColorBlended))) {
+						// Only 2 textures allowed for paletted blended average...
+						texID = findInRange(unusedTextureIds, quint8(BackgroundTexturesPC::PalettedBlendedAverage), quint8(BackgroundTexturesPC::DirectColor));
+						if (texID >= BACKGROUND_TEXTURE_PC_MAX_COUNT) {
+							// ...but we can add 9 textures from direct color blended!
+							texID = findInRange(unusedTextureIds, quint8(BackgroundTexturesPC::DirectColorBlended), quint8(BACKGROUND_TEXTURE_PC_MAX_COUNT));
+						}
+					}
+				} else if (group < BackgroundTexturesPC::DirectColorBlended) { // Direct color
+					// We can allow extra textures in this case, because the game does not check strictly the bounds
+					if ((texID >= int(BackgroundTexturesPC::PalettedBlended) && texID < int(BackgroundTexturesPC::DirectColor))
+						|| texID >= int(BackgroundTexturesPC::DirectColorBlended)) {
+						// Only 7 textures allowed for direct color...
+						texID = findInRange(unusedTextureIds, quint8(BackgroundTexturesPC::DirectColor), quint8(BackgroundTexturesPC::DirectColorBlended));
+						if (texID >= BACKGROUND_TEXTURE_PC_MAX_COUNT) {
+							// ...but we can add 15 textures from paletted color!
+							texID = findInRange(unusedTextureIds, 0, quint8(BackgroundTexturesPC::PalettedBlended));
+						}
+					}
+				} else if (group < BackgroundTexturesPC::DirectColorBlendedAverage) { // Direct color blended
+					if (texID < int(BackgroundTexturesPC::DirectColorBlended) || texID >= int(BackgroundTexturesPC::DirectColorBlendedAverage)) {
+						// Only 7 textures allowed for direct color blended
+						texID = findInRange(unusedTextureIds, quint8(BackgroundTexturesPC::DirectColorBlended), quint8(BackgroundTexturesPC::DirectColorBlendedAverage));
+					}
+				} else { // Direct color blended average
+					if (texID < int(BackgroundTexturesPC::DirectColorBlendedAverage) || texID >= BACKGROUND_TEXTURE_PC_MAX_COUNT) {
+						// Only 2 textures allowed for direct color blended average
+						texID = findInRange(unusedTextureIds, quint8(BackgroundTexturesPC::DirectColorBlended), quint8(BackgroundTexturesPC::DirectColorBlendedAverage));
+					}
+				}
+				
+				if (texID >= BACKGROUND_TEXTURE_PC_MAX_COUNT) {
+					QString errorMessage;
+					if (group < BackgroundTexturesPC::PalettedBlended) { // Paletted
+						errorMessage = QObject::tr("You cannot have more than 15 textures in paletted non-blended mode");
+					} else if (group < BackgroundTexturesPC::DirectColor) { // Paletted blended
+						errorMessage = QObject::tr("You cannot have more than 9 textures in paletted blended mode and 11 in paletted blended average mode");
+					} else if (group < BackgroundTexturesPC::DirectColorBlended) { // Direct color
+						errorMessage = QObject::tr("You cannot have more than 22 textures in direct color non-blended mode");
+					} else { // Direct color blended
+						errorMessage = QObject::tr("You cannot have more than 7 textures in direct color blended mode and 2 in direct color blended average mode");
+					}
+					_lastError = QObject::tr("Cannot find enough space to save textures of the background.\n%1.").arg(errorMessage);
 
-		for (BackgroundTexturePCInfosAndColors &textureInfAndCol: list) {
-			if (texID >= BACKGROUND_TEXTURE_PC_MAX_COUNT) {
-				if (unusedTextureIds.isEmpty()) {
-					qWarning() << "BackgroundFilePC::compile no more room for texture";
 					return false;
 				}
-				// At this point we don't care if it is a good texture number, we use what's remain
-				texID = unusedTextureIds.takeFirst();
+				
+				if (! newTextures->hasTex(texID)) {
+					qDebug() << "BackgroundFilePC::compile" << "set tex" << texID << textureInfAndCol.infos().depth << textureInfAndCol.infos().isBigTile << textureInfAndCol.infos().pos;
+
+					newTextures->setTex(texID, textureInfAndCol.indexesOrColors, textureInfAndCol.infos());
+					textureInfAndCol.pos = texID;
+					
+					texID = originalTexId + 1;
+					
+					break;
+				}
+				
+				texID = originalTexId + 1;
 			}
-			qDebug() << "BackgroundFilePC::compile" << "set tex" << texID << textureInfAndCol.infos().depth << textureInfAndCol.infos().isBigTile << textureInfAndCol.infos().pos;
-			newTextures->setTex(texID, textureInfAndCol.indexesOrColors, textureInfAndCol.infos());
-			textureInfAndCol.pos = texID;
-			++texID;
 		}
 	}
 

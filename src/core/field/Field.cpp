@@ -329,7 +329,6 @@ bool Field::save(QByteArray &newData, bool compress)
 	toc.append(saveHeader());
 
 	// Sections
-	int id=0;
 	QList<Field::FieldSection> fieldSections = orderOfSections();
 	for (const FieldSection &fieldSection : std::as_const(fieldSections)) {
 		// Section position
@@ -356,8 +355,6 @@ bool Field::save(QByteArray &newData, bool compress)
 		if (alignment() > 0 && newData.size() % alignment() != 0) {
 			newData.append(QByteArray(alignment() - newData.size() % alignment(), '\0'));
 		}
-
-		++id;
 	}
 
 	// Footer
@@ -387,7 +384,10 @@ QByteArray Field::saveSection(FieldSection fieldSection, bool &ok)
 	if (fieldPart && fieldPart->canSave() &&
 			fieldPart->isOpen() && fieldPart->isModified()) {
 		if (fieldSection == Field::Background && isPC()) {
-			static_cast<BackgroundFilePC *>(fieldPart)->compile();
+			if (!static_cast<BackgroundFilePC *>(fieldPart)->compile()) {
+				_lastError = static_cast<BackgroundFilePC *>(fieldPart)->lastErrorString();
+				ok = false;
+			}
 		}
 		// FIXME: EXCEPTION NEEDS TO BE REMOVED IN THE FUTURE
 		QByteArray section = fieldSection == Field::PalettePC ? static_cast<BackgroundFilePC *>(fieldPart)->savePal() : fieldPart->save();
@@ -408,6 +408,7 @@ qint8 Field::save(const QString &path, bool compress)
 	if (save(newData, compress)) {
 		QFile fic(path);
 		if (!fic.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+			_lastError = fic.errorString();
 			return 2;
 		}
 		fic.write(newData);

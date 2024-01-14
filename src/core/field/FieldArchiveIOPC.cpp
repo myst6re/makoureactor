@@ -211,6 +211,8 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCLgp::save2(const QString &path, Archiv
 
 	if (!_lgp.pack(path, this)) {
 		this->observer = nullptr;
+		
+		_errorString = _lgp.errorString();
 
 		switch (_lgp.error()) {
 		case Lgp::OpenError:
@@ -306,6 +308,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCFile::save2(const QString &path0, Arch
 
 	if (field && field->isOpen() && field->isModified()) {
 		qint8 err = field->save(path, true);
+		_errorString = field->errorString();
 		if (err == 2)	return ErrorOpening;
 		if (err == 1)	return Invalid;
 		if (err != 0)	return NotImplemented;
@@ -424,6 +427,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCDir::save2(const QString &path, Archiv
 			        filePath = dir.filePath(fileName);
 			if (field->isOpen() && field->isModified()) {
 				qint8 err = field->save(filePath, true);
+				_errorString = field->errorString();
 				if (err == 2)	return ErrorOpening;
 				if (err == 1)	return Invalid;
 				if (err != 0)	return NotImplemented;
