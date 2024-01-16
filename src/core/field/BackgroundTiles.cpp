@@ -24,6 +24,12 @@ void Tile::calcIDBig(CaFile *ca)
 	if (manualIDBig) {
 		return;
 	}
+	
+	if (layerID >= 2) {
+		IDBig = 0;
+		
+		return;
+	}
 
 	// Used for conversion to PC format 
 	if (ID == 0) {

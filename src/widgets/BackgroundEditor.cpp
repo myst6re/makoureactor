@@ -430,11 +430,11 @@ void BackgroundEditor::refreshImage(int layer, int section, ParamState paramStat
 	quint8 tileSize = layer > 1 ? 32 : 16;
 	QRect area = layerTiles.rect();
 	QPoint shift = layerTiles.dstShift(tileSize);
+	
+	qDebug() << "BackgroundEditor::refreshImage" << "area" << area << shift;
 
-	qDebug() << "BackgroundEditor::refreshImage" << "area" << area;
-
-	_shiftX->setMaximum(tileSize / 2);
-	_shiftY->setMaximum(tileSize / 2);
+	_shiftX->setMaximum(tileSize - 1);
+	_shiftY->setMaximum(tileSize - 1);
 	_shiftX->setValue(shift.x());
 	_shiftY->setValue(shift.y());
 	_shiftX->setEnabled(true);
@@ -520,9 +520,9 @@ void BackgroundEditor::updateSelectedTiles(const QList<Cell> &cells)
 		} else {
 			tiles = _backgroundFile->tiles().tiles(layerID, ID);
 		}
-
-		qDebug() << "updateSelectedTiles" << cellSize << layerID << ID << paramState.param << paramState.state << tiles.size();
+		
 		QPoint shift(_shiftX->value(), _shiftY->value());
+		qDebug() << "updateSelectedTiles" << "cellSize" << cellSize << "layerID" << layerID << "ID" << ID << "param" << paramState.param << "state" << paramState.state << "tilescount" << tiles.size() << "shift" << shift;
 		
 		for (const Tile &tile : std::as_const(tiles)) {
 			if (layerID >= 1 && !effectTileIds.isEmpty() && !effectTileIds.contains(tile.tileID)) {
