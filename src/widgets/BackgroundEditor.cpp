@@ -389,14 +389,14 @@ void BackgroundEditor::updateImageLabel(int layer, int section, ParamState param
 	updateSelectedTiles(_backgroundLayerWidget->selectedCells());
 }
 
-QPoint BackgroundEditor::backgroundPositionFromTile(const QPoint &tile, quint8 cellSize)
+QPoint BackgroundEditor::backgroundPositionFromTile(const QPoint &tile, const QPoint &shift)
 {
-	return tile + QPoint(MAX_TILE_DST, MAX_TILE_DST) - QPoint(tile.x() % cellSize, tile.y() % cellSize);
+	return tile + QPoint(MAX_TILE_DST, MAX_TILE_DST) - shift;
 }
 
 QPoint BackgroundEditor::tilePositionFromCell(const QPoint &cell, quint8 cellSize, const QPoint &shift)
 {
-	return cell * cellSize - QPoint(MAX_TILE_DST, MAX_TILE_DST) - shift;
+	return cell * cellSize - QPoint(MAX_TILE_DST, MAX_TILE_DST) + shift;
 }
 
 void BackgroundEditor::refreshImage(int layer, int section, ParamState paramState, const QList<quint16> &effectTileIds)
@@ -432,7 +432,7 @@ void BackgroundEditor::refreshImage(int layer, int section, ParamState paramStat
 	QPoint shift = layerTiles.dstShift(tileSize);
 	
 	qDebug() << "BackgroundEditor::refreshImage" << "area" << area << shift;
-
+	
 	_shiftX->setMaximum(tileSize - 1);
 	_shiftY->setMaximum(tileSize - 1);
 	_shiftX->setValue(shift.x());
@@ -484,7 +484,9 @@ void BackgroundEditor::refreshImage(int layer, int section, ParamState paramStat
 	QSize gridSize((MAX_TILE_DST - shift.x()) * 2, (MAX_TILE_DST - shift.y()) * 2);
 	_backgroundLayerWidget->setGridSize(gridSize / tileSize);
 
-	_backgroundLayerWidget->setPixmap(backgroundPositionFromTile(layerTiles.minTopLeft(), tileSize), pix);
+	_backgroundLayerWidget->setPixmap(backgroundPositionFromTile(layerTiles.minTopLeft(), shift), pix);
+	
+	qDebug() << "gridSize" << gridSize;
 
 	QList<QLine> axis;
 	axis.append(QLine(0, gridSize.height() / 2, gridSize.width(), gridSize.height() / 2)); // x

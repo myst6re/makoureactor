@@ -453,12 +453,18 @@ QPoint BackgroundTiles::dstShift(quint8 tileSize) const
 		}
 
 		if (!shiftXComputed && tile.dstX != 0) {
-			shiftX = std::abs(tile.dstX) % tile.size;
+			shiftX = tile.dstX < 0 ? tile.size - (-tile.dstX % tile.size) : tile.dstX % tile.size;
+			if (shiftX == tile.size) {
+				shiftX = 0;
+			}
 			shiftXComputed = true;
 		}
 
 		if (!shiftYComputed && tile.dstY != 0) {
-			shiftY = std::abs(tile.dstY) % tile.size;
+			shiftY = tile.dstY < 0 ? tile.size - (-tile.dstY % tile.size) : tile.dstY % tile.size;
+			if (shiftY == tile.size) {
+				shiftY = 0;
+			}
 			shiftYComputed = true;
 		}
 

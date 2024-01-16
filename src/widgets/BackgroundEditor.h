@@ -57,7 +57,7 @@ private:
 	void refreshList(int layer);
 	void refreshImage(int layer, int section, ParamState paramState, const QList<quint16> &effectTileIds);
 	void refreshTexture();
-	static QPoint backgroundPositionFromTile(const QPoint &cell, quint8 cellSize);
+	static QPoint backgroundPositionFromTile(const QPoint &tile, const QPoint &shift);
 	static QPoint tilePositionFromCell(const QPoint &cell, quint8 cellSize, const QPoint &shift);
 
 	QSplitter *_topBottomSplitter;
