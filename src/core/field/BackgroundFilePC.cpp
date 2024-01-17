@@ -260,8 +260,9 @@ struct BackgroundTexturePCInfosAndColors
 quint8 findInRange(QList<quint8> &unusedTextureIds, quint8 start, quint8 end)
 {
 	for (quint8 i = start; i < end; ++i) {
-		if (unusedTextureIds.contains(i)) {
-			return unusedTextureIds.takeAt(i);
+		qsizetype index = unusedTextureIds.indexOf(i);
+		if (index >= 0) {
+			return unusedTextureIds.takeAt(index);
 		}
 	}
 	

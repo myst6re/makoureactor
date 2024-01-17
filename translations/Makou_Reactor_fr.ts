@@ -221,6 +221,14 @@
         <source>Conflicts</source>
         <translation>Conflits</translation>
     </message>
+    <message>
+        <source>Compilation error</source>
+        <translation>Erreur de compilation</translation>
+    </message>
+    <message>
+        <source>Check errors</source>
+        <translation>Vérifier les erreurs</translation>
+    </message>
 </context>
 <context>
     <name>BackgroundPaletteEditor</name>

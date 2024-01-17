@@ -42,6 +42,7 @@ private slots:
 	void updateSelectedTiles(const QList<Cell> &cells);
 	void updateSelectedTileTexture(const Cell &cell);
 	void updateTiles(const QList<Tile> &tiles);
+	void compile();
 private:
 	enum LayerSubType {
 		SubLayer = QTreeWidgetItem::UserType,
@@ -67,6 +68,7 @@ private:
 	QScrollArea *_backgroundLayerScrollArea;
 	ImageGridWidget *_backgroundLayerWidget, *_texturesWidget, *_palettesWidget;
 	BackgroundTileEditor *_backgroundTileEditor;
+	QPushButton *_compileButton;
 
 	BackgroundFile *_backgroundFile;
 	QList<quint8> _texIdKeys;

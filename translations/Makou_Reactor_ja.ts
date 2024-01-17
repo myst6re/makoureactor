@@ -214,6 +214,14 @@
         <source>Conflicts</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Compilation error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check errors</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>BackgroundPaletteEditor</name>

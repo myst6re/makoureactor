@@ -58,6 +58,8 @@ BackgroundEditor::BackgroundEditor(QWidget *parent)
 	_backgroundLayerScrollArea->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 
 	_backgroundTileEditor = new BackgroundTileEditor(this);
+	
+	_compileButton = new QPushButton(tr("Check errors"), this);
 
 	QWidget *topRow = new QWidget(this);
 	QGridLayout *topRowLayout = new QGridLayout(topRow);
@@ -65,9 +67,10 @@ BackgroundEditor::BackgroundEditor(QWidget *parent)
 	topRowLayout->addWidget(_shiftX, 0, 1);
 	topRowLayout->addWidget(new QLabel(tr("Shift Y:"), this), 0, 2);
 	topRowLayout->addWidget(_shiftY, 0, 3);
-	topRowLayout->addWidget(_backgroundLayerScrollArea, 1, 0, 1, 6);
-	topRowLayout->addWidget(_backgroundTileEditor, 0, 6, 2, 1);
-	topRowLayout->setColumnStretch(4, 1);
+	topRowLayout->addWidget(_compileButton, 0, 6);
+	topRowLayout->addWidget(_backgroundLayerScrollArea, 1, 0, 1, 7);
+	topRowLayout->addWidget(_backgroundTileEditor, 0, 7, 2, 1);
+	topRowLayout->setColumnStretch(5, 1);
 	topRowLayout->setRowStretch(1, 1);
 	topRowLayout->setContentsMargins(QMargins(0, 0, 0, topRowLayout->contentsMargins().bottom()));
 
@@ -108,6 +111,7 @@ BackgroundEditor::BackgroundEditor(QWidget *parent)
 	connect(_texturesWidget, &ImageGridWidget::clicked, this, &BackgroundEditor::updateSelectedTileTexture);
 	connect(_backgroundTileEditor, &BackgroundTileEditor::changed, this, &BackgroundEditor::updateTiles);
 	connect(_backgroundTileEditor, &BackgroundTileEditor::changed, this, &BackgroundEditor::modified);
+	connect(_compileButton, &QPushButton::clicked, this, &BackgroundEditor::compile);
 }
 
 void BackgroundEditor::saveConfig()
@@ -630,4 +634,20 @@ void BackgroundEditor::updateTiles(const QList<Tile> &tiles)
 
 	refreshImage(currentLayer(), currentSection(), currentParamState(), currentEffect());
 	refreshTexture();
+}
+
+void BackgroundEditor::compile()
+{
+	if (_backgroundFile == nullptr) {
+		return;
+	}
+
+	if (_backgroundFile->isModified() && _backgroundFile->field()->isPC()) {
+		BackgroundFilePC *backgroundFilePC = static_cast<BackgroundFilePC *>(_backgroundFile);
+		if (!backgroundFilePC->compile()) {
+			QMessageBox::warning(this, tr("Compilation error"), backgroundFilePC->lastErrorString());
+		} else {
+			refreshTexture();
+		}
+	}
 }
