@@ -78,7 +78,7 @@ jobs:
 
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Env Script (Windows)
       uses: ilammy/msvc-dev-cmd@v1
@@ -87,7 +87,7 @@ jobs:
         arch: ${{ matrix.win_arch }}
 
     - name: Install Qt
-      uses: jurplel/install-qt-action@v3
+      uses: jurplel/install-qt-action@v3.3.0
       with:
        dir: ${{ env.qt_installation_path }}
        arch: ${{ matrix.qt_arch }}
@@ -115,7 +115,7 @@ jobs:
     - name: Cache Zlib
       id: cache-zlib
       if: runner.os == 'Windows'
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ${{ env.zlib_installation_path }}
         key: ${{ runner.os }}${{ matrix.win_arch }}-zlib-${{ env.zlib_version}}
@@ -174,8 +174,9 @@ jobs:
       run: mv ../build-makoureactor/*.${{ matrix.package_extension }} makoureactor-continuous-${{ matrix.interface }}-${{ matrix.package_suffix }}.${{ matrix.package_extension }}
 
     - name: Upload
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
+        name: artifact-${{ matrix.package_suffix }}-${{ matrix.interface }}
         path: ${{ github.workspace }}/makoureactor-continuous-*.*
 
   deb_builder:
@@ -190,7 +191,7 @@ jobs:
              , debArch: amd64
           }
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0
     - run: git fetch --tags --force
@@ -207,53 +208,53 @@ jobs:
         cmake --build build
         cpack -G DEB -C Release --config build/CPackConfig.cmake
     - name: Upload
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: debian-artifacts
+        name: debian-artifacts-${{ matrix.config.name }}}
         path: makoureactor*.deb
 
   pre_release_assets:
     name: Pre-Release
-    needs: [main_Build, deb_builder]
+    needs: [main_build, deb_builder]
     if: (github.event.ref_type != 'tag') && (github.ref == 'refs/heads/master')
     concurrency: pre-release-${{ github.ref }}
     runs-on: ubuntu-latest
     steps:
     - name: Download Files
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
 
     - name: Deploy Package
-      uses: "marvinpinto/action-automatic-releases@latest"
+      uses: crowbarmaster/GH-Automatic-Releases@latest
       with:
        repo_token: "${{ secrets.GITHUB_TOKEN }}"
        automatic_release_tag: "continuous"
        prerelease: true
        title: "Unstable Build"
        files: |
-         artifact/*
-         debian-artifacts/*
+         artifact-*/*
+         debian-artifacts-*/*
 
   release_assets:
     name: Release
-    needs: [main_Build, deb_builder]
+    needs: [main_build, deb_builder]
     if: github.event.ref_type == 'tag'
     concurrency: release-${{ github.ref }}
     runs-on: ubuntu-latest
     steps:
     - name: Download Files
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
 
     - name: Prepare Upload
       shell: bash
       run: find . -type f -name 'makoureactor-continuous-*' -exec bash -c 'mv "{}" $(echo {} | sed 's/continuous-//')' ';'
 
     - name: Deploy Package
-      uses: "marvinpinto/action-automatic-releases@latest"
+      uses: crowbarmaster/GH-Automatic-Releases@latest
       with:
        repo_token: "${{ secrets.GITHUB_TOKEN }}"
        prerelease: false
        title: ${{ github.event.ref }}
        files: |
-         artifact/*
-         debian-artifacts/*
+         artifact-*/*
+         debian-artifacts-*/*
 
