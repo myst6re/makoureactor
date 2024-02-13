@@ -3,9 +3,11 @@ name: Bug report
 about: Create a report to help us improve
 title: ''
 labels: bug
-assignees: ''
+assignees: myst6re
+
 ---
-**PLEASE NOTE:** Before create a new issue, please check if your bug exists with [https://github.com/myst6re/makoureactor/releases/tag/continuous](the last unstable version).
+
+**PLEASE NOTE:** Before create a new issue, please check if your bug exists with the last unstable version (https://github.com/myst6re/makoureactor/releases/tag/continuous).
 
 **Describe the bug**
 A clear and concise description of what the bug is.
