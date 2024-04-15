@@ -450,21 +450,29 @@ bool Section1File::exporter(QIODevice *device, ExportFormat format)
 			QList<FF7Window> windows;
 			listWindows(id, windows);
 			if (!windows.empty()) {
-				const int groupId = windows.first().groupID;
-				const GrpScript &grpScript = _grpScripts.at(groupId);
-				stream.writeAttribute("group", grpScript.name());
-				const int modelId = modelID(groupId);
-				
-				if (modelId >= 0 && modelId < charNames.size()) {
-					QString name = charNames.at(modelId);
-					if (name.startsWith(mapName)) {
-						name = name.mid(mapName.size());
+				QString groupName, modelName;
+				for (const FF7Window &win: windows) {
+					const int groupId = win.groupID;
+					const GrpScript &grpScript = _grpScripts.at(groupId);
+					groupName = grpScript.name();
+					const int modelId = modelID(groupId);
+					
+					if (modelId >= 0 && modelId < charNames.size()) {
+						modelName = charNames.at(modelId);
+						if (modelName.startsWith(mapName)) {
+							modelName = modelName.mid(mapName.size());
+						}
+						if (modelName.endsWith(".char")) {
+							modelName = modelName.left(modelName.size() - 5);
+						}
+						break;
 					}
-					if (name.endsWith(".char")) {
-						name = name.left(name.size() - 5);
-					}
-					stream.writeAttribute("model", name);
 				}
+				stream.writeAttribute("group", groupName);
+				if (!modelName.isEmpty()) {
+					stream.writeAttribute("model", modelName);
+				}
+				
 			}
 			stream.writeCharacters(text.text());
 			stream.writeEndElement(); // /text
