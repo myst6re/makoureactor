@@ -19,6 +19,7 @@
 #include "Field.h"
 #include "core/Config.h"
 #include "core/FF7Font.h"
+#include "FieldModelLoaderPC.h"
 
 Section1File::Section1File(Field *field) :
 	FieldPart(field), _scale(0), _version(0)
@@ -421,16 +422,50 @@ bool Section1File::exporter(QIODevice *device, ExportFormat format)
 		if (!device->open(QIODevice::WriteOnly | QIODevice::Truncate)) {
 			return false;
 		}
+		
+		QStringList charNames;
+		QString mapName = field()->name();
+		
+		if (field()->isPC()) {
+			FieldModelLoaderPC *modelLoader = static_cast<FieldModelLoaderPC *>(field()->fieldModelLoader());
+			if (modelLoader != nullptr) {
+				charNames = modelLoader->charNames();
+			}
+			InfFile *inf = field()->inf();
+			if (inf != nullptr) {
+				mapName = inf->mapName();
+			}
+		}
+		
 		QXmlStreamWriter stream(device);
 		stream.setAutoFormatting(true);
 		stream.writeStartDocument();
 		stream.writeStartElement("field");
 		stream.writeAttribute("name", field()->name());
 		stream.writeStartElement("texts");
-		int id=0;
+		int id = 0;
 		for (const FF7String &text : texts()) {
 			stream.writeStartElement("text");
 			stream.writeAttribute("id", QString::number(id));
+			QList<FF7Window> windows;
+			listWindows(id, windows);
+			if (!windows.empty()) {
+				const int groupId = windows.first().groupID;
+				const GrpScript &grpScript = _grpScripts.at(groupId);
+				stream.writeAttribute("group", grpScript.name());
+				const int modelId = modelID(groupId);
+				
+				if (modelId >= 0 && modelId < charNames.size()) {
+					QString name = charNames.at(modelId);
+					if (name.startsWith(mapName)) {
+						name = name.mid(mapName.size());
+					}
+					if (name.endsWith(".char")) {
+						name = name.left(name.size() - 5);
+					}
+					stream.writeAttribute("model", name);
+				}
+			}
 			stream.writeCharacters(text.text());
 			stream.writeEndElement(); // /text
 			++id;

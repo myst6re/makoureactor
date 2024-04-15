@@ -166,7 +166,7 @@ void Renderer::draw(RendererPrimitiveType _type, float _pointSize)
 		}
 	}
 
-		if (!mIndex.isCreated() && !mIndex.create()) {
+	if (!mIndex.isCreated() && !mIndex.create()) {
 #ifdef QT_DEBUG
 		qWarning() << "Cannot create the index buffer";
 #endif
