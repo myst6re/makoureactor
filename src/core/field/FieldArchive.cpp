@@ -1878,12 +1878,35 @@ bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &
 				}
 			}
 			if (toExport.contains(Chunks)) {
-				path = QDir::cleanPath(QString("%1/%2").arg(directory, f->name()));
+				path = QDir::cleanPath(directory);
+				extension = toExport.value(Chunks);
+				Field::FieldSection section;
+				if (extension == "chunk.1") {
+					section = Field::Scripts;
+				} else if (extension == "chunk.2") {
+					section = Field::Camera;
+				} else if (extension == "chunk.3") {
+					section = Field::ModelLoader;
+				} else if (extension == "chunk.4") {
+					section = Field::PalettePC;
+				} else if (extension == "chunk.5") {
+					section = Field::Walkmesh;
+				} else if (extension == "chunk.6") {
+					section = Field::Tiles;
+				} else if (extension == "chunk.7") {
+					section = Field::Encounter;
+				} else if (extension == "chunk.8") {
+					section = Field::Inf;
+				} else if (extension == "chunk.9") {
+					section = Field::Background;
+				} else {
+					return false;
+				}
 				QDir dir(path);
 				if (!dir.exists()) {
 					dir.mkpath("./");
 				}
-				if (!f->exportToChunks(dir)) {
+				if (!f->exportToChunks(dir, section)) {
 					return false;
 				}
 			}

@@ -35,7 +35,7 @@ public:
 	FieldModelLoaderPS *fieldModelLoader(bool open = true) override;
 	FieldModelFilePS *fieldModel(int modelID, int animationID = 0, bool animate = true, bool open = true) override;
 	FieldArchiveIOPS *io() const override;
-	bool exportToChunks(const QDir &dir) override;
+	bool exportToChunks(const QDir &dir, FieldSections parts) override;
 	bool saveModels(QByteArray &newData, bool compress);
 	qint8 saveModels(const QString &path, bool compress);
 	bool saveBackground(QByteArray &newData, bool compress);

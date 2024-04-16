@@ -81,7 +81,7 @@ public:
 	bool importer(const QByteArray &data, bool isPSField, FieldSections part, QIODevice *bsxDevice = nullptr,
 	               QIODevice *mimDevice = nullptr);
 	bool importChunk(const QString &path);
-	virtual bool exportToChunks(const QDir &dir) = 0;
+	virtual bool exportToChunks(const QDir &dir, FieldSections parts) = 0;
 
 	Section1File *scriptsAndTexts(bool open=true);
 	EncounterFile *encounter(bool open=true);

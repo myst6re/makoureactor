@@ -631,6 +631,101 @@ Voulez-vous vraiment continuer ?</translation>
     </message>
 </context>
 <context>
+    <name>ExportChunksDialog</name>
+    <message>
+        <source>Export to chunks</source>
+        <translation>Exporter les sections</translation>
+    </message>
+    <message>
+        <source>Export</source>
+        <translation>Exporter</translation>
+    </message>
+    <message>
+        <source>Scripts/Texts</source>
+        <translation type="obsolete">Scripts/Textes</translation>
+    </message>
+    <message>
+        <source>Musics/Tutorials</source>
+        <translation type="obsolete">Musiques / Tutoriels</translation>
+    </message>
+    <message>
+        <source>Camera</source>
+        <translation type="obsolete">Caméra</translation>
+    </message>
+    <message>
+        <source>Walkmesh</source>
+        <translation type="obsolete">Walkmesh</translation>
+    </message>
+    <message>
+        <source>Triggers/gateways</source>
+        <translation type="obsolete">Déclencheurs/Liens entre les écrans</translation>
+    </message>
+    <message>
+        <source>Model loader</source>
+        <translation type="obsolete">Liste des modèles 3D</translation>
+    </message>
+    <message>
+        <source> (partial: models and animations are not linked properly)</source>
+        <translation type="obsolete"> (partiel : les modèles et les animations ne sont pas reliés correctement)</translation>
+    </message>
+    <message>
+        <source> (partial: Z-depth might be a little broken)</source>
+        <translation type="obsolete"> (partiel : la profondeur Z sera potentiellement incorrecte)</translation>
+    </message>
+    <message>
+        <source>Select the associated BSX file</source>
+        <translation type="obsolete">Sélectionnez le fichier BSX associé</translation>
+    </message>
+    <message>
+        <source>BSX File (*.BSX);;All Files (*)</source>
+        <translation type="obsolete">Fichier BSX (*.BSX);;Tous les fichiers (*)</translation>
+    </message>
+    <message>
+        <source>Select the associated MIM file</source>
+        <translation type="obsolete">Sélectionner le fichier MIM associé</translation>
+    </message>
+    <message>
+        <source>MIM File (*.MIM);;All Files (*)</source>
+        <translation type="obsolete">Fichier MIM (*.MIM);;Tous les fichiers (*)</translation>
+    </message>
+    <message>
+        <source>Chunk 1: Scripts/Texts</source>
+        <translation>Section 1 : Scripts/Textes</translation>
+    </message>
+    <message>
+        <source>Chunk 2: Camera</source>
+        <translation>Section 2 : Caméra</translation>
+    </message>
+    <message>
+        <source>Chunk 5: Walkmesh</source>
+        <translation>Section 5 : Zone de marche</translation>
+    </message>
+    <message>
+        <source>Chunk 6: Tiles (unused)</source>
+        <translation>Section 6 : Tuiles (pas utilisé)</translation>
+    </message>
+    <message>
+        <source>Chunk 7: Encounters</source>
+        <translation>Section 7 : Rencontres aléatoires</translation>
+    </message>
+    <message>
+        <source>Chunk 8: Triggers/gateways</source>
+        <translation>Section 8 : Déclencheurs / Portes</translation>
+    </message>
+    <message>
+        <source>Chunk 3: Model loader (PC only)</source>
+        <translation>Section 3 : Modèles 3D (uniquement PC)</translation>
+    </message>
+    <message>
+        <source>Chunk 9: Background (PC only)</source>
+        <translation>Section 9 : décors (uniquement PC)</translation>
+    </message>
+    <message>
+        <source>Chunk 4: Palette (PC only)</source>
+        <translation>Section 4 : Palettes (uniquement PC)</translation>
+    </message>
+</context>
+<context>
     <name>FieldList</name>
     <message>
         <source>File</source>
@@ -1620,6 +1715,42 @@ Certains scripts peuvent y faire référence !</translation>
     <message>
         <source>Field Chunks</source>
         <translation>Sections d&apos;écran</translation>
+    </message>
+    <message>
+        <source>Chunk 1 (Scripts, texts and akaos)</source>
+        <translation>Section 1 (Scripts, textes et musiques)</translation>
+    </message>
+    <message>
+        <source>Chunk 2 (Camera)</source>
+        <translation>Section 2 (Caméra)</translation>
+    </message>
+    <message>
+        <source>Chunk 3 (Model loader PC)</source>
+        <translation>Section 3 (Modèles 3D PC)</translation>
+    </message>
+    <message>
+        <source>Chunk 4 (Palettes PC)</source>
+        <translation>Section 4 (Palettes PC)</translation>
+    </message>
+    <message>
+        <source>Chunk 5 (Walkmesh)</source>
+        <translation>Section 5 (Zone de marche)</translation>
+    </message>
+    <message>
+        <source>Chunk 6 (Tiles)</source>
+        <translation>Section 6 (Tuiles)</translation>
+    </message>
+    <message>
+        <source>Chunk 7 (Encounters)</source>
+        <translation>Section 7 (Rencontres aléatoires)</translation>
+    </message>
+    <message>
+        <source>Chunk 8 (Misc and doors)</source>
+        <translation>Section 8 (Divers et portes)</translation>
+    </message>
+    <message>
+        <source>Chunk 9 (Background PC)</source>
+        <translation>Section 9 (Décors PC)</translation>
     </message>
 </context>
 <context>

@@ -174,11 +174,15 @@ bool FieldPC::importModelLoader(const QByteArray &sectionData, bool isPSField, Q
 	return true;
 }
 
-bool FieldPC::exportToChunks(const QDir &dir)
+bool FieldPC::exportToChunks(const QDir &dir, FieldSections parts)
 {
 	quint8 sectionNum = 1;
 	QList<FieldSection> sections = orderOfSections();
 	for (FieldSection section : sections) {
+		if (!parts.testFlag(section)) {
+			++sectionNum;
+			continue;
+		}
 		QFile f(dir.filePath(QString("%1.chunk.%2").arg(name()).arg(sectionNum)));
 		if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
 			setErrorString(QString("%1: %2").arg(f.fileName(), f.errorString()));

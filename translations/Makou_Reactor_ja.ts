@@ -580,6 +580,77 @@ Are you sure you want to continue?</source>
     </message>
 </context>
 <context>
+    <name>ExportChunksDialog</name>
+    <message>
+        <source>Export to chunks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export</source>
+        <translation>エクスポート</translation>
+    </message>
+    <message>
+        <source>Scripts/Texts</source>
+        <translation type="obsolete">スクリプト/テキスト</translation>
+    </message>
+    <message>
+        <source>Musics/Tutorials</source>
+        <translation type="obsolete">サウンド/解説</translation>
+    </message>
+    <message>
+        <source>Camera</source>
+        <translation type="obsolete">カメラ</translation>
+    </message>
+    <message>
+        <source>Walkmesh</source>
+        <translation type="obsolete">ウォークメッシュ</translation>
+    </message>
+    <message>
+        <source>Triggers/gateways</source>
+        <translation type="obsolete">トリガー/出入り口</translation>
+    </message>
+    <message>
+        <source>Model loader</source>
+        <translation type="obsolete">モデル ローダー</translation>
+    </message>
+    <message>
+        <source>Chunk 1: Scripts/Texts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chunk 2: Camera</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chunk 5: Walkmesh</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chunk 6: Tiles (unused)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chunk 7: Encounters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chunk 8: Triggers/gateways</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chunk 3: Model loader (PC only)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chunk 9: Background (PC only)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chunk 4: Palette (PC only)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>FieldList</name>
     <message>
         <source>File</source>
@@ -1404,6 +1475,42 @@ Some scripts can refer to it!</source>
     </message>
     <message>
         <source>Field Chunks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chunk 1 (Scripts, texts and akaos)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chunk 2 (Camera)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chunk 3 (Model loader PC)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chunk 4 (Palettes PC)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chunk 5 (Walkmesh)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chunk 6 (Tiles)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chunk 7 (Encounters)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chunk 8 (Misc and doors)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chunk 9 (Background PC)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

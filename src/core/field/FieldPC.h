@@ -36,7 +36,7 @@ public:
 	FieldModelLoaderPC *fieldModelLoader(bool open = true) override;
 	FieldModelFilePC *fieldModel(int modelID, int animationID = 0, bool animate = true, bool open = true) override;
 	FieldModelFilePC *fieldModel(const QString &hrc, const QString &a, bool animate = true);
-	bool exportToChunks(const QDir &dir) override;
+	bool exportToChunks(const QDir &dir, FieldSections parts) override;
 protected:
 	inline int headerSize() const override { return 42; }
 	void openHeader(const QByteArray &fileData) override;

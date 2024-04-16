@@ -260,10 +260,13 @@ qint8 FieldPS::saveBackground(const QString &path, bool compress)
 	return 1;
 }
 
-bool FieldPS::exportToChunks(const QDir &dir)
+bool FieldPS::exportToChunks(const QDir &dir, FieldSections parts)
 {
 	QList<FieldSection> sections = orderOfSections();
 	for (FieldSection section : sections) {
+		if (!parts.testFlag(section)) {
+			continue;
+		}
 		QString extension;
 		switch (section) {
 		case Scripts:

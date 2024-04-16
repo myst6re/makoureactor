@@ -21,6 +21,7 @@
 #include "widgets/EncounterWidget.h"
 #include "widgets/MiscWidget.h"
 #include "widgets/ImportDialog.h"
+#include "widgets/ExportChunksDialog.h"
 #include "widgets/MassExportDialog.h"
 #include "widgets/MassImportDialog.h"
 #include "widgets/PsfDialog.h"
@@ -1407,8 +1408,18 @@ void Window::exportCurrentMapIntoChunks()
 	if (path.isNull()) {
 		return;
 	}
+	
+	ExportChunksDialog dialog(this);
+	if (dialog.exec() != QDialog::Accepted) {
+		return;
+	}
+	
+	Field::FieldSections parts = dialog.parts();
+	if (parts == 0) {
+		return;
+	}
 
-	if (!field->exportToChunks(path)) {
+	if (!field->exportToChunks(path, parts)) {
 		QMessageBox::warning(this, tr("Error"), field->errorString());
 		return;
 	}
@@ -1540,10 +1551,10 @@ void Window::importToCurrentMap()
 		}
 	} else {
 		bool isDat = selectedFilter == dat;
-	
+
 		ImportDialog dialog((isDat && fieldArchive->io()->isPS())
-							|| (!isDat && fieldArchive->io()->isPC()),
-							isDat, path, this);
+		                    || (!isDat && fieldArchive->io()->isPC()),
+		                    isDat, path, this);
 		if (dialog.exec() != QDialog::Accepted) {
 			return;
 		}

@@ -62,7 +62,16 @@ MassExportDialog::MassExportDialog(QWidget *parent) :
 	exports.insert(FieldArchive::Chunks,
 	               new FormatSelectionWidget(tr("Export chunks"),
 	                                         QStringList() <<
-	                                             tr("Field Chunks") + ";;chunk", this));
+	                                         tr("Field Chunks") + ";;chunk" <<
+	                                         tr("Chunk 1 (Scripts, texts and akaos)") + ";;chunk.1" <<
+	                                         tr("Chunk 2 (Camera)") + ";;chunk.2" <<
+	                                         tr("Chunk 3 (Model loader PC)") + ";;chunk.3" <<
+	                                         tr("Chunk 4 (Palettes PC)") + ";;chunk.4" <<
+	                                         tr("Chunk 5 (Walkmesh)") + ";;chunk.5" <<
+	                                         tr("Chunk 6 (Tiles)") + ";;chunk.6" <<
+	                                         tr("Chunk 7 (Encounters)") + ";;chunk.7" <<
+	                                         tr("Chunk 8 (Misc and doors)") + ";;chunk.8" <<
+	                                         tr("Chunk 9 (Background PC)") + ";;chunk.9", this));
 
 	exports.value(FieldArchive::Backgrounds)->setCurrentFormat(Config::value("exportBackgroundFormat").toString());
 
