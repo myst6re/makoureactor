@@ -341,6 +341,8 @@ set(PROJECT_SOURCES
     "src/widgets/VertexWidget.h"
     "src/widgets/WalkmeshManager.cpp"
     "src/widgets/WalkmeshManager.h"
+    "src/widgets/ExportChunksDialog.cpp"
+    "src/widgets/ExportChunksDialog.h"
 )
 
 if(APPLE)
@@ -540,7 +542,7 @@ if(GUI)
             GUI=1
         )
     endif()
-    
+
     set_target_properties(${GUI_TARGET} PROPERTIES
         MACOSX_BUNDLE_BUNDLE_NAME "Makou Reactor"
         MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
