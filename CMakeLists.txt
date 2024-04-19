@@ -358,6 +358,8 @@ set(PROJECT_CLI_SOURCES
     "src/ArgumentsExport.h"
     "src/ArgumentsPatch.cpp"
     "src/ArgumentsPatch.h"
+    "src/ArgumentsTools.cpp"
+    "src/ArgumentsTools.h"
     "src/CLI.cpp"
     "src/CLI.h"
     "src/Data.cpp"

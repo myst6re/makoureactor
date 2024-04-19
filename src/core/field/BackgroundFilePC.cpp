@@ -494,3 +494,84 @@ bool BackgroundFilePC::addPalette(const char *data)
 
 	return false;
 }
+
+bool BackgroundFilePC::untile(const QDir &dir) const
+{
+	BackgroundTexturesPC *texs = textures();
+	QMap<uint8_t, QImage> images;
+	
+	for (uint8_t i = 0; i < BACKGROUND_TEXTURE_PC_MAX_COUNT; ++i) {
+		if (texs->hasTex(i)) {
+			QString fileName = QString("%1_%2_00").arg(field()->name()).arg(i, 2, 10, QChar('0'));
+			QImage image;
+			if (!image.load(dir.filePath(QString("%1.png").arg(fileName)))) {
+				qWarning() << "Texture not found (only PNG format is supported)" << dir.filePath(fileName);
+				return false;
+			}
+			images.insert(i, image);
+		}
+	}
+	
+	return untile(images);
+}
+
+bool BackgroundFilePC::untile(const QMap<uint8_t, QImage> &images) const
+{
+	QSet<quint64> collect;
+	QMultiMap<quint64, Tile> tilesPerTargetImage;
+	int scale = images.first().width() / 256;
+	QRect area = tiles().rect();
+	
+	for (int layerId = 0; layerId < 4; ++layerId) {
+		BackgroundTiles ts = tiles().tiles(layerId, true);
+		const int layer = layerId == 0 ? 0 : layerId - 1;
+		for (const Tile &tile: ts) {
+			// Use the same naming than Palmer
+			quint32 i = layerId == 1 ? 128 : 0;
+			
+			if (tile.param > 0) {
+				i += 256 + (tile.param + tile.state * 64) * 4;
+			}
+			
+			if (tile.blending) {
+				i += 64 * 256 * 4;
+			}
+			
+			quint64 x = 64 + ((tile.dstX + std::abs(tile.dstX % 16)) / 16),
+			        y = 64 + ((tile.dstY + std::abs(tile.dstY % 16)) / 16);
+			
+			quint64 key = quint64(i) | ((x * 128 + y) << 32);
+			
+			while (collect.contains(key)) {
+				i += 1;
+				key = quint64(i) | ((x * 128 + y) << 32);
+			}
+			
+			collect.insert(key);
+			
+			tilesPerTargetImage.insert(quint64(i) | (quint64(layer) << 32), tile);
+		}
+	}
+	
+	QList<quint64> keys = tilesPerTargetImage.uniqueKeys();
+	
+	for (quint64 key: keys) {
+		QList<Tile> tiles = tilesPerTargetImage.values(key);
+		quint64 layer = key >> 32;
+		quint64 i = key & 0xFFFFFFFF;
+		QImage image(area.size() * scale, QImage::Format_ARGB32_Premultiplied);
+		QPainter p(&image);
+		
+		for (const Tile &tile: tiles) {
+			p.drawImage((area.topLeft() + QPoint(tile.dstX, tile.dstY)) * scale,
+			            images.value(tile.textureID),
+			            QRect(QPoint(tile.srcX, tile.srcY) * scale, QSize(tile.size, tile.size) * scale));
+		}
+
+		p.end();
+		QString fileName = QString("%1_%2_%3.png").arg(field()->name()).arg(layer).arg(i, 8, 10, QChar('0'));
+		image.save(fileName);
+	}
+	
+	return true;
+}

@@ -19,6 +19,7 @@
 #include "Arguments.h"
 #include "ArgumentsExport.h"
 #include "ArgumentsPatch.h"
+#include "ArgumentsTools.h"
 #include "core/field/FieldArchivePS.h"
 #include "core/field/FieldArchivePC.h"
 #include "core/field/BackgroundFilePC.h"
@@ -251,6 +252,74 @@ void CLI::commandPatch()
 	delete fieldArchive;
 }
 
+void CLI::commandTools()
+{
+	ArgumentsTools argsTools;
+	if (argsTools.help() || argsTools.path().isEmpty()) {
+		argsTools.showHelp();
+	}
+
+	FieldArchive *fieldArchive = openFieldArchive(argsTools.inputFormat(), argsTools.path());
+	if (fieldArchive == nullptr) {
+		return;
+	}
+
+	QList<int> selectedFields;
+	QList<QRegularExpression> includes, excludes;
+	QStringList includePatterns = argsTools.includes(), excludePatterns = argsTools.excludes();
+
+	for (const QString &pattern: includePatterns) {
+		includes.append(QRegularExpression(QRegularExpression::anchoredPattern(QRegularExpression::wildcardToRegularExpression(pattern))));
+	}
+	for (const QString &pattern: excludePatterns) {
+		excludes.append(QRegularExpression(QRegularExpression::anchoredPattern(QRegularExpression::wildcardToRegularExpression(pattern))));
+	}
+
+	FieldArchiveIterator it(*fieldArchive);
+	while (it.hasNext()) {
+		const Field *field = it.next(false);
+		if (field != nullptr) {
+			bool found = includes.isEmpty();
+			for (const QRegularExpression &regExp: includes) {
+				if (regExp.match(field->name()).hasMatch()) {
+					found = true;
+					break;
+				}
+			}
+			for (const QRegularExpression &regExp: excludes) {
+				if (regExp.match(field->name()).hasMatch()) {
+					found = false;
+					break;
+				}
+			}
+
+			if (found) {
+				selectedFields.append(it.mapId());
+			}
+		}
+	}
+
+	observer.setObserverMaximum(uint(selectedFields.size()));
+
+	int i = 0;
+
+	for (const int &mapID : selectedFields) {
+		Field *field = fieldArchive->field(mapID);
+		if (field != nullptr) {
+			if (fieldArchive->isPC()) {
+				BackgroundFilePC *bg = static_cast<BackgroundFilePC *>(field->background());
+				if (bg->isOpen()) {
+					bg->untile(argsTools.dir());
+				}
+			}
+		}
+
+		observer.setObserverValue(i++);
+	}
+
+	delete fieldArchive;
+}
+
 FieldArchive *CLI::openFieldArchive(const QString &ext, const QString &path)
 {
 	bool isPS;
@@ -342,6 +411,9 @@ void CLI::exec()
 		break;
 	case Arguments::Patch:
 		commandPatch();
+		break;
+	case Arguments::Tools:
+		commandTools();
 		break;
 	}
 }

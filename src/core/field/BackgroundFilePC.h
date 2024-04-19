@@ -48,6 +48,8 @@ public:
 	const QString &lastErrorString() const {
 		return _lastError;
 	}
+	bool untile(const QDir &dir) const;
+	bool untile(const QMap<uint8_t, QImage> &images) const;
 private:
 	using BackgroundFile::open;
 	QString _lastError;

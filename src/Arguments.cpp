@@ -155,8 +155,9 @@ Arguments::Arguments() :
 	    QCoreApplication::translate(
 	        "Arguments",
 	        "\nList of available commands:\n"
-	        "  export  Export various assets from archive to files\n"
-	        "  patch   Patch archive\n"
+	        "  export           Export various assets from archive to files\n"
+	        "  patch            Patch archive\n"
+	        "  unpack-bg-mod    Unpack background mod packed with Palmer\n"
 	        "\n"
 	        "\"%1 export --help\" to see help of the specific subcommand"
 	    ).arg(QFileInfo(qApp->arguments().first()).fileName())
@@ -182,6 +183,8 @@ void Arguments::parse()
 		_command = Export;
 	} else if (command == "patch") {
 		_command = Patch;
+	}  else if (command == "unpack-bg-mod") {
+		_command = Tools;
 	} else {
 		qWarning() << qPrintable(QCoreApplication::translate("Arguments", "Unknown command type:")) << qPrintable(command);
 		return;

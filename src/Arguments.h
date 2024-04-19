@@ -63,7 +63,8 @@ public:
 		None,
 		Export,
 		//Import,
-		Patch
+		Patch,
+		Tools
 	};
 	Arguments();
 	inline Command command() const {
