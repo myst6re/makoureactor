@@ -155,11 +155,12 @@ jobs:
         sudo add-apt-repository -y universe
         sudo apt install -y libfuse2 libxkbcommon-x11-0 libxcb-cursor0
         cmake --build ${{ env.makoureactor_build_path }} --target install -j3
+        mkdir -p ${{env.makoureactor_appbundle_path}}/usr/share/ff7tk/translations
+        cp ${{env.ff7tk_installation_path}}/share/ff7tk/translations/*.qm ${{env.makoureactor_appbundle_path}}/usr/share/ff7tk/translations
         mkdir -p ${{env.makoureactor_appbundle_path}}/usr/share/makoureactor/translations
-        cp ${{env.makoureactor_installation_path}}/share/makoureactor/translations/*.qm ${{env.makoureactor_appbundle_path}}/usr/share/makoureactor/translations/
+        cp ${{env.makoureactor_installation_path}}/share/makoureactor/translations/*.qm ${{env.makoureactor_appbundle_path}}/usr/share/makoureactor/translations
         mkdir -p ${{env.makoureactor_appbundle_path}}/usr/plugins/iconengines
         cp ${{ env.qt_installation_path }}/Qt/${{ matrix.qt }}/gcc_64/plugins/iconengines/libqsvgicon.so ${{env.makoureactor_appbundle_path}}/usr/plugins/iconengines/libqsvgicon.so
-
         export VERSION=continuous
         export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${{ env.ff7tk_installation_path }}/lib
         export PATH=$PATH:${{ env.qt_installation_path }}/Qt/${{ matrix.qt }}/gcc_64/libexec
@@ -204,7 +205,7 @@ jobs:
         rm libff7tk*.deb
     - name: Build
       run: |
-        cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DQT_DEFAULT_MAJOR_VERSION=6 -DCPACK_DEBIAN_PACKAGE_RELEASE=${{github.run_attempt}}~${{matrix.config.name}} -DBUNDLE_FF7TK_QM=OFF
+        cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DQT_DEFAULT_MAJOR_VERSION=6 -DCPACK_DEBIAN_PACKAGE_RELEASE=${{github.run_attempt}}~${{matrix.config.name}}
         cmake --build build
         cpack -G DEB -C Release --config build/CPackConfig.cmake
     - name: Upload
