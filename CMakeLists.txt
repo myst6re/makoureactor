@@ -32,7 +32,7 @@ if(NOT PRERELEASE_STRING)
     set(PRERELEASE_STRING "")
 endif()
 
-project("Makou Reactor" VERSION 2.0.0 LANGUAGES CXX
+project("Makou Reactor" VERSION 2.1.0 LANGUAGES CXX
     DESCRIPTION "Final Fantasy VII field archive editor"
     HOMEPAGE_URL "https://github.com/myst6re/makoureactor"
 )
