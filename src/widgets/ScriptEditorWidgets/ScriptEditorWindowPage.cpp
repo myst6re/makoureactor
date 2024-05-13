@@ -138,7 +138,7 @@ void ScriptEditorWindowPage::setOpcode(const Opcode &opcode)
 		hAlign->show();
 		vAlign->show();
 
-		FF7Window ff7Win = FF7Window();
+		ff7Win = FF7Window();
 		opcode.window(ff7Win);
 		x->setValue(ff7Win.x);
 		y->setValue(ff7Win.y);
