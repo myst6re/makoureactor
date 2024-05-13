@@ -1,14 +1,3 @@
-# Deploy translations
-if(APPLE)
-    set(TRANSLATIONS_PATH ${PROJECT_NAME}.app/Contents/MacOS/translations)
-elseif(WIN32)
-    set(TRANSLATIONS_PATH translations)
-else()
-    set(TRANSLATIONS_PATH share/makoureactor/translations)
-endif()
-
-install(FILES ${QM_FILES} DESTINATION "${TRANSLATIONS_PATH}")
-
 # Deploy ff7tk
 if(VCPKG_TOOLCHAIN)
     cmake_path(SET _ff7tk_ROOT "${ff7tk_DIR}/../..")
@@ -56,10 +45,6 @@ if(WIN32)
     install(FILES ${FF7TK_DEPENDS} DESTINATION ".")
 endif()
 
-list(TRANSFORM LANGS REPLACE ".+" "${_ff7tk_ROOT}/share/ff7tk/translations/ff7tk_\\0.qm" OUTPUT_VARIABLE FF7TK_QM_FILES)
-if(BUNDLE_FF7TK_QM)
-    install(FILES ${FF7TK_QM_FILES} DESTINATION "${TRANSLATIONS_PATH}")
-endif()
 # Deploy Qt using macdeployqt and windeployqt scripts
 if((APPLE AND GUI) OR WIN32)
     install(CODE "set(_target_file_dir \"${QT_DEPLOY_TMP_DIR}\")")

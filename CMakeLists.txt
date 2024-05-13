@@ -58,7 +58,6 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 option(GUI "Build the gui executable" ON)
 option(CLI "Build the cli executable" OFF)
-option(BUNDLE_FF7TK_QM "Include FF7tk QM Files in bundle" ON)
 
 add_compile_definitions(
     QT_DISABLE_DEPRECATED_BEFORE=0x050F00
@@ -505,20 +504,6 @@ elseif (WIN32)
     set(EXTRA_RESOURCES_CLI "${EXTRA_RESOURCES_GUI}")
 endif()
 
-function(add_translations target)
-    set(oneValueArgs QM_FILES_OUTPUT_VARIABLE)
-    set(multiValueArgs TS_FILES)
-    cmake_parse_arguments(arg "" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
-    set(qm_files "")
-    qt_add_translations(${target}
-        TS_FILES ${TS_FILES}
-        LUPDATE_OPTIONS -locations none
-        QM_FILES_OUTPUT_VARIABLE qm_files)
-    set("${arg_QM_FILES_OUTPUT_VARIABLE}" "${qm_files}" PARENT_SCOPE)
-    # Force lupdate
-    add_dependencies(${target}_lrelease ${target}_lupdate)
-endfunction()
-
 # GUI
 if(GUI)
     qt_add_executable(${GUI_TARGET} MANUAL_FINALIZATION MACOSX_BUNDLE WIN32 ${PROJECT_SOURCES} ${RESOURCES} ${EXTRA_RESOURCES_GUI})
@@ -558,9 +543,8 @@ if(GUI)
         set_target_properties(${GUI_TARGET} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}")
     endif()
 
-    add_translations(${GUI_TARGET}
-        TS_FILES ${TS_FILES}
-        QM_FILES_OUTPUT_VARIABLE QM_FILES)
+    add_subdirectory(translations)
+
 endif()
 
 # CLI
@@ -620,7 +604,6 @@ else()
     install(FILES ${CMAKE_SOURCE_DIR}/src/qt/images/logo-shinra.png DESTINATION share/icons/hicolor/256x256/apps RENAME io.github.myst6re.makoureactor.png)
     install(FILES ${CMAKE_SOURCE_DIR}/deploy/linux/io.github.myst6re.makoureactor.desktop DESTINATION share/applications)
     install(FILES ${CMAKE_SOURCE_DIR}/deploy/linux/io.github.myst6re.makoureactor.metainfo.xml DESTINATION share/metainfo)
-    install(FILES ${QM_FILES} DESTINATION share/makoureactor/translations)
     if(GUI)
         install(TARGETS ${GUI_TARGET} RUNTIME)
     endif()
