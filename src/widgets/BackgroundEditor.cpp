@@ -632,6 +632,7 @@ void BackgroundEditor::updateTiles(const QList<Tile> &tiles)
 {
 	Q_UNUSED(tiles)
 
+	refreshList(currentLayer());
 	refreshImage(currentLayer(), currentSection(), currentParamState(), currentEffect());
 	refreshTexture();
 }
