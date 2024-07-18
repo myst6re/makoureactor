@@ -25,10 +25,13 @@
 
 Opcode::Opcode() noexcept
 {
+	memset(&_opcode, 0, sizeof(_opcode));
 }
 
 Opcode::Opcode(const char *data, qsizetype size) noexcept
 {
+	memset(&_opcode, 0, sizeof(_opcode));
+
 	if (size <= 0) {
 		return;
 	}
@@ -39,6 +42,7 @@ Opcode::Opcode(const char *data, qsizetype size) noexcept
 
 Opcode::Opcode(OpcodeKey id, const char *params, qsizetype size) noexcept
 {
+	memset(&_opcode, 0, sizeof(_opcode));
 	_opcode.id = id;
 	setParams(params, size);
 }
@@ -175,9 +179,10 @@ QByteArray Opcode::serialize() const
 Opcode Opcode::unserialize(const QByteArray &data)
 {
 	Opcode ret;
-	ret._opcode = OPCODE();
-	memcpy(&ret._opcode, data.constData(), std::min(sizeof(_opcode), size_t(data.size())));
-	ret.setResizableData(data.mid(sizeof(_opcode)));
+	memset(&ret._opcode, 0, sizeof(ret._opcode));
+	memcpy(&ret._opcode, data.constData(), std::min(sizeof(ret._opcode), size_t(data.size())));
+	ret.clearResizableDataPointers();
+	ret.setResizableData(data.mid(sizeof(ret._opcode)));
 
 	return ret;
 }
