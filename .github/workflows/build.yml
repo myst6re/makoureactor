@@ -87,7 +87,7 @@ jobs:
         arch: ${{ matrix.win_arch }}
 
     - name: Install Qt
-      uses: jurplel/install-qt-action@v3.3.0
+      uses: jurplel/install-qt-action@v4
       with:
        dir: ${{ env.qt_installation_path }}
        arch: ${{ matrix.qt_arch }}
@@ -100,11 +100,9 @@ jobs:
       shell: bash
       run: |
         QT_MAJOR_VERSION=$(echo "${{ matrix.qt }}" | sed -E 's/^([0-9]+)\..*/\1/')
-        QT_DIR=$(eval 'echo $Qt'"$QT_MAJOR_VERSION"'_DIR')
         echo "$IQTA_TOOLS/Ninja" >> $GITHUB_PATH
         echo "$IQTA_TOOLS/CMake_64/bin" >> $GITHUB_PATH
         echo "QT_MAJOR_VERSION=$QT_MAJOR_VERSION" >> $GITHUB_ENV
-        echo "QT_DIR=$QT_DIR" >> $GITHUB_ENV
 
     - name: Set prerelease string
       if: github.event.ref_type != 'tag'
@@ -140,8 +138,8 @@ jobs:
         wget -qc "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage"
         export VERSION=continuous
         chmod a+x linuxdeploy*.AppImage
-        mv linuxdeploy-plugin-qt-*.AppImage $QT_DIR/bin/linuxdeploy-plugin-qt
-        mv linuxdeploy-*.AppImage $QT_DIR/bin/linuxdeploy
+        mv linuxdeploy-plugin-qt-*.AppImage $QT_ROOT_DIR/bin/linuxdeploy-plugin-qt
+        mv linuxdeploy-*.AppImage $QT_ROOT_DIR/bin/linuxdeploy
 
     - name: Build Makou Reactor
       id: main_build
