@@ -320,6 +320,8 @@ void FieldModel::paintGL()
 	if (qApp->desktop()->physicalDpiX() > 140) {
 		scale = 2;
 	} */ // TODO
+	
+	gpuRenderer->clear();
 
 	mProjection.setToIdentity();
 	mProjection.perspective(70.0f, (float)width() / (float)height(), 0.001f, 1000.0f);

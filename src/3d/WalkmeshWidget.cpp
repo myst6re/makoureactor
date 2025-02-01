@@ -136,6 +136,8 @@ void WalkmeshWidget::paintGL()
 		return;
 	}
 
+	gpuRenderer->clear();
+	
 	if (backgroundVisible) {
 		drawBackground();
 	}

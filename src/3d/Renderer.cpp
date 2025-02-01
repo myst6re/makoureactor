@@ -132,6 +132,8 @@ void Renderer::reset()
 void Renderer::draw(RendererPrimitiveType _type, float _pointSize)
 {
 	// --- Before Draw ---
+	mVAO.bind();
+	mProgram.bind();
 
 	// Vertex Buffer
 	if (!mVertex.isCreated() && !mVertex.create()) {
@@ -202,6 +204,9 @@ void Renderer::draw(RendererPrimitiveType _type, float _pointSize)
 		mTexture.release();
 	}
 	mGL.glDisable(GL_BLEND);
+	
+	mVAO.release();
+	mProgram.release();
 }
 
 void Renderer::setViewport(int32_t _x, int32_t _y, int32_t _width, int32_t _height)
