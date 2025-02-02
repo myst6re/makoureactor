@@ -137,6 +137,7 @@ jobs:
 
     - name: Clone ff7tk repo (Debug)
       if: matrix.build_type == 'Debug'
+      shell: bash
       run: |
         git clone -q --depth 1 --single-branch --branch continuous https://github.com/sithlord48/ff7tk.git ${{ env.ff7tk_path }}
         rm -fr ${{ env.ff7tk_path }}/.git
