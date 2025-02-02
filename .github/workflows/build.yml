@@ -142,7 +142,7 @@ jobs:
     - name: Build ff7tk (Debug)
       if: matrix.build_type == 'Debug'
       run: |
-        cmake -B ${{ env.ff7tk_build_path }} -DCMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }} -DCMAKE_INSTALL_PREFIX=${{ env.ff7tk_installation_path }} -DQT_DEFAULT_MAJOR_VERSION=${{ env.QT_MAJOR_VERSION }} ${{ matrix.cmake_extra_args }}
+        cmake -B ${{ env.ff7tk_build_path }} -UFF7TK_VERSION -DFF7TK_VERSION=1.0.0 -DCMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }} -DCMAKE_INSTALL_PREFIX=${{ env.ff7tk_installation_path }} -DQT_DEFAULT_MAJOR_VERSION=${{ env.QT_MAJOR_VERSION }} ${{ matrix.cmake_extra_args }}
         cmake --build ${{ env.ff7tk_build_path }} --target install -j3
       working-directory: ${{ env.ff7tk_path }}
 
