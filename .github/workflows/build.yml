@@ -137,14 +137,13 @@ jobs:
 
     - name: Clone ff7tk repo (Debug)
       if: matrix.build_type == 'Debug'
-      shell: bash
-      run: |
-        git clone -q --depth 1 --single-branch --branch continuous https://github.com/sithlord48/ff7tk.git ${{ env.ff7tk_path }}
-        rm -fr ${{ env.ff7tk_path }}/.git
+      run: git clone -q --depth 1 --single-branch --branch continuous https://github.com/sithlord48/ff7tk.git ${{ env.ff7tk_path }}
 
     - name: Build ff7tk (Debug)
       if: matrix.build_type == 'Debug'
+      shell: bash
       run: |
+        rm -fr .git
         cmake -B ${{ env.ff7tk_build_path }} -DCMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }} -DCMAKE_INSTALL_PREFIX=${{ env.ff7tk_installation_path }} -DQT_DEFAULT_MAJOR_VERSION=${{ env.QT_MAJOR_VERSION }} ${{ matrix.cmake_extra_args }}
         cmake --build ${{ env.ff7tk_build_path }} --target install -j3
       working-directory: ${{ env.ff7tk_path }}
