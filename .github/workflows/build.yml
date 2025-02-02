@@ -137,7 +137,7 @@ jobs:
 
     - name: Clone ff7tk repo (Debug)
       if: matrix.build_type == 'Debug'
-      run: git clone -q --depth 1 --single-branch --branch master https://github.com/sithlord48/ff7tk.git ${{ env.ff7tk_path }}
+      run: git clone -q --depth 1 --single-branch --branch continuous https://github.com/sithlord48/ff7tk.git ${{ env.ff7tk_path }}
 
     - name: Build ff7tk (Debug)
       if: matrix.build_type == 'Debug'
