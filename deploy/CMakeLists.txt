@@ -58,7 +58,11 @@ endif()
 
 # Deploy zlib
 if(WIN32)
-    get_filename_component(_ZLIB_DLL_PATH "${ZLIB_LIBRARY_RELEASE}" DIRECTORY)
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+        get_filename_component(_ZLIB_DLL_PATH "${ZLIB_LIBRARY_DEBUG}" DIRECTORY)
+    else()
+        get_filename_component(_ZLIB_DLL_PATH "${ZLIB_LIBRARY_RELEASE}" DIRECTORY)
+    endif()
     get_filename_component(_ZLIB_DLL_PATH "${_ZLIB_DLL_PATH}" DIRECTORY)
     set(_ZLIB_DLL_PATH "${_ZLIB_DLL_PATH}/bin")
     if(MINGW)
