@@ -61,6 +61,8 @@ jobs:
         - interface: cli
           cmake_cli_arg: 'ON'
           cmake_gui_arg: 'OFF'
+        - build_type: Debug
+          os: windows-latest
 
     env:
       qt_installation_path: ${{ github.workspace }}
