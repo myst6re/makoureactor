@@ -126,7 +126,7 @@ jobs:
       uses: actions/cache@v4
       with:
         path: ${{ env.zlib_installation_path }}
-        key: ${{ runner.os }}${{ matrix.win_arch }}-zlib-${{ env.zlib_version}}
+        key: ${{ runner.os }}${{ matrix.win_arch }}-zlib-${{ env.zlib_version}}-${{ env.CMAKE_BUILD_TYPE }}
 
     - name: Install Zlib
       if: (runner.os == 'Windows') && (steps.cache-zlib.outputs.cache-hit != 'true')
