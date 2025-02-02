@@ -28,6 +28,7 @@ jobs:
           - gui
         build_type:
           - Release
+          - Debug
         include:
         - qt_tools: tools_ninja
           qt_modules: qt5compat
@@ -61,8 +62,13 @@ jobs:
         - interface: cli
           cmake_cli_arg: 'ON'
           cmake_gui_arg: 'OFF'
+        exclude:
         - build_type: Debug
-          os: windows-latest
+          interface: cli
+        - build_type: Debug
+          os: macos-latest
+        - build_type: Debug
+          os: ubuntu-latest
 
     env:
       qt_installation_path: ${{ github.workspace }}
