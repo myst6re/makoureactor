@@ -12,7 +12,7 @@ env:
 
 jobs:
   main_build:
-    name: ${{ matrix.package_suffix }} ${{ matrix.interface }}
+    name: ${{ matrix.package_suffix }} ${{ matrix.interface }} ${{ matrix.build_type }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -76,6 +76,8 @@ jobs:
       zlib_build_path: ${{ github.workspace }}/../build-zlib-git
       zlib_installation_path: C:/zlib
       zlib_version: "1.3"
+      ff7tk_path: ${{ github.workspace }}/../ff7tk-git
+      ff7tk_build_path: ${{ github.workspace }}/../build-ff7tk-git
       ff7tk_installation_path: ${{ github.workspace }}/ff7tk
       makoureactor_build_path: ${{ github.workspace }}/../build-makoureactor
       makoureactor_installation_path: ${{ github.workspace }}/../installation-makoureactor
@@ -133,10 +135,23 @@ jobs:
         cmake -S${{ env.zlib_path }} -B${{ env.zlib_build_path }} -DCMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }} -DCMAKE_INSTALL_PREFIX=${{ env.zlib_installation_path }}
         cmake --build ${{ env.zlib_build_path }} --target install -j3
 
+    - name: Clone ff7tk repo (Debug)
+      if: matrix.build_type == 'Debug'
+      run: git clone -q --depth 1 --single-branch --branch master https://github.com/sithlord48/ff7tk.git ${{ env.ff7tk_path }}
+
+    - name: Build ff7tk (Debug)
+      if: matrix.build_type == 'Debug'
+      run: |
+        cmake -B ${{ env.ff7tk_build_path }} -DCMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }} -DCMAKE_INSTALL_PREFIX=${{ env.ff7tk_installation_path }} -DQT_DEFAULT_MAJOR_VERSION=${{ env.QT_MAJOR_VERSION }} ${{ matrix.cmake_extra_args }}
+        cmake --build ${{ env.ff7tk_build_path }} --target install -j3
+      working-directory: ${{ env.ff7tk_path }}
+
     - name: Get ff7tk redist
+      if: matrix.build_type == 'Release'
       run: curl -LJO https://github.com/sithlord48/ff7tk/releases/download/continuous/${{ env.ff7tk_package }}
 
     - name: Install ff7tk
+      if: matrix.build_type == 'Release'
       run: ${{matrix.ff7tk_install_command_extract}} ${{env.ff7tk_package}} ${{matrix.ff7tk_install_command_dest}}${{env.ff7tk_installation_path}}
 
     - name: Download linuxdeployqt
@@ -178,12 +193,12 @@ jobs:
 
     - name: Prepare Upload
       shell: bash
-      run: mv ../build-makoureactor/*.${{ matrix.package_extension }} makoureactor-continuous-${{ matrix.interface }}-${{ matrix.package_suffix }}.${{ matrix.package_extension }}
+      run: mv ../build-makoureactor/*.${{ matrix.package_extension }} makoureactor-continuous-${{ matrix.interface }}-${{ matrix.package_suffix }}-${{ matrix.build_type }}.${{ matrix.package_extension }}
 
     - name: Upload
       uses: actions/upload-artifact@v4
       with:
-        name: artifact-${{ matrix.package_suffix }}-${{ matrix.interface }}
+        name: artifact-${{ matrix.package_suffix }}-${{ matrix.interface }}-${{ matrix.build_type }}
         path: ${{ github.workspace }}/makoureactor-continuous-*.*
 
   deb_builder:
@@ -253,7 +268,9 @@ jobs:
 
     - name: Prepare Upload
       shell: bash
-      run: find . -type f -name 'makoureactor-continuous-*' -exec bash -c 'mv "{}" $(echo {} | sed 's/continuous-//')' ';'
+      run: |
+        find . -type f -name 'makoureactor-continuous-*-Debug*' -delete
+        find . -type f -name 'makoureactor-continuous-*' -exec bash -c 'mv "{}" $(echo {} | sed 's/continuous-//' | sed 's/-Release//')' ';'
 
     - name: Deploy Package
       uses: crowbarmaster/GH-Automatic-Releases@latest
