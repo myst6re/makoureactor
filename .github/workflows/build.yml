@@ -18,7 +18,7 @@ jobs:
       fail-fast: false
       matrix:
         qt:
-          - 6.6.3
+          - 6.8.2
         os:
           - ubuntu-latest
           - macos-latest
@@ -50,7 +50,7 @@ jobs:
           package_extension: 'zip'
           package_suffix: 'win64'
           win_arch: "x64"
-          qt_arch: win64_msvc2019_64
+          qt_arch: win64_msvc2022_64
           cmake_extra_args: '-DZLIB_ROOT=C:/zlib'
           qt_tools: tools_ninja, tools_cmake
           ff7tk_pack_suffix: "win64.7z"
@@ -208,7 +208,7 @@ jobs:
         path: ${{ github.workspace }}/makoureactor-continuous-*.*
 
   deb_builder:
-    name: debianBuilder-${{matrix.config.name}}
+    name: debianBuilder-${{matrix.config.name}}-${{matrix.config.arch}}
     runs-on: ${{matrix.config.os}}
     strategy:
       fail-fast: false
@@ -216,7 +216,19 @@ jobs:
         config:
         - {
              name: jammy , os: ubuntu-22.04
-             , debArch: amd64
+             , arch: x86_64
+          }
+        - {
+             name: jammy , os: ubuntu-22.04-arm
+             , arch: aarch64
+          }
+        - {
+             name: noble , os: ubuntu-24.04
+             , arch: x86_64
+          }
+        - {
+             name: noble , os: ubuntu-24.04-arm
+             , arch: aarch64
           }
     steps:
     - uses: actions/checkout@v4
@@ -227,7 +239,7 @@ jobs:
       run: |
         sudo apt-get update -y > /dev/null
         sudo apt-get install -qqq ${{env.debianRequirements}} > /dev/null
-        curl -s https://api.github.com/repos/sithlord48/ff7tk/releases/latest | awk -F\" '/browser_download_url.*${{matrix.config.debArch}}*[.deb]/{print $(NF-1)}' | wget -i -
+        curl -s https://api.github.com/repos/sithlord48/ff7tk/releases/latest | awk -F\" '/browser_download_url.*${{matrix.config.name}}-${{matrix.config.arch}}*[.deb]/{print $(NF-1)}' | wget -i -
         sudo apt -y -qqq install ./libff7tk*.deb
         rm libff7tk*.deb
     - name: Build
@@ -238,7 +250,7 @@ jobs:
     - name: Upload
       uses: actions/upload-artifact@v4
       with:
-        name: debian-artifacts-${{ matrix.config.name }}}
+        name: debian-artifacts-${{ matrix.config.name }}-${{matrix.config.arch}}
         path: makoureactor*.deb
 
   pre_release_assets:
