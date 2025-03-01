@@ -16,6 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "ExportChunksDialog.h"
+#include "core/Config.h"
 
 ExportChunksDialog::ExportChunksDialog(QWidget *parent) :
 	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint)
@@ -33,15 +34,15 @@ ExportChunksDialog::ExportChunksDialog(QWidget *parent) :
 	mim = new QCheckBox(tr("Chunk 9: Background (PC only)"));
 	palette = new QCheckBox(tr("Chunk 4: Palette (PC only)"));
 	
-	scripts->setChecked(scripts->isEnabled());
-	ca->setChecked(ca->isEnabled());
-	id->setChecked(id->isEnabled());
-	tiles->setChecked(tiles->isEnabled());
-	encounter->setChecked(encounter->isEnabled());
-	inf->setChecked(inf->isEnabled());
-	model->setChecked(model->isEnabled());
-	mim->setChecked(mim->isEnabled());
-	palette->setChecked(palette->isEnabled());
+	scripts->setChecked(Config::value("exportChunksCheckedScripts", true).toBool());
+	ca->setChecked(Config::value("exportChunksCheckedCa", true).toBool());
+	id->setChecked(Config::value("exportChunksCheckedId", true).toBool());
+	tiles->setChecked(Config::value("exportChunksCheckedTiles", true).toBool());
+	encounter->setChecked(Config::value("exportChunksCheckedEncounter", true).toBool());
+	inf->setChecked(Config::value("exportChunksCheckedInf", true).toBool());
+	model->setChecked(Config::value("exportChunksCheckedModel", true).toBool());
+	mim->setChecked(Config::value("exportChunksCheckedMim", true).toBool());
+	palette->setChecked(Config::value("exportChunksCheckedPalette", true).toBool());
 
 	QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal);
 
@@ -79,6 +80,16 @@ Field::FieldSections ExportChunksDialog::parts() const
 	if (encounter->isChecked()) parts |= Field::Encounter;
 	if (inf->isChecked())       parts |= Field::Inf;
 	if (mim->isChecked())       parts |= Field::Background;
+
+	Config::setValue("exportChunksCheckedScripts", scripts->isChecked());
+	Config::setValue("exportChunksCheckedCa", ca->isChecked());
+	Config::setValue("exportChunksCheckedModel", model->isChecked());
+	Config::setValue("exportChunksCheckedPalette", palette->isChecked());
+	Config::setValue("exportChunksCheckedId", id->isChecked());
+	Config::setValue("exportChunksCheckedTiles", tiles->isChecked());
+	Config::setValue("exportChunksCheckedEncounter", encounter->isChecked());
+	Config::setValue("exportChunksCheckedInf", inf->isChecked());
+	Config::setValue("exportChunksCheckedMim", mim->isChecked());
 
 	return parts;
 }
