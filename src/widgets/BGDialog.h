@@ -18,7 +18,7 @@
 #pragma once
 
 #include <QtWidgets>
-#include "ApercuBGLabel.h"
+#include "PreviewBGLabel.h"
 #include "BackgroundEditor.h"
 #include "BackgroundPaletteEditor.h"
 
@@ -50,11 +50,11 @@ private slots:
 private:
 	void createEditorPage();
 	void createPalettesPage();
-	QImage background(bool *bgWarning = nullptr);
+	QImage background(bool *bgWarning = nullptr, bool transparent = false);
 	void fillWidgets();
 
 	Field *_field;
-	ApercuBGLabel *image;
+	PreviewBGLabel *image;
 	QTabBar *mainTabBar;
 	QStackedLayout *stackedLayout;
 	QWidget *viewerPage;

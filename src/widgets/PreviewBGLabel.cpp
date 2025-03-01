@@ -1,5 +1,5 @@
 /****************************************************************************
- ** Deling Final Fantasy VIII Field Editor
+ ** Makou Reactor Final Fantasy VII Field Script Editor
  ** Copyright (C) 2009-2022 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
@@ -15,35 +15,48 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#pragma once
-
-#include <QtWidgets>
 #include "PreviewBGLabel.h"
-#include "3d/FieldModel.h"
 
-class ArchivePreview : public QStackedWidget
+PreviewBGLabel::PreviewBGLabel(QWidget *parent)
+	: QLabel(parent), _showSave(false)
 {
-	Q_OBJECT
-public:
-	enum Pages { EmptyPage = 0, ImagePage, TextPage, ModelPage };
-	explicit ArchivePreview(QWidget *parent = nullptr);
-	void clearPreview();
-	void imagePreview(const QPixmap &image, const QString &name = QString(),
-	                  int palID = 0, int palCount = 0, int imageID = 0,
-	                  int imageCount = 0);
-	void textPreview(const QString &text);
-	void modelPreview(FieldModelFile *fieldModel);
-signals:
-	void currentImageChanged(int);
-	void currentPaletteChanged(int);
-public slots:
-	void saveImage();
-private:
-	QWidget *imageWidget();
-	QWidget *textWidget();
-	QWidget *modelWidget();
-	QScrollArea *scrollArea;
-	QComboBox *imageSelect, *palSelect;
-	PreviewBGLabel *_lbl;
-	QString _name;
-};
+}
+
+void PreviewBGLabel::paintEvent(QPaintEvent *e)
+{
+	QLabel::paintEvent(e);
+
+	if (isEnabled() && _showSave) {
+		QPainter painter(this);
+		painter.drawPixmap(0, 0, QIcon::fromTheme(QStringLiteral("document-save")).pixmap(32));
+		painter.end();
+	}
+}
+
+void PreviewBGLabel::enterEvent(QEnterEvent *e)
+{
+	QLabel::enterEvent(e);
+
+	_showSave = true;
+	update(0, 0, 32, 32);
+}
+
+void PreviewBGLabel::leaveEvent(QEvent *e)
+{
+	QLabel::leaveEvent(e);
+
+	_showSave = false;
+	update(0, 0, 32, 32);
+}
+
+void PreviewBGLabel::mousePressEvent(QMouseEvent *e)
+{
+	QLabel::mousePressEvent(e);
+	QPointF pos = e->position();
+
+	if (e->button() == Qt::LeftButton &&
+	        pos.x() >= 0.0 && pos.x() < 32.0 &&
+	        pos.y() >= 0.0 && pos.y() < 32.0) {
+		emit saveRequested();
+	}
+}

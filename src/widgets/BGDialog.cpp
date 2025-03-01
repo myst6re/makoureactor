@@ -27,7 +27,7 @@ BGDialog::BGDialog(QWidget *parent) :
 
 	viewerPage = new QWidget();
 
-	image = new ApercuBGLabel();
+	image = new PreviewBGLabel();
 	image->setAlignment(Qt::AlignCenter);
 
 	imageBox = new QScrollArea(this);
@@ -95,7 +95,7 @@ BGDialog::BGDialog(QWidget *parent) :
 	mainLayout->addWidget(mainTabBar, 0, mainTabBar->documentMode() ? Qt::AlignCenter : Qt::Alignment());
 	mainLayout->addLayout(stackedLayout);
 
-	connect(image, &ApercuBGLabel::saveRequested, this, &BGDialog::saveImage);
+	connect(image, &PreviewBGLabel::saveRequested, this, &BGDialog::saveImage);
 	connect(parametersWidget, &QComboBox::currentIndexChanged, this, &BGDialog::parameterChanged);
 	connect(layersWidget, &QListWidget::itemSelectionChanged, this, &BGDialog::layerChanged);
 	connect(sectionsWidget, &QListWidget::itemSelectionChanged, this, &BGDialog::sectionChanged);
@@ -439,8 +439,22 @@ void BGDialog::saveImage()
 	if (path.isNull()) {
 		return;
 	}
+	
+	QDialog dialog(this);
+	dialog.setWindowTitle(tr("Export options"));
+	QCheckBox checkBox(tr("Transparent background"), &dialog);
+	QDialogButtonBox buttonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, &dialog);
+	connect(&buttonBox, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
+	connect(&buttonBox, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
+	QVBoxLayout layout(&dialog);
+	layout.addWidget(&checkBox, 1);
+	layout.addWidget(&buttonBox);
 
-	background().save(path);
+	if (dialog.exec() != QDialog::Accepted) {
+		return;
+	}
+
+	background(nullptr, checkBox.isChecked()).save(path);
 
 	qsizetype index = path.lastIndexOf('/');
 	Config::setValue("saveBGPath", index == -1 ? path : path.left(index));
@@ -461,18 +475,18 @@ void BGDialog::tryToRepairBG()
 	}
 }
 
-QImage BGDialog::background(bool *bgWarning)
+QImage BGDialog::background(bool *bgWarning, bool transparent)
 {
 	if (_field == nullptr) {
 		return QImage();
 	}
 
 	if (tabBar->currentIndex() == 0) {
-		return _field->background()->openBackground(&params, z, layers, nullptr, false, false, bgWarning);
+		return _field->background()->openBackground(&params, z, layers, nullptr, false, transparent, bgWarning);
 	}
 
 	bool layers[4] = { false, true, false, false };
-	return _field->background()->openBackground(&params, z, layers, &sections, false, false, bgWarning);
+	return _field->background()->openBackground(&params, z, layers, &sections, false, transparent, bgWarning);
 }
 
 void BGDialog::updateBG()

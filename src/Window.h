@@ -25,7 +25,7 @@
 #include "widgets/VarManager.h"
 #include "widgets/TextManager.h"
 #include "widgets/BGDialog.h"
-#include "widgets/ApercuBG.h"
+#include "widgets/PreviewBG.h"
 #include "widgets/Search.h"
 #include "3d/FieldModel.h"
 #include "widgets/ModelManagerPC.h"
@@ -124,7 +124,7 @@ private:
 	QLineEdit *lineSearch;
 	FieldList *_fieldList;
 	QStackedWidget *zonePreview;
-	ApercuBG *zoneImage;
+	PreviewBG *zoneImage;
 	FieldModel *fieldModel;
 	Splitter *horizontalSplitter, *verticalSplitter;
 

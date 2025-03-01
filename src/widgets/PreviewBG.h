@@ -1,5 +1,5 @@
 /****************************************************************************
- ** Deling Final Fantasy VIII Field Editor
+ ** Makou Reactor Final Fantasy VII Field Script Editor
  ** Copyright (C) 2009-2022 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
@@ -18,32 +18,33 @@
 #pragma once
 
 #include <QtWidgets>
-#include "PreviewBGLabel.h"
-#include "3d/FieldModel.h"
 
-class ArchivePreview : public QStackedWidget
+class Field;
+
+class PreviewBG : public QLabel
 {
 	Q_OBJECT
 public:
-	enum Pages { EmptyPage = 0, ImagePage, TextPage, ModelPage };
-	explicit ArchivePreview(QWidget *parent = nullptr);
-	void clearPreview();
-	void imagePreview(const QPixmap &image, const QString &name = QString(),
-	                  int palID = 0, int palCount = 0, int imageID = 0,
-	                  int imageCount = 0);
-	void textPreview(const QString &text);
-	void modelPreview(FieldModelFile *fieldModel);
+	explicit PreviewBG(QWidget *parent = nullptr);
+	void fill(Field *field, bool reload = false);
+	void clear();
+	inline QSize minimumSizeHint() const override {
+		return QSize(100, 100);
+	}
+	inline QSize sizeHint() const override {
+		return QSize(300, 225);
+	}
 signals:
-	void currentImageChanged(int);
-	void currentPaletteChanged(int);
+	void clicked();
 public slots:
-	void saveImage();
+	void drawBackground();
 private:
-	QWidget *imageWidget();
-	QWidget *textWidget();
-	QWidget *modelWidget();
-	QScrollArea *scrollArea;
-	QComboBox *imageSelect, *palSelect;
-	PreviewBGLabel *_lbl;
-	QString _name;
+	static QPixmap errorPixmap(const QSize &size);
+	Field *_field;
+	QPixmap _background;
+	QSize _backgroundSize;
+	bool _error;
+protected:
+	void mouseReleaseEvent(QMouseEvent *e) override;
+	void resizeEvent(QResizeEvent *e) override;
 };

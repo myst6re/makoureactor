@@ -18,7 +18,7 @@ set ( makoureactor_TRS
     Makou_Reactor_ja.ts
 )
 
-qt_create_translation(APP_QM_FILES ${CMAKE_SOURCE_DIR} ${makoureactor_TRS} OPTIONS -no-ui-lines -locations none)
+qt_create_translation(APP_QM_FILES ${CMAKE_SOURCE_DIR}/src ${makoureactor_TRS} OPTIONS -no-ui-lines -locations none)
 add_custom_target(app_translations ALL DEPENDS ${APP_QM_FILES})
 install(FILES ${APP_QM_FILES} DESTINATION "${TRANSLATIONS_PATH}")
 

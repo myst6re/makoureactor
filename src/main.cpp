@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
 	QString lang = QLocale::system().name();
 	lang = Config::value("lang", lang.left(lang.indexOf("_")).toLower()).toString();
 	QTranslator translator1;
-	if (translator1.load("qt_" % lang, Config::programLanguagesDir()) || translator1.load("qt_" % lang, QLibraryInfo::location(QLibraryInfo::TranslationsPath))) {
+	if (translator1.load("qt_" % lang, Config::programLanguagesDir()) || translator1.load("qt_" % lang, QLibraryInfo::path(QLibraryInfo::TranslationsPath))) {
 		app.installTranslator(&translator1);
 	}
 	QTranslator translator2;

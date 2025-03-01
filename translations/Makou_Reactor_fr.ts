@@ -33,7 +33,7 @@
     <message>
         <source>Error</source>
         <oldsource>Erreur</oldsource>
-        <translation>Erreur</translation>
+        <translation type="vanished">Erreur</translation>
     </message>
 </context>
 <context>
@@ -65,6 +65,77 @@
     <message>
         <source>PNG image (*.png);;JPG image (*.jpg);;BMP image (*.bmp);;Portable Pixmap (*.ppm)</source>
         <translation>Image PNG (*.png);;Image JPG (*.jpg);;Image BMP (*.bmp);;Portable Pixmap (*.ppm)</translation>
+    </message>
+</context>
+<context>
+    <name>Arguments</name>
+    <message>
+        <source>Input file or directory.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning: cannot open file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Command to execute</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>
+List of available commands:
+  export           Export various assets from archive to files
+  patch            Patch archive
+  unpack-bg-mod    Unpack background mod packed with Palmer
+
+&quot;%1 export --help&quot; to see help of the specific subcommand</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please specify a command</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown command type:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error: you cannot specify both background and bg-layer parameters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error: too much parameters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error: --psf-lib-path is required with --music psf/minipsf</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error: target directory does not exist:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output file (optional).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error: directory does not exist:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ArgumentsExport</name>
+    <message>
+        <source>Output directory.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ArgumentsTools</name>
+    <message>
+        <source>Input/Output directory.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -145,6 +216,14 @@
     <message>
         <source>Palettes</source>
         <translation>Palettes</translation>
+    </message>
+    <message>
+        <source>Export options</source>
+        <translation>Options d&apos;export</translation>
+    </message>
+    <message>
+        <source>Transparent background</source>
+        <translation>Fond transparent</translation>
     </message>
 </context>
 <context>
@@ -368,47 +447,55 @@ Voulez-vous vraiment continuer ?</translation>
     <name>CLI</name>
     <message>
         <source>An error occured when exporting</source>
-        <translation type="obsolete">Une erreur s&apos;est produite lors de l&apos;exportation</translation>
+        <translation type="unfinished">Une erreur s&apos;est produite lors de l&apos;exportation</translation>
     </message>
     <message>
         <source>Nothing found!</source>
-        <translation type="obsolete">Rien trouvé !</translation>
+        <translation type="unfinished">Rien trouvé !</translation>
     </message>
     <message>
         <source>The file already exists</source>
-        <translation type="obsolete">Le fichier existe déjà</translation>
+        <translation type="unfinished">Le fichier existe déjà</translation>
     </message>
     <message>
         <source>The file is inaccessible</source>
-        <translation type="obsolete">Le fichier est inaccessible</translation>
+        <translation type="unfinished">Le fichier est inaccessible</translation>
     </message>
     <message>
         <source>Can not create temporary file</source>
-        <translation type="obsolete">Impossible de créer un fichier temporaire</translation>
+        <translation type="unfinished">Impossible de créer un fichier temporaire</translation>
     </message>
     <message>
         <source>Unable to remove the file, check write permissions.</source>
-        <translation type="obsolete">Impossible de supprimer le fichier, vérifiez les droits d&apos;écriture.</translation>
+        <translation type="unfinished">Impossible de supprimer le fichier, vérifiez les droits d&apos;écriture.</translation>
     </message>
     <message>
         <source>Failed to rename the file, check write permissions.</source>
-        <translation type="obsolete">Impossible de renommer le fichier, vérifiez les droits d&apos;écriture.</translation>
+        <translation type="unfinished">Impossible de renommer le fichier, vérifiez les droits d&apos;écriture.</translation>
     </message>
     <message>
         <source>Failed to copy the file, check write permissions.</source>
-        <translation type="obsolete">Impossible de copier le fichier, vérifiez les droits d&apos;écriture.</translation>
+        <translation type="unfinished">Impossible de copier le fichier, vérifiez les droits d&apos;écriture.</translation>
     </message>
     <message>
         <source>Invalid file</source>
-        <translation type="obsolete">Fichier invalide</translation>
+        <translation type="unfinished">Fichier invalide</translation>
     </message>
     <message>
         <source>This error should not appear, thank you for reporting it</source>
-        <translation type="obsolete">Cette erreur ne devrais pas s&apos;afficher, merci de le signaler</translation>
+        <translation type="unfinished">Cette erreur ne devrais pas s&apos;afficher, merci de le signaler</translation>
     </message>
     <message>
         <source>Error</source>
-        <translation type="obsolete">Erreur</translation>
+        <translation type="unfinished">Erreur</translation>
+    </message>
+    <message>
+        <source>Retry? [Yn] </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>y</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1144,35 +1231,39 @@ Certains scripts peuvent y faire référence !</translation>
     <name>GrpScriptWizardPageType</name>
     <message>
         <source>Empty</source>
-        <translation type="vanished">Vide</translation>
+        <translation>Vide</translation>
     </message>
     <message>
         <source>3D Model</source>
-        <translation type="vanished">Modèle 3D</translation>
+        <translation>Modèle 3D</translation>
     </message>
     <message>
         <source>Line</source>
-        <translation type="vanished">Ligne</translation>
+        <translation>Ligne</translation>
     </message>
     <message>
         <source>Other</source>
-        <translation type="vanished">Autre</translation>
+        <translation>Autre</translation>
     </message>
     <message>
         <source>Main Character</source>
-        <translation type="vanished">Personnage principal</translation>
+        <translation>Personnage principal</translation>
     </message>
     <message>
         <source>Non Playable Character</source>
-        <translation type="vanished">Personnage non jouable</translation>
+        <translation>Personnage non jouable</translation>
     </message>
     <message>
         <source>Item</source>
-        <translation type="vanished">Objet</translation>
+        <translation>Objet</translation>
     </message>
     <message>
         <source>Save Point</source>
-        <translation type="vanished">Point de sauvegarde</translation>
+        <translation>Point de sauvegarde</translation>
+    </message>
+    <message>
+        <source>Animation</source>
+        <translation>Animation</translation>
     </message>
 </context>
 <context>
@@ -4235,6 +4326,13 @@ Certains scripts peuvent y faire référence !</translation>
     <message>
         <source>Resize backgrounds to 16/9 ratio</source>
         <translation>Redimensionner décors en ratio 16/9</translation>
+    </message>
+</context>
+<context>
+    <name>PreviewBG</name>
+    <message>
+        <source>Error</source>
+        <translation>Erreur</translation>
     </message>
 </context>
 <context>

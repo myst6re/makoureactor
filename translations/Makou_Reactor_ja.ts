@@ -29,7 +29,7 @@
     <name>ApercuBG</name>
     <message>
         <source>Error</source>
-        <translation>エラー</translation>
+        <translation type="vanished">エラー</translation>
     </message>
 </context>
 <context>
@@ -62,6 +62,77 @@
     <message>
         <source>PNG image (*.png);;JPG image (*.jpg);;BMP image (*.bmp);;Portable Pixmap (*.ppm)</source>
         <translation>PNG 画像 (*.png);;JPG 画像 (*.jpg);;BMP 画像 (*.bmp);;Portable Pixmap (*.ppm)</translation>
+    </message>
+</context>
+<context>
+    <name>Arguments</name>
+    <message>
+        <source>Input file or directory.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning: cannot open file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Command to execute</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>
+List of available commands:
+  export           Export various assets from archive to files
+  patch            Patch archive
+  unpack-bg-mod    Unpack background mod packed with Palmer
+
+&quot;%1 export --help&quot; to see help of the specific subcommand</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please specify a command</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown command type:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error: you cannot specify both background and bg-layer parameters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error: too much parameters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error: --psf-lib-path is required with --music psf/minipsf</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error: target directory does not exist:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output file (optional).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error: directory does not exist:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ArgumentsExport</name>
+    <message>
+        <source>Output directory.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ArgumentsTools</name>
+    <message>
+        <source>Input/Output directory.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -141,6 +212,14 @@
     </message>
     <message>
         <source>Palettes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transparent background</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -359,23 +438,55 @@ Are you sure you want to continue?</source>
     <name>CLI</name>
     <message>
         <source>Nothing found!</source>
-        <translation type="obsolete">見つかりませんでした！</translation>
+        <translation type="unfinished">見つかりませんでした！</translation>
     </message>
     <message>
         <source>The file is inaccessible</source>
-        <translation type="obsolete">ファイルにアクセスできません</translation>
+        <translation type="unfinished">ファイルにアクセスできません</translation>
     </message>
     <message>
         <source>Can not create temporary file</source>
-        <translation type="obsolete">一時ファイルが作成できません</translation>
+        <translation type="unfinished">一時ファイルが作成できません</translation>
     </message>
     <message>
         <source>Invalid file</source>
-        <translation type="obsolete">無効なファイル</translation>
+        <translation type="unfinished">無効なファイル</translation>
     </message>
     <message>
         <source>Error</source>
-        <translation type="obsolete">エラー</translation>
+        <translation type="unfinished">エラー</translation>
+    </message>
+    <message>
+        <source>Retry? [Yn] </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>y</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>An error occured when exporting</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The file already exists</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unable to remove the file, check write permissions.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to rename the file, check write permissions.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to copy the file, check write permissions.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This error should not appear, thank you for reporting it</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1040,11 +1151,39 @@ Some scripts can refer to it!</source>
     <name>GrpScriptWizardPageType</name>
     <message>
         <source>Animation</source>
-        <translation type="obsolete">アニメーション</translation>
+        <translation type="unfinished">アニメーション</translation>
     </message>
     <message>
         <source>Item</source>
-        <translation type="obsolete">アイテム</translation>
+        <translation type="unfinished">アイテム</translation>
+    </message>
+    <message>
+        <source>Empty</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>3D Model</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Other</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Main Character</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Non Playable Character</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save Point</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -3705,6 +3844,13 @@ Some scripts can refer to it!</source>
     <message>
         <source>Resize backgrounds to 16/9 ratio</source>
         <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PreviewBG</name>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">エラー</translation>
     </message>
 </context>
 <context>

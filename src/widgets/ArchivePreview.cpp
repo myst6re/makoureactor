@@ -81,13 +81,13 @@ void ArchivePreview::imagePreview(const QPixmap &image, const QString &name,
                                    int imageCount)
 {
 	setCurrentIndex(ImagePage);
-	_lbl = new ApercuBGLabel();
+	_lbl = new PreviewBGLabel();
 	_lbl->setPixmap(image);
 	scrollArea->setWidget(_lbl);
 
 	this->_name = name;
 
-	connect(_lbl, &ApercuBGLabel::saveRequested, this, &ArchivePreview::saveImage);
+	connect(_lbl, &PreviewBGLabel::saveRequested, this, &ArchivePreview::saveImage);
 
 	imageSelect->blockSignals(true);
 	imageSelect->clear();

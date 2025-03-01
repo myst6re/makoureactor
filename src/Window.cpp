@@ -185,7 +185,7 @@ Window::Window() :
 
 	_fieldList = new FieldList(this);
 
-	zoneImage = new ApercuBG();
+	zoneImage = new PreviewBG();
 	if (Config::value("OpenGL", true).toBool()) {
 		fieldModel = new FieldModel();
 //		modelThread = new FieldModelThread(this);
@@ -255,7 +255,7 @@ Window::Window() :
 	connect(_fieldList, &FieldList::itemSelectionChanged, this, [&] {openField(false);});
 	connect(_fieldList, &FieldList::changed, this, [&] {setModified(true);});
 	connect(_fieldList, &FieldList::fieldDeleted, this, &Window::setFieldDeleted);
-	connect(zoneImage, &ApercuBG::clicked, this, &Window::backgroundManager);
+	connect(zoneImage, &PreviewBG::clicked, this, &Window::backgroundManager);
 	connect(searchDialog, &Search::found, this, &Window::gotoOpcode);
 	connect(searchDialog, &Search::foundText, this, &Window::gotoText);
 	connect(_scriptManager, &ScriptManager::groupScriptCurrentChanged, this, qOverload<int>(&Window::showModel));
@@ -355,9 +355,7 @@ void Window::fillRecentMenu()
 		_recentMenu->addAction(QDir::toNativeSeparators(recentFile));
 	}
 
-	if (_recentMenu->actions().isEmpty()) {
-		_recentMenu->setDisabled(true);
-	}
+	_recentMenu->setDisabled(_recentMenu->actions().isEmpty());
 }
 
 void Window::toggleFieldList()
@@ -1770,7 +1768,7 @@ void Window::backgroundManager()
 	if (!_backgroundManager) {
 		_backgroundManager = new BGDialog(this);
 		connect(_backgroundManager, &BGDialog::modified, this, [&] {setModified(true);});
-		connect(_backgroundManager, &BGDialog::modified, zoneImage, &ApercuBG::drawBackground);
+		connect(_backgroundManager, &BGDialog::modified, zoneImage, &PreviewBG::drawBackground);
 	}
 
 	if (field) {

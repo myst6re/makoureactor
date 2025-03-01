@@ -1,5 +1,5 @@
 /****************************************************************************
- ** Deling Final Fantasy VIII Field Editor
+ ** Makou Reactor Final Fantasy VII Field Script Editor
  ** Copyright (C) 2009-2022 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
@@ -18,32 +18,19 @@
 #pragma once
 
 #include <QtWidgets>
-#include "PreviewBGLabel.h"
-#include "3d/FieldModel.h"
 
-class ArchivePreview : public QStackedWidget
+class PreviewBGLabel : public QLabel
 {
 	Q_OBJECT
 public:
-	enum Pages { EmptyPage = 0, ImagePage, TextPage, ModelPage };
-	explicit ArchivePreview(QWidget *parent = nullptr);
-	void clearPreview();
-	void imagePreview(const QPixmap &image, const QString &name = QString(),
-	                  int palID = 0, int palCount = 0, int imageID = 0,
-	                  int imageCount = 0);
-	void textPreview(const QString &text);
-	void modelPreview(FieldModelFile *fieldModel);
+	explicit PreviewBGLabel(QWidget *parent = nullptr);
 signals:
-	void currentImageChanged(int);
-	void currentPaletteChanged(int);
-public slots:
-	void saveImage();
+	void saveRequested();
 private:
-	QWidget *imageWidget();
-	QWidget *textWidget();
-	QWidget *modelWidget();
-	QScrollArea *scrollArea;
-	QComboBox *imageSelect, *palSelect;
-	PreviewBGLabel *_lbl;
-	QString _name;
+	bool _showSave;
+protected:
+	void paintEvent(QPaintEvent *e) override;
+	void enterEvent(QEnterEvent *e) override;
+	void leaveEvent(QEvent *e) override;
+	void mousePressEvent(QMouseEvent *e) override;
 };
