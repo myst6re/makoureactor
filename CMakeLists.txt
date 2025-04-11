@@ -76,7 +76,6 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets OpenGLWidgets Svg OpenGL L
 
 set(REQUIRED_FF7TK_VERSION 1.0.0)
 find_package(ff7tk ${REQUIRED_FF7TK_VERSION} CONFIG REQUIRED COMPONENTS ff7tk fftkData ff7tkQtWidgets ff7tkFormats ff7tkUtils)
-
 find_package(ZLIB REQUIRED)
 
 set(LANGS
@@ -547,6 +546,14 @@ if(GUI)
         set_target_properties(${GUI_TARGET} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}")
     endif()
 
+    if (WIN32)
+        target_compile_options(
+            ${GUI_TARGET}
+            PRIVATE /Qpar
+            PRIVATE /MP
+        )
+    endif()
+
     add_subdirectory(translations)
 
 endif()
@@ -565,6 +572,13 @@ if(CLI)
     target_compile_definitions(${CLI_TARGET}
         PRIVATE MR_CONSOLE=1 QT_NO_DEBUG_OUTPUT=1
     )
+    if (WIN32)
+        target_compile_options(
+            ${CLI_TARGET}
+            PRIVATE /Qpar
+            PRIVATE /MP
+        )
+    endif()
 endif()
 
 include(GNUInstallDirs)
