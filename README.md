@@ -34,7 +34,7 @@ instructions below.
 
 0. Download the online installer from https://www.qt.io/download-qt-installer
 1. Install Qt 6 with these items checked:
-   - **Qt/Qt 6.x.x (last version):** Check `MSVC 2019 64-bit`, `Qt Creator`, `Qt Shader Tools` and `Qt 5 Compatibility Module`
+   - **Qt/Qt 6.x.x (last version):** Check `MSVC 2022 64-bit`, `Qt Creator`, `Qt Shader Tools` and `Qt 5 Compatibility Module`
    - **Developer And Designer Tools:** Check `CMake` and `Ninja`
 2. Run Qt Creator and open an existing project, select the CMakeLists.txt in the source directory of Makou Reactor
 
@@ -48,7 +48,7 @@ instructions below.
 1. Download the the latest [Visual Studio Community](https://visualstudio.microsoft.com/vs/community/) installer
 2. Run the installer and import this [.vsconfig](.vsconfig) file in the installer to pick the required components to build this project
 3. Make sure you select the English Language pack in the language list before clicking Install
-4. Once installed, open this repository **as a folder** in Visual Studio 2019 and click the build button.
+4. Once installed, open this repository **as a folder** in Visual Studio 2022 and click the build button.
 
 #### Optional: Visual Studio Code
 

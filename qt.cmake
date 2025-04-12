@@ -33,11 +33,11 @@ if(NOT QT_FOUND)
     else()
         if(WIN32)
             # look for user-registry pointing to Qt installation
-            cmake_host_system_information(RESULT QT_INSTALLATION_PATH QUERY WINDOWS_REGISTRY "HKEY_CURRENT_USER/Software/Microsoft/Windows/CurrentVersion/Uninstall/{89c4e30e-3a1a-47c7-80d7-013ba3e25e57}" VALUE "InstallLocation")
+            cmake_host_system_information(RESULT QT_INSTALLATION_PATH QUERY WINDOWS_REGISTRY "HKEY_CURRENT_USER/Software/Microsoft/Windows/CurrentVersion/Uninstall/{1f0b01f1-fb8c-49bb-8410-ef0628043911}" VALUE "InstallLocation")
 
             if(QT_INSTALLATION_PATH STREQUAL "")
                 # look for user-registry pointing to qtcreator
-                cmake_host_system_information(RESULT QT_INSTALLATION_PATH QUERY WINDOWS_REGISTRY "HKEY_CURRENT_USER/Software/Classes/Applications/QtProject.QtCreator.cpp/shell/Open/Command")
+                cmake_host_system_information(RESULT QT_INSTALLATION_PATH QUERY WINDOWS_REGISTRY "HKEY_CURRENT_USER/Software/Classes/Applications/QtProject.QtCreator.qml/shell/Open/Command")
                 string(REPLACE " -client \"%1\"" "" QT_INSTALLATION_PATH ${QT_INSTALLATION_PATH})
 
                 if(QT_INSTALLATION_PATH STREQUAL "")
@@ -68,7 +68,7 @@ if(NOT QT_FOUND)
 
         if(MSVC)
             if(MSVC_TOOLSET_VERSION MATCHES 143)
-                set(QT_MSVC "2019") # Qt does not yet provide an official 2022 toolset
+                set(QT_MSVC "2022")
             elseif(MSVC_TOOLSET_VERSION MATCHES 142)
                 set(QT_MSVC "2019")
             elseif(MSVC_TOOLSET_VERSION MATCHES 141)

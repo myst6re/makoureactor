@@ -1,15 +1,21 @@
 {
   "name": "makou-reactor",
   "version": "2.0.0",
-  "builtin-baseline": "0ba60bfef5dea4cb2599daa7ad8364e309835a68",
+  "builtin-baseline": "b322364f06308bdd24823f9d8f03fe0cc86fd46f",
   "dependencies": [
     "ff7tk",
+    "vulkan-headers",
     "zlib"
   ],
   "overrides": [
     {
       "name": "ff7tk",
       "version": "1.0.0",
+      "port-version": 0
+    },
+    {
+      "name": "vulkan-headers",
+      "version": "1.3.296.0",
       "port-version": 0
     },
     {

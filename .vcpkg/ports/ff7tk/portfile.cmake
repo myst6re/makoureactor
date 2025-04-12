@@ -1,6 +1,6 @@
-if(MSVC)
-    set(VCPKG_C_FLAGS "-bigobj ${VCPKG_C_FLAGS}")
-    set(VCPKG_CXX_FLAGS "-bigobj ${VCPKG_CXX_FLAGS}")
+if(VCPKG_TARGET_IS_WINDOWS)
+  set(VCPKG_C_FLAGS "-bigobj ${VCPKG_C_FLAGS}")
+  set(VCPKG_CXX_FLAGS "-bigobj ${VCPKG_CXX_FLAGS}")
 endif()
 
 vcpkg_from_github(
