@@ -556,7 +556,7 @@ if(GUI)
         )
     endif()
 
-    qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES} OPTIONS -no-ui-lines -locations none)
+    qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR}/src ${TS_FILES} OPTIONS -no-ui-lines -locations none)
     # Force lupdate
     add_custom_target(app_translations ALL DEPENDS ${QM_FILES})
 endif()
