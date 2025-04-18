@@ -1,5 +1,5 @@
 ###############################################################################
-## Copyright (C) 2009-2023 Arzel Jérôme <myst6re@gmail.com>
+## Copyright (C) 2009-2024 Arzel Jérôme <myst6re@gmail.com>
 ## Copyright (C) 2023 Julian Xhokaxhiu <https://julianxhokaxhiu.com>
 ##
 ## This program is free software: you can redistribute it and/or modify
@@ -30,6 +30,8 @@ if(NOT QT_FOUND)
         # ../../
         get_filename_component(QT_PATH "${QT_QMAKE_EXECUTABLE}" DIRECTORY)
         get_filename_component(QT_PATH "${QT_PATH}" DIRECTORY)
+
+        message("-- Found qmake in PATH: ${QT_QMAKE_EXECUTABLE}")
     else()
         if(WIN32)
             # look for user-registry pointing to Qt installation
@@ -97,10 +99,11 @@ if(NOT QT_FOUND)
     set(Qt${QT_VERSION_TO_FIND}_DIR "${QT_PATH}/lib/cmake/Qt${QT_VERSION_TO_FIND}")
     set(QT_DIR "${Qt${QT_VERSION_TO_FIND}_DIR}")
 
+    message("-- Qt${QT_VERSION_TO_FIND}_DIR: ${Qt${QT_VERSION_TO_FIND}_DIR}")
+
     find_package(QT NAMES Qt${QT_VERSION_TO_FIND} REQUIRED)
 
     message("-- Qt Auto-Detected at ${QT_PATH}")
-    message("-- Qt${QT_VERSION_MAJOR}_DIR: ${Qt${QT_VERSION_MAJOR}_DIR}")
 endif()
 
 if(NOT DEFINED QT_QMAKE_EXECUTABLE OR QT_QMAKE_EXECUTABLE MATCHES "QT_QMAKE_EXECUTABLE-NOTFOUND")

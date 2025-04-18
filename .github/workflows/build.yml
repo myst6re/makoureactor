@@ -36,16 +36,10 @@ jobs:
         - os: ubuntu-latest
           package_extension: 'tar.xz'
           package_suffix: 'linux64'
-          ff7tk_pack_suffix: "linux_x86_64.tar.gz"
-          ff7tk_install_command_extract: "tar -xf"
-          ff7tk_install_command_dest: "--one-top-level="
         - os: macos-latest
           package_extension: 'dmg'
           package_suffix: 'macos'
-          ff7tk_pack_suffix: "macos.zip"
-          ff7tk_install_command_extract: "unzip "
-          ff7tk_install_command_dest: "-d "
-          cmake_extra_args: "-DCMAKE_OSX_ARCHITECTURES=\"arm64;x86_64\""
+          cmake_extra_args: "-DCMAKE_OSX_ARCHITECTURES=\"arm64;x86_64\" -DVCPKG_TARGET_TRIPLET=\"universal-osx\""
         - os: windows-latest
           package_extension: 'zip'
           package_suffix: 'win64'
@@ -53,9 +47,6 @@ jobs:
           qt_arch: win64_msvc2022_64
           cmake_extra_args: '-DZLIB_ROOT=C:/zlib'
           qt_tools: tools_ninja, tools_cmake
-          ff7tk_pack_suffix: "win64.7z"
-          ff7tk_install_command_extract: "7z x"
-          ff7tk_install_command_dest: "-o"
         - interface: gui
           cmake_cli_arg: 'OFF'
           cmake_gui_arg: 'ON'
@@ -72,29 +63,53 @@ jobs:
 
     env:
       qt_installation_path: ${{ github.workspace }}
-      zlib_path: ${{ github.workspace }}/../zlib-git
-      zlib_build_path: ${{ github.workspace }}/../build-zlib-git
-      zlib_installation_path: C:/zlib
-      zlib_version: "1.3"
-      ff7tk_path: ${{ github.workspace }}/../ff7tk-git
-      ff7tk_build_path: ${{ github.workspace }}/../build-ff7tk-git
-      ff7tk_installation_path: ${{ github.workspace }}/ff7tk
       makoureactor_build_path: ${{ github.workspace }}/../build-makoureactor
       makoureactor_installation_path: ${{ github.workspace }}/../installation-makoureactor
       makoureactor_appbundle_path: ${{ github.workspace }}/../appbundle-makoureactor
       CMAKE_GENERATOR: Ninja
       CMAKE_BUILD_TYPE: ${{ matrix.build_type }}
-      ff7tk_package: ff7tk-continuous-${{matrix.ff7tk_pack_suffix}}
+      VCPKG_KEEP_ENV_VARS: PATH
 
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+        fetch-depth: 0
 
     - name: Env Script (Windows)
       uses: ilammy/msvc-dev-cmd@v1
       if: runner.os == 'Windows'
       with:
         arch: ${{ matrix.win_arch }}
+
+    - name: Add universal-osx triplet
+      shell: bash
+      if: runner.os == 'macOS'
+      run: |
+        cd ${{ github.workspace }}/vcpkg/triplets
+        cp arm64-osx.cmake universal-osx.cmake
+        sed -i '' 's|set(VCPKG_OSX_ARCHITECTURES arm64)|set(VCPKG_OSX_ARCHITECTURES "arm64;x86_64")|' universal-osx.cmake
+
+    - name: Setup NuGet.exe
+      uses: nuget/setup-nuget@v2
+      if: runner.os == 'Linux'
+      with:
+        nuget-version: latest
+
+    - name: Install Mono
+      shell: bash
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt install mono-runtime
+        sudo apt install mono-complete
+
+    - name: Enable vcpkg Github packages registry
+      shell: bash
+      run: |
+        nuget sources add -Name github -Source "https://nuget.pkg.github.com/${GITHUB_REPOSITORY_OWNER}/index.json" -Username ${GITHUB_REPOSITORY_OWNER} -Password ${{secrets.GITHUB_TOKEN}} -StorePasswordInClearText
+        nuget setApiKey ${{secrets.GITHUB_TOKEN}} -Source "https://nuget.pkg.github.com/${GITHUB_REPOSITORY_OWNER}/index.json"
+        nuget sources list
 
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
@@ -120,46 +135,6 @@ jobs:
       run: |
         echo "PRERELEASE_STRING= unstable build" >> $GITHUB_ENV
 
-    - name: Cache Zlib
-      id: cache-zlib
-      if: runner.os == 'Windows'
-      uses: actions/cache@v4
-      with:
-        path: ${{ env.zlib_installation_path }}
-        key: ${{ runner.os }}${{ matrix.win_arch }}-zlib-${{ env.zlib_version}}-${{ env.CMAKE_BUILD_TYPE }}
-
-    - name: Install Zlib
-      if: (runner.os == 'Windows') && (steps.cache-zlib.outputs.cache-hit != 'true')
-      run: |
-        git clone -q --depth 1 --single-branch --branch=v${{ env.zlib_version }} https://github.com/madler/zlib ${{ env.zlib_path }}
-        cmake -S${{ env.zlib_path }} -B${{ env.zlib_build_path }} -DCMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }} -DCMAKE_INSTALL_PREFIX=${{ env.zlib_installation_path }}
-        cmake --build ${{ env.zlib_build_path }} --target install -j3
-
-    - name: Clone ff7tk repo (Debug)
-      if: matrix.build_type == 'Debug'
-      run: git clone -q --depth 1 --single-branch --branch continuous https://github.com/sithlord48/ff7tk.git ${{ env.ff7tk_path }}
-
-    - name: Remove .git ff7tk (Debug)
-      if: matrix.build_type == 'Debug'
-      shell: bash
-      run: rm -fr .git
-      working-directory: ${{ env.ff7tk_path }}
-
-    - name: Build ff7tk (Debug)
-      if: matrix.build_type == 'Debug'
-      run: |
-        cmake -B ${{ env.ff7tk_build_path }} -DCMAKE_CXX_FLAGS=/bigobj -DTESTS=OFF -DPACKAGE=OFF -DDEMOS=OFF -DCMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }} -DCMAKE_INSTALL_PREFIX=${{ env.ff7tk_installation_path }} -DQT_DEFAULT_MAJOR_VERSION=${{ env.QT_MAJOR_VERSION }} ${{ matrix.cmake_extra_args }}
-        cmake --build ${{ env.ff7tk_build_path }} --target install -j3
-      working-directory: ${{ env.ff7tk_path }}
-
-    - name: Get ff7tk redist
-      if: matrix.build_type == 'Release'
-      run: curl -LJO https://github.com/sithlord48/ff7tk/releases/download/continuous/${{ env.ff7tk_package }}
-
-    - name: Install ff7tk
-      if: matrix.build_type == 'Release'
-      run: ${{matrix.ff7tk_install_command_extract}} ${{env.ff7tk_package}} ${{matrix.ff7tk_install_command_dest}}${{env.ff7tk_installation_path}}
-
     - name: Download linuxdeployqt
       if: runner.os == 'Linux'
       run: |
@@ -173,8 +148,15 @@ jobs:
     - name: Build Makou Reactor
       id: main_build
       run: |
-        cmake -B ${{ env.makoureactor_build_path }} -DCMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }} -DCMAKE_INSTALL_PREFIX=${{ env.makoureactor_installation_path }} -Dff7tk_DIR=${{ env.ff7tk_installation_path }}/lib/cmake/ff7tk -DCLI:BOOL=${{ matrix.cmake_cli_arg }} -DGUI:BOOL=${{ matrix.cmake_gui_arg }} -DPRERELEASE_STRING="$PRERELEASE_STRING" ${{ matrix.cmake_extra_args }}
+        cmake -B ${{ env.makoureactor_build_path }} --preset ${{ env.CMAKE_BUILD_TYPE }} -DCMAKE_INSTALL_PREFIX=${{ env.makoureactor_installation_path }} -DCLI:BOOL=${{ matrix.cmake_cli_arg }} -DGUI:BOOL=${{ matrix.cmake_gui_arg }} -DPRERELEASE_STRING="$PRERELEASE_STRING" ${{ matrix.cmake_extra_args }}
         cmake --build ${{ env.makoureactor_build_path }} --target package -j3
+
+    - name: Upload vcpkg build logs
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: vcpkg-logs-${{ matrix.package_suffix }}-${{ matrix.interface }}-${{ matrix.build_type }}
+        path: ${{ github.workspace }}/vcpkg/buildtrees/**/*.log
 
     - name: Build AppImage (Linux)
       if: runner.os == 'Linux' && matrix.interface == 'gui'
@@ -182,14 +164,13 @@ jobs:
         sudo add-apt-repository -y universe
         sudo apt install -y libfuse2 libxkbcommon-x11-0 libxcb-cursor0
         cmake --build ${{ env.makoureactor_build_path }} --target install -j3
-        mkdir -p ${{env.makoureactor_appbundle_path}}/usr/share/ff7tk/translations
-        cp ${{env.ff7tk_installation_path}}/share/ff7tk/translations/*.qm ${{env.makoureactor_appbundle_path}}/usr/share/ff7tk/translations
         mkdir -p ${{env.makoureactor_appbundle_path}}/usr/share/makoureactor/translations
         cp ${{env.makoureactor_installation_path}}/share/makoureactor/translations/*.qm ${{env.makoureactor_appbundle_path}}/usr/share/makoureactor/translations
         mkdir -p ${{env.makoureactor_appbundle_path}}/usr/plugins/iconengines
         cp ${{ env.qt_installation_path }}/Qt/${{ matrix.qt }}/gcc_64/plugins/iconengines/libqsvgicon.so ${{env.makoureactor_appbundle_path}}/usr/plugins/iconengines/libqsvgicon.so
+
         export VERSION=continuous
-        export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${{ env.ff7tk_installation_path }}/lib
+        export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${{ env.makoureactor_build_path }}/vcpkg_installed/x64-linux/lib
         export PATH=$PATH:${{ env.qt_installation_path }}/Qt/${{ matrix.qt }}/gcc_64/libexec
         linuxdeploy --appdir="${{ env.makoureactor_appbundle_path }}" --plugin=qt --output appimage \
           -e "${{ env.makoureactor_installation_path }}"/bin/Makou_Reactor \
@@ -233,8 +214,29 @@ jobs:
     steps:
     - uses: actions/checkout@v4
       with:
+        submodules: recursive
         fetch-depth: 0
-    - run: git fetch --tags --force
+
+    - name: Setup NuGet.exe
+      uses: nuget/setup-nuget@v2
+      if: runner.os == 'Linux'
+      with:
+        nuget-version: latest
+
+    - name: Install Mono
+      shell: bash
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt install mono-runtime
+        sudo apt install mono-complete
+
+    - name: Enable vcpkg Github packages registry
+      shell: bash
+      run: |
+        nuget sources add -Name github -Source "https://nuget.pkg.github.com/${GITHUB_REPOSITORY_OWNER}/index.json" -Username ${GITHUB_REPOSITORY_OWNER} -Password ${{secrets.GITHUB_TOKEN}} -StorePasswordInClearText
+        nuget setApiKey ${{secrets.GITHUB_TOKEN}} -Source "https://nuget.pkg.github.com/${GITHUB_REPOSITORY_OWNER}/index.json"
+        nuget sources list
+
     - name: Install Dependencies
       run: |
         sudo apt-get update -y > /dev/null
@@ -242,11 +244,13 @@ jobs:
         curl -s https://api.github.com/repos/sithlord48/ff7tk/releases/latest | awk -F\" '/browser_download_url.*${{matrix.config.name}}-${{matrix.config.arch}}*[.deb]/{print $(NF-1)}' | wget -i -
         sudo apt -y -qqq install ./libff7tk*.deb
         rm libff7tk*.deb
+
     - name: Build
       run: |
-        cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DQT_DEFAULT_MAJOR_VERSION=6 -DCPACK_DEBIAN_PACKAGE_RELEASE=${{github.run_attempt}}~${{matrix.config.name}}
+        cmake -S. -Bbuild --preset=Release -DCMAKE_INSTALL_PREFIX=/usr -DQT_DEFAULT_MAJOR_VERSION=6 -DCPACK_DEBIAN_PACKAGE_RELEASE=${{github.run_attempt}}~${{matrix.config.name}}
         cmake --build build
         cpack -G DEB -C Release --config build/CPackConfig.cmake
+
     - name: Upload
       uses: actions/upload-artifact@v4
       with:

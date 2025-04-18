@@ -16,7 +16,7 @@
 ## along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ###############################################################################
 
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.25)
 cmake_policy(SET CMP0010 NEW)
 cmake_policy(SET CMP0042 NEW)
 cmake_policy(SET CMP0074 NEW)
@@ -24,6 +24,7 @@ cmake_policy(SET CMP0091 NEW)
 
 set(VCPKG_DISABLE_COMPILER_TRACKING 1)
 set(VCPKG_INSTALL_OPTIONS "--clean-after-build" "--x-use-aria2")
+set(X_VCPKG_APPLOCAL_DEPS_INSTALL ON)
 
 set(RELEASE_NAME "Makou_Reactor")
 set(GUI_TARGET "${RELEASE_NAME}")
@@ -73,15 +74,16 @@ add_compile_definitions(
 )
 
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets OpenGLWidgets Svg OpenGL LinguistTools Core5Compat Xml Quick REQUIRED)
+find_package(ZLIB REQUIRED)
 
 set(REQUIRED_FF7TK_VERSION 1.0.0)
 find_package(ff7tk ${REQUIRED_FF7TK_VERSION} CONFIG REQUIRED COMPONENTS ff7tk fftkData ff7tkQtWidgets ff7tkFormats ff7tkUtils)
-find_package(ZLIB REQUIRED)
 
 set(LANGS
     fr
     ja)
 list(TRANSFORM LANGS REPLACE ".+" "translations/${RELEASE_NAME}_\\0.ts" OUTPUT_VARIABLE TS_FILES)
+list(TRANSFORM LANGS REPLACE ".+" "${ff7tk_DIR}/translations/ff7tk_\\0.qm" OUTPUT_VARIABLE ff7tk_QM_FILES)
 
 set(PROJECT_SOURCES
     "src/3d/FieldModel.cpp"
@@ -554,8 +556,9 @@ if(GUI)
         )
     endif()
 
-    add_subdirectory(translations)
-
+    qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES} OPTIONS -no-ui-lines -locations none)
+    # Force lupdate
+    add_custom_target(app_translations ALL DEPENDS ${QM_FILES})
 endif()
 
 # CLI
@@ -599,10 +602,10 @@ elseif(WIN32)
         set(QT_DEPLOY_TMP_DIR "${CMAKE_BINARY_DIR}/win32-deploy" CACHE PATH "Directory to run deployqt scripts")
     endif()
     if(GUI)
-        install(TARGETS ${GUI_TARGET} RUNTIME DESTINATION "${QT_DEPLOY_TMP_DIR}")
+        install(TARGETS ${GUI_TARGET} DESTINATION "${QT_DEPLOY_TMP_DIR}")
     endif()
     if(CLI)
-        install(TARGETS ${CLI_TARGET} RUNTIME DESTINATION "${QT_DEPLOY_TMP_DIR}")
+        install(TARGETS ${CLI_TARGET} DESTINATION "${QT_DEPLOY_TMP_DIR}")
     endif()
 endif()
 
@@ -616,6 +619,12 @@ if(APPLE)
         install(TARGETS ${CLI_TARGET} RUNTIME EXCLUDE_FROM_ALL)
     endif()
 elseif(WIN32)
+    if(GUI)
+        install(TARGETS ${GUI_TARGET} RUNTIME DESTINATION ".")
+    endif()
+    if(CLI)
+        install(TARGETS ${CLI_TARGET} RUNTIME DESTINATION ".")
+    endif()
     install(DIRECTORY "${QT_DEPLOY_TMP_DIR}/" DESTINATION ".")
     install(CODE "file(REMOVE_RECURSE \"${QT_DEPLOY_TMP_DIR}\")")
 else()

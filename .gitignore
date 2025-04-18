@@ -448,5 +448,6 @@ compile_commands.json
 *_qmlcache.qrc
 
 # Custom
-.dist
+.build
+.install
 .DS_Store
