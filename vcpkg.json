@@ -1,6 +1,6 @@
 {
   "name": "makou-reactor",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "builtin-baseline": "ce613c41372b23b1f51333815feb3edd87ef8a8b",
   "dependencies": [
     "ff7tk",
