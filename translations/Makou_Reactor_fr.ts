@@ -4316,7 +4316,7 @@ Certains scripts peuvent y faire référence !</translation>
     </message>
     <message>
         <source>Repair broken backgrounds (lastmap, fr_e)</source>
-        <translation>Réparer les décors cassés ((lastmap, fr_e)</translation>
+        <translation>Réparer les décors cassés (lastmap, fr_e)</translation>
     </message>
     <message>
         <source>Apply</source>
