@@ -6,10 +6,9 @@ endif()
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO sithlord48/ff7tk
-  REF v1.2.0
-  SHA512 7968f18625e587b00d0e2f6106b7d697e74f4c5c3f2791953663dbbce4c55a7a7bf831c6968a4a4847149a7a01abf225cff4f24f3ff4b0313554c1a20901f974
+  REF v1.3.0
+  SHA512 ce58f6f18e9fd2c98200eae2c0e5e9e3bec58111c075755724d3cb37715b761a70fc5bf5136bc6f5659c230bc05c1515d2876e805c1e3ea483fdb09096abdb8f
   HEAD_REF master
-  PATCHES cmake.patch
 )
 
 vcpkg_cmake_configure(
