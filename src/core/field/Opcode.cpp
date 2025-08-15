@@ -146,7 +146,7 @@ quint8 Opcode::size() const
 	if (id() == OpcodeKey::Unused1C) {
 		size += std::min(_opcode.opcodeUnused1C.subSize, quint8(128));
 	} else if (id() == OpcodeKey::KAWAI) {
-		size = _opcode.opcodeKAWAI.opcodeSize;
+		size = std::max(_opcode.opcodeKAWAI.opcodeSize, quint8(1));
 	}
 
 	return size;
