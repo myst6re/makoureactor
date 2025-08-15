@@ -12,7 +12,7 @@ env:
 
 jobs:
   main_build:
-    name: ${{ matrix.package_suffix }} ${{ matrix.interface }} ${{ matrix.build_type }}
+    name: ${{ matrix.package_suffix }} ${{ matrix.interface }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -208,12 +208,12 @@ jobs:
 
     - name: Prepare Upload
       shell: bash
-      run: mv ../build-makoureactor/*.${{ matrix.package_extension }} makoureactor-continuous-${{ matrix.interface }}-${{ matrix.package_suffix }}-${{ matrix.build_type }}.${{ matrix.package_extension }}
+      run: mv ../build-makoureactor/*.${{ matrix.package_extension }} makoureactor-continuous-${{ matrix.interface }}-${{ matrix.package_suffix }}.${{ matrix.package_extension }}
 
     - name: Upload
       uses: actions/upload-artifact@v4
       with:
-        name: artifact-${{ matrix.package_suffix }}-${{ matrix.interface }}-${{ matrix.build_type }}
+        name: artifact-${{ matrix.package_suffix }}-${{ matrix.interface }}
         path: ${{ github.workspace }}/makoureactor-continuous-*.*
 
   deb_builder:
