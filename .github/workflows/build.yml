@@ -12,54 +12,65 @@ env:
 
 jobs:
   main_build:
-    name: ${{ matrix.package_suffix }} ${{ matrix.interface }} ${{ matrix.build_type }}
+    name: ${{ matrix.package_suffix }} ${{ matrix.interface }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         qt:
-          - 6.8.2
+          - 6.8.3
         os:
           - ubuntu-latest
+          - ubuntu-24.04-arm
           - macos-latest
           - windows-latest
+          - windows-11-arm
         interface:
           - cli
           - gui
         build_type:
           - Release
-          - Debug
         include:
         - qt_tools: tools_ninja
           qt_modules: qt5compat
           cmake_cli_arg: 'OFF'
         - os: ubuntu-latest
           package_extension: 'tar.xz'
-          package_suffix: 'linux64'
+          package_suffix: 'linux_x64'
+          qt_host: linux
+          vcpkg_lib_path: vcpkg_installed/x64-linux/lib
+          qt_gcc_dir: gcc_64
+        - os: ubuntu-24.04-arm
+          package_extension: 'tar.xz'
+          package_suffix: 'linux_arm64'
+          qt_host: linux_arm64
+          vcpkg_lib_path: vcpkg_installed/arm64-linux/lib
+          qt_gcc_dir: gcc_arm64
         - os: macos-latest
           package_extension: 'dmg'
           package_suffix: 'macos'
           cmake_extra_args: "-DCMAKE_OSX_ARCHITECTURES=\"arm64;x86_64\" -DVCPKG_TARGET_TRIPLET=\"universal-osx\""
+          qt_host: mac
         - os: windows-latest
           package_extension: 'zip'
-          package_suffix: 'win64'
+          package_suffix: 'win_x64'
           win_arch: "x64"
           qt_arch: win64_msvc2022_64
-          cmake_extra_args: '-DZLIB_ROOT=C:/zlib'
           qt_tools: tools_ninja, tools_cmake
+          qt_host: windows
+        - os: windows-11-arm
+          package_extension: 'zip'
+          package_suffix: 'win_arm64'
+          win_arch: "arm64"
+          qt_arch: win64_msvc2022_arm64_cross_compiled
+          qt_tools: tools_ninja, tools_cmake
+          qt_host: windows
         - interface: gui
           cmake_cli_arg: 'OFF'
           cmake_gui_arg: 'ON'
         - interface: cli
           cmake_cli_arg: 'ON'
           cmake_gui_arg: 'OFF'
-        exclude:
-        - build_type: Debug
-          interface: cli
-        - build_type: Debug
-          os: macos-latest
-        - build_type: Debug
-          os: ubuntu-latest
 
     env:
       qt_installation_path: ${{ github.workspace }}
@@ -68,7 +79,7 @@ jobs:
       makoureactor_appbundle_path: ${{ github.workspace }}/../appbundle-makoureactor
       CMAKE_GENERATOR: Ninja
       CMAKE_BUILD_TYPE: ${{ matrix.build_type }}
-      VCPKG_KEEP_ENV_VARS: PATH
+      VCPKG_KEEP_ENV_VARS: PATH;QT_HOST_PATH
 
 
     steps:
@@ -93,16 +104,22 @@ jobs:
 
     - name: Setup NuGet.exe
       uses: nuget/setup-nuget@v2
-      if: runner.os == 'Linux'
+      if: runner.os == 'Linux' || runner.os == 'macOS'
       with:
         nuget-version: latest
 
-    - name: Install Mono
+    - name: Install Mono (Linux)
       shell: bash
       if: runner.os == 'Linux'
       run: |
         sudo apt install mono-runtime
         sudo apt install mono-complete
+
+    - name: Install Mono (macOS)
+      if: runner.os == 'macOS'
+      run: |
+        brew update
+        brew install mono
 
     - name: Enable vcpkg Github packages registry
       shell: bash
@@ -116,6 +133,7 @@ jobs:
       with:
        dir: ${{ env.qt_installation_path }}
        arch: ${{ matrix.qt_arch }}
+       host: ${{ matrix.qt_host }}
        version: ${{ matrix.qt }}
        cache: true
        tools: ${{ matrix.qt_tools }}
@@ -135,11 +153,21 @@ jobs:
       run: |
         echo "PRERELEASE_STRING= unstable build" >> $GITHUB_ENV
 
-    - name: Download linuxdeployqt
-      if: runner.os == 'Linux'
+    - name: Download linuxdeployqt (x64)
+      if: runner.os == 'Linux' && runner.arch == 'X64'
       run: |
         wget -qc "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage"
         wget -qc "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage"
+        export VERSION=continuous
+        chmod a+x linuxdeploy*.AppImage
+        mv linuxdeploy-plugin-qt-*.AppImage $QT_ROOT_DIR/bin/linuxdeploy-plugin-qt
+        mv linuxdeploy-*.AppImage $QT_ROOT_DIR/bin/linuxdeploy
+
+    - name: Download linuxdeployqt (ARM64)
+      if: runner.os == 'Linux' && runner.arch == 'ARM64'
+      run: |
+        wget -qc "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-aarch64.AppImage"
+        wget -qc "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-aarch64.AppImage"
         export VERSION=continuous
         chmod a+x linuxdeploy*.AppImage
         mv linuxdeploy-plugin-qt-*.AppImage $QT_ROOT_DIR/bin/linuxdeploy-plugin-qt
@@ -167,11 +195,11 @@ jobs:
         mkdir -p ${{env.makoureactor_appbundle_path}}/usr/share/makoureactor/translations
         cp ${{env.makoureactor_installation_path}}/share/makoureactor/translations/*.qm ${{env.makoureactor_appbundle_path}}/usr/share/makoureactor/translations
         mkdir -p ${{env.makoureactor_appbundle_path}}/usr/plugins/iconengines
-        cp ${{ env.qt_installation_path }}/Qt/${{ matrix.qt }}/gcc_64/plugins/iconengines/libqsvgicon.so ${{env.makoureactor_appbundle_path}}/usr/plugins/iconengines/libqsvgicon.so
+        cp ${{ env.qt_installation_path }}/Qt/${{ matrix.qt }}/${{ matrix.qt_gcc_dir }}/plugins/iconengines/libqsvgicon.so ${{env.makoureactor_appbundle_path}}/usr/plugins/iconengines/libqsvgicon.so
 
         export VERSION=continuous
-        export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${{ env.makoureactor_build_path }}/vcpkg_installed/x64-linux/lib
-        export PATH=$PATH:${{ env.qt_installation_path }}/Qt/${{ matrix.qt }}/gcc_64/libexec
+        export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${{ env.makoureactor_build_path }}/${{ matrix.vcpkg_lib_path }}
+        export PATH=$PATH:${{ env.qt_installation_path }}/Qt/${{ matrix.qt }}/${{ matrix.qt_gcc_dir }}/libexec
         linuxdeploy --appdir="${{ env.makoureactor_appbundle_path }}" --plugin=qt --output appimage \
           -e "${{ env.makoureactor_installation_path }}"/bin/Makou_Reactor \
           -d "${{ env.makoureactor_installation_path }}"/share/applications/io.github.myst6re.makoureactor.desktop \
@@ -180,12 +208,12 @@ jobs:
 
     - name: Prepare Upload
       shell: bash
-      run: mv ../build-makoureactor/*.${{ matrix.package_extension }} makoureactor-continuous-${{ matrix.interface }}-${{ matrix.package_suffix }}-${{ matrix.build_type }}.${{ matrix.package_extension }}
+      run: mv ../build-makoureactor/*.${{ matrix.package_extension }} makoureactor-continuous-${{ matrix.interface }}-${{ matrix.package_suffix }}.${{ matrix.package_extension }}
 
     - name: Upload
       uses: actions/upload-artifact@v4
       with:
-        name: artifact-${{ matrix.package_suffix }}-${{ matrix.interface }}-${{ matrix.build_type }}
+        name: artifact-${{ matrix.package_suffix }}-${{ matrix.interface }}
         path: ${{ github.workspace }}/makoureactor-continuous-*.*
 
   deb_builder:
@@ -195,14 +223,6 @@ jobs:
       fail-fast: false
       matrix:
         config:
-        - {
-             name: jammy , os: ubuntu-22.04
-             , arch: x86_64
-          }
-        - {
-             name: jammy , os: ubuntu-22.04-arm
-             , arch: aarch64
-          }
         - {
              name: noble , os: ubuntu-24.04
              , arch: x86_64
@@ -247,7 +267,7 @@ jobs:
 
     - name: Build
       run: |
-        cmake -S. -Bbuild --preset=Release -DCMAKE_INSTALL_PREFIX=/usr -DQT_DEFAULT_MAJOR_VERSION=6 -DCPACK_DEBIAN_PACKAGE_RELEASE=${{github.run_attempt}}~${{matrix.config.name}}
+        cmake -S. -Bbuild --preset=Release -DCMAKE_INSTALL_PREFIX=/usr -DCPACK_DEBIAN_PACKAGE_RELEASE=${{github.run_attempt}}~${{matrix.config.name}}
         cmake --build build
         cpack -G DEB -C Release --config build/CPackConfig.cmake
 
@@ -290,9 +310,7 @@ jobs:
 
     - name: Prepare Upload
       shell: bash
-      run: |
-        find . -type f -name 'makoureactor-continuous-*-Debug*' -delete
-        find . -type f -name 'makoureactor-continuous-*' -exec bash -c 'mv "{}" $(echo {} | sed 's/continuous-//' | sed 's/-Release//')' ';'
+      run: find . -type f -name 'makoureactor-continuous-*' -exec bash -c 'mv "{}" $(echo {} | sed 's/continuous-//')' ';'
 
     - name: Deploy Package
       uses: crowbarmaster/GH-Automatic-Releases@latest
