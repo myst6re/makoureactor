@@ -117,3 +117,5 @@ set(_qt_translations_dir "${_qt_dir}/translations")
 
 # Add the QT_PATH to the resolution paths
 list(APPEND CMAKE_PREFIX_PATH "${QT_PATH}")
+
+set(QT_PATH "${QT_PATH}" CACHE PATH "Path to QT directory")
