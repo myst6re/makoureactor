@@ -717,7 +717,7 @@ void TextManager::updateWindowCoord()
 
 void TextManager::insertTag(QAction *action)
 {
-	if (sender() != qobject_cast<QObject*>(action->parent())) {
+	if (sender() != action->parent()) {
 		return; // toolBar/Menu signals hack
 	}
 	textEdit->insertPlainText(action->data().toString());
