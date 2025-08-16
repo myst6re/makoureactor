@@ -162,7 +162,7 @@ void FieldModel::drawP(Renderer *gpuRenderer, FieldModelFile *data, float scale,
 
 void FieldModel::mouseMoveEvent(QMouseEvent *event)
 {
-	int dx = event->x() - lastPos.x(); //, dy = event->y() - lastPos.y();
+	int dx = event->position().x() - lastPos.x(); //, dy = event->y() - lastPos.y();
 
 	bool needsUpdate = false;
 
