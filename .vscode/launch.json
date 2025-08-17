@@ -3,16 +3,39 @@
   // Hover to view descriptions of existing attributes.
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
+  "inputs": [
+    {
+      "id": "cmakeCache.QT_PATH",
+      "type": "command",
+      "command": "cmake.cacheVariable",
+      "args": {
+        "name": "QT_PATH"
+      }
+    }
+  ],
   "configurations": [
     {
       "name": "(Windows) Launch",
       "type": "cppvsdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/.dist/install/Makou Reactor.exe",
+      "program": "${command:cmake.launchTargetPath}",
       "args": [],
       "stopAtEntry": false,
-      "cwd": "${workspaceFolder}/.dist/install",
-      "environment": [],
+      "cwd": "${command:cmake.launchTargetDirectory}",
+      "environment": [
+        {
+          "name": "PATH",
+          "value": "${input:cmakeCache.QT_PATH}/bin:${input:cmakeCache.QT_PATH}/lib:${command:cmake.launchTargetDirectory}:${env:PATH}"
+        }
+      ],
+      "windows": {
+        "environment": [
+          {
+            "name": "PATH",
+            "value": "${input:cmakeCache.QT_PATH}/bin;${input:cmakeCache.QT_PATH}/lib;${command:cmake.launchTargetDirectory};${env:PATH}"
+          }
+        ]
+      },
       "externalConsole": false
     }
   ]

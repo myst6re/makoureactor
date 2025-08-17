@@ -1,8 +1,0 @@
-{
-  "cmake.buildDirectory": "${workspaceFolder}/.dist/build",
-  "cmake.configureSettings": {
-    "CMAKE_BUILD_TYPE": "${buildType}",
-    "CMAKE_TOOLCHAIN_FILE": "${workspaceFolder}/vcpkg/scripts/buildsystems/vcpkg.cmake"
-  },
-  "cmake.installPrefix": "${workspaceFolder}/.dist/install"
-}
