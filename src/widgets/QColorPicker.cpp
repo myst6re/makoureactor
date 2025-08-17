@@ -58,12 +58,12 @@ QColorLuminancePicker::~QColorLuminancePicker()
 
 void QColorLuminancePicker::mouseMoveEvent(QMouseEvent *m)
 {
-	setVal(y2val(m->y()));
+	setVal(y2val(m->position().y()));
 }
 
 void QColorLuminancePicker::mousePressEvent(QMouseEvent *m)
 {
-	setVal(y2val(m->y()));
+	setVal(y2val(m->position().y()));
 }
 
 void QColorLuminancePicker::setVal(int v)

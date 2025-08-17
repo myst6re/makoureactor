@@ -606,7 +606,7 @@ void BackgroundEditor::updateSelectedTileTexture(const Cell &cell)
 	quint8 layerID = quint8(currentLayer());
 	BackgroundTiles tiles = _backgroundFile->tiles().tiles(layerID <= 1 ? 0 : layerID);
 	if (layerID <= 1) {
-		tiles.insert(_backgroundFile->tiles().tiles(1));
+		tiles.unite(_backgroundFile->tiles().tiles(1));
 	}
 
 	for (const Tile &tile : tiles) {

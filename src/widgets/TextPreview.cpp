@@ -521,8 +521,8 @@ void TextPreview::mousePressEvent(QMouseEvent *event)
 		if (ff7Window.type != NOWIN && ff7Window.type != OpcodeKey::MPNAM) {
 			QPoint real = ff7Window.realPos();
 
-			acceptMove = event->x() >= real.x() && event->x() < real.x() + maxW
-			        && event->y() >= real.y() && event->y() < real.y() + maxH;
+			acceptMove = event->position().x() >= real.x() && event->position().x() < real.x() + maxW
+			        && event->position().y() >= real.y() && event->position().y() < real.y() + maxH;
 
 			if (acceptMove) {
 				moveStartPosition = event->pos();
@@ -547,8 +547,8 @@ void TextPreview::mouseMoveEvent(QMouseEvent *event)
 		return;
 	}
 
-	int x = ff7Window.x + event->x() - moveStartPosition.x();
-	int y = ff7Window.y + event->y() - moveStartPosition.y();
+	int x = ff7Window.x + event->position().x() - moveStartPosition.x();
+	int y = ff7Window.y + event->position().y() - moveStartPosition.y();
 
 	if (x < 0) {
 		x = 0;
