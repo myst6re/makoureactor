@@ -90,20 +90,20 @@ Window::Window() :
 	/* "File" Menu */
 	QMenu *fileMenu = menuBar->addMenu(tr("&File"));
 
-	actionOpen = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-open")), tr("&Open..."), this, [&] { openFile(QString());}, QKeySequence("Ctrl+O"));
-	fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-open-folder")), tr("Open &Directory..."), this, &Window::openDir, QKeySequence("Shift+Ctrl+O"));
+	actionOpen = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-open")), tr("&Open..."), QKeySequence("Ctrl+O"), this, [&] { openFile(QString());});
+	fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-open-folder")), tr("Open &Directory..."), QKeySequence("Shift+Ctrl+O"), this, &Window::openDir);
 	_recentMenu = new QMenu(tr("&Recent files"), this);
 	_recentMenu->setIcon(QIcon::fromTheme(QStringLiteral("document-open-recent")));
 	fillRecentMenu();
 	connect(_recentMenu, &QMenu::triggered, this, &Window::openRecentFile);
 	fileMenu->addMenu(_recentMenu);
-	actionSave = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-save")), tr("&Save"), this, &Window::save, QKeySequence("Ctrl+S"));
-	actionSaveAs = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-save-as")), tr("Save &As..."), this, &Window::saveAs, QKeySequence("Shift+Ctrl+S"));
-	actionExport = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-export")), tr("&Export the current map..."), this, &Window::exportCurrentMap, QKeySequence("Ctrl+E"));
-	actionChunks = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-chunks-export")), tr("Expor&t map into chunks..."), this, &Window::exportCurrentMapIntoChunks, QKeySequence("Ctrl+U"));
-	actionMassExport = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-export")), tr("&Mass Export..."), this, &Window::massExport, QKeySequence("Shift+Ctrl+E"));
-	actionImport = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-import")),tr("&Import to current map..."), this, &Window::importToCurrentMap, QKeySequence("Ctrl+I"));
-//	actionMassImport = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-import")), tr("Mass im&port..."), this, &Window::massImport, QKeySequence("Shift+Ctrl+I"));
+	actionSave = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-save")), tr("&Save"), QKeySequence("Ctrl+S"), this, &Window::save);
+	actionSaveAs = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-save-as")), tr("Save &As..."), QKeySequence("Shift+Ctrl+S"), this, &Window::saveAs);
+	actionExport = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-export")), tr("&Export the current map..."), QKeySequence("Ctrl+E"), this, &Window::exportCurrentMap);
+	actionChunks = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-chunks-export")), tr("Expor&t map into chunks..."), QKeySequence("Ctrl+U"), this, &Window::exportCurrentMapIntoChunks);
+	actionMassExport = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-export")), tr("&Mass Export..."), QKeySequence("Shift+Ctrl+E"), this, &Window::massExport);
+	actionImport = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-import")),tr("&Import to current map..."), QKeySequence("Ctrl+I"), this, &Window::importToCurrentMap);
+//	actionMassImport = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-import")), tr("Mass im&port..."), QKeySequence("Shift+Ctrl+I"), this, &Window::massImport);
 	fileMenu->addSeparator();
 	actionRun = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("ff7")), tr("R&un FF7"), this, &Window::runFF7);
 	actionRun->setShortcut(Qt::Key_F8);
@@ -111,20 +111,20 @@ Window::Window() :
 	actionRun->setEnabled(!Data::ff7AppPath().isEmpty());
 	fileMenu->addSeparator();
 	actionClose = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("document-close")), tr("C&lose"), this, &Window::closeFile);
-	fileMenu->addAction(QIcon::fromTheme(QStringLiteral("application-exit")), tr("E&xit"), this, &Window::close, QKeySequence::Quit)->setMenuRole(QAction::QuitRole);
+	fileMenu->addAction(QIcon::fromTheme(QStringLiteral("application-exit")), tr("E&xit"), QKeySequence::Quit, this, &Window::close)->setMenuRole(QAction::QuitRole);
 
 	/* "Tools" Menu */
 	menu = menuBar->addMenu(tr("T&ools"));
-	QAction *actionText = menu->addAction(QIcon(":/images/text-editor.png"), tr("&Texts..."), this, [&] {textManager(-1, 0, 0, true);}, QKeySequence("Ctrl+T"));
-	actionModels = menu->addAction(QIcon(":/images/model.png"), tr("Map &Models..."), this, &Window::modelManager, QKeySequence("Ctrl+M"));
-	actionEncounter = menu->addAction(tr("Encounte&rs..."), this, &Window::encounterManager, QKeySequence("Ctrl+N"));
-	menu->addAction(QIcon::fromTheme(QStringLiteral("new-audio-alarm")), tr("Mu&sics/Tutorials..."), this, &Window::tutManager, QKeySequence("Ctrl+K"));
-	QAction *actionWalkmesh = menu->addAction(QIcon::fromTheme(QStringLiteral("kstars_grid")), tr("&Walkmesh..."), this, &Window::walkmeshManager, QKeySequence("Ctrl+W"));
-	menu->addAction(QIcon::fromTheme(QStringLiteral("view-preview")), tr("&Background..."), this, &Window::backgroundManager, QKeySequence("Ctrl+B"));
+	QAction *actionText = menu->addAction(QIcon(":/images/text-editor.png"), tr("&Texts..."), QKeySequence("Ctrl+T"), this, [&] {textManager(-1, 0, 0, true);});
+	actionModels = menu->addAction(QIcon(":/images/model.png"), tr("Map &Models..."), QKeySequence("Ctrl+M"), this, &Window::modelManager);
+	actionEncounter = menu->addAction(tr("Encounte&rs..."), QKeySequence("Ctrl+N"), this, &Window::encounterManager);
+	menu->addAction(QIcon::fromTheme(QStringLiteral("new-audio-alarm")), tr("Mu&sics/Tutorials..."), QKeySequence("Ctrl+K"), this, &Window::tutManager);
+	QAction *actionWalkmesh = menu->addAction(QIcon::fromTheme(QStringLiteral("kstars_grid")), tr("&Walkmesh..."), QKeySequence("Ctrl+W"), this, &Window::walkmeshManager);
+	menu->addAction(QIcon::fromTheme(QStringLiteral("view-preview")), tr("&Background..."), QKeySequence("Ctrl+B"), this, &Window::backgroundManager);
 	actionMisc = menu->addAction(tr("M&iscellaneous..."), this, &Window::miscManager);
 	menu->addSeparator();
-	menu->addAction(tr("Variable Mana&ger..."), this, &Window::varManager, QKeySequence("Ctrl+G"));
-	actionFind = menu->addAction(QIcon::fromTheme(QStringLiteral("edit-find")), tr("&Find..."), this, &Window::searchManager, QKeySequence::Find);
+	menu->addAction(tr("Variable Mana&ger..."), QKeySequence("Ctrl+G"), this, &Window::varManager);
+	actionFind = menu->addAction(QIcon::fromTheme(QStringLiteral("edit-find")), tr("&Find..."), QKeySequence::Find, this, &Window::searchManager);
 	actionMiscOperations = menu->addAction(tr("B&atch processing..."), this, &Window::miscOperations);
 
 	/* "Settings" Menu */
