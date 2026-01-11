@@ -70,6 +70,10 @@ Opcode &Opcode::operator=(const Opcode &other) noexcept
 
 void Opcode::setParams(const char *params, qsizetype maxSize)
 {
+	if (id() == OpcodeKey::SPECIAL && maxSize > 0) {
+		_opcode.opcodeSPECIAL.subKey = params[0];
+	}
+
 	quint8 fixedParamsSize = fixedSize() - 1;
 
 	if (fixedParamsSize > maxSize) {
@@ -85,7 +89,7 @@ void Opcode::setParams(const char *params, qsizetype maxSize)
 
 	if (id() == OpcodeKey::Unused1C || id() == OpcodeKey::KAWAI) {
 		quint8 dynamicParamsSize = size() - fixedParamsSize - 1;
-		
+
 		if (dynamicParamsSize > maxSize - fixedParamsSize) {
 			qWarning() << "Opcode::setParams" << id() << "dynamic size exceeded" << fixedParamsSize << dynamicParamsSize << maxSize;
 			dynamicParamsSize = quint8(maxSize - fixedParamsSize);
@@ -247,7 +251,7 @@ bool Opcode::searchVar(quint8 bank, quint16 address, Operation operation, int va
 			if (id() == SETBYTE || id() == SETWORD) {
 				FF7BinaryOperation binaryOp;
 				binaryOperation(binaryOp);
-				
+
 				if (bank1() == bank && (noAddress || binaryOp.var == address)
 				        && bank2() == 0) {
 					switch (operation) {
@@ -1331,7 +1335,7 @@ bool Opcode::setJump(qint32 jump)
 	if (realJump > 255) {
 		return setLongJump(quint16(std::min(realJump, 65535)));
 	}
-	
+
 	return setShortJump(quint8(std::max(realJump, 0)));
 }
 
@@ -2445,7 +2449,7 @@ QString Opcode::toStringUnused1A(const Section1File *scriptsAndTexts, const Opco
 {
 	Q_UNUSED(scriptsAndTexts)
 	QStringList flags;
-	
+
 	switch (opcode.flag & 0x7) {
 	case 0:
 		flags.append(Opcode::tr("8 bit"));
@@ -2462,15 +2466,15 @@ QString Opcode::toStringUnused1A(const Section1File *scriptsAndTexts, const Opco
 	default:
 		break;
 	}
-	
+
 	if (opcode.flag & 0x10) {
 		flags.append(Opcode::tr("From is a pointer"));
 	}
-	
+
 	if (opcode.flag & 0x20) {
 		flags.append(Opcode::tr("To is a pointer"));
 	}
-	
+
 	return Opcode::tr("Write/Read entire savemap (from=%1, to=%2, absValue=%3, flags={%4})")
 	        .arg(opcode.from, 0, 16)
 	        .arg(opcode.to, 0, 16)
@@ -2553,7 +2557,7 @@ QString Opcode::toStringMINIGAME(const Section1File *scriptsAndTexts, const Opco
 		        .arg(opcode.minigameParam);
 		break;
 	}
-	
+
 	return Opcode::tr("Mini-game: %5 (After the game goto field %1 (X=%2, Y=%3, triangle ID=%4))")
 	        .arg(_field(opcode.mapID, scriptsAndTexts))
 	        .arg(opcode.targetX)
@@ -2914,7 +2918,7 @@ QString Opcode::toStringWSPCL(const Section1File *scriptsAndTexts, const OpcodeW
 		        .arg(opcode.displayType);
 		break;
 	}
-	
+
 	return Opcode::tr("%2 in the window #%1 (left=%3, top=%4)")
 	        .arg(opcode.windowID)
 	        .arg(windowNum)
@@ -3281,7 +3285,7 @@ QString Opcode::toStringWMODE(const Section1File *scriptsAndTexts, const OpcodeW
 		        .arg(opcode.mode);
 		break;
 	}
-	
+
 	return Opcode::tr("Set the window #%1 mode: %2 (%3 the closing of the window by the player)")
 	        .arg(opcode.windowID)
 	        .arg(
@@ -3602,7 +3606,7 @@ QString Opcode::toStringBTLMD(const Section1File *scriptsAndTexts, const OpcodeB
 			}
 		}
 	}
-	
+
 	return Opcode::tr("Battle mode: %1")
 	        .arg(modes.isEmpty() ? Opcode::tr("None") : modes.join(", "));
 }
@@ -4951,7 +4955,7 @@ QString Opcode::_item(quint16 itemID, quint8 bank)
 	if (bank > 0) {
 		return Opcode::tr("No%1").arg(_bank(itemID & 0xFF, bank));
 	}
-	
+
 	if (itemID < 128) {
 		if (!Data::item_names.isEmpty() && itemID < Data::item_names.size())
 			return Data::item_names.at(itemID);
@@ -4973,7 +4977,7 @@ QString Opcode::_materia(quint8 materiaID, quint8 bank)
 	if (bank > 0) {
 		return Opcode::tr("No%1").arg(_bank(materiaID, bank));
 	}
-	
+
 	if (materiaID < Data::materia_names.size()) {
 		return Data::materia_names.at(materiaID);
 	}
@@ -5008,12 +5012,12 @@ QString Opcode::_movie(quint8 movieID)
 	cds << Data::movie_names_cd1.value(movieID, dflt)
 	    << Data::movie_names_cd2.value(movieID, dflt)
 	    << Data::movie_names_cd3.value(movieID, dflt);
-	
+
 	QStringList out;
 	for (int discID = 0; discID < 3; ++discID) {
 		out.append(Opcode::tr("%1 (disc %2)").arg(cds.at(discID)).arg(discID + 1));
 	}
-	
+
 	return out.join(", ");
 }
 
@@ -5167,7 +5171,7 @@ QString Opcode::akao(quint8 akaoOp, bool *ok)
 		if (ok) {
 			*ok = false;
 		}
-		
+
 		return Opcode::tr("AKAO: %1?").arg(akaoOp);
 	}
 }
@@ -5249,7 +5253,7 @@ QString Opcode::_windowCorner(quint8 param, quint8 bank)
 	if (bank > 0) {
 		return _bank(param, bank);
 	}
-	
+
 	switch (param) {
 	case 0:     return Opcode::tr("Top Left");
 	case 1:     return Opcode::tr("Bottom Left");
@@ -5309,7 +5313,7 @@ const quint8 Opcode::length[257] =
     /* 0d           */    1,
     /* 0e  DSKCG    */    2,
     /* 0f  SPECIAL  */    2,
-    
+
     /* 10  JMPF     */    2,
     /* 11  JMPFL    */    3,
     /* 12  JMPB     */    2,
@@ -5326,7 +5330,7 @@ const quint8 Opcode::length[257] =
     /* 1d           */    1,
     /* 1e           */    1,
     /* 1f           */    1,
-    
+
     /* 20  MINIGAME */    11,
     /* 21  TUTOR    */    2,
     /* 22  BTMD2    */    5,
@@ -5343,7 +5347,7 @@ const quint8 Opcode::length[257] =
     /* 2d  BGSCR    */    7,
     /* 2e  WCLS     */    2,
     /* 2f  WSIZW    */    10,
-    
+
     /* 30  IFKEY    */    4,
     /* 31  IFKEYON  */    4,
     /* 32  IFKEYOFF */    4,
@@ -5360,7 +5364,7 @@ const quint8 Opcode::length[257] =
     /* 3d  HMPMAX2  */    1,
     /* 3e  MHMMX    */    1,
     /* 3f  HMPMAX3  */    1,
-    
+
     /* 40  MESSAGE  */    3,
     /* 41  MPARA    */    5,
     /* 42  MPRA2    */    6,
@@ -5377,7 +5381,7 @@ const quint8 Opcode::length[257] =
     /* 4d  HPu      */    5,
     /* 4e           */    1,
     /* 4f  HPd      */    5,
-    
+
     /* 50  WINDOW   */    10,
     /* 51  WMOVE    */    6,
     /* 52  WMODE    */    4,
@@ -5394,7 +5398,7 @@ const quint8 Opcode::length[257] =
     /* 5d  CMTRA    */    10,
     /* 5e  SHAKE    */    8,
     /* 5f  NOP      */    1,
-    
+
     /* 60  MAPJUMP  */    10,
     /* 61  SCRLO    */    2,
     /* 62  SCRLC    */    5,
@@ -5411,7 +5415,7 @@ const quint8 Opcode::length[257] =
     /* 6d  IDLCK    */    4,
     /* 6e  LSTMP    */    3,
     /* 6f  SCRLP    */    6,
-    
+
     /* 70  BATTLE   */    4,
     /* 71  BTLON    */    2,
     /* 72  BTLMD    */    3,
@@ -5428,7 +5432,7 @@ const quint8 Opcode::length[257] =
     /* 7d  DEC2!    */    3,
     /* 7e  TLKON    */    2,
     /* 7f  RDMSD    */    3,
-    
+
     /* 80  SETBYTE  */    4,
     /* 81  SETWORD  */    5,
     /* 82  BITON    */    4,
@@ -5445,7 +5449,7 @@ const quint8 Opcode::length[257] =
     /* 8d  MOD      */    4,
     /* 8e  MOD2     */    5,
     /* 8f  AND      */    4,
-    
+
     /* 90  AND2     */    5,
     /* 91  OR       */    4,
     /* 92  OR2      */    5,
@@ -5462,7 +5466,7 @@ const quint8 Opcode::length[257] =
     /* 9d  SETX     */    7,
     /* 9e  GETX     */    7,
     /* 9f  SEARCHX  */    11,
-    
+
     /* a0  PC       */    2,
     /* a1  CHAR     */    2,
     /* a2  DFANM    */    3,
@@ -5479,7 +5483,7 @@ const quint8 Opcode::length[257] =
     /* ad  FMOVE    */    6,
     /* ae  ANIME2   */    3,
     /* af  ANIM!1   */    3,
-    
+
     /* b0  CANIM1   */    5,
     /* b1  CANM!1   */    5,
     /* b2  MSPED    */    4,
@@ -5496,7 +5500,7 @@ const quint8 Opcode::length[257] =
     /* bd  ASPED    */    4,
     /* be           */    1,
     /* bf  CC       */    2,
-    
+
     /* c0  JUMP     */    11,
     /* c1  AXYZI    */    8,
     /* c2  LADER    */    15,
@@ -5513,7 +5517,7 @@ const quint8 Opcode::length[257] =
     /* cd  MMBud    */    3,
     /* ce  MMBLK    */    2,
     /* cf  MMBUK    */    2,
-    
+
     /* d0  LINE     */    13,
     /* d1  LINON    */    2,
     /* d2  MPJPO    */    2,
@@ -5530,7 +5534,7 @@ const quint8 Opcode::length[257] =
     /* dd  ANIMB    */    1,
     /* de  TURNW    */    1,
     /* df  MPPAL    */    11,
-    
+
     /* e0  BGON     */    4,
     /* e1  BGOFF    */    4,
     /* e2  BGROL    */    3,
@@ -5547,7 +5551,7 @@ const quint8 Opcode::length[257] =
     /* ed  CPPAL2   */    8,
     /* ee  RTPAL2   */    8,
     /* ef  ADPAL2   */    11,
-    
+
     /* f0  MUSIC    */    2,
     /* f1  SOUND    */    5,
     /* f2  AKAO     */    14,
@@ -5585,7 +5589,7 @@ const char *Opcode::names[257] =
     /* 0d */    "Unknown2",
     /* 0e */    "DSKCG",
     /* 0f */    "SPECIAL",
-    
+
     /* 10 */    "JMPF",
     /* 11 */    "JMPFL",
     /* 12 */    "JMPB",
@@ -5602,7 +5606,7 @@ const char *Opcode::names[257] =
     /* 1d */    "Unknown6",
     /* 1e */    "Unknown7",
     /* 1f */    "Unknown8",
-    
+
     /* 20 */    "MINIGAME",
     /* 21 */    "TUTOR",
     /* 22 */    "BTMD2",
@@ -5619,7 +5623,7 @@ const char *Opcode::names[257] =
     /* 2d */    "BGSCR",
     /* 2e */    "WCLS",
     /* 2f */    "WSIZW",
-    
+
     /* 30 */    "IFKEY",
     /* 31 */    "IFKEYON",
     /* 32 */    "IFKEYOFF",
@@ -5636,7 +5640,7 @@ const char *Opcode::names[257] =
     /* 3d */    "HMPMAX2",
     /* 3e */    "MHMMX",
     /* 3f */    "HMPMAX3",
-    
+
     /* 40 */    "MESSAGE",
     /* 41 */    "MPARA",
     /* 42 */    "MPRA2",
@@ -5653,7 +5657,7 @@ const char *Opcode::names[257] =
     /* 4d */    "HPu",
     /* 4e */    "Unknown12",
     /* 4f */    "HPd",
-    
+
     /* 50 */    "WINDOW",
     /* 51 */    "WMOVE",
     /* 52 */    "WMODE",
@@ -5670,7 +5674,7 @@ const char *Opcode::names[257] =
     /* 5d */    "CMTRA",
     /* 5e */    "SHAKE",
     /* 5f */    "NOP",
-    
+
     /* 60 */    "MAPJUMP",
     /* 61 */    "SCRLO",
     /* 62 */    "SCRLC",
@@ -5687,7 +5691,7 @@ const char *Opcode::names[257] =
     /* 6d */    "IDLCK",
     /* 6e */    "LSTMP",
     /* 6f */    "SCRLP",
-    
+
     /* 70 */    "BATTLE",
     /* 71 */    "BTLON",
     /* 72 */    "BTLMD",
@@ -5704,7 +5708,7 @@ const char *Opcode::names[257] =
     /* 7d */    "DEC2!",
     /* 7e */    "TLKON",
     /* 7f */    "RDMSD",
-    
+
     /* 80 */    "SETBYTE",
     /* 81 */    "SETWORD",
     /* 82 */    "BITON",
@@ -5721,7 +5725,7 @@ const char *Opcode::names[257] =
     /* 8d */    "MOD",
     /* 8e */    "MOD2",
     /* 8f */    "AND",
-    
+
     /* 90 */    "AND2",
     /* 91 */    "OR",
     /* 92 */    "OR2",
@@ -5738,7 +5742,7 @@ const char *Opcode::names[257] =
     /* 9d */    "SETX",
     /* 9e */    "GETX",
     /* 9f */    "SEARCHX",
-    
+
     /* a0 */    "PC",
     /* a1 */    "CHAR",
     /* a2 */    "DFANM",
@@ -5755,7 +5759,7 @@ const char *Opcode::names[257] =
     /* ad */    "FMOVE",
     /* ae */    "ANIME2",
     /* af */    "ANIM!1",
-    
+
     /* b0 */    "CANIM1",
     /* b1 */    "CANM!1",
     /* b2 */    "MSPED",
@@ -5772,7 +5776,7 @@ const char *Opcode::names[257] =
     /* bd */    "ASPED",
     /* be */    "Unknown13",
     /* bf */    "CC",
-    
+
     /* c0 */    "JUMP",
     /* c1 */    "AXYZI",
     /* c2 */    "LADER",
@@ -5789,7 +5793,7 @@ const char *Opcode::names[257] =
     /* cd */    "MMBud",
     /* ce */    "MMBLK",
     /* cf */    "MMBUK",
-    
+
     /* d0 */    "LINE",
     /* d1 */    "LINON",
     /* d2 */    "MPJPO",
@@ -5806,7 +5810,7 @@ const char *Opcode::names[257] =
     /* dd */    "ANIMB",
     /* de */    "TURNW",
     /* df */    "MPPAL",
-    
+
     /* e0 */    "BGON",
     /* e1 */    "BGOFF",
     /* e2 */    "BGROL",
@@ -5823,7 +5827,7 @@ const char *Opcode::names[257] =
     /* ed */    "CPPAL2",
     /* ee */    "RTPAL2",
     /* ef */    "ADPAL2",
-    
+
     /* f0 */    "MUSIC",
     /* f1 */    "SOUND",
     /* f2 */    "AKAO",

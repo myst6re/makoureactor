@@ -59,7 +59,7 @@ if(NOT QT_FOUND)
         endif()
 
         file(GLOB QT_VERSIONS "${QT_INSTALLATION_PATH}/${QT_VERSION_TO_FIND}.*")
-        list(SORT QT_VERSIONS)
+        list(SORT QT_VERSIONS COMPARE NATURAL)
 
         # assume the latest version will be last alphabetically
         list(REVERSE QT_VERSIONS)
