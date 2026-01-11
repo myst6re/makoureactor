@@ -316,6 +316,7 @@ jobs:
       uses: crowbarmaster/GH-Automatic-Releases@latest
       with:
        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+       automatic_release_tag: ${{ github.event.ref }}
        prerelease: false
        title: ${{ github.event.ref }}
        files: |
