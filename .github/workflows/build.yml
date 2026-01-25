@@ -192,8 +192,8 @@ jobs:
         sudo add-apt-repository -y universe
         sudo apt install -y libfuse2 libxkbcommon-x11-0 libxcb-cursor0
         cmake --build ${{ env.makoureactor_build_path }} --target install -j3
-        mkdir -p ${{env.makoureactor_appbundle_path}}/usr/share/makoureactor/translations
-        cp ${{env.makoureactor_installation_path}}/share/makoureactor/translations/*.qm ${{env.makoureactor_appbundle_path}}/usr/share/makoureactor/translations
+        mkdir -p ${{env.makoureactor_appbundle_path}}/usr/translations
+        cp ${{env.makoureactor_installation_path}}/share/makoureactor/translations/*.qm ${{env.makoureactor_appbundle_path}}/usr/translations
         mkdir -p ${{env.makoureactor_appbundle_path}}/usr/plugins/iconengines
         cp ${{ env.qt_installation_path }}/Qt/${{ matrix.qt }}/${{ matrix.qt_gcc_dir }}/plugins/iconengines/libqsvgicon.so ${{env.makoureactor_appbundle_path}}/usr/plugins/iconengines/libqsvgicon.so
 
