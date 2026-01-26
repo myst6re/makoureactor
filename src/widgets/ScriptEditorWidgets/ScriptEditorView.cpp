@@ -30,8 +30,8 @@ ScriptEditorView::~ScriptEditorView()
 void ScriptEditorView::showEvent(QShowEvent *e)
 {
 	if (!_builded) {
-		build();
 		_builded = true;
+		build();
 	}
 
 	QWidget::showEvent(e);

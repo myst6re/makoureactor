@@ -19,6 +19,7 @@
 #include "core/field/Field.h"
 #include "core/field/FieldModelLoaderPC.h"
 #include "core/field/FieldModelLoaderPS.h"
+#include "core/Config.h"
 
 ScriptEditorModelPage::ScriptEditorModelPage(Field *field, const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent) :
     ScriptEditorView(scriptsAndTexts, grpScript, script, opcodeID, parent), _field(field)
@@ -27,7 +28,11 @@ ScriptEditorModelPage::ScriptEditorModelPage(Field *field, const Section1File *s
 
 void ScriptEditorModelPage::build()
 {
-	_modelPreview = new FieldModel(this);
+	if (Config::value("OpenGL", true).toBool()) {
+		_modelPreview = new FieldModel();
+	} else {
+		_modelPreview = nullptr;
+	}
 	_models = new QComboBox(this);
 
 	int modelCount = _field->fieldModelLoader()->modelCount();
@@ -44,7 +49,9 @@ void ScriptEditorModelPage::build()
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(_models, 0, 0);
-	layout->addWidget(_modelPreview, 1, 0);
+	if (_modelPreview != nullptr) {
+		layout->addWidget(_modelPreview, 1, 0);
+	}
 	layout->setRowStretch(1, 1);
 	layout->setContentsMargins(QMargins());
 
@@ -73,7 +80,9 @@ void ScriptEditorModelPage::setOpcode(const Opcode &opcode)
 
 void ScriptEditorModelPage::updatePreview()
 {
-	_modelPreview->setFieldModelFile(_field->fieldModel(_models->currentData().toInt()));
+	if (_modelPreview != nullptr) {
+		_modelPreview->setFieldModelFile(_field->fieldModel(_models->currentData().toInt()));
+	}
 
 	emit opcodeChanged();
 }

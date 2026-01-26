@@ -24,6 +24,7 @@
 #include "ScriptEditorWidgets/ScriptEditorMoviePage.h"
 #include "ScriptEditorWidgets/ScriptEditorSpecialPage.h"
 #include "ScriptEditorWidgets/ScriptEditorWalkmeshPage.h"
+#include "../core/Config.h"
 
 QList<OpcodeKey> ScriptEditor::crashIfInit;
 
@@ -75,6 +76,9 @@ ScriptEditor::ScriptEditor(Field *field, const Section1File *scriptsAndTexts, co
 	textEdit->setFixedHeight(2 * textEdit->fontMetrics().height() + textEditHMargins);
 
 	editorLayout = new QStackedWidget(this);
+	if (Config::value("OpenGL", true).toBool()) {
+		editorLayout->addWidget(new QOpenGLWidget()); // Fake openglwidget to prevent crashes (https://stackoverflow.com/questions/76026196/how-to-force-qt-to-use-the-opengl-window-type)
+	}
 
 	ok = new QPushButton(tr("OK"),this);
 	ok->setDefault(true);
