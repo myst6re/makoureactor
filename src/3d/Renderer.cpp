@@ -34,8 +34,6 @@ Renderer::Renderer(QOpenGLWidget *_widget) :
     , mLogger(_widget)
 #endif
 {
-	mWidget = _widget;
-
 	mGL.initializeOpenGLFunctions();
 
 #ifdef QT_DEBUG

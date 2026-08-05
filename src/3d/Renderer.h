@@ -58,8 +58,6 @@ private:
 		TEXCOORD
 	};
 
-	QOpenGLWidget *mWidget;
-
 	QOpenGLFunctions mGL;
 
 	QOpenGLShaderProgram mProgram;

@@ -299,7 +299,7 @@ void Script::insertOpcode(qsizetype opcodeID, const Opcode &opcode)
 
 bool Script::moveOpcode(qsizetype opcodeID, MoveDirection direction)
 {
-	if (opcodeID >= _opcodes.size()) {
+	if (opcodeID < 0 || opcodeID >= _opcodes.size()) {
 		return false;
 	}
 	

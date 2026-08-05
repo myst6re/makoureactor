@@ -739,8 +739,9 @@ void OpcodeList::scriptEditor(bool modify)
 	}
 
 	int opcodeID = selectedID();
-	if (opcodeID == -1) {
+	if (opcodeID <= -1 || opcodeID >= _script->size()) {
 		modify = false;
+		opcodeID = -1;
 	}
 
 	Opcode oldVersion;
@@ -926,7 +927,7 @@ void OpcodeList::paste()
 void OpcodeList::move(Script::MoveDirection direction)
 {
 	int opcodeID = selectedID();
-	if (opcodeID == -1) {
+	if (opcodeID <= -1 || opcodeID >= _script->size()) {
 		return;
 	}
 	saveExpandedItems();
