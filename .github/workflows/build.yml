@@ -18,7 +18,7 @@ jobs:
       fail-fast: false
       matrix:
         qt:
-          - 6.8.3
+          - 6.9.3
         os:
           - ubuntu-latest
           - ubuntu-24.04-arm
@@ -84,7 +84,7 @@ jobs:
 
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         submodules: recursive
         fetch-depth: 0
@@ -114,32 +114,6 @@ jobs:
         cd ${{ github.workspace }}/vcpkg/triplets
         cp arm64-osx.cmake universal-osx.cmake
         sed -i '' 's|set(VCPKG_OSX_ARCHITECTURES arm64)|set(VCPKG_OSX_ARCHITECTURES "arm64;x86_64")|' universal-osx.cmake
-
-    - name: Setup NuGet.exe
-      uses: nuget/setup-nuget@v2
-      if: runner.os == 'Linux' || runner.os == 'macOS'
-      with:
-        nuget-version: latest
-
-    - name: Install Mono (Linux)
-      shell: bash
-      if: runner.os == 'Linux'
-      run: |
-        sudo apt install mono-runtime
-        sudo apt install mono-complete
-
-    - name: Install Mono (macOS)
-      if: runner.os == 'macOS'
-      run: |
-        brew update
-        brew install mono
-
-    - name: Enable vcpkg Github packages registry
-      shell: bash
-      run: |
-        nuget sources add -Name github -Source "https://nuget.pkg.github.com/${GITHUB_REPOSITORY_OWNER}/index.json" -Username ${GITHUB_REPOSITORY_OWNER} -Password ${{secrets.GITHUB_TOKEN}} -StorePasswordInClearText
-        nuget setApiKey ${{secrets.GITHUB_TOKEN}} -Source "https://nuget.pkg.github.com/${GITHUB_REPOSITORY_OWNER}/index.json"
-        nuget sources list
 
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
