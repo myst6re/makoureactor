@@ -168,7 +168,7 @@ jobs:
 
     - name: Upload vcpkg build logs
       if: failure()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: vcpkg-logs-${{ matrix.package_suffix }}-${{ matrix.interface }}-${{ matrix.build_type }}
         path: ${{ github.workspace }}/vcpkg/buildtrees/**/*.log
@@ -198,7 +198,7 @@ jobs:
       run: mv ../build-makoureactor/*.${{ matrix.package_extension }} makoureactor-continuous-${{ matrix.interface }}-${{ matrix.package_suffix }}.${{ matrix.package_extension }}
 
     - name: Upload
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: artifact-${{ matrix.package_suffix }}-${{ matrix.interface }}
         path: ${{ github.workspace }}/makoureactor-continuous-*.*
@@ -219,30 +219,10 @@ jobs:
              , arch: aarch64
           }
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         submodules: recursive
         fetch-depth: 0
-
-    - name: Setup NuGet.exe
-      uses: nuget/setup-nuget@v2
-      if: runner.os == 'Linux'
-      with:
-        nuget-version: latest
-
-    - name: Install Mono
-      shell: bash
-      if: runner.os == 'Linux'
-      run: |
-        sudo apt install mono-runtime
-        sudo apt install mono-complete
-
-    - name: Enable vcpkg Github packages registry
-      shell: bash
-      run: |
-        nuget sources add -Name github -Source "https://nuget.pkg.github.com/${GITHUB_REPOSITORY_OWNER}/index.json" -Username ${GITHUB_REPOSITORY_OWNER} -Password ${{secrets.GITHUB_TOKEN}} -StorePasswordInClearText
-        nuget setApiKey ${{secrets.GITHUB_TOKEN}} -Source "https://nuget.pkg.github.com/${GITHUB_REPOSITORY_OWNER}/index.json"
-        nuget sources list
 
     - name: Install Dependencies
       run: |
@@ -259,7 +239,7 @@ jobs:
         cpack -G DEB -C Release --config build/CPackConfig.cmake
 
     - name: Upload
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: debian-artifacts-${{ matrix.config.name }}-${{matrix.config.arch}}
         path: makoureactor*.deb
