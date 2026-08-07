@@ -8,10 +8,10 @@ else()
 endif()
 
 install(FILES ${QM_FILES} DESTINATION "${TRANSLATIONS_PATH}")
+install(FILES ${ff7tk_QM_FILES} DESTINATION "${TRANSLATIONS_PATH}")
 
 # Deploy Qt using macdeployqt and windeployqt scripts
 if((APPLE AND GUI) OR WIN32)
-    install(FILES ${ff7tk_QM_FILES} DESTINATION "${TRANSLATIONS_PATH}")
     install(CODE "set(_target_file_dir \"${QT_DEPLOY_TMP_DIR}\")")
     install(CODE "set(_target_bundle_name \"${PROJECT_NAME}.app\")")
     install(CODE "set(_qt_translations_dir \"${_qt_translations_dir}\")")
