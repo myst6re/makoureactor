@@ -62,6 +62,7 @@ Opcode::~Opcode() noexcept
 Opcode &Opcode::operator=(const Opcode &other) noexcept
 {
 	_opcode = other._opcode;
+	deleteResizableData();
 	clearResizableDataPointers();
 	setResizableData(other.resizableData());
 

@@ -402,7 +402,7 @@ void ScriptEditor::fillView()
 	ok->setDisabled(disableEditor);
 }
 
-bool ScriptEditor::needslabel() const
+bool ScriptEditor::needsLabel() const
 {
 	return (_currentPageType == Jump
 	        || _currentPageType == If

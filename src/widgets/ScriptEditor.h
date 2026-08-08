@@ -28,7 +28,7 @@ class ScriptEditor : public QDialog
 public:
 	ScriptEditor(Field *field, const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, bool modify, bool isInit, QWidget *parent = nullptr);
 
-	bool needslabel() const;
+	bool needsLabel() const;
 	Opcode buildOpcode() const;
 
 private slots:

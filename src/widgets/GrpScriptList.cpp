@@ -383,7 +383,9 @@ void GrpScriptList::copy()
 
 	clearCopiedGroups();
 	for (const int id : selectedIDs) {
-		_grpScriptCopied.append(_scripts->grpScript(id));
+		if (id >= 0 && id < _scripts->grpScriptCount()) {
+			_grpScriptCopied.append(_scripts->grpScript(id));
+		}
 	}
 
 	actions().at(PasteAction)->setEnabled(true);

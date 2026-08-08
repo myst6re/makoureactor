@@ -104,7 +104,7 @@ private:
 
 //	QString showHistoric();
 	void changeHist(HistoricType type, int opcodeID, const Opcode &data = Opcode());
-	void changeHist(HistoricType type, const QList<int> &opcodeIDs, const QList<Opcode> &data);
+	void changeHist(HistoricType type, const QList<int> &opcodeIDs, const QList<Opcode> &data = QList<Opcode>());
 	void clearHist();
 
 	static QPixmap &posNumber(int num, const QPixmap &fontPixmap, QPixmap &wordPixmap);
