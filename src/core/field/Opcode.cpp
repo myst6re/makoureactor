@@ -734,6 +734,8 @@ void Opcode::setIfStruct(const FF7If &i)
 		setJump(j);
 		setLabel(quint16(l));
 		setBadJump(bje);
+	} else {
+		setBadJump(BadJumpError::Ok);
 	}
 
 	switch (id()) {

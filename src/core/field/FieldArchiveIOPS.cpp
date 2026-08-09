@@ -142,7 +142,9 @@ QByteArray FieldArchiveIOPSFile::fileData2(const QString &fileName)
 		return d;
 	}
 
-	if (!fic.isOpen() && !fic.open(QIODevice::ReadOnly))		return QByteArray();
+	if (!fic.isOpen() && !fic.open(QIODevice::ReadOnly)) {
+		return QByteArray();
+	}
 	fic.reset();
 	QByteArray data = fic.readAll();
 	fic.close();
@@ -192,14 +194,14 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSFile::save2(const QString &path0, Arch
 			if (err != 0)	return NotImplemented;
 		}
 		if (fieldPS->isBsxModified()) {
-			path = path.left(fic.fileName().lastIndexOf('.')) + ".BSX";
+			path = path.left(path.lastIndexOf('.')) + ".BSX";
 			qint8 err = fieldPS->saveModels(path, true);
 			if (err == 2)	return ErrorOpening;
 			if (err == 1)	return Invalid;
 			if (err != 0)	return NotImplemented;
 		}
 		if (fieldPS->isMimModified()) {
-			path = path.left(fic.fileName().lastIndexOf('.')) + ".MIM";
+			path = path.left(path.lastIndexOf('.')) + ".MIM";
 			qint8 err = fieldPS->saveBackground(path, true);
 			if (err == 2)	return ErrorOpening;
 			if (err == 1)	return Invalid;
@@ -317,6 +319,8 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::open2(ArchiveObserver *observer)
 			QString name = file->name().mid(file->name().lastIndexOf('/')+1);
 			fieldArchive()->appendField(new FieldPS(name.left(name.lastIndexOf('.')), this));
 		}
+
+		++i;
 	}
 	// qDebug("Ouverture : %d ms", t.elapsed());
 

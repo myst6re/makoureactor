@@ -1959,7 +1959,7 @@ void FieldArchive::setSaved()
 
 QString FieldArchive::mapName(int mapID) const
 {
-	if (mapID < _mapList.mapNames().size()) {
+	if (mapID >= 0 && mapID < _mapList.mapNames().size()) {
 		return _mapList.mapNames().at(mapID);
 	}
 	

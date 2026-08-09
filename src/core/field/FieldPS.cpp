@@ -45,7 +45,7 @@ void FieldPS::openHeader(const QByteArray &fileData)
 	memcpy(sectionPositions, fileData.constData(), headerSize()); // header
 	vramDiff = sectionPositions[0] - headerSize();// vram section1 pos - real section 1 pos
 
-	for (quint8 i=0; i<7; ++i) {
+	for (quint8 i = 0; i < 7; ++i) {
 		sectionPositions[i] -= vramDiff;
 	}
 }
@@ -96,7 +96,7 @@ FieldModelFilePS *FieldPS::fieldModel(int modelID, int animationID, bool animate
 	
 	_models.resize(modelID + 1);
 
-	if (_models[modelID] == nullptr) {
+	if (_models.at(modelID) == nullptr) {
 		_models[modelID] = new FieldModelFilePS();
 	}
 
@@ -116,7 +116,7 @@ FieldModelFilePS *FieldPS::fieldModel(int modelID, int animationID, bool animate
 		}
 	}
 	
-	FieldModelFilePS *ret = _models[modelID];
+	FieldModelFilePS *ret = _models.at(modelID);
 
 	ret->setCurrentAnimationId(animationID);
 

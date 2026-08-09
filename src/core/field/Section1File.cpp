@@ -240,6 +240,10 @@ bool Section1File::open(const QByteArray &data)
 			quint8 scriptID = 0;
 			for (quint8 j = 0; j < scriptCount; ++j) {
 				if (positions[j + 1] > positions[j]) {
+					if (positions[j] >= dataSize || positions[j + 1] > dataSize) {
+						qWarning() << "Section1File::open invalid script positions" << i << j << positions[j] << positions[j + 1] << dataSize;
+						return false;
+					}
 					Script script(constData + positions[j], positions[j + 1] - positions[j]);
 					if (!script.isValid()) {
 						qWarning() << "Section1File::open invalid script" << i << j;
@@ -283,7 +287,11 @@ bool Section1File::open(const QByteArray &data)
 				memcpy(&posEnd, constData + posTexts + 2 + i*2, 2);
 
 				if (dataSize < posTexts + posEnd) {
-					qWarning() << "Section1File::open invalid posFin" << posTexts << posEnd << dataSize;
+					qWarning() << "Section1File::open invalid posEnd" << posTexts << posEnd << dataSize;
+					break;
+				}
+				if (posBeg > posEnd) {
+					qWarning() << "Section1File::open invalid posBeg" << posTexts << posBeg << posEnd << dataSize;
 					break;
 				}
 
@@ -293,6 +301,10 @@ bool Section1File::open(const QByteArray &data)
 			}
 			if (dataSize < sizeTextSection) {
 				qWarning() << "Section1File::open invalid sizeTextSection" << sizeTextSection << dataSize;
+				return false;
+			}
+			if (posBeg > sizeTextSection) {
+				qWarning() << "Section1File::open invalid posBeg/sizeTextSection" << posTexts << posBeg << sizeTextSection << dataSize;
 				return false;
 			}
 			// FIXME: possible hidden data between 0xFF and posEnd - posBeg
@@ -586,7 +598,7 @@ bool Section1File::insertGrpScript(int row, const GrpScript &grpScript)
 
 void Section1File::removeGrpScript(int row)
 {
-	if (row < _grpScripts.size()) {
+	if (row >= 0 && row < _grpScripts.size()) {
 		_grpScripts.removeAt(row);
 		for (GrpScript &grpScript : _grpScripts) {
 			grpScript.shiftGroupIds(row, -1);
@@ -597,7 +609,7 @@ void Section1File::removeGrpScript(int row)
 
 bool Section1File::moveGrpScript(int row, bool direction)
 {
-	if (row >= _grpScripts.size()) {
+	if (row < 0 || row >= _grpScripts.size()) {
 		return false;
 	}
 
