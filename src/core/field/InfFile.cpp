@@ -27,8 +27,9 @@ void InfFile::initEmpty()
 {
 	// Fill with zeroes
 	data = InfData();
+	QByteArray name = field()->name().toLatin1().leftJustified(8, '\0', true);
 
-	memcpy(data.name, field()->name().toLatin1().left(8), 8);
+	memcpy(data.name, name.constData(), 8);
 	data.control = 128; // Left on the left
 	data.camera_range.left = -256;
 	data.camera_range.right = 256;

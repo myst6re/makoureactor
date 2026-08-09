@@ -418,7 +418,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::save2(const QString &path0, Archi
 	if (QFile::exists(path) && !QFile::remove(path)) {
 		bool removed = false;
 
-		while (observer->observerRetry(QObject::tr("Cannot remove destination archive"))) {
+		while (observer && observer->observerRetry(QObject::tr("Cannot remove destination archive"))) {
 			if (QFile::remove(path)) {
 				removed = true;
 				break;
@@ -434,7 +434,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::save2(const QString &path0, Archi
 	if (!QFile::rename(isoTemp.fileName(), path)) {
 		bool renamed = false;
 
-		while (observer->observerRetry(QObject::tr("Cannot rename temporary file to destination path"))) {
+		while (observer && observer->observerRetry(QObject::tr("Cannot rename temporary file to destination path"))) {
 			if (QFile::rename(isoTemp.fileName(), path)) {
 				renamed = true;
 				break;
@@ -545,17 +545,19 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSDir::save2(const QString &path, Archiv
 		observer->setObserverMaximum(fieldArchive()->size());
 	}
 
+	QDir targetDir = saveAs ? QDir(path) : dir;
+
 	while (it.hasNext()) {
 		if (observer && observer->observerWasCanceled()) {
 			return Aborted;
 		}
 		Field *field = it.next(false);
 		QString datName = field->name().toUpper() + ".DAT",
-		        datPath = dir.filePath(datName),
+		        datPath = targetDir.filePath(datName),
 		        bsxName = field->name().toUpper() + ".BSX",
-		        bsxPath = dir.filePath(bsxName),
+		        bsxPath = targetDir.filePath(bsxName),
 		        mimName = field->name().toUpper() + ".MIM",
-		        mimPath = dir.filePath(mimName);
+		        mimPath = targetDir.filePath(mimName);
 		if (field) {
 			if (field->isOpen() && field->isModified()) {
 				FieldPS *fieldPS = static_cast<FieldPS *>(field);
@@ -581,21 +583,16 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSDir::save2(const QString &path, Archiv
 					if (err != 0)	return NotImplemented;
 				}
 			} else if (saveAs) {
-				QString datDstPath = path + "/" + datName;
-				if (!QFile::copy(datPath, datDstPath)) {
+				if (!QFile::copy(dir.filePath(datName), datPath)) {
 					return ErrorCopying;
 				}
-				if (QFile::exists(bsxPath)) {
-					QString bsxDstPath = path + "/" + bsxName;
-					if (!QFile::copy(bsxPath, bsxDstPath)) {
-						return ErrorCopying;
-					}
+				QString sourceBsxPath = dir.filePath(bsxName);
+				if (QFile::exists(sourceBsxPath) && !QFile::copy(sourceBsxPath, bsxPath)) {
+					return ErrorCopying;
 				}
-				if (QFile::exists(mimPath)) {
-					QString mimDstPath = path + "/" + mimName;
-					if (!QFile::copy(mimPath, mimDstPath)) {
-						return ErrorCopying;
-					}
+				QString sourceMimPath = dir.filePath(mimName);
+				if (QFile::exists(sourceMimPath) && !QFile::copy(sourceMimPath, mimPath)) {
+					return ErrorCopying;
 				}
 			}
 		}

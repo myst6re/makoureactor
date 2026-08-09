@@ -515,7 +515,7 @@ bool Section1File::importer(QIODevice *device, ExportFormat format)
 		}
 	}
 
-	return stream.hasError();
+	return !stream.hasError();
 }
 
 bool Section1File::isModified() const

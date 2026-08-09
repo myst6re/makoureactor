@@ -417,6 +417,8 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCDir::save2(const QString &path, Archiv
 		observer->setObserverMaximum(uint(fieldArchive()->size()));
 	}
 
+	QDir targetDir = saveAs ? QDir(path) : dir;
+
 	while (it.hasNext()) {
 		if (observer && observer->observerWasCanceled()) {
 			return Aborted;
@@ -424,7 +426,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCDir::save2(const QString &path, Archiv
 		Field *field = it.next(false);
 		if (field) {
 			QString fileName = field->name(),
-			        filePath = dir.filePath(fileName);
+			        filePath = targetDir.filePath(fileName);
 			if (field->isOpen() && field->isModified()) {
 				qint8 err = field->save(filePath, true);
 				_errorString = field->errorString();
@@ -432,8 +434,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCDir::save2(const QString &path, Archiv
 				if (err == 1)	return Invalid;
 				if (err != 0)	return NotImplemented;
 			} else if (saveAs) {
-				QString dstPath = path + "/" + fileName;
-				if (!QFile::copy(filePath, dstPath)) {
+				if (!QFile::copy(dir.filePath(fileName), filePath)) {
 					return ErrorCopying;
 				}
 			}

@@ -310,6 +310,7 @@ void Field::setSaved()
 	for (FieldPart *part : std::as_const(_parts)) {
 		part->setModified(false);
 	}
+	_isModified = false;
 	_oldName.clear();
 }
 
@@ -671,7 +672,7 @@ bool Field::importChunk(const QString &path)
 	bool ok = false;
 	int num = path.right(1).toInt(&ok) - 1;
 	
-	if (!ok) {
+	if (!ok || num <= 0) {
 		setErrorString(QObject::tr("Incorrect file name format (accepted format: *.chunk.[1-9])"));
 		return false;
 	}

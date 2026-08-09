@@ -151,8 +151,8 @@ bool BackgroundFilePC::repair()
 	// PC field file contains PS tiles format
 	// Altough it is unused by the game, we can use it to repair the PC format
 	BackgroundTilesFile *psTiles = field()->tiles();
-	QMap<quint16, Tile> &tiles = reinterpret_cast<QMap<quint16, Tile> &>(tilesRef());
-	QMutableMapIterator<quint16, Tile> it(tiles);
+	QMap<qint32, Tile> &tiles = reinterpret_cast<QMap<qint32, Tile> &>(tilesRef());
+	QMutableMapIterator<qint32, Tile> it(tiles);
 	bool modified = false;
 
 	if (psTiles && psTiles->isOpen()) {

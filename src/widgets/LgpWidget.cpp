@@ -933,7 +933,9 @@ void LgpWidget::extractCurrent()
 				QFile file(path);
 				if (file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
 					while (io->bytesAvailable()) {
-						file.write(io->read(4096));
+						if (!file.write(io->read(4096))) {
+							break;
+						}
 					}
 					if (file.error() != QFile::NoError) {
 						QMessageBox::warning(this, tr("Write error"), tr("Can not write to file (message: %1).")
@@ -988,7 +990,9 @@ void LgpWidget::extractAll()
 			QFile file(dir.filePath(fileName));
 			if (file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
 				while (io->bytesAvailable()) {
-					file.write(io->read(4096));
+					if (!file.write(io->read(4096))) {
+						break;
+					}
 				}
 				if (file.error() != QFile::NoError) {
 					error = file.errorString();
