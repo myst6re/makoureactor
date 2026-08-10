@@ -87,11 +87,10 @@ void FieldModel::drawP(Renderer *gpuRenderer, FieldModelFile *data, float scale,
 		return;
 	}
 
-	int curPolyType = 0;
 
 	for (FieldModelPart *part : bone.parts()) {
 		for (FieldModelGroup *g : part->groups()) {
-			bool groupTextureBinded = false;
+			bool groupTextureBinded = false, hasBufferedVertices = false;
 			if (g->hasTexture()) {
 				QImage tex = data->loadedTexture(g);
 				if (!tex.isNull()) {
@@ -101,16 +100,8 @@ void FieldModel::drawP(Renderer *gpuRenderer, FieldModelFile *data, float scale,
 			}
 
 			for (const Poly *p : g->polygons()) {
-				if (curPolyType != p->count()) {
-					if (curPolyType != 0) {
-						if (p->count() == 3) {
-							gpuRenderer->draw(RendererPrimitiveType::PT_TRIANGLES);
-						} else {
-							gpuRenderer->draw(RendererPrimitiveType::PT_QUADS);
-						}
-					}
-
-					curPolyType = p->count();
+				if (p->count() < 3) {
+					continue;
 				}
 
 				QRgba64 color;
@@ -120,41 +111,40 @@ void FieldModel::drawP(Renderer *gpuRenderer, FieldModelFile *data, float scale,
 					color = QRgba64::fromRgba(qRed(_color) * globalColor[0], qGreen(_color) * globalColor[1], qBlue(_color) * globalColor[2], UINT8_MAX);
 				}
 
-				for (int j=0; j<p->count(); ++j) {
-					const PolyVertex &vertex = p->vertex(j);
-					QVector3D position(vertex.x/scale, vertex.y/scale, vertex.z/scale);
-					QVector2D texcoord(0, 0);
+				for (int j = 0; j < p->count() - 2; ++j) {
+					const int indices[] = {0, j + 1, j + 2}; // Rebuild quads as triangles
 
-					if (!p->isMonochrome()) {
-						QRgb _color = p->color(j);
-						// TODO: color projector effect
-						/*
-						float spot = qMax(vertex.x * 0.0f + vertex.y * 0.0f + (1.0 - (vertex.z/scale)) * -1.0f, 0.0f);
-						if (spot >= qCos(180.0))
-							spot = 1.0;
-						else
-							spot = qPow(spot, 0.0);
-						*/
-						color = QRgba64::fromRgba(qRed(_color) * globalColor[0], qGreen(_color) * globalColor[1], qBlue(_color) * globalColor[2], UINT8_MAX);
+					for (int j : indices) {
+						const PolyVertex &vertex = p->vertex(j);
+						QVector3D position(vertex.x / scale, vertex.y / scale, vertex.z / scale);
+						QVector2D texcoord(0, 0);
+
+						if (!p->isMonochrome()) {
+							QRgb _color = p->color(j);
+							// TODO: color projector effect
+							/*
+							float spot = qMax(vertex.x * 0.0f + vertex.y * 0.0f + (1.0 - (vertex.z/scale)) * -1.0f, 0.0f);
+							if (spot >= qCos(180.0))
+								spot = 1.0;
+							else
+								spot = qPow(spot, 0.0);
+							*/
+							color = QRgba64::fromRgba(qRed(_color) * globalColor[0], qGreen(_color) * globalColor[1], qBlue(_color) * globalColor[2], UINT8_MAX);
+						}
+
+						if (groupTextureBinded && p->hasTexture()) {
+							const TexCoord &_coord = p->texCoord(j);
+							texcoord = QVector2D(_coord.x, _coord.y);
+						}
+
+						gpuRenderer->bufferVertex(position, color, texcoord);
+						hasBufferedVertices = true;
 					}
-
-					if (groupTextureBinded && p->hasTexture()) {
-						const TexCoord &_coord = p->texCoord(j);
-						texcoord = QVector2D(_coord.x, _coord.y);
-					}
-
-					gpuRenderer->bufferVertex(position, color, texcoord);
 				}
 			}
 
-			if (curPolyType != 0) {
-				if (curPolyType == 3) {
-					gpuRenderer->draw(RendererPrimitiveType::PT_TRIANGLES);
-				} else {
-					gpuRenderer->draw(RendererPrimitiveType::PT_QUADS);
-				}
-
-				curPolyType = 0;
+			if (hasBufferedVertices) {
+				gpuRenderer->draw(RendererPrimitiveType::PT_TRIANGLES);
 			}
 		}
 	}
