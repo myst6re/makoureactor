@@ -273,6 +273,10 @@ void BackgroundEditor::updateCurrentLayer(int index)
 
 void BackgroundEditor::refreshList(int layer)
 {
+	int section = currentSection();
+	ParamState paramState = currentParamState();
+	QList<quint16> effectTileIds = currentEffect();
+
 	_sectionsList->blockSignals(true);
 	for (int row = 0; row < _sectionsList->topLevelItemCount(); ++row) {
 		qDeleteAll(_sectionsList->topLevelItem(row)->takeChildren());
@@ -318,6 +322,15 @@ void BackgroundEditor::refreshList(int layer)
 					items.append(item);
 				}
 			}
+			topLevelItem->addChildren(items);
+			if (section >= 0) {
+				for (QTreeWidgetItem *i: items) {
+					if (section == i->data(0, Qt::UserRole).toInt()) {
+						_sectionsList->setCurrentItem(i);
+						break;
+					}
+				}
+			}
 			break;
 		case BackgroundParameter:
 			while (layer > 0 && itParams.hasNext()) {
@@ -344,6 +357,21 @@ void BackgroundEditor::refreshList(int layer)
 					}
 				}
 			}
+			if (paramState.isValid()) {
+				for (int c = 0; c < topLevelItem->childCount(); ++c) {
+					QTreeWidgetItem *i = topLevelItem->child(c);
+					if (paramState.param == i->data(0, Qt::UserRole).toInt()) {
+						for (int child = 0; child < i->childCount(); ++child) {
+							QTreeWidgetItem *itm = i->child(child);
+							if (paramState.state == itm->data(0, Qt::UserRole).toInt()) {
+								_sectionsList->setCurrentItem(itm);
+								break;
+							}
+						}
+						break;
+					}
+				}
+			}
 			break;
 		case Effect:
 			if (layer == 0) {
@@ -364,9 +392,23 @@ void BackgroundEditor::refreshList(int layer)
 
 				++i;
 			}
+			topLevelItem->addChildren(items);
+			if (!effectTileIds.isEmpty()) {
+				for (QTreeWidgetItem *i: items) {
+					QList<QVariant> itemData = i->data(0, Qt::UserRole).toList();
+					QList<quint16> itemEffectTileIds;
+					itemEffectTileIds.reserve(itemData.size());
+					for (QVariant v: itemData) {
+						itemEffectTileIds.append(v.toInt());
+					}
+					if (effectTileIds == itemEffectTileIds) {
+						_sectionsList->setCurrentItem(i);
+						break;
+					}
+				}
+			}
 			break;
 		}
-		topLevelItem->addChildren(items);
 	}
 }
 
