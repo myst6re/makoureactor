@@ -990,6 +990,9 @@ void Window::openField(bool reload)
 
 	int mapId = _fieldList->currentMapId();
 	if (mapId < 0) {
+		if (varDialog) {
+			varDialog->setCurrentField(nullptr);
+		}
 		disableEditors();
 		return;
 	}
@@ -1018,6 +1021,9 @@ void Window::openField(bool reload)
 
 	// Get and set field
 	field = fieldArchive->field(mapId, true, true);
+	if (varDialog) {
+		varDialog->setCurrentField(field);
+	}
 	if (!field) {
 		if (fieldArchive->isPC()) {
 			_fieldStackedWidget->setCurrentIndex(1);
@@ -1581,6 +1587,7 @@ void Window::varManager()
 	if (!varDialog) {
 		varDialog = new VarManager(fieldArchive, this);
 	}
+	varDialog->setCurrentField(field);
 	varDialog->show();
 }
 

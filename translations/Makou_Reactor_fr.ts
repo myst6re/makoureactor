@@ -7565,9 +7565,12 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
         <translation>Adresse</translation>
     </message>
     <message>
-        <source>Addresses Used</source>
-        <oldsource>Adresses utilisées</oldsource>
-        <translation>Adresses utilisées</translation>
+        <source>Global used</source>
+        <translation>Utilisées globalement</translation>
+    </message>
+    <message>
+        <source>Local used</source>
+        <translation>Utilisées localement</translation>
     </message>
     <message>
         <source>Error</source>

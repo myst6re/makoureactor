@@ -17,11 +17,12 @@
  ****************************************************************************/
 #include "VarManager.h"
 #include "core/field/FieldArchive.h"
+#include "core/Config.h"
 #include "core/Var.h"
 #include "../Data.h"
 
 VarManager::VarManager(FieldArchive *fieldArchive, QWidget *parent)
-	: QWidget(parent, Qt::Tool)
+	: QWidget(parent, Qt::Tool), fieldArchive(nullptr), currentField(nullptr)
 {
 	setWindowTitle(tr("Variable manager"));
 
@@ -72,11 +73,18 @@ VarManager::VarManager(FieldArchive *fieldArchive, QWidget *parent)
 
 	QHBoxLayout *layout3 = new QHBoxLayout();
 
-	searchButton = new QPushButton(tr("Addresses Used"), this);
+	searchScope = new QComboBox(this);
+	searchScope->addItem(tr("Global used"), GlobalUsedScope);
+	searchScope->addItem(tr("Local used"), LocalUsedScope);
+
+	const int savedScope = Config::value("varManagerSearchScope", int(GlobalUsedScope)).toInt();
+	const int savedScopeIndex = searchScope->findData(savedScope);
+	searchScope->setCurrentIndex(savedScopeIndex >= 0 ? savedScopeIndex : 0);
+
 	ok = new QPushButton(QIcon::fromTheme(QStringLiteral("document-save")), tr("Save"), this);
 	ok->setEnabled(false);
 
-	layout3->addWidget(searchButton);
+	layout3->addWidget(searchScope);
 	layout3->addStretch();
 	layout3->addWidget(ok);
 
@@ -104,15 +112,55 @@ VarManager::VarManager(FieldArchive *fieldArchive, QWidget *parent)
 	connect(name, &QLineEdit::returnPressed, this, &VarManager::renameVar);
 	connect(rename, &QPushButton::clicked, this, &VarManager::renameVar);
 	connect(ok, &QPushButton::clicked, this, &VarManager::save);
-	connect(searchButton, &QPushButton::clicked, this, &VarManager::search);
+	connect(searchScope, &QComboBox::currentIndexChanged, this, &VarManager::searchScopeChanged);
 
 	adjustSize();
+	const int naturalWidth = width();
+	liste2->setColumnWidth(1, liste2->columnWidth(1) * 5 / 2);
+	resize(naturalWidth * 2, height());
 }
 
 void VarManager::setFieldArchive(FieldArchive *fieldArchive)
 {
 	this->fieldArchive = fieldArchive;
-	searchButton->setEnabled(fieldArchive != nullptr);
+	searchScope->setEnabled(fieldArchive != nullptr);
+
+	if (!fieldArchive) {
+		currentField = nullptr;
+		clearUsageResults();
+		return;
+	}
+
+	if (isVisible()) {
+		search();
+	}
+}
+
+void VarManager::setCurrentField(Field *field)
+{
+	if (currentField == field) {
+		return;
+	}
+
+	currentField = field;
+
+	// Field-list navigation only refreshes usage results in Local used mode.
+	if (searchScope->currentData().toInt() != LocalUsedScope) {
+		return;
+	}
+
+	if (!currentField) {
+		clearUsageResults();
+		return;
+	}
+
+	// During archive replacement, the field can be selected before
+	// setFieldArchive() receives the new archive. Avoid scanning until then.
+	if (isVisible() && fieldArchive) {
+		search();
+	} else {
+		clearUsageResults();
+	}
 }
 
 QPair<quint8, quint8> VarManager::banksFromRow(int row)
@@ -270,22 +318,67 @@ void VarManager::save()
 
 void VarManager::search()
 {
-	QMessageBox mess(QMessageBox::Information, tr("Searching"), tr("Searching, it may take a minute..."));
-	mess.setWindowModality(Qt::ApplicationModal);
-	mess.setWindowFlags(Qt::Dialog | Qt::WindowCloseButtonHint | Qt::MSWindowsFixedSizeDialogHint);
-	mess.setStandardButtons(QMessageBox::NoButton);
-	mess.show();
-	QTimer t(this);
-	connect(&t, &QTimer::timeout, this, &VarManager::processEvents);
-	t.start(700);
-	allVars = fieldArchive->searchAllVars(_fieldNames);
-	quint8 b = quint8(bank->value());
+	clearUsageResults();
 
-	for (quint16 address=0; address<256; ++address) {
-		colorizeItem(liste2->topLevelItem(address), FF7Var(qint8(b), quint8(address), FF7Var::VarSize()));
+	if (searchScope->currentData().toInt() == LocalUsedScope) {
+		if (!currentField) {
+			return;
+		}
+
+		currentField->scriptsAndTexts()->searchAllVars(allVars);
+	} else {
+		if (!fieldArchive) {
+			return;
+		}
+
+		QMessageBox mess(QMessageBox::Information, tr("Searching"), tr("Searching, it may take a minute..."));
+		mess.setWindowModality(Qt::ApplicationModal);
+		mess.setWindowFlags(Qt::Dialog | Qt::WindowCloseButtonHint | Qt::MSWindowsFixedSizeDialogHint);
+		mess.setStandardButtons(QMessageBox::NoButton);
+		mess.show();
+
+		QTimer t(this);
+		connect(&t, &QTimer::timeout, this, &VarManager::processEvents);
+		t.start(700);
+
+		allVars = fieldArchive->searchAllVars(_fieldNames);
+
+		t.stop();
 	}
 
-	t.stop();
+	refreshUsageResults();
+}
+
+void VarManager::searchScopeChanged()
+{
+	Config::setValue("varManagerSearchScope", searchScope->currentData().toInt());
+	search();
+}
+
+void VarManager::clearUsageResults()
+{
+	allVars.clear();
+	_fieldNames.clear();
+	refreshUsageResults();
+}
+
+void VarManager::refreshUsageResults()
+{
+	if (!liste2 || liste2->topLevelItemCount() == 0) {
+		return;
+	}
+
+	quint8 b = quint8(bank->value());
+
+	for (quint16 address = 0; address < 256; ++address) {
+		colorizeItem(liste2->topLevelItem(address), FF7Var(qint8(b), quint8(address), FF7Var::VarSize()));
+	}
+}
+
+void VarManager::showEvent(QShowEvent *event)
+{
+	QWidget::showEvent(event);
+	search();
 }
 
 void VarManager::processEvents() const
