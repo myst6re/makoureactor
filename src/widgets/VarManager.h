@@ -21,6 +21,7 @@
 #include "core/field/Opcode.h"
 
 class FieldArchive;
+class Field;
 
 class VarManager : public QWidget
 {
@@ -28,6 +29,9 @@ class VarManager : public QWidget
 public:
 	explicit VarManager(FieldArchive *fieldArchive, QWidget *parent = nullptr);
 	void setFieldArchive(FieldArchive *fieldArchive);
+	void setCurrentField(Field *field);
+protected:
+	void showEvent(QShowEvent *event) override;
 private slots:
 	void scrollToList1(int);
 	void scrollToList2(int);
@@ -37,14 +41,22 @@ private slots:
 	void renameVar();
 	void save();
 	void search();
+	void searchScopeChanged();
 	void processEvents() const;
 
 private:
+	enum SearchScope {
+		GlobalUsedScope = 0,
+		LocalUsedScope = 1
+	};
+
 	QTreeWidgetItem *findList2Item(int);
 	void fillList1();
 	void fillList2();
 	void findVar(const FF7Var &var, bool &foundR, bool &foundW, QSet<FF7Var::VarSize> &varSize);
 	void colorizeItem(QTreeWidgetItem *item, const FF7Var &var);
+	void clearUsageResults();
+	void refreshUsageResults();
 	static quint8 itemAddress(QTreeWidgetItem *item);
 	static int rowFromBank(quint8 bank);
 	static QPair<quint8, quint8> banksFromRow(int row);
@@ -56,12 +68,14 @@ private:
 	QLineEdit *name;
 	QPushButton *rename;
 
-	QPushButton *searchButton, *ok;
+	QPushButton *ok;
+	QComboBox *searchScope;
 
 	QListWidget *liste1;
 	QTreeWidget *liste2;
 
 	FieldArchive *fieldArchive;
+	Field *currentField;
 	QList<FF7Var> allVars;
 	QMap<FF7Var, QSet<QString> > _fieldNames;
 };

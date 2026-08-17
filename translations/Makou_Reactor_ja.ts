@@ -6949,10 +6949,12 @@ Are you sure you want to continue?</source>
         <translation type="unfinished">アドレス</translation>
     </message>
     <message>
-        <source>Addresses Used</source>
-        <oldsource>Adresses utilisées</oldsource>
-        <translatorcomment>Adresses used</translatorcomment>
-        <translation type="unfinished">アドレスに適用</translation>
+        <source>Global used</source>
+        <translation>全フィールドで使用</translation>
+    </message>
+    <message>
+        <source>Local used</source>
+        <translation>現在のフィールドで使用</translation>
     </message>
     <message>
         <source>Error</source>
