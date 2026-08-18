@@ -284,16 +284,28 @@ bool Script::isVoid() const
 
 void Script::setOpcode(qsizetype opcodeID, const Opcode &opcode)
 {
+	if (opcodeID < 0 || opcodeID >= _opcodes.size()) {
+		qWarning() << "Script::setOpcode invalid index" << opcodeID << _opcodes.size();
+		return;
+	}
 	_opcodes.replace(opcodeID, opcode);
 }
 
 void Script::removeOpcode(qsizetype opcodeID)
 {
+	if (opcodeID < 0 || opcodeID >= _opcodes.size()) {
+		qWarning() << "Script::removeOpcode invalid index" << opcodeID << _opcodes.size();
+		return;
+	}
 	_opcodes.removeAt(opcodeID);
 }
 
 void Script::insertOpcode(qsizetype opcodeID, const Opcode &opcode)
 {
+	if (opcodeID < 0 || opcodeID > _opcodes.size()) {
+		qWarning() << "Script::insertOpcode invalid index" << opcodeID << _opcodes.size();
+		return;
+	}
 	_opcodes.insert(opcodeID, opcode);
 }
 
@@ -759,15 +771,14 @@ void Script::backgroundMove(qint16 z[2], qint16 *x, qint16 *y) const
 bool Script::removeTexts()
 {
 	bool modified = false;
-	qsizetype i = 0;
-	for (const Opcode &opcode : std::as_const(_opcodes)) {
+	for (qsizetype i = _opcodes.size(); i-- > 0;) {
+		const Opcode &opcode = _opcodes.at(i);
 		if (opcode.id() != OpcodeKey::ASK
 				&& opcode.id() != OpcodeKey::MPNAM
 				&& opcode.textID() != -1) {
 			_opcodes.removeAt(i);
 			modified = true;
 		}
-		i += 1;
 	}
 
 	return modified;
@@ -798,12 +809,28 @@ QDataStream &operator<<(QDataStream &stream, const QList<Opcode> &script)
 
 QDataStream &operator>>(QDataStream &stream, QList<Opcode> &script)
 {
-	qsizetype size;
+	qsizetype size = 0;
 	stream >> size;
+
+	// A compiled field script cannot exceed 65535 bytes, so a clipboard list
+	// containing more opcodes than that is necessarily corrupt.
+	constexpr qsizetype MaxSerializedOpcodeCount = 65535;
+	if (stream.status() != QDataStream::Ok || size < 0 || size > MaxSerializedOpcodeCount) {
+		script.clear();
+		stream.setStatus(QDataStream::ReadCorruptData);
+		return stream;
+	}
 
 	for (qsizetype i = 0; i < size; ++i) {
 		QByteArray data;
 		stream >> data;
+		if (stream.status() != QDataStream::Ok
+		        || data.size() < qsizetype(sizeof(Opcode::OPCODE))
+		        || data.size() > qsizetype(sizeof(Opcode::OPCODE)) + 255) {
+			script.clear();
+			stream.setStatus(QDataStream::ReadCorruptData);
+			return stream;
+		}
 
 		script.append(Opcode::unserialize(data));
 	}

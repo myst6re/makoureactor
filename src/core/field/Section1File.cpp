@@ -585,7 +585,8 @@ qsizetype Section1File::grpScriptCount() const
 
 bool Section1File::insertGrpScript(int row, const GrpScript &grpScript)
 {
-	if (grpScriptCount() < maxGrpScriptCount()) {
+	if (row >= 0 && row <= _grpScripts.size()
+	        && grpScriptCount() < maxGrpScriptCount()) {
 		_grpScripts.insert(row, grpScript);
 		for (GrpScript &grpScript : _grpScripts) {
 			grpScript.shiftGroupIds(row - 1, +1);
