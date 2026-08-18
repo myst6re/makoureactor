@@ -458,6 +458,13 @@ int Window::closeFile(bool quit)
 			_lgpWidget = nullptr;
 		}
 
+		// Detach every editor/manager from Field/Section1File objects before the
+		// archive deletes those objects. Several dialogs survive archive changes.
+		disableEditors();
+		_scriptManager->removeCopiedReferences();
+		_scriptManager->clear();
+		searchDialog->setFieldArchive(nullptr);
+
 		if (fieldArchive != nullptr) {
 			delete fieldArchive;
 			fieldArchive = nullptr;
@@ -469,9 +476,6 @@ int Window::closeFile(bool quit)
 		_fieldList->setEnabled(false);
 		_fieldList->blockSignals(false);
 
-		disableEditors();
-		_scriptManager->removeCopiedReferences();
-		_scriptManager->clear();
 		if (_modelManager) {
 			_modelManager->close();
 			_modelManager->deleteLater();
@@ -479,7 +483,6 @@ int Window::closeFile(bool quit)
 		}
 		setWindowModified(false);
 		setWindowTitle();
-		searchDialog->setFieldArchive(nullptr);
 
 		actionSave->setEnabled(false);
 		actionSaveAs->setEnabled(false);
@@ -1041,7 +1044,9 @@ void Window::openField(bool reload)
 		//	modelThread->setField(field);
 		//}
 	}
-	if (_textDialog && (reload || _textDialog->isVisible())) {
+	if (_textDialog) {
+		// TextManager stays connected to ScriptManager::changed even while hidden,
+		// therefore its backing Section1File must always follow the current field.
 		_textDialog->setField(field, reload);
 		_textDialog->setEnabled(true);
 	}

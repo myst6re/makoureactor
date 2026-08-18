@@ -69,6 +69,9 @@ private slots:
 	void upDownEnabled();
 
 signals:
+	// Emitted synchronously before _scripts->_grpScripts is structurally modified.
+	// Consumers holding pointers/references into that container must detach here.
+	void aboutToChange();
 	void changed();
 
 private:

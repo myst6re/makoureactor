@@ -70,6 +70,16 @@ ScriptManager::ScriptManager(QWidget *parent) :
 	contentLayout->setColumnStretch(1, 1);
 	contentLayout->setColumnStretch(2, 9);
 
+	connect(_groupScriptList, &GrpScriptList::aboutToChange, this, [this]() {
+		// GrpScriptList mutates a QList<GrpScript>. ScriptList and OpcodeList cache
+		// pointers into that QList, so they must be detached while those pointers
+		// are still valid, before insert/remove/swap can invalidate them.
+		const QSignalBlocker scriptSignals(_scriptList);
+		const QSignalBlocker opcodeSignals(_opcodeList);
+		_opcodeList->saveExpandedItems();
+		_opcodeList->clear();
+		_scriptList->clear();
+	});
 	connect(_groupScriptList, &GrpScriptList::changed, this, &ScriptManager::changed);
 	connect(_groupScriptList, &GrpScriptList::itemSelectionChanged, this, &ScriptManager::fillScripts);
 
@@ -149,6 +159,11 @@ void ScriptManager::fillScripts()
 		_scriptList->blockSignals(false);
 		// Select first entry
 		_scriptList->setCurrentRow(0);
+	} else {
+		const QSignalBlocker scriptSignals(_scriptList);
+		const QSignalBlocker opcodeSignals(_opcodeList);
+		_opcodeList->clear();
+		_scriptList->clear();
 	}
 	emit groupScriptCurrentChanged(_groupScriptList->selectedID());
 }
@@ -180,6 +195,9 @@ void ScriptManager::fillOpcodes()
 		_opcodeList->setIsInit(_scriptList->selectedID() == 0);
 		// Scroll to top
 		_opcodeList->scroll(0, false);
+	} else {
+		const QSignalBlocker opcodeSignals(_opcodeList);
+		_opcodeList->clear();
 	}
 }
 
