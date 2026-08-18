@@ -205,7 +205,51 @@ void ScriptEditorGenericList::fillModel()
 
 	int paramSize, paramType, cur = 0, maxValue, minValue, value=0;
 	QList<int> paramTypes = this->paramTypes(opcode().id());
-	
+
+	// Battle-mode flags are displayed MSB-first within each serialized byte.
+	// BTLMD feeds its second byte to the field-side Game Over state; only
+	// row 16 is the intended flag. BTMD2 uses its first two bytes for the
+	// effective battle-mode word and row 24 for Disable Game Over.
+	auto battleModeParamName = [this](int opcodeID, quint8 index) -> QString {
+		switch (index) {
+		case 0:
+			return tr("Disable rewards");
+		case 1:
+			return tr("Activate Battle Arena");
+		case 2:
+			return tr("Do not play victory fanfare music");
+		case 3:
+			return tr("Unused");
+		case 4:
+			return tr("Cannot escape from battle");
+		case 5:
+			return tr("Preemptive attack");
+		case 6:
+			return tr("Enable countdown timer");
+		default:
+			break;
+		}
+
+		if (opcodeID == OpcodeKey::BTLMD) {
+			if (index == 7) {
+				return tr("Unused");
+			}
+			return index == 15 ? tr("Disable Game Over") : tr("Unusable");
+		}
+
+		if (index <= 14) {
+			return tr("Unused");
+		}
+		if (index == 15) {
+			return tr("Disable victory celebration");
+		}
+		if (index == 23) {
+			return tr("Disable Game Over");
+		}
+
+		return tr("Unusable");
+	};
+
 	if (opcode().id() == OpcodeKey::LABEL) {
 		addRow(int(opcode().op().opcodeLABEL._label), 0, int(pow(2, 15)) - 1, label);
 	} else if (paramTypes.isEmpty()) {
@@ -239,6 +283,14 @@ void ScriptEditorGenericList::fillModel()
 				minValue = 0;
 			}			
 			addRow(value, minValue, maxValue, paramType);
+
+			if (opcode().id() == OpcodeKey::BTLMD || opcode().id() == OpcodeKey::BTMD2) {
+				QStandardItem *nameItem = model->item(i, 0);
+				const QString name = battleModeParamName(opcode().id(), i);
+				nameItem->setText(name);
+				nameItem->setToolTip(name);
+			}
+
 			cur += paramSize;
 		}
 	}

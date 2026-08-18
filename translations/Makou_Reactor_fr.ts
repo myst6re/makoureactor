@@ -2417,11 +2417,11 @@ Certains scripts peuvent y faire référence !</translation>
         <translation>%1 les combats aléatoires</translation>
     </message>
     <message>
-        <source>The party cannot escape the battle</source>
+        <source>Cannot escape from battle</source>
         <translation>Impossible de fuir</translation>
     </message>
     <message>
-        <source>Do not show battle rewards</source>
+        <source>Disable rewards</source>
         <translation>Ne pas afficher d&apos;écran de récompense</translation>
     </message>
     <message>
@@ -3027,19 +3027,18 @@ Certains scripts peuvent y faire référence !</translation>
         <translation>Lancer un mini-jeu : %5 (Après le jeu aller à l&apos;écran %1 (X=%2, Y=%3, triangle id=%4))</translation>
     </message>
     <message>
-        <source>Pre-emptive attack</source>
+        <source>Preemptive attack</source>
         <oldsource>Attaque préventive</oldsource>
         <translation>Attaque préventive</translation>
     </message>
     <message>
-        <source>Disable game over</source>
+        <source>Disable Game Over</source>
         <oldsource>Désactiver Game Over</oldsource>
         <translation>Désactiver Game Over</translation>
     </message>
     <message>
-        <source>Battle mode: %1</source>
-        <oldsource>Mode de combat : %1</oldsource>
-        <translation>Mode de combat : %1</translation>
+        <source>Battle mode (1): %1</source>
+        <translation>Mode de combat (1) : %1</translation>
     </message>
     <message>
         <source>Stores the result of the last battle in %1</source>
@@ -3231,19 +3230,19 @@ Certains scripts peuvent y faire référence !</translation>
         <translation>Lancer le tutoriel n°%1</translation>
     </message>
     <message>
-        <source>Countdown</source>
+        <source>Enable countdown timer</source>
         <translation>Compte à rebours</translation>
     </message>
     <message>
-        <source>Do not play the battle victory music</source>
+        <source>Do not play victory fanfare music</source>
         <translation>Ne pas jouer Fanfare</translation>
     </message>
     <message>
-        <source>Activates the battle arena</source>
+        <source>Activate Battle Arena</source>
         <translation>Active l&apos;arène de combat du Gold Saucer</translation>
     </message>
     <message>
-        <source>The party members do not perform their victory celebrations at the end of battle</source>
+        <source>Disable victory celebration</source>
         <translation>Les personnages ne font pas leur animation de victoire</translation>
     </message>
     <message>
@@ -4140,6 +4139,19 @@ Certains scripts peuvent y faire référence !</translation>
     <message>
         <source>Copy partially palette (2) (sourceTile=%1, targetTile=%2, sourcePal=%3, targetPal=%4, first color=%5)</source>
         <translation>Copier un morceau de palette (2) (sourceTile=%1, targetTile=%2, sourcePal=%3, ciblePal=%4, première couleur=%5)</translation>
+    </message>
+
+    <message>
+        <source>Battle mode (2): %1</source>
+        <translation>Mode de combat (2) : %1</translation>
+    </message>
+    <message>
+        <source>Unused (%1)</source>
+        <translation>Inutilisé (%1)</translation>
+    </message>
+    <message>
+        <source>Unusable (%1)</source>
+        <translation>Inutilisable (%1)</translation>
     </message>
 </context>
 <context>
@@ -5742,13 +5754,11 @@ id=%2
         <translation type="vanished">Changer d&apos;écran</translation>
     </message>
     <message>
-        <source>Battle mode</source>
-        <oldsource>Mode de combat</oldsource>
-        <translation>Mode de combat</translation>
+        <source>Battle mode (1)</source>
+        <translation>Mode de combat (1)</translation>
     </message>
     <message>
         <source>Battle mode (2)</source>
-        <oldsource>Mode de combat (2)</oldsource>
         <translation>Mode de combat (2)</translation>
     </message>
     <message>
@@ -6378,6 +6388,47 @@ id=%2
     <message>
         <source>???</source>
         <translation>???</translation>
+    </message>
+
+    <message>
+        <source>Disable rewards</source>
+        <translation>Ne pas afficher d&apos;écran de récompense</translation>
+    </message>
+    <message>
+        <source>Activate Battle Arena</source>
+        <translation>Active l&apos;arène de combat du Gold Saucer</translation>
+    </message>
+    <message>
+        <source>Do not play victory fanfare music</source>
+        <translation>Ne pas jouer Fanfare</translation>
+    </message>
+    <message>
+        <source>Unused</source>
+        <translation>Inutilisé</translation>
+    </message>
+    <message>
+        <source>Cannot escape from battle</source>
+        <translation>Impossible de fuir</translation>
+    </message>
+    <message>
+        <source>Preemptive attack</source>
+        <translation>Attaque préventive</translation>
+    </message>
+    <message>
+        <source>Enable countdown timer</source>
+        <translation>Activer le compte à rebours</translation>
+    </message>
+    <message>
+        <source>Disable victory celebration</source>
+        <translation>Les personnages ne font pas leur animation de victoire</translation>
+    </message>
+    <message>
+        <source>Unusable</source>
+        <translation>Inutilisable</translation>
+    </message>
+    <message>
+        <source>Disable Game Over</source>
+        <translation>Désactiver Game Over</translation>
     </message>
 </context>
 <context>

@@ -2581,42 +2581,56 @@ QString Opcode::toStringBTMD2(const Section1File *scriptsAndTexts, const OpcodeB
 {
 	Q_UNUSED(scriptsAndTexts)
 	QStringList modes;
+	auto flagNumber = [](quint8 bit) {
+		return int(bit / 8) * 8 + 8 - int(bit % 8);
+	};
 
 	for (quint8 i = 0; i < 32; ++i) {
 		if ((opcode.battleMode >> i) & 1) {
 			switch (i) {
+			case 0:
+			case 4:
+			case 9:
+			case 10:
+			case 11:
+			case 12:
+			case 13:
+			case 14:
+			case 15:
+				modes.append(Opcode::tr("Unused (%1)").arg(flagNumber(i), 2, 10, QLatin1Char('0')));
+				break;
 			case 1:
-				modes.append(Opcode::tr("Countdown"));
+				modes.append(Opcode::tr("Enable countdown timer"));
 				break;
 			case 2:
-				modes.append(Opcode::tr("Pre-emptive attack"));
+				modes.append(Opcode::tr("Preemptive attack"));
 				break;
 			case 3:
-				modes.append(Opcode::tr("The party cannot escape the battle"));
+				modes.append(Opcode::tr("Cannot escape from battle"));
 				break;
 			case 5:
-				modes.append(Opcode::tr("Do not play the battle victory music"));
+				modes.append(Opcode::tr("Do not play victory fanfare music"));
 				break;
 			case 6:
-				modes.append(Opcode::tr("Activates the battle arena"));
+				modes.append(Opcode::tr("Activate Battle Arena"));
 				break;
 			case 7:
-				modes.append(Opcode::tr("Do not show battle rewards"));
+				modes.append(Opcode::tr("Disable rewards"));
 				break;
 			case 8:
-				modes.append(Opcode::tr("The party members do not perform their victory celebrations at the end of battle"));
+				modes.append(Opcode::tr("Disable victory celebration"));
 				break;
 			case 16:
-				modes.append(Opcode::tr("Disable game over"));
+				modes.append(Opcode::tr("Disable Game Over"));
 				break;
 			default:
-				modes.append(QString("%1?").arg(i));
+				modes.append(Opcode::tr("Unusable (%1)").arg(flagNumber(i), 2, 10, QLatin1Char('0')));
 				break;
 			}
 		}
 	}
 
-	return Opcode::tr("Battle mode: %1")
+	return Opcode::tr("Battle mode (2): %1")
 	        .arg(modes.isEmpty() ? Opcode::tr("None") : modes.join(", "));
 }
 
@@ -3580,38 +3594,54 @@ QString Opcode::toStringBTLMD(const Section1File *scriptsAndTexts, const OpcodeB
 {
 	Q_UNUSED(scriptsAndTexts)
 	QStringList modes;
+	auto flagNumber = [](quint8 bit) {
+		return int(bit / 8) * 8 + 8 - int(bit % 8);
+	};
+
 	for (quint8 i = 0; i < 16; ++i) {
 		if ((opcode.battleMode >> i) & 1) {
 			switch (i) {
+			case 0:
+				modes.append(Opcode::tr("Unused (%1)").arg(flagNumber(i), 2, 10, QLatin1Char('0')));
+				break;
+			case 9:
+			case 10:
+			case 11:
+			case 12:
+			case 13:
+			case 14:
+			case 15:
+				modes.append(Opcode::tr("Unusable (%1)").arg(flagNumber(i), 2, 10, QLatin1Char('0')));
+				break;
 			case 1:
-				modes.append(Opcode::tr("Countdown"));
+				modes.append(Opcode::tr("Enable countdown timer"));
 				break;
 			case 2:
-				modes.append(Opcode::tr("Pre-emptive attack"));
+				modes.append(Opcode::tr("Preemptive attack"));
 				break;
 			case 3:
-				modes.append(Opcode::tr("The party cannot escape the battle"));
+				modes.append(Opcode::tr("Cannot escape from battle"));
+				break;
+			case 4:
+				modes.append(Opcode::tr("Unused (%1)").arg(flagNumber(i), 2, 10, QLatin1Char('0')));
 				break;
 			case 5:
-				modes.append(Opcode::tr("Do not play the battle victory music"));
+				modes.append(Opcode::tr("Do not play victory fanfare music"));
 				break;
 			case 6:
-				modes.append(Opcode::tr("Activates the battle arena"));
+				modes.append(Opcode::tr("Activate Battle Arena"));
 				break;
 			case 7:
-				modes.append(Opcode::tr("Do not show battle rewards"));
+				modes.append(Opcode::tr("Disable rewards"));
 				break;
 			case 8:
-				modes.append(Opcode::tr("Disable game over"));
-				break;
-			default:
-				modes.append(QString("%1?").arg(i));
+				modes.append(Opcode::tr("Disable Game Over"));
 				break;
 			}
 		}
 	}
 
-	return Opcode::tr("Battle mode: %1")
+	return Opcode::tr("Battle mode (1): %1")
 	        .arg(modes.isEmpty() ? Opcode::tr("None") : modes.join(", "));
 }
 
