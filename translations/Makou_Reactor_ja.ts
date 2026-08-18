@@ -2745,40 +2745,40 @@ Some scripts can refer to it!</source>
         <translation>解説 No.%1</translation>
     </message>
     <message>
-        <source>Countdown</source>
+        <source>Enable countdown timer</source>
         <translation>カウントダウン</translation>
     </message>
     <message>
-        <source>Pre-emptive attack</source>
+        <source>Preemptive attack</source>
         <translation>先制攻撃</translation>
     </message>
     <message>
-        <source>The party cannot escape the battle</source>
+        <source>Cannot escape from battle</source>
         <translation>パーティはバトルから逃走不能</translation>
     </message>
     <message>
-        <source>Do not play the battle victory music</source>
+        <source>Do not play victory fanfare music</source>
         <translation>バトル勝利時の BGM を再生しない</translation>
     </message>
     <message>
-        <source>Activates the battle arena</source>
+        <source>Activate Battle Arena</source>
         <translation>バトル アリーナの有効化</translation>
     </message>
     <message>
-        <source>Do not show battle rewards</source>
+        <source>Disable rewards</source>
         <translation>バトル後の AP/EXP/ギル/アイテム 精算画面を表示しない</translation>
     </message>
     <message>
-        <source>The party members do not perform their victory celebrations at the end of battle</source>
+        <source>Disable victory celebration</source>
         <translation>バトル後のメンバーの決めポーズをやめる</translation>
     </message>
     <message>
-        <source>Disable game over</source>
+        <source>Disable Game Over</source>
         <translation>ゲーム オーバーを無効化</translation>
     </message>
     <message>
-        <source>Battle mode: %1</source>
-        <translation>バトル モード : %1</translation>
+        <source>Battle mode (1): %1</source>
+        <translation>バトル モード (1) : %1</translation>
     </message>
     <message>
         <source>None</source>
@@ -3667,6 +3667,19 @@ Some scripts can refer to it!</source>
     <message>
         <source>Copy partially palette (2) (sourceTile=%1, targetTile=%2, sourcePal=%3, targetPal=%4, first color=%5)</source>
         <translation type="unfinished"></translation>
+    </message>
+
+    <message>
+        <source>Battle mode (2): %1</source>
+        <translation>バトル モード (2) : %1</translation>
+    </message>
+    <message>
+        <source>Unused (%1)</source>
+        <translation>未使用 (%1)</translation>
+    </message>
+    <message>
+        <source>Unusable (%1)</source>
+        <translation>使用不可 (%1)</translation>
     </message>
 </context>
 <context>
@@ -5026,12 +5039,12 @@ Make sure it is valid or delete it.</source>
         <translation>バトルをオン/オフ</translation>
     </message>
     <message>
-        <source>Battle mode</source>
-        <translation>バトル モード</translation>
+        <source>Battle mode (1)</source>
+        <translation>バトル モード (1)</translation>
     </message>
     <message>
         <source>Battle mode (2)</source>
-        <translation>バトル モード</translation>
+        <translation>バトル モード (2)</translation>
     </message>
     <message>
         <source>Map Jump On/Off</source>
@@ -5833,6 +5846,47 @@ Make sure it is valid or delete it.</source>
     <message>
         <source>???</source>
         <translation>???</translation>
+    </message>
+
+    <message>
+        <source>Disable rewards</source>
+        <translation>バトル後の AP/EXP/ギル/アイテム 精算画面を表示しない</translation>
+    </message>
+    <message>
+        <source>Activate Battle Arena</source>
+        <translation>バトル アリーナの有効化</translation>
+    </message>
+    <message>
+        <source>Do not play victory fanfare music</source>
+        <translation>バトル勝利時の BGM を再生しない</translation>
+    </message>
+    <message>
+        <source>Unused</source>
+        <translation>未使用</translation>
+    </message>
+    <message>
+        <source>Cannot escape from battle</source>
+        <translation>バトルから逃走不能</translation>
+    </message>
+    <message>
+        <source>Preemptive attack</source>
+        <translation>先制攻撃</translation>
+    </message>
+    <message>
+        <source>Enable countdown timer</source>
+        <translation>カウントダウンタイマーを有効化</translation>
+    </message>
+    <message>
+        <source>Disable victory celebration</source>
+        <translation>バトル後のメンバーの決めポーズをやめる</translation>
+    </message>
+    <message>
+        <source>Unusable</source>
+        <translation>使用不可</translation>
+    </message>
+    <message>
+        <source>Disable Game Over</source>
+        <translation>ゲーム オーバーを無効化</translation>
     </message>
 </context>
 <context>
