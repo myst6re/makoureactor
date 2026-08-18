@@ -33,14 +33,14 @@ AboutDialog::AboutDialog(QWidget *parent)
 	desc1->setOpenExternalLinks(true);
 	
 	QLabel *desc2 = new QLabel(tr("Contributors:<ul style=\"margin:0\"><li>Sithlord48</li>"
-	                              "<li>TrueOdin</li><li>dangarfield</li><li>vegetass4</li><li>nickrum</li></ul>"), this);
+	                              "<li>TrueOdin</li><li>dangarfield</li><li>vegetass4</li><li>nickrum</li>"
+	                              "<li>DLPB</li></ul>"), this);
 	desc2->setTextInteractionFlags(Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard);
 	desc2->setTextFormat(Qt::RichText);
 	desc2->setOpenExternalLinks(true);
 
 	QLabel *desc3 = new QLabel(tr("Thanks to:<ul style=\"margin:0\"><li>Squall78</li>"
-	                              "<li>Synergy Blades</li><li>Akari</li><li>Asa</li><li>Aali</li>"
-	                              "<li>DLPB</li></ul>"), this);
+	                              "<li>Synergy Blades</li><li>Akari</li><li>Asa</li><li>Aali</li></ul>"), this);
 	desc3->setTextInteractionFlags(Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard);
 	desc3->setTextFormat(Qt::RichText);
 	desc3->setOpenExternalLinks(true);
