@@ -302,10 +302,6 @@ void Script::removeOpcode(qsizetype opcodeID)
 
 void Script::insertOpcode(qsizetype opcodeID, const Opcode &opcode)
 {
-	if (opcodeID < 0 || opcodeID > _opcodes.size()) {
-		qWarning() << "Script::insertOpcode invalid index" << opcodeID << _opcodes.size();
-		return;
-	}
 	_opcodes.insert(opcodeID, opcode);
 }
 

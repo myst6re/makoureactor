@@ -72,11 +72,6 @@ Opcode &Opcode::operator=(const Opcode &other) noexcept
 
 void Opcode::setParams(const char *params, qsizetype maxSize)
 {
-	if (maxSize < 0 || (params == nullptr && maxSize > 0)) {
-		qWarning() << "Opcode::setParams" << id() << "invalid parameter buffer" << maxSize;
-		maxSize = 0;
-	}
-
 	// params can theoretically point into this Opcode's dynamic storage. Make a
 	// private copy before releasing/zeroing the old union contents.
 	const QByteArray source = maxSize > 0 ? QByteArray(params, maxSize) : QByteArray();
@@ -134,10 +129,6 @@ QByteArray Opcode::params() const
 
 int Opcode::subParam(qsizetype cur, qsizetype sizeInBits) const
 {
-	if (cur < 0 || sizeInBits <= 0 || sizeInBits > 32) {
-		return 0;
-	}
-
 	const QByteArray p = params();
 	const qsizetype byteOffset = cur / 8;
 	const qsizetype bitOffset = cur % 8;
