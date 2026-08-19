@@ -321,8 +321,6 @@ void GrpScriptList::add()
 
 	const int grpScriptID = qBound(0, selectedID() + 1, int(_scripts->grpScriptCount()));
 
-	// ScriptList/OpcodeList keep pointers into Section1File::_grpScripts.
-	// QList insertion can relocate elements, so detach those pointers first.
 	emit aboutToChange();
 	if (!_scripts->insertGrpScript(grpScriptID, GrpScript())) {
 		return;

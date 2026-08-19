@@ -89,7 +89,7 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	disableTree_A = new QAction(tr("Disable tree"), this);
 	search_A = new QAction(tr("Search opcode..."), this);
 
-	connect(edit_A, &QAction::triggered, this, [this]() { scriptEditor(true); });
+	connect(edit_A, &QAction::triggered, this, &OpcodeList::scriptEditor);
 	connect(add_A, &QAction::triggered, this, &OpcodeList::add);
 	connect(del_A, &QAction::triggered, this, &OpcodeList::del);
 	connect(cut_A, &QAction::triggered, this, &OpcodeList::cut);
@@ -170,8 +170,7 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	setMinimumWidth(_toolBar->sizeHint().width());
 	setMinimumHeight(_toolBar->sizeHint().width());
 
-	connect(this, &OpcodeList::itemDoubleClicked, this,
-	        [this](QTreeWidgetItem *, int) { scriptEditor(true); });
+	connect(this, &OpcodeList::itemDoubleClicked, this, &OpcodeList::scriptEditor);
 	connect(this, &OpcodeList::itemSelectionChanged, this, &OpcodeList::itemSelected);
 	connect(this, &OpcodeList::currentItemChanged, this, &OpcodeList::evidence);
 	connect(QApplication::clipboard(), &QClipboard::changed, this, &OpcodeList::adjustPasteAction);

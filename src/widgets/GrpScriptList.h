@@ -69,8 +69,7 @@ private slots:
 	void upDownEnabled();
 
 signals:
-	// Emitted synchronously before _scripts->_grpScripts is structurally modified.
-	// Consumers holding pointers/references into that container must detach here.
+	// Lets ScriptManager release cached GrpScript/Script pointers before the list changes.
 	void aboutToChange();
 	void changed();
 

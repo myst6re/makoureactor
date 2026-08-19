@@ -71,9 +71,8 @@ ScriptManager::ScriptManager(QWidget *parent) :
 	contentLayout->setColumnStretch(2, 9);
 
 	connect(_groupScriptList, &GrpScriptList::aboutToChange, this, [this]() {
-		// GrpScriptList mutates a QList<GrpScript>. ScriptList and OpcodeList cache
-		// pointers into that QList, so they must be detached while those pointers
-		// are still valid, before insert/remove/swap can invalidate them.
+		// OpcodeList::clear() drops its Script/GrpScript pointers; ScriptList::clear()
+		// drops its GrpScript pointer. Do this before the group list can relocate them.
 		const QSignalBlocker scriptSignals(_scriptList);
 		const QSignalBlocker opcodeSignals(_opcodeList);
 		_opcodeList->saveExpandedItems();
