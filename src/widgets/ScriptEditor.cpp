@@ -764,7 +764,7 @@ void ScriptEditor::buildList(int id)
 		comboBox->addItem(tr("Last Map ID"), QList<QVariant>() << 0x6E);
 		comboBox->addItem(tr("Start Battle"), QList<QVariant>() << 0x70);
 		comboBox->addItem(tr("Battle On/Off"), QList<QVariant>() << 0x71);
-		comboBox->addItem(tr("Battle mode"), QList<QVariant>() << 0x72);
+		comboBox->addItem(tr("Battle mode (1)"), QList<QVariant>() << 0x72);
 		comboBox->addItem(tr("Battle mode (2)"), QList<QVariant>() << 0x22);
 		comboBox->addItem(tr("Map Jump On/Off"), QList<QVariant>() << 0xD2);
 		comboBox->addItem(tr("Character movability On/Off"), QList<QVariant>() << 0x33);
