@@ -72,32 +72,48 @@ Opcode &Opcode::operator=(const Opcode &other) noexcept
 
 void Opcode::setParams(const char *params, qsizetype maxSize)
 {
-	if (id() == OpcodeKey::SPECIAL && maxSize > 0) {
-		_opcode.opcodeSPECIAL.subKey = params[0];
+	// params can theoretically point into this Opcode's dynamic storage. Make a
+	// private copy before releasing/zeroing the old union contents.
+	const QByteArray source = maxSize > 0 ? QByteArray(params, maxSize) : QByteArray();
+
+	// KAWAI and Unused1C own a QByteArray* inside the packed opcode union.
+	// Free it before memset() overwrites the pointer.
+	deleteResizableData();
+
+	const qsizetype maxStructSize = qsizetype(sizeof(_opcode) - sizeof(_opcode.id));
+	memset(reinterpret_cast<char *>(&_opcode) + sizeof(_opcode.id), 0, size_t(maxStructSize));
+
+	if (id() == OpcodeKey::SPECIAL && !source.isEmpty()) {
+		_opcode.opcodeSPECIAL.subKey = quint8(source.at(0));
 	}
 
-	quint8 fixedParamsSize = fixedSize() - 1;
+	const qsizetype expectedFixedParamsSize = qMax<qsizetype>(0, qsizetype(fixedSize()) - 1);
+	const qsizetype fixedParamsSize = qMin(qMin(expectedFixedParamsSize, source.size()), maxStructSize);
 
-	if (fixedParamsSize > maxSize) {
-		qWarning() << "Opcode::setParams" << id() << "fixed size exceeded" << fixedParamsSize << maxSize;
-		fixedParamsSize = quint8(maxSize);
+	if (expectedFixedParamsSize > source.size()) {
+		qWarning() << "Opcode::setParams" << id() << "fixed size exceeded"
+		           << expectedFixedParamsSize << source.size();
 	}
 
-	qsizetype maxStructSize = sizeof(_opcode) - sizeof(_opcode.id);
-	memcpy(reinterpret_cast<char *>(&_opcode) + sizeof(_opcode.id), params, size_t(fixedParamsSize));
-	if (fixedParamsSize < maxStructSize) {
-		memset(reinterpret_cast<char *>(&_opcode) + sizeof(_opcode.id) + fixedParamsSize, 0, size_t(maxStructSize - fixedParamsSize));
+	if (fixedParamsSize > 0) {
+		memcpy(reinterpret_cast<char *>(&_opcode) + sizeof(_opcode.id),
+		       source.constData(), size_t(fixedParamsSize));
 	}
 
 	if (id() == OpcodeKey::Unused1C || id() == OpcodeKey::KAWAI) {
-		quint8 dynamicParamsSize = size() - fixedParamsSize - 1;
+		const qsizetype declaredDynamicParamsSize = qMax<qsizetype>(
+		            0, qsizetype(size()) - expectedFixedParamsSize - 1);
+		const qsizetype availableDynamicParamsSize = qMax<qsizetype>(
+		            0, source.size() - expectedFixedParamsSize);
+		const qsizetype dynamicParamsSize = qMin(declaredDynamicParamsSize,
+		                                             availableDynamicParamsSize);
 
-		if (dynamicParamsSize > maxSize - fixedParamsSize) {
-			qWarning() << "Opcode::setParams" << id() << "dynamic size exceeded" << fixedParamsSize << dynamicParamsSize << maxSize;
-			dynamicParamsSize = quint8(maxSize - fixedParamsSize);
+		if (declaredDynamicParamsSize > availableDynamicParamsSize) {
+			qWarning() << "Opcode::setParams" << id() << "dynamic size exceeded"
+			           << expectedFixedParamsSize << declaredDynamicParamsSize << source.size();
 		}
 
-		setResizableData(QByteArray(params + fixedParamsSize, dynamicParamsSize));
+		setResizableData(source.mid(expectedFixedParamsSize, dynamicParamsSize));
 	}
 }
 
@@ -113,13 +129,25 @@ QByteArray Opcode::params() const
 
 int Opcode::subParam(qsizetype cur, qsizetype sizeInBits) const
 {
-	QByteArray p = params();
-	qsizetype size = sizeInBits % 8 != 0 ? sizeInBits / 8 + 1 : sizeInBits / 8;
-	int value = 0;
+	const QByteArray p = params();
+	const qsizetype byteOffset = cur / 8;
+	const qsizetype bitOffset = cur % 8;
+	const qsizetype bytesToRead = (bitOffset + sizeInBits + 7) / 8;
 
-	memcpy(&value, p.constData() + cur / 8, size_t(size));
+	if (byteOffset < 0 || byteOffset > p.size()
+	        || bytesToRead > qsizetype(sizeof(quint64))
+	        || bytesToRead > p.size() - byteOffset) {
+		qWarning() << "Opcode::subParam" << id() << "parameter read out of bounds"
+		           << cur << sizeInBits << p.size();
+		return 0;
+	}
 
-	return (value >> ((size * 8 - cur % 8) - sizeInBits)) & (int(pow(2, sizeInBits)) - 1);
+	quint64 value = 0;
+	memcpy(&value, p.constData() + byteOffset, size_t(bytesToRead));
+
+	const qsizetype shift = bytesToRead * 8 - bitOffset - sizeInBits;
+	const quint64 mask = (quint64(1) << sizeInBits) - 1;
+	return int((value >> shift) & mask);
 }
 
 quint8 Opcode::fixedSize() const
@@ -174,12 +202,19 @@ QByteArray Opcode::toByteArray() const
 
 QByteArray Opcode::serialize() const
 {
-	QByteArray data = resizableData();
+	const QByteArray data = resizableData();
+	OPCODE fixedData = _opcode;
+	if (fixedData.id == OpcodeKey::KAWAI) {
+		fixedData.opcodeKAWAI._data = nullptr;
+	} else if (fixedData.id == OpcodeKey::Unused1C) {
+		fixedData.opcodeUnused1C._data = nullptr;
+	}
+
 	QByteArray ret;
-	ret.reserve(qsizetype(sizeof(_opcode)) + data.size());
+	ret.reserve(qsizetype(sizeof(fixedData)) + data.size());
 	return ret
-	        .append(reinterpret_cast<const char *>(&_opcode), sizeof(_opcode))
-	        .append(resizableData());
+	        .append(reinterpret_cast<const char *>(&fixedData), sizeof(fixedData))
+	        .append(data);
 }
 
 Opcode Opcode::unserialize(const QByteArray &data)
