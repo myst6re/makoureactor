@@ -46,7 +46,7 @@ private slots:
 
 private:
 	void build() override;
-	void addRow(int value, int minValue, int maxValue, int type);
+	void addRow(int value, int minValue, int maxValue, int type, const QString &name = QString());
 	void fillModel();
 	QByteArray parseModel(bool *isLabel);
 	QList<int> paramTypes(int id);
