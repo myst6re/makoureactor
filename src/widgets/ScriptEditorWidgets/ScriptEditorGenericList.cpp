@@ -199,6 +199,8 @@ void ScriptEditorGenericList::addRow(int value, int minValue, int maxValue, int 
 
 void ScriptEditorGenericList::fillModel()
 {
+	const QSignalBlocker blocker(model);
+
 	addButton->hide();
 	delButton->hide();
 	model->clear();
