@@ -181,11 +181,14 @@ void ScriptEditorGenericList::delLastRow()
 	emit opcodeChanged();
 }
 
-void ScriptEditorGenericList::addRow(int value, int minValue, int maxValue, int type)
+void ScriptEditorGenericList::addRow(int value, int minValue, int maxValue, int type, const QString &name)
 {
 	QList<QStandardItem *> items;
 	QStandardItem *standardItem;
-	standardItem = new QStandardItem(paramName(type));
+	standardItem = new QStandardItem(name.isEmpty() ? paramName(type) : name);
+	if (!name.isEmpty()) {
+		standardItem->setToolTip(name);
+	}
 	standardItem->setEditable(false);
 	items.append(standardItem);
 
@@ -282,14 +285,10 @@ void ScriptEditorGenericList::fillModel()
 				maxValue = int(pow(2, paramSize)) - 1;
 				minValue = 0;
 			}			
-			addRow(value, minValue, maxValue, paramType);
-
-			if (opcode().id() == OpcodeKey::BTLMD || opcode().id() == OpcodeKey::BTMD2) {
-				QStandardItem *nameItem = model->item(i, 0);
-				const QString name = battleModeParamName(opcode().id(), i);
-				nameItem->setText(name);
-				nameItem->setToolTip(name);
-			}
+			const bool isBattleMode = opcode().id() == OpcodeKey::BTLMD
+			        || opcode().id() == OpcodeKey::BTMD2;
+			const QString name = isBattleMode ? battleModeParamName(opcode().id(), i) : QString();
+			addRow(value, minValue, maxValue, paramType, name);
 
 			cur += paramSize;
 		}
