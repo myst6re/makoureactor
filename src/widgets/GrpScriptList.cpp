@@ -19,6 +19,7 @@
 #include "Data.h"
 #include "core/field/Section1File.h"
 #include <FF7Char>
+#include <algorithm>
 
 GrpScriptList::GrpScriptList(QWidget *parent) :
     QTreeWidget(parent), _scripts(nullptr)
@@ -305,7 +306,8 @@ void GrpScriptList::renameOK(QTreeWidgetItem *item, int column)
 	}
 
 	int groupID = item->text(0).toInt();
-	if (groupID >= 0 && _scripts->grpScript(groupID).name() != newName) {
+	if (groupID >= 0 && groupID < _scripts->grpScriptCount()
+	        && _scripts->grpScript(groupID).name() != newName) {
 		_scripts->grpScript(groupID).setName(newName);
 		emit changed();
 	}
@@ -313,13 +315,17 @@ void GrpScriptList::renameOK(QTreeWidgetItem *item, int column)
 
 void GrpScriptList::add()
 {
-	if (_scripts == nullptr || topLevelItemCount() > _scripts->maxGrpScriptCount()) {
+	if (_scripts == nullptr || topLevelItemCount() >= _scripts->maxGrpScriptCount()) {
 		return;
 	}
 
-	int grpScriptID = selectedID() + 1;
+	const int grpScriptID = qBound(0, selectedID() + 1, int(_scripts->grpScriptCount()));
 
-	_scripts->insertGrpScript(grpScriptID, GrpScript());
+	emit aboutToChange();
+	if (!_scripts->insertGrpScript(grpScriptID, GrpScript())) {
+		return;
+	}
+
 	fill();
 	scroll(grpScriptID);
 	emit changed();
@@ -346,7 +352,16 @@ void GrpScriptList::del(bool totalDel)
 	}
 
 	std::sort(selectedIDs.begin(), selectedIDs.end());
-	for (int i = selectedIDs.size() - 1; i >= 0; --i) {
+	selectedIDs.erase(std::remove_if(selectedIDs.begin(), selectedIDs.end(),
+	                                 [this](int id) {
+		return id < 0 || id >= _scripts->grpScriptCount();
+	}), selectedIDs.end());
+	if (selectedIDs.isEmpty()) {
+		return;
+	}
+
+	emit aboutToChange();
+	for (qsizetype i = selectedIDs.size(); i-- > 0;) {
 		_scripts->removeGrpScript(selectedIDs.at(i));
 	}
 
@@ -396,13 +411,26 @@ void GrpScriptList::paste()
 	if (_scripts == nullptr || _grpScriptCopied.isEmpty()) {
 		return;
 	}
+
+	const qsizetype available = _scripts->maxGrpScriptCount() - _scripts->grpScriptCount();
+	const qsizetype pasteCount = qMin(available, _grpScriptCopied.size());
+	if (pasteCount <= 0) {
+		return;
+	}
+
 	int grpScriptID = selectedID() + 1;
 	if (grpScriptID == 0) {
 		grpScriptID = topLevelItemCount(); // Last position
 	}
-	int i = grpScriptID;
-	for (const GrpScript &GScopied : std::as_const(_grpScriptCopied)) {
-		_scripts->insertGrpScript(i++, GScopied);
+	grpScriptID = qBound(0, grpScriptID, int(_scripts->grpScriptCount()));
+
+	emit aboutToChange();
+	int insertAt = grpScriptID;
+	for (qsizetype copiedID = 0; copiedID < pasteCount; ++copiedID) {
+		if (!_scripts->insertGrpScript(insertAt, _grpScriptCopied.at(copiedID))) {
+			break;
+		}
+		++insertAt;
 	}
 
 	fill();
@@ -421,13 +449,23 @@ void GrpScriptList::move(bool direction)
 	if (_scripts == nullptr) {
 		return;
 	}
-	int grpScriptID = selectedID();
-	if (grpScriptID == -1) {
+	const int grpScriptID = selectedID();
+	if (grpScriptID < 0 || grpScriptID >= _scripts->grpScriptCount()) {
 		return;
 	}
+
+	const bool canMove = direction
+	        ? grpScriptID < _scripts->grpScriptCount() - 1
+	        : grpScriptID > 0;
+	if (!canMove) {
+		setFocus();
+		return;
+	}
+
+	emit aboutToChange();
 	if (_scripts->moveGrpScript(grpScriptID, direction)) {
 		fill();
-		scroll(direction ? grpScriptID+1 : grpScriptID-1);
+		scroll(direction ? grpScriptID + 1 : grpScriptID - 1);
 		emit changed();
 	} else {
 		setFocus();

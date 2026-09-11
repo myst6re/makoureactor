@@ -22,6 +22,7 @@
 #include "Data.h"
 #include "core/field/Field.h"
 #include "core/field/Opcode.h"
+#include <algorithm>
 
 OpcodeList::OpcodeList(QWidget *parent) :
     QTreeWidget(parent), _field(nullptr), _grpScript(nullptr), _script(nullptr), errorLine(-1),
@@ -426,9 +427,13 @@ void OpcodeList::fill(Field *field, const GrpScript *grpScript, Script *script)
 void OpcodeList::fill()
 {
 	previousBG = QBrush();
-	blockSignals(true);
-	QTreeWidget::clear();
-	blockSignals(false);
+	{
+		// Preserve an outer blocked state (ScriptManager::fillOpcodes blocks us).
+		// Calling blockSignals(false) unconditionally here used to re-enable signals
+		// in the middle of a caller's protected refresh.
+		const QSignalBlocker signalBlocker(this);
+		QTreeWidget::clear();
+	}
 
 	if (_field == nullptr || _script == nullptr) {
 		return;
@@ -740,7 +745,8 @@ void OpcodeList::redo()
 
 void OpcodeList::scriptEditor(bool modify)
 {
-	if (_script == nullptr) {
+	if (_field == nullptr || _grpScript == nullptr || _script == nullptr
+	        || _field->scriptsAndTexts() == nullptr) {
 		return;
 	}
 
@@ -760,46 +766,62 @@ void OpcodeList::scriptEditor(bool modify)
 		++opcodeID;
 	}
 
-	ScriptEditor editor(_field, _field->scriptsAndTexts(), *_grpScript, *_script, opcodeID, modify, isInit, this);
+	Opcode opcode;
+	bool needsLabel = false;
 
-	if (editor.exec() == QDialog::Accepted) {
-		Opcode opcode = editor.buildOpcode();
-	
-		if (modify) {
-			_script->setOpcode(opcodeID, opcode);
-		} else {
-			_script->insertOpcode(opcodeID, opcode);
-		}
+	// Extract everything needed from the modal editor, then destroy it before
+	// mutating the live Script and emitting change notifications. Editor pages
+	// retain references to the current GrpScript/Script while the dialog exists.
+	{
+		ScriptEditor editor(_field, _field->scriptsAndTexts(), *_grpScript, *_script,
+		                    opcodeID, modify, isInit, this);
 
-		if (editor.needsLabel()) {
-			OpcodeLABEL label;
-			label._label = quint16(opcode.label());
-			_script->insertOpcode(opcodeID + 1, label);
+		if (editor.exec() != QDialog::Accepted) {
+			return;
 		}
 
-		fill();
-		QTreeWidgetItem *item = findItem(opcodeID);
-		if (item != nullptr) {
-			setCurrentItem(item);
-		}
-		if (modify) {
-			if (editor.needsLabel()) {
-				changeHist(ModifyAndAddLabel, QList<int>() << opcodeID << (opcodeID + 1), QList<Opcode>() << oldVersion);
-			} else {
-				changeHist(Modify, opcodeID, oldVersion);
-			}
-		} else {
-			if (item != nullptr) {
-				scrollToItem(item, QAbstractItemView::EnsureVisible);
-			}
-			if (editor.needsLabel()) {
-				changeHist(Add, QList<int>() << opcodeID << (opcodeID + 1));
-			} else {
-				changeHist(Add, opcodeID);
-			}
-		}
-		emit changed();
+		opcode = editor.buildOpcode();
+		needsLabel = editor.needsLabel();
 	}
+
+	if (modify) {
+		_script->setOpcode(opcodeID, opcode);
+	} else {
+		_script->insertOpcode(opcodeID, opcode);
+	}
+
+	if (needsLabel) {
+		OpcodeLABEL label;
+		label._label = quint16(opcode.label());
+		_script->insertOpcode(opcodeID + 1, label);
+	}
+
+	fill();
+	QTreeWidgetItem *item = findItem(opcodeID);
+	if (item != nullptr) {
+		setCurrentItem(item);
+	}
+
+	if (modify) {
+		if (needsLabel) {
+			changeHist(ModifyAndAddLabel,
+			           QList<int>() << opcodeID << (opcodeID + 1),
+			           QList<Opcode>() << oldVersion);
+		} else {
+			changeHist(Modify, opcodeID, oldVersion);
+		}
+	} else {
+		if (item != nullptr) {
+			scrollToItem(item, QAbstractItemView::EnsureVisible);
+		}
+		if (needsLabel) {
+			changeHist(Add, QList<int>() << opcodeID << (opcodeID + 1));
+		} else {
+			changeHist(Add, opcodeID);
+		}
+	}
+
+	emit changed();
 }
 
 void OpcodeList::del(bool totalDel)
@@ -808,6 +830,11 @@ void OpcodeList::del(bool totalDel)
 		return;
 	}
 	QList<int> selectedIDs = this->selectedIDs();
+	std::sort(selectedIDs.begin(), selectedIDs.end());
+	selectedIDs.erase(std::remove_if(selectedIDs.begin(), selectedIDs.end(),
+	                                 [this](int id) {
+		return id < 0 || id >= _script->size();
+	}), selectedIDs.end());
 	if (selectedIDs.isEmpty()) {
 		return;
 	}
@@ -825,14 +852,11 @@ void OpcodeList::del(bool totalDel)
 	}
 
 	saveExpandedItems();
-	
-	std::sort(selectedIDs.begin(), selectedIDs.end());
-	for (qsizetype i = selectedIDs.size() - 1; i >= 0; --i) {
-		int opId = selectedIDs.at(i);
-		if (opId >= 0 && opId < _script->size()) {
-			oldVersions.prepend(_script->opcode(quint16(opId)));
-			_script->removeOpcode(quint16(opId));
-		}
+
+	for (qsizetype i = selectedIDs.size(); i-- > 0;) {
+		const int opcodeID = selectedIDs.at(i);
+		oldVersions.prepend(_script->opcode(opcodeID));
+		_script->removeOpcode(opcodeID);
 	}
 
 	fill();

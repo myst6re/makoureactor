@@ -290,18 +290,27 @@ void TextManager::focusInEvent(QFocusEvent *)
 
 void TextManager::setField(Field *field, bool reload)
 {
-	if (!field
-	        || (!reload && this->scriptsAndTexts == field->scriptsAndTexts())
-	        || !field->scriptsAndTexts()->isOpen()) {
+	Section1File *newScriptsAndTexts = field != nullptr ? field->scriptsAndTexts() : nullptr;
+
+	// TextManager remains connected to ScriptManager::changed even while hidden.
+	// Never leave it retaining data from a deleted/closed field.
+	if (newScriptsAndTexts == nullptr || !newScriptsAndTexts->isOpen()) {
+		clear();
+		return;
+	}
+
+	if (!reload && scriptsAndTexts == newScriptsAndTexts) {
 		return;
 	}
 
 	clear();
-	this->scriptsAndTexts = field->scriptsAndTexts();
+	scriptsAndTexts = newScriptsAndTexts;
 	usedTexts = scriptsAndTexts->listUsedTexts();
 	showList();
-	liste1->setCurrentRow(0);
-	selectText(liste1->item(0));
+	if (liste1->count() > 0) {
+		liste1->setCurrentRow(0);
+		selectText(liste1->item(0));
+	}
 }
 
 void TextManager::clear()
@@ -414,6 +423,14 @@ void TextManager::updateText()
 
 void TextManager::updateFromScripts()
 {
+	// This slot is connected for the lifetime of TextManager. The dialog can be
+	// hidden/cleared while ScriptManager continues to emit changed(), so the
+	// backing Section1File is not guaranteed to be set here.
+	if (scriptsAndTexts == nullptr) {
+		usedTexts.clear();
+		return;
+	}
+
 	usedTexts = scriptsAndTexts->listUsedTexts();
 
 	for (int row = 0; row < liste1->count(); ++row) {

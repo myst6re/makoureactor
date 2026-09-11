@@ -69,6 +69,8 @@ private slots:
 	void upDownEnabled();
 
 signals:
+	// Lets ScriptManager release cached GrpScript/Script pointers before the list changes.
+	void aboutToChange();
 	void changed();
 
 private:
